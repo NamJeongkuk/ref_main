@@ -1,12 +1,12 @@
 return personality({
   refrigerator_model = import("../RefrigeratorModel/refrigerator_model_single_cabinet_freezer.lua"),
+  platform = import("../Platform/all_freezer_platform.lua"),
   defrost = import("../Defrost/single_evaporator_defrost.lua"),
   enhanced_sabbath = import("../EnhancedSabbath/enhanced_sabbath_number_of_secondary_only_defrosts_zero.lua"),
   fans = import("../Fan/fan_list.lua"),
   grid = import("../Grid/single_door_single_evap.lua"),
   sabbath = import("../Sabbath/sabbath.lua"),
   convertible_compartment = import("../ConvertibleCompartment/convertible_compartment.lua"),
-  evaporator = import("../Evaporator/single_evaporator.lua"),
   sensors = import("../Sensor/sensors.lua"),
   system_monitor = import("../SystemMonitor/system_monitor.lua"),
   compressor = import("../Compressor/variable_speed_cooling_mode_dependent_compressor.lua"),

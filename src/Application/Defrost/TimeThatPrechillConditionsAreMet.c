@@ -94,7 +94,7 @@ static CoolingMode_t CoolingMode(TimeThatPrechillConditionsAreMet_t *instance)
 
 static uint8_t NumberOfEvaporators(TimeThatPrechillConditionsAreMet_t *instance)
 {
-   return instance->_private.evaporatorParametricData->numberOfEvaporators;
+   return instance->_private.numberOfEvaporators;
 }
 
 static void PeriodicOneMinuteTimeout(void *context)
@@ -269,7 +269,7 @@ void TimeThatPrechillConditionsAreMet_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.evaporatorParametricData = PersonalityParametricData_Get(dataModel)->evaporatorData;
+   instance->_private.numberOfEvaporators = PersonalityParametricData_Get(dataModel)->platformData->numberOfEvaporators;
 
    Fsm_Init(&instance->_private.fsm, InitialState(instance));
 

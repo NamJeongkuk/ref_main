@@ -11,13 +11,13 @@ describe("Personality", function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
       refrigerator_model = TypedString('refrigerator_model', 'refrigerator_model'),
+      platform = TypedString('platform', 'platform'),
       defrost = TypedString('defrost', 'defrost'),
       enhanced_sabbath = TypedString('enhanced_sabbath', 'enhanced_sabbath'),
       fans = TypedString('fan_list', 'fan_list'),
       grid = TypedString('grid', 'grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
-      evaporator = TypedString('evaporator', 'evaporator'),
       sensors = TypedString('sensors', 'sensors'),
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
@@ -49,6 +49,14 @@ describe("Personality", function()
     should_fail_with('refrigerator_model must be a typed string with type refrigerator_model, but is a number', function()
       personality(generate_config({
         refrigerator_model = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('platform must be a typed string with type platform, but is a number', function()
+      personality(generate_config({
+        platform = -1
       }))
     end)
   end)
@@ -97,14 +105,6 @@ describe("Personality", function()
     should_fail_with('convertible_compartment must be a typed string with type convertible_compartment, but is a number', function()
       personality(generate_config({
         convertible_compartment = -1
-      }))
-    end)
-  end)
-
-  it('should constrain all arguments', function()
-    should_fail_with('evaporator must be a typed string with type evaporator, but is a number', function()
-      personality(generate_config({
-        evaporator = -1
       }))
     end)
   end)
@@ -273,13 +273,13 @@ describe("Personality", function()
     local expected = remove_whitespace([[
       structure(
         pointer(refrigerator_model),
+        pointer(platform),
         pointer(defrost),
         pointer(enhanced_sabbath),
         pointer(fan_list),
         pointer(grid),
         pointer(sabbath),
         pointer(convertible_compartment),
-        pointer(evaporator),
         pointer(sensors),
         pointer(system_monitor),
         pointer(compressor),

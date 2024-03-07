@@ -27,7 +27,7 @@ enum
 static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScriptName] = {
    { "Parametric/data/Development/Personality/", "personalitySwqa.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvap.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvap.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvapThreeDoor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentTripleEvap.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleSpeedCompressor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentVariableSpeedCoolingModeIndependentCompressor.lua" },
@@ -45,6 +45,7 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvapFourDoor.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentNoAdcsMapped.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreezer.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua" }
 };

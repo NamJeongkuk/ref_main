@@ -31,7 +31,7 @@ return function(directory)
   import('SealedSystemValve/SealedSystemValvePositionType')
   import('Grid/GridLineCorrection')
   import('Sabbath/Sabbath')
-  import('Evaporator/Evaporator')
+  import('Platform/Platform')
   import('Sensor/Sensors')
   import('Sensor/SensorType')
   import('Sensor/ConvertibleCompartmentSensorType')
@@ -137,7 +137,7 @@ return function(directory)
   pid = Pid(core)
   rpm = Rpm(core)
   sabbath = Sabbath(core)
-  evaporator = Evaporator(core)
+  platform = Platform(core)
   sensors = Sensors(core)
   sensor_type = SensorType(core)
   convertible_compartment_sensor_type = ConvertibleCompartmentSensorType(core)
@@ -244,7 +244,7 @@ return function(directory)
     sealed_system_valve_position_type = SealedSystemValvePositionType,
     grid_line_correction = GridLineCorrection,
     sabbath = sabbath,
-    evaporator = evaporator,
+    platform = platform,
     sensors = sensors,
     sensor_type = sensor_type,
     convertible_compartment_sensor_type = convertible_compartment_sensor_type,

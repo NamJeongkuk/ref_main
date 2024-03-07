@@ -107,6 +107,12 @@ I_DataModel_t *SystemData_DataModel(
 
 /*!
  * @param instance
+ * @return I_DataSource_t*
+ */
+I_DataSource_t *SystemData_BspDataSource(SystemData_t *instance);
+
+/*!
+ * @param instance
  * @param dataModel
  * @param timerModule
  * @param interrupt

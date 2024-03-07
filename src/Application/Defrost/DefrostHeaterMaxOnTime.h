@@ -13,10 +13,10 @@
 
 typedef struct
 {
-   Erd_t freezerEvaporatorThermistorIsValidErd; // bool
-   Erd_t freshFoodEvaporatorThermistorIsValidErd; // bool
+   Erd_t freezerEvaporatorThermistorIsValidResolvedErd; // bool
+   Erd_t freshFoodEvaporatorThermistorIsValidResolvedErd; // bool
    Erd_t hasConvertibleCompartmentErd; // bool
-   Erd_t convertibleCompartmentEvaporatorThermistorIsValidErd; // bool
+   Erd_t convertibleCompartmentEvaporatorThermistorIsValidResolvedErd; // bool
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t freshFoodDefrostHeaterMaxOnTimeInMinutesErd; // uint8_t
    Erd_t freezerDefrostHeaterMaxOnTimeInMinutesErd; // uint8_t

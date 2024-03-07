@@ -130,6 +130,11 @@ I_DataModel_t *SystemData_DataModel(SystemData_t *instance)
    return DataModel_DataModel(&instance->_private.dataModel);
 }
 
+I_DataSource_t *SystemData_BspDataSource(SystemData_t *instance)
+{
+   return BspDataSource_DataSource(&instance->_private.dataSource.bsp);
+}
+
 void SystemData_AddBspDataSource(
    SystemData_t *instance,
    I_DataModel_t *dataModel,
@@ -153,4 +158,10 @@ void SystemData_AddBspDataSource(
       instance,
       UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
       &instance->_private.dataSource.unmappedBspComponent);
+
+   I_DataSource_t *bspDataSource = SystemData_BspDataSource(instance);
+   DataModel_WritePointer(
+      dataModel,
+      Erd_BspDataSource,
+      bspDataSource);
 }

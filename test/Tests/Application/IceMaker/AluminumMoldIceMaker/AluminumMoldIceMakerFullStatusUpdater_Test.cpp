@@ -21,9 +21,9 @@ extern "C"
 #define When
 
 static const AluminumMoldIceMakerFullStatusUpdaterConfig_t config = {
-   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
-   .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker0_StateMachineState,
-   .iceMakerFullStatusErd = Erd_IceMaker0_FullStatus
+   .feelerArmPositionErd = Erd_IceMaker1_FeelerArmPosition,
+   .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker1_StateMachineState,
+   .iceMakerFullStatusErd = Erd_IceMaker1_FullStatus
 };
 
 TEST_GROUP(AluminumMoldIceMakerFullStatusUpdater)
@@ -45,18 +45,26 @@ TEST_GROUP(AluminumMoldIceMakerFullStatusUpdater)
 
    void FeelerArmPositionIs(FeelerArmPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmPosition, &position);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmPosition, &position);
+   }
+
+   void FeelerArmPositionShouldBe(FeelerArmPosition_t expected)
+   {
+      FeelerArmPosition_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker1_FeelerArmPosition, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 
    void AluminumMoldIceMakerStateMachineStateIs(IceMakerStateMachineState_t state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_StateMachineState, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_StateMachineState, &state);
    }
 
    void IceMakerFullStatusShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0_FullStatus, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_FullStatus, &actual);
       CHECK_EQUAL(expected, actual);
    }
 };
@@ -118,11 +126,13 @@ TEST(AluminumMoldIceMakerFullStatusUpdater, ShouldClearIceMakerFullStatusWhenIni
 TEST(AluminumMoldIceMakerFullStatusUpdater, ShouldClearIceMakerFullStatusWhenFeelerArmPositionIsBucketNotFullWhileIceMakerFullStatusIsSet)
 {
    Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
+   FeelerArmPositionShouldBe(FeelerArmPosition_BucketFull);
    Given AluminumMoldIceMakerStateMachineStateIs(IceMakerStateMachineState_Freeze);
    Given TheModuleIsInitialized();
    IceMakerFullStatusShouldBe(SET);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+   FeelerArmPositionShouldBe(FeelerArmPosition_BucketNotFull);
    IceMakerFullStatusShouldBe(CLEAR);
 }
 
@@ -151,6 +161,7 @@ TEST(AluminumMoldIceMakerFullStatusUpdater, ShouldSetIceMakerFullStatusWhenFeele
 TEST(AluminumMoldIceMakerFullStatusUpdater, ShouldSetIceMakerFullStatusWhenIceMakerIsChangedToFreezeWhileFeelerArmPositionIsChangedToBucketFull)
 {
    Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
+   FeelerArmPositionShouldBe(FeelerArmPosition_BucketFull);
    Given AluminumMoldIceMakerStateMachineStateIs(IceMakerStateMachineState_Harvest);
    Given TheModuleIsInitialized();
    IceMakerFullStatusShouldBe(CLEAR);

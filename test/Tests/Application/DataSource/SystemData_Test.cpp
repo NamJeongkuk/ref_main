@@ -11,9 +11,12 @@ extern "C"
 #include "Action_Null.h"
 #include "Action_Context.h"
 #include "Crc16Calculator_Table.h"
+#include "TddPersonality.h"
+#include "DataModelErdPointerAccess.h"
+#include "ParametricDataErds.h"
+#include <string.h>
 }
 
-#include <string.h>
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "uassert_test.h"
@@ -21,10 +24,16 @@ extern "C"
 #include "Action_Mock.h"
 #include "Crc16Calculator_TestDouble.h"
 #include "AsyncDataSource_Eeprom_TestDouble.h"
+#include "PersonalityParametricDataTestDouble.h"
 
 #define AllErds                \
-   size_t i = 1;               \
+   size_t i = 0;               \
    i < NUM_ELEMENTS(erdTable); \
+   i++
+
+#define AllBspErds                    \
+   size_t i = 0;                      \
+   i < NUM_ELEMENTS(someBspErdTable); \
    i++
 
 #define And
@@ -70,9 +79,6 @@ enum
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
-
 #define ERD_EXPAND_NUMBER_SIZE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)({ Number COMMA sizeof(DataType) } COMMA)
 
@@ -88,7 +94,17 @@ typedef struct
 static const ErdTableElement_t erdTable[] = {
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
-   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE)
+};
+
+static const ErdTableElement_t someBspErdTable[] = {
+   { Erd_HeartbeatLed, 0xF500, Swap_No, Io_O, Sub_N },
+   { Erd_RelayWatchdog, 0xF502, Swap_No, Io_O, Sub_N },
+   { Erd_CompressorInverterDriver, 0xF502, Swap_No, Io_None, Sub_N },
+   { Erd_AugerMotorDirection, 0xF50A, Swap_No, Io_None, Sub_N },
+   { Erd_AugerMotorPower, 0xF50B, Swap_No, Io_None, Sub_N },
+   { Erd_Pwm_PWM_25K_00, 0xF56F, Swap_Range_S, Io_None, Sub_N },
+   { Erd_InputCapture_CAPTURE_00, 0xF58F, Swap_Yes, Io_None, Sub_N },
+   { Erd_Adc_ADC_0, 0xF59A, Swap_Range_S, Io_None, Sub_N }
 };
 
 // clang-format on
@@ -105,6 +121,7 @@ TEST_GROUP(SystemData)
    uint8_t blockOfRandomData[UINT8_MAX];
    uint8_t dataFromExternalDataSource[UINT8_MAX];
    uint8_t dataFromInternalDataSource[UINT8_MAX];
+
    I_DataModel_t *dataModel;
    I_DataSource_t *externalDataSource;
 
@@ -112,6 +129,8 @@ TEST_GROUP(SystemData)
    TimerModule_TestDouble_t timerModuleDouble;
    AsyncDataSource_Eeprom_TestDouble_t nvAsyncDataSource;
    Action_Context_t runTimerModuleAction;
+
+   PersonalityParametricData_t *personalityParametricData;
 
    TimerTicks_t readTime;
    TimerTicks_t writeTime;
@@ -167,6 +186,12 @@ TEST_GROUP(SystemData)
 
       dataModel = SystemData_DataModel(&instance);
       externalDataSource = SystemData_ExternalDataSource(&instance);
+
+      personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
+      DataModelErdPointerAccess_Write(
+         dataModel,
+         Erd_PersonalityParametricData,
+         personalityParametricData);
 
       SystemData_AddBspDataSource(
          &instance,
@@ -306,11 +331,45 @@ TEST(SystemData, ShouldSupportReadsAndWritesToInternalDataModel)
    }
 }
 
+TEST(SystemData, ShouldSupportReadsAndWritesToSomeBspErdsInInternalDataModel)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllBspErds)
+   {
+      WhenDataIsWrittenViaInternalDataModel(erdTable[i].erd, blockOfRandomData);
+      InternalDataModelShouldReturnDataEqualTo(erdTable[i].erd, blockOfRandomData);
+   }
+}
+
 TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
 
    for(AllErds)
+   {
+      Erd_t internalErd = erdTable[i].erd;
+      Erd_t externalErd = erdTable[i].externalErd;
+      bool endiannessNeedsToBeSwapped = erdTable[i].endiannessNeedsToBeSwapped;
+
+      WhenDataIsWrittenViaInternalDataModel(internalErd, blockOfRandomData);
+
+      if(endiannessNeedsToBeSwapped)
+      {
+         EndiannessShouldBeSwapped(internalErd, externalErd);
+      }
+      else
+      {
+         EndiannessShouldNotBeSwapped(internalErd, externalErd);
+      }
+   }
+}
+
+TEST(SystemData, ShouldSwapEndiannessOfSomeBspErds)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllBspErds)
    {
       Erd_t internalErd = erdTable[i].erd;
       Erd_t externalErd = erdTable[i].externalErd;
@@ -351,6 +410,28 @@ TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
    }
 }
 
+TEST(SystemData, ShouldSupportInputsAndInputOutputsForSomeBspErds)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllBspErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
+
+      if(ioConfiguration == InputAndOutputAreEnabled)
+      {
+         DataModelShouldReturnInputForErd(erd);
+         And DataModelShouldReturnInputOutputForErd(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenInputIsRequestedForErd(erd);
+         And AssertionShouldFailWhenInputOutputIsRequestedForErd(erd);
+      }
+   }
+}
+
 TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
@@ -371,11 +452,51 @@ TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
    }
 }
 
+TEST(SystemData, ShouldSupportOutputsForSomeBspErds)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllBspErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
+
+      if(ioConfiguration == OutputIsEnabled || ioConfiguration == InputAndOutputAreEnabled)
+      {
+         DataModelShouldReturnOutputForErd(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenOutputIsRequestedForErd(erd);
+      }
+   }
+}
+
 TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
 
    for(AllErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t subscriptionConfiguration = erdTable[i].subscription;
+
+      if(subscriptionConfiguration == Sub_Y)
+      {
+         DataModelShouldAllowSubscribeUnsubscribeFor(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenSubscribingToErd(erd);
+      }
+   }
+}
+
+TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSomeBspErds)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllBspErds)
    {
       Erd_t erd = erdTable[i].erd;
       uint8_t subscriptionConfiguration = erdTable[i].subscription;

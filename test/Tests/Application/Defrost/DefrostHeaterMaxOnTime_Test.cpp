@@ -30,10 +30,10 @@ enum
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t config = {
-   .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
-   .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvaporatorThermistorIsValid,
+   .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,
+   .freshFoodEvaporatorThermistorIsValidResolvedErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
-   .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvaporatorThermistorIsValid,
+   .convertibleCompartmentEvaporatorThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
@@ -63,17 +63,17 @@ TEST_GROUP(DefrostHeaterMaxOnTime)
 
    void FreezerEvaporatorThermistorValidityChangesTo(bool valid)
    {
-      DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorIsValid, &valid);
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &valid);
    }
 
    void FreshFoodEvaporatorThermistorValidityChangesTo(bool valid)
    {
-      DataModel_Write(dataModel, Erd_FreshFoodEvaporatorThermistorIsValid, &valid);
+      DataModel_Write(dataModel, Erd_FreshFoodEvapThermistor_IsValidResolved, &valid);
    }
 
    void ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(bool valid)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvaporatorThermistorIsValid, &valid);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &valid);
    }
 
    void ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_t type)

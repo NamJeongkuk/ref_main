@@ -911,6 +911,76 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Convertible Compartment Setpoint Resolved Vote",
+          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Setpoint Factory Vote",
+          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Fresh Food Door Status",
+          "name": "Erd_ConvertibleCompartmentAsFreshFoodDoorStatus",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Freezer Door Status",
+          "name": "Erd_ConvertibleCompartmentAsFreezerDoorStatus",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Resolved",
+          "name": "Erd_ConvertibleCompartmentDoorStatusResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Sabbath Override Request",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Sabbath Override Value",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Testing Override Request",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Testing Override Value",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Testing Left Freezer Override Request",
           "name": "Erd_LeftSideFreezerDoorStatus_TestingOverrideRequest",
           "read": true,

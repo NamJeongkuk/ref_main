@@ -46,7 +46,7 @@ TEST_GROUP(NextDefrostTypeOverrideArbiter)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&referDataModelTestDouble, TddPersonality_DevelopmentDualEvaporator);
+      ReferDataModel_TestDouble_Init(&referDataModelTestDouble, TddPersonality_DevelopmentDualEvapFourDoor);
       dataModel = referDataModelTestDouble.dataModel;
 
       defrostData = PersonalityParametricData_Get(dataModel)->defrostData;

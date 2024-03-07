@@ -19,6 +19,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
+#include "TddPersonality.h"
 #include "uassert_test.h"
 
 #define Given
@@ -51,6 +52,69 @@ enum
 {
    CaresAbout = Vote_Care,
    DoesNotCareAbout = Vote_DontCare,
+};
+
+const DefrostConfiguration_t defrostConfig = {
+   .defrostHsmStateErd = Erd_DefrostHsmState,
+   .defrostStateErd = Erd_DefrostState,
+   .waitingForDefrostErd = Erd_WaitingToDefrost,
+   .defrostingErd = Erd_Defrosting,
+   .disableDefrostErd = Erd_DisableDefrost,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
+   .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
+   .readyToDefrostErd = Erd_ReadyToDefrost,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .coolingModeErd = Erd_CoolingMode,
+   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .disableCompressorMinimumTimesVoteErd = Erd_DisableMinimumCompressorTimes_DefrostVote,
+   .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
+   .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
+   .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,
+   .freezerEvapFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
+   .iceCabinetFanSpeedVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
+   .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
+   .freezerDefrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
+   .numberOfFreezerDefrostsErd = Erd_NumberOfFreezerDefrosts,
+   .numberOfFreezerAbnormalDefrostsErd = Erd_NumberOfFreezerAbnormalDefrosts,
+   .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
+   .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
+   .currentDefrostTypeErd = Erd_CurrentDefrostType,
+   .timerModuleErd = Erd_TimerModule,
+   .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
+   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
+   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
+   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault,
+   .freshFoodDefrostHeaterVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
+   .convertibleCompartmentDefrostHeaterVoteErd = Erd_ConvertibleCompartmentDefrostHeater_DefrostVote,
+   .freshFoodEvapFanVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
+   .convertibleCompartmentEvapFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote,
+   .sealedSystemValveHomingRequestErd = Erd_SealedSystemValveHomingRequest,
+   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote,
+   .sealedSystemValvePositionGridVoteErd = Erd_SealedSystemValvePosition_GridVote,
+   .freshFoodDamperPositionGridVoteErd = Erd_FreshFoodDamperPosition_GridVote,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .convertibleCompartmentFilteredTemperatureResolvedInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .convertibleCompartmentThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   .convertibleCompartmentDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DefrostVote,
+   .freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd = Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,
+   .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,
+   .freezerEvaporatorThermistorHasBeenDiscoveredErd = Erd_FreezerEvaporatorThermistorDiscovered,
+   .freezerFilteredTemperatureResolvedInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
+   .freezerThermistorHasBeenDiscoveredErd = Erd_FreezerThermistorDiscovered,
+   .freshFoodFilteredTemperatureResolvedInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved,
+   .freshFoodThermistorHasBeenDiscoveredErd = Erd_FreshFoodThermistorDiscovered
 };
 
 static const DefrostIdleData_t idleData = {
@@ -139,28 +203,33 @@ static const DefrostData_t defrostData = {
    .postDwellData = postDwellData
 };
 
-TEST_GROUP(Defrost_SingleEvap)
+TEST_GROUP(Defrost_SingleEvapSideBySide)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    Defrost_t instance;
+   PlatformData_t platformData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_FreshFood);
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Freezer);
+      platformData.numberOfEvaporators = 1;
    }
 
-   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void DefrostIsInitializedWithoutAssertErdsSet()
    {
-      Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
    }
 
    void DefrostIsInitialized()
@@ -168,13 +237,13 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
       DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
 
-      Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
    }
 
    void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
-      Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
    }
 
    void ShouldAssertOnInitialization()
@@ -283,8 +352,6 @@ TEST_GROUP(Defrost_SingleEvap)
 
          case DefrostHsmState_PrechillPrep:
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-            Given FreezerEvaporatorThermistorValidityIs(Valid);
-            Given FreezerThermistorValidityIs(Valid);
 
             When ReadyToDefrost();
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
@@ -298,10 +365,6 @@ TEST_GROUP(Defrost_SingleEvap)
             break;
 
          case DefrostHsmState_HeaterOnEntry:
-            Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-            Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-            Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-            Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
             if(currentDefrostType == DefrostType_SecondaryOnly)
@@ -909,6 +972,21 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerDefrostHeaterOnForMaxTimeFault, &state);
    }
 
+   void GivenFreezerThermistorHasBeenDiscovered()
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistorDiscovered, set);
+   }
+
+   void GivenFreezerEvapThermistorHasBeenDiscovered()
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorDiscovered, set);
+   }
+
+   void GivenFreshFoodThermistorHasBeenDiscovered()
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodThermistorDiscovered, set);
+   }
+
    void FreshFoodDefrostHeaterVoteShouldBe(HeaterState_t expected)
    {
       HeaterVotedState_t actual;
@@ -952,6 +1030,16 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_FALSE(actual.care);
    }
 
+   void GivenFreezerThermistorHasNotBeenDiscovered()
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistorDiscovered, clear);
+   }
+
+   void GivenFreezerEvapThermistorHasNotBeenDiscovered()
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorDiscovered, clear);
+   }
+
    void ConvertibleCompartmentDamperVoteShouldBe(DamperPosition_t expected)
    {
       DamperVotedPosition_t actual;
@@ -991,13 +1079,31 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &state);
    }
 
-   void WhenConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   void GivenConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
+
+   void WhenConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      GivenConvertibleCompartmentCabinetTemperatureIs(temperature);
+   }
+
+   void GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions()
+   {
+      Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+      Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+      Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+      GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+      Given FreezerEvaporatorThermistorValidityIs(Valid);
+      Given FreezerThermistorValidityIs(Valid);
+      Given FreshFoodThermistorValidityIs(Valid);
+      GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+      Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   }
 };
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_HeaterOn);
@@ -1006,7 +1112,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTem
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Idle);
@@ -1015,7 +1121,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Prechill);
@@ -1024,7 +1130,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Dwell);
@@ -1033,7 +1139,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Prechill);
@@ -1042,7 +1148,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFiltered
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_HeaterOn);
@@ -1051,7 +1157,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFiltered
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Dwell);
@@ -1060,7 +1166,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTem
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPostDwell)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_PostDwell);
@@ -1069,7 +1175,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Idle);
@@ -1078,7 +1184,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Disabled);
@@ -1087,7 +1193,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Disabled);
@@ -1096,7 +1202,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreshFoodDefrostWasAbnormal)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreshFoodDefrostWasAbnormal)
 {
    Given LastFreshFoodDefrostWasAbnormal();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -1105,7 +1211,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreshFo
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreezerDefrostWasAbnormal)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreezerDefrostWasAbnormal)
 {
    Given LastFreezerDefrostWasAbnormal();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -1114,7 +1220,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreezer
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastConvertibleCompartmentDefrostWasAbnormal)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastConvertibleCompartmentDefrostWasAbnormal)
 {
    Given HasConvertibleCompartment();
    Given LastConvertibleCompartmentDefrostWasAbnormal();
@@ -1124,7 +1230,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastConvert
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndResetFreezerWasTooWarmErdToFalse)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndResetFreezerWasTooWarmErdToFalse)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -1134,7 +1240,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasT
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndLastFreezerDefrostWasAbnormalAndResetFreezerWasTooWarmErdToFalse)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndLastFreezerDefrostWasAbnormalAndResetFreezerWasTooWarmErdToFalse)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And LastFreezerDefrostWasAbnormal();
@@ -1145,12 +1251,29 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasT
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsFalseAndFreezerThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndHasBeenDiscoveredAndInvalidFreezerEvaporatorThermistorDuringDefrostIsFalseAndFreezerThermistorIsValid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   And FreezerEvaporatorThermistorValidityIs(Invalid);
+   And InvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndHasNotBeenDiscoveredAndInvalidFreezerEvaporatorThermistorDuringDefrostIsFalseAndFreezerThermistorIsValid)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenFreezerEvapThermistorHasNotBeenDiscovered();
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    And FreezerEvaporatorThermistorValidityIs(Invalid);
@@ -1158,10 +1281,10 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvap
    And FreezerThermistorValidityIs(Valid);
 
    When ReadyToDefrost();
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsValid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1177,7 +1300,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvap
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsInvalid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1193,7 +1316,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvap
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsValidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsValidAndInvalidFreezerEvaporatorThermistorDuringDefrostIsTrueAndFreezerThermistorIsValid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1209,34 +1332,32 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvap
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldSetDisableMinimumCompressorOnTimesWhenEnteringHeaterOnEntry)
+TEST(Defrost_SingleEvapSideBySide, ShouldSetDisableMinimumCompressorOnTimesWhenEnteringHeaterOnEntry)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
    DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
 }
-TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringIdle)
+
+TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringIdle)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechillPrep)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechill)
 {
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeInMinutes - 1);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValidAndDontSkipPrechillPrepIsNotSet)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValidAndDontSkipPrechillPrepIsNotSet)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1250,7 +1371,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrosts
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndInvalidFreezerEvapThermistorDuringDefrostIsTrueAndDontSkipPrechillIsSet)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenReadyToDefrostAndInvalidFreezerEvapThermistorDuringDefrostIsTrueAndDontSkipPrechillIsSet)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1267,8 +1388,12 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndInvalidFreez
    And DontSkipPrechillPrepErdShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldOnlyGoToPrechillPrepOnceWhenDontSkipPrechillIsSetIfConditionsAreNotPresentForItToGoToPrechillPrepNormallyAndInThisCaseItShouldGoToHeaterOnEntryInsteadOfPrechillPrepNextTime)
+TEST(Defrost_SingleEvapSideBySide, ShouldOnlyGoToPrechillPrepOnceWhenDontSkipPrechillIsSetIfConditionsAreNotPresentForItToGoToPrechillPrepNormallyAndInThisCaseItShouldGoToHeaterOnEntryInsteadOfPrechillPrepNextTime)
 {
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInPrechillPrepBecauseDontSkipPrechillErdWasSet();
 
    When DefrostTransitionsFromPrechillPrepToPrechillToHeaterOnEntryToHeaterOnToDwellToPostDwellThenToIdle();
@@ -1278,7 +1403,7 @@ TEST(Defrost_SingleEvap, ShouldOnlyGoToPrechillPrepOnceWhenDontSkipPrechillIsSet
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1287,6 +1412,7 @@ TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerThermisto
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    And InvalidFreezerEvaporatorThermistorDuringDefrostIs(true);
    And DontSkipPrechillErdIs(SET);
 
@@ -1294,12 +1420,13 @@ TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerThermisto
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerEvaporatorThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    And FreezerEvaporatorThermistorValidityIs(Invalid);
    And FreezerThermistorValidityIs(Valid);
@@ -1310,7 +1437,7 @@ TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerEvaporato
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearUseAhamPrechillTimeErdOnEntryToPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldClearUseAhamPrechillTimeErdOnEntryToPrechillPrep)
 {
    Given UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagIs(SET);
    And LastFreshFoodDefrostWasNormal();
@@ -1328,14 +1455,16 @@ TEST(Defrost_SingleEvap, ShouldClearUseAhamPrechillTimeErdOnEntryToPrechillPrep)
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given FreezerThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    WhenPrechillConditionsAreMet();
@@ -1343,12 +1472,13 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillCo
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToPrechillWhenPrechillConditionsNotMetWhileInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToPrechillWhenPrechillConditionsNotMetWhileInPrechillPrep)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When CompressorIs(OFF);
@@ -1360,24 +1490,28 @@ TEST(Defrost_SingleEvap, ShouldNotGoToPrechillWhenPrechillConditionsNotMetWhileI
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillConditionsMetWhileInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillWhenPrechillConditionsMetWhileInPrechillPrep)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    WhenPrechillConditionsAreMet();
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPrechillPrep)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    After((defrostData.prechillPrepData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN) - 1);
@@ -1387,7 +1521,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPr
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasTooWarmOnPowerUp)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasTooWarmOnPowerUp)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
@@ -1415,7 +1549,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasT
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwellExitTimeIfPostDwellExitTimeIsFreshFoodOnly)
+TEST(Defrost_SingleEvapSideBySide, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwellExitTimeIfPostDwellExitTimeIsFreshFoodOnly)
 {
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
@@ -1434,7 +1568,7 @@ TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwe
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterPostDwellExitTimeIfCurrentDefrostIsFull)
+TEST(Defrost_SingleEvapSideBySide, ShouldExitPostDwellAndGoToIdleAfterPostDwellExitTimeIfCurrentDefrostIsFull)
 {
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
@@ -1453,13 +1587,14 @@ TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterPostDwellExitTimeIfC
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalidAndHasBeenDiscovered)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -1467,7 +1602,22 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreez
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalidWhileSabbathModeIsEnabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenEnteringPrechillPrepAndFreezerThermistorIsInvalidAndHasNotBeenDiscovered)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorValidityIs(Invalid);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenFreezerThermistorHasNotBeenDiscovered();
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalidWhileSabbathModeIsEnabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1482,7 +1632,7 @@ TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFr
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalidWhileEnhancedSabbathModeIsEnabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreezerThermistorIsAlreadyInvalidWhileEnhancedSabbathModeIsEnabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1497,29 +1647,52 @@ TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenEnteringPrechillPrepAndFr
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenSabbathModeIsDisabledWhileReadyToDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenSabbathModeIsDisabledWhileReadyToDefrostAndFreezerThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    GivenSabbathModeIs(ENABLED);
-   Given ReadyToDefrost();
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
    WhenSabbathModeIs(DISABLED);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnhancedSabbathModeIsDisabledWhileReadyToDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenSabbathModeIsDisabledWhileReadyToDefrostAndFreezerThermistorIsInvalidAndHasNotBeenDiscovered)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasNotBeenDiscovered();
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenSabbathModeIs(ENABLED);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(DISABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnhancedSabbathModeIsDisabledWhileReadyToDefrostAndFreezerThermistorIsInvalidAndHasBeenDiscovered)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    GivenEnhancedSabbathModeIs(ENABLED);
@@ -1529,7 +1702,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnhancedSabbathModeIsDisable
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileSabbathModeIsEnabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileSabbathModeIsEnabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1544,7 +1717,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileS
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsDisabledIfEnhancedSabbathHasNotRequestedADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsDisabledIfEnhancedSabbathHasNotRequestedADefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1561,7 +1734,7 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhance
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsEnabledIfEnhancedSabbathHasNotRequestedADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsEnabledIfEnhancedSabbathHasNotRequestedADefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1578,7 +1751,7 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhance
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileSabbathModeIsDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileSabbathModeIsDisabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1593,7 +1766,7 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileSabbath
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsDisabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1608,7 +1781,7 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhance
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathModeIsEnabledWhileSabbathIsReadyToDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenSabbathModeIsEnabledWhileSabbathIsReadyToDefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1623,7 +1796,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathModeIsEnabledWhileSabb
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenEnhancedSabbathModeIsEnabledWhileSabbathIsReadyToDefrostIfEnhancedSabbathHasNotRequestedADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenEnhancedSabbathModeIsEnabledWhileSabbathIsReadyToDefrostIfEnhancedSabbathHasNotRequestedADefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1639,9 +1812,10 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenEnhancedSabbathModeIsEnabledWhileSa
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechillPrepAndFreezerThermistorHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Valid);
+   GivenFreezerThermistorHasBeenDiscovered();
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -1649,24 +1823,44 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInva
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidWhileInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechillPrepAndFreezerThermistorHasNotBeenDiscovered)
+{
+   Given FreezerThermistorValidityIs(Valid);
+   GivenFreezerThermistorHasNotBeenDiscovered();
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When FreezerThermistorValidityIs(Invalid);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidWhileInPrechillPrepAndFreezerEvapThermistorHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When FreezerEvaporatorThermistorValidityIs(Invalid);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForSecondaryOnlyDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidWhileInPrechillPrepAndFreezerEvapThermistorHasNotBeenDiscovered)
+{
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenFreezerEvapThermistorHasNotBeenDiscovered();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When FreezerEvaporatorThermistorValidityIs(Invalid);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForSecondaryOnlyDefrost)
 {
    Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 
@@ -1677,14 +1871,11 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForFullDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForFullDefrost)
 {
    Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    After(defrostData.prechillData.maxPrechillTimeInMinutes * MSEC_PER_MIN - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
@@ -1693,14 +1884,11 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForSecondaryOnlyDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForSecondaryOnlyDefrost)
 {
    Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes - OneMinute);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
    CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 
    After(OneMinute * MSEC_PER_MIN - 1);
@@ -1710,14 +1898,11 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeTha
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForFullDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForFullDefrost)
 {
    Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeInMinutes - OneMinute);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
    CurrentDefrostTypeShouldBe(DefrostType_Full);
 
    After(OneMinute * MSEC_PER_MIN - 1);
@@ -1727,7 +1912,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeTha
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndMaxPrechillTimeAlreadyMet)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndMaxPrechillTimeAlreadyMet)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
@@ -1736,7 +1921,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndMaxPrechi
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndPrechillConditionsHaveBeenMetForLongerThanMaxPrechillTime)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndPrechillConditionsHaveBeenMetForLongerThanMaxPrechillTime)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
@@ -1745,13 +1930,10 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndPrechillC
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerEvapTemperatureGoesBelowExitThreshold)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerEvapTemperatureGoesBelowExitThresholdAndFreezerEvapThermistorIsValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 2);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
@@ -1760,23 +1942,27 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerEvapTemp
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerEvapTemperatureAlreadyBelowExitThreshold)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerEvapTemperatureAlreadyBelowExitThresholdAndFreezerEvapThermistorIsValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    WhenPrechillConditionsAreMet();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerTemperatureGoesBelowExitThreshold)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerTemperatureGoesBelowExitThresholdAndFreezerThermistorIsValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 2);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
@@ -1785,147 +1971,204 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerTemperat
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerTemperatureAlreadyBelowExitThreshold)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenInPrechillAndFreezerTemperatureGoesBelowExitThresholdIfFreezerThermistorIsInvalid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerThermistorValidityIs(Invalid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerTemperatureAlreadyBelowExitThreshold)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    WhenPrechillConditionsAreMet();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureDecreasesToExitThresholdAndFreshFoodThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureDecreasesToExitThresholdAndFreshFoodThermistorIsValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Valid);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureDecreasesToExitThresholdAndFreshFoodThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureDecreasesToExitThresholdAndFreshFoodThermistorIsInvalid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Invalid);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreshFoodThermistorValidityIs(Invalid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
    When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsValid)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100);
-
-   WhenPrechillConditionsAreMet();
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillAndStayWhenPrechillConditionsAreMetDuringPrechillPrepWithFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsInvalid)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Invalid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100);
-
-   WhenPrechillConditionsAreMet();
-   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureIncreasesToExitThresholdAndFreshFoodThermistorIsValid)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
    Given FreshFoodThermistorValidityIs(Valid);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100 - 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-
-   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureIncreasesToExitThresholdAndFreshFoodThermistorIsInvalid)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Invalid);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100 - 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-
-   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
-   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillConditionsAreMetDuringPrechillPrepWithFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsValid)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
-
-   WhenPrechillConditionsAreMet();
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillAndStayWhenPrechillConditionsAreMetDuringPrechillPrepWithFreshFoodTemperatureAlreadyAtExitThresholdButFreshFoodThermistorIsInvalid)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FreshFoodThermistorValidityIs(Invalid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
-
-   WhenPrechillConditionsAreMet();
-   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechill)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   WhenPrechillConditionsAreMet();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillAndStayWhenPrechillConditionsAreMetDuringPrechillPrepWithFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsInvalid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreshFoodThermistorValidityIs(Invalid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   WhenPrechillConditionsAreMet();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillAndStayWhenPrechillConditionsAreMetDuringPrechillPrepWithFreezerTemperatureAlreadyAtExitThresholdAndFreezerThermistorIsInvalid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Invalid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   WhenPrechillConditionsAreMet();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillAndStayWhenPrechillConditionsAreMetDuringPrechillPrepWithFreezerEvapTemperatureAlreadyAtExitThresholdAndFreezerEvapThermistorIsInvalid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   WhenPrechillConditionsAreMet();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureIncreasesToExitThresholdAndFreshFoodThermistorIsValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100 - 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemperatureIncreasesToExitThresholdAndFreshFoodThermistorIsInvalid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100 - 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreshFoodThermistorValidityIs(Invalid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+
+   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenPrechillConditionsAreMetDuringPrechillPrepWithFreshFoodTemperatureAlreadyAtExitThresholdAndFreshFoodThermistorIsValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMaxTempInDegFx100);
+
+   WhenPrechillConditionsAreMet();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechillAndFreezerThermistorHasBeenDiscovered)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   GivenFreezerThermistorHasBeenDiscovered();
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When FreezerThermistorValidityIs(Invalid);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidWhileInPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidWhileInPrechillAndFreezerEvapThermistorHasBeenDiscovered)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given FreezerThermistorValidityIs(Valid);
-   Given FreezerEvaporatorThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When FreezerEvaporatorThermistorValidityIs(Invalid);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteForLoadsOnEntryToPrechill)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    CompressorSpeedVoteShouldBe(defrostData.prechillData.prechillCompressorSpeed);
    FreezerEvapFanSpeedVoteShouldBe(defrostData.prechillData.prechillFreezerEvapFanSpeed);
@@ -1933,7 +2176,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    IceCabinetFanSpeedVoteShouldBe(defrostData.prechillData.prechillIceCabinetFanSpeed);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnEntryLoadsWhenEnteringHeaterOnEntryState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1941,12 +2184,15 @@ TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnEntryLoadsWhenEnteringHeaterOnEntr
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
-   FreshFoodDamperPositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition);
-   ConvertibleCompartmentDamperVoteShouldBe(DamperPosition_Closed);
-   SealedSystemValvePositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntrySealedSystemValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteForFreshFoodDamperBasedOnParametricallyDefinedPositionOnEntryToHeaterOnEntry)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+   FreshFoodDamperPositionVoteShouldBe(DamperPosition_Open);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1959,7 +2205,7 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDi
    SealedSystemValvePositionVoteShouldBeDontCare();
 }
 
-TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAndEnableMinimumCompressorTimesAfterDefrostHeaterOnDelayTimerExpired)
+TEST(Defrost_SingleEvapSideBySide, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAndEnableMinimumCompressorTimesAfterDefrostHeaterOnDelayTimerExpired)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1973,7 +2219,7 @@ TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAn
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnLoadsUponEntryToHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteCompressorAndFansOffAndFreshFoodDamperPositionBasedOnParametricallyDefinedPositionUponEntryToHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1991,7 +2237,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnLoadsUponEntryToHeaterOn)
    SealedSystemValvePositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntrySealedSystemValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2008,7 +2254,7 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisable
    FreezerDefrostHeaterVoteShouldBeDontCare();
 }
 
-TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsValid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given NumberOfFreezerDefrostsIs(1);
@@ -2021,7 +2267,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCou
    And DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotTurnOffDefrostHeaterAndShouldNotIncrementFreezerDefrostCountAndShouldNotTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotTurnOffDefrostHeaterAndShouldNotIncrementFreezerDefrostCountAndShouldNotTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsInvalid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given NumberOfFreezerDefrostsIs(1);
@@ -2034,7 +2280,7 @@ TEST(Defrost_SingleEvap, ShouldNotTurnOffDefrostHeaterAndShouldNotIncrementFreez
    And DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearFreezerDefrostWasAbnormalAndFreezerDefrostHeaterOnForMaxTimeFaultWhenFreezerHeaterOnTimeIsLessThanFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldClearFreezerDefrostWasAbnormalAndFreezerDefrostHeaterOnForMaxTimeFaultWhenFreezerHeaterOnTimeIsLessThanFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsValid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -2048,7 +2294,7 @@ TEST(Defrost_SingleEvap, ShouldClearFreezerDefrostWasAbnormalAndFreezerDefrostHe
    FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeaterOnTimeIsEqualToFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeaterOnTimeIsEqualToFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsInvalid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
@@ -2060,7 +2306,7 @@ TEST(Defrost_SingleEvap, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeate
    FreezerDefrostWasAbnormalFlagShouldBe(SET);
 }
 
-TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitionToDwellStateWhenFreezerHeaterOnTimeReachesMaxOnTime)
+TEST(Defrost_SingleEvapSideBySide, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitionToDwellStateWhenFreezerHeaterOnTimeReachesMaxOnTime)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given NumberOfFreezerDefrostsIs(1);
@@ -2073,7 +2319,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCou
    And DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountAndSetFreezerDefrostWasAbnormalAndSaveTheFreezerDefrostCountAsTheLastAbnormalFreezerDefrostCountWhenFreezerHeaterOnTimeReachesAbnormalTime)
+TEST(Defrost_SingleEvapSideBySide, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountAndSetFreezerDefrostWasAbnormalAndSaveTheFreezerDefrostCountAsTheLastAbnormalFreezerDefrostCountWhenFreezerHeaterOnTimeReachesAbnormalTime)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given NumberOfFreezerAbnormalDefrostsIs(1);
@@ -2087,7 +2333,7 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    And FreezerDefrostWasAbnormalFlagShouldBe(SET);
 }
 
-TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountJustOnce)
+TEST(Defrost_SingleEvapSideBySide, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountJustOnce)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given NumberOfFreezerAbnormalDefrostsIs(1);
@@ -2101,7 +2347,7 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    NumberOfFreezerAbnormalDefrostsShouldBe(2);
 }
 
-TEST(Defrost_SingleEvap, ShouldDisableMinimumCompressorTimesAndRequestValveHomingAndVoteForDwellLoadsWhenEnteringDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldDisableMinimumCompressorTimesAndRequestValveHomingAndVoteForDwellLoadsWhenEnteringDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2120,13 +2366,13 @@ TEST(Defrost_SingleEvap, ShouldDisableMinimumCompressorTimesAndRequestValveHomin
    SealedSystemValvePositionVoteShouldBe(defrostData.dwellData.dwellSealedSystemValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodDamperWhenEnteringDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteForFreshFoodDamperWhenEnteringDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
    FreshFoodDamperPositionVoteShouldBe(defrostData.dwellData.dwellFreshFoodDamperPosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2137,7 +2383,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldDisableMinimumCompressorTimesAndVoteForPostDwellLoadsWhenEnteringPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldDisableMinimumCompressorTimesAndVoteForPostDwellLoadsWhenEnteringPostDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
@@ -2154,7 +2400,7 @@ TEST(Defrost_SingleEvap, ShouldDisableMinimumCompressorTimesAndVoteForPostDwellL
    SealedSystemValvePositionVoteShouldBe(defrostData.postDwellData.postDwellSealedSystemValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForSecondaryOnlyDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForSecondaryOnlyDefrost)
 {
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2166,7 +2412,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForSec
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForFullDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForFullDefrost)
 {
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2178,7 +2424,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForFul
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsLessThanExitTemperatureAndFreezerEvaporatorThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsLessThanExitTemperatureAndFreezerEvaporatorThermistorIsValid)
 {
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2187,7 +2433,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureI
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatureIsLessThanExitTemperatureAndFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatureIsLessThanExitTemperatureAndFreezerEvaporatorThermistorIsInvalid)
 {
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2196,7 +2442,7 @@ TEST(Defrost_SingleEvap, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatu
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsEqualToExitTemperatureAndFreezerEvaporatorThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsEqualToExitTemperatureAndFreezerEvaporatorThermistorIsValid)
 {
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2205,7 +2451,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureI
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatureIsEqualToExitTemperatureAndFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatureIsEqualToExitTemperatureAndFreezerEvaporatorThermistorIsInvalid)
 {
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2214,7 +2460,7 @@ TEST(Defrost_SingleEvap, ShouldNotTransitionToIdleWhenFreezerEvaporatorTemperatu
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotCareAboutPostDwellLoadsAndEnableMinimumCompressorTimesWhenEnteringIdleFromPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotCareAboutPostDwellLoadsAndEnableMinimumCompressorTimesWhenEnteringIdleFromPostDwell)
 {
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2231,7 +2477,7 @@ TEST(Defrost_SingleEvap, ShouldNotCareAboutPostDwellLoadsAndEnableMinimumCompres
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringIdleOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringIdleOnInit)
 {
    Given WaitingToDefrostIs(false);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -2239,7 +2485,7 @@ TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringIdleOnI
    WaitingToDefrostShouldBe(true);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellOnInit)
 {
    Given WaitingToDefrostIs(false);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2247,7 +2493,7 @@ TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwe
    WaitingToDefrostShouldBe(true);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellFromDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellFromDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
    WaitingToDefrostShouldBe(false);
@@ -2260,7 +2506,7 @@ TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwe
    WaitingToDefrostIs(true);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringIdleOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToDefrostingErdWhenEnteringIdleOnInit)
 {
    Given DefrostingIs(true);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -2268,7 +2514,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringIdleOnInit)
    DefrostingShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellOnInit)
 {
    Given DefrostingIs(true);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
@@ -2276,7 +2522,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellOnI
    DefrostingShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringDwellOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteTrueToDefrostingErdWhenEnteringDwellOnInit)
 {
    Given DefrostingIs(false);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
@@ -2284,7 +2530,7 @@ TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringDwellOnInit)
    DefrostingShouldBe(true);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringHeaterOnEntryOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteTrueToDefrostingErdWhenEnteringHeaterOnEntryOnInit)
 {
    Given DefrostingIs(false);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
@@ -2292,7 +2538,7 @@ TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringHeaterOnEntry
    DefrostingShouldBe(true);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellFromDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellFromDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
    DefrostingShouldBe(true);
@@ -2305,7 +2551,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellFro
    DefrostingShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringPrechillPrepFromIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringPrechillPrepFromIdle)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -2321,7 +2567,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringPrechi
    WaitingToDefrostShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromWaitingToDefrostStateToDisabledWhenDisableIsRequested)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionFromWaitingToDefrostStateToDisabledWhenDisableIsRequested)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2329,7 +2575,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromWaitingToDefrostStateToDisabledWhen
    DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromDefrostingStateToDisabledWhenDisableIsRequested)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionFromDefrostingStateToDisabledWhenDisableIsRequested)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2337,7 +2583,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromDefrostingStateToDisabledWhenDisabl
    DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    WaitingToDefrostShouldBe(true);
@@ -2346,7 +2592,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringDisabl
    WaitingToDefrostShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    DefrostingShouldBe(true);
@@ -2355,7 +2601,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
    DefrostingShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromHeaterOnToDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromHeaterOnToDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerDefrostHeaterVoteIs(HeaterState_On);
@@ -2364,7 +2610,7 @@ TEST(Defrost_SingleEvap, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromH
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromIdleToDisabled)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromIdleToDisabled)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    Given FreezerDefrostHeaterVoteIs(HeaterState_On);
@@ -2373,7 +2619,7 @@ TEST(Defrost_SingleEvap, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromI
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBecomesEnabledAndTransitionsFromDisabledToIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBecomesEnabledAndTransitionsFromDisabledToIdle)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
@@ -2383,7 +2629,7 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBe
    FreezerDefrostHeaterVoteShouldBeDontCare();
 }
 
-TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
 {
    Given NextDefrostTypeOverrideIs(DefrostType_Full);
    And CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
@@ -2399,7 +2645,7 @@ TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefr
    CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryFromIdleWhenReadyToDefrostAndEepromIsClearedOnStartup)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryFromIdleWhenReadyToDefrostAndEepromIsClearedOnStartup)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    Given ClearedEepromOnStartupIs(true);
@@ -2409,7 +2655,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryFromIdleWhenReadyToDefro
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefrostAndNotSetFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsInvalidAndMaxOnTimeReachesOnHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefrostAndNotSetFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsInvalidAndMaxOnTimeReachesOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
@@ -2420,7 +2666,7 @@ TEST(Defrost_SingleEvap, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefros
    FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostAndSetFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsValidAndMaxOnTimeReachesOnHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostAndSetFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsValidAndMaxOnTimeReachesOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
@@ -2432,7 +2678,7 @@ TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefr
    FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(SET);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostAndFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsValidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostAndFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsValidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -2444,7 +2690,7 @@ TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefr
    FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotClearInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsInvalidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotClearInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsInvalidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
@@ -2454,7 +2700,7 @@ TEST(Defrost_SingleEvap, ShouldNotClearInvalidFreezerEvaporatorThermistorDuringD
    InvalidFreezerEvaporatorThermistorDuringDefrostShouldBe(SET);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInIdleState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInIdleState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2463,9 +2709,10 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleState)
 {
    Given FreezerThermistorValidityIs(Valid);
+   GivenFreezerThermistorHasBeenDiscovered();
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2474,9 +2721,10 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestSta
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleStateButTheFreezerThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleStateButTheFreezerThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2485,10 +2733,11 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleStateButTheFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInIdleStateButTheFreezerEvaporatorThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
@@ -2496,7 +2745,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInIdleState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInIdleState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2505,7 +2754,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPostDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPostDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
@@ -2514,7 +2763,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPostDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPostDwellState)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -2525,7 +2774,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestSta
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPostDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPostDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
@@ -2534,7 +2783,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPrechillPrepState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPrechillPrepState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -2543,7 +2792,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPrechillPrepState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPrechillPrepState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -2552,7 +2801,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestSta
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPrechillPrepState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPrechillPrepState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -2561,52 +2810,37 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPrechillState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPrechillState)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given FreezerThermistorValidityIs(Valid);
-   Given FreezerEvaporatorThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPrechillState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPrechillState)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given FreezerThermistorValidityIs(Valid);
-   Given FreezerEvaporatorThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPrechillState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInPrechillState)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
-   Given FreezerThermistorValidityIs(Valid);
-   Given FreezerEvaporatorThermistorValidityIs(Valid);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Defrost);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInHeaterOnEntryState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -2615,7 +2849,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInHeaterOnEntryState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -2624,7 +2858,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillAndClearTheDefrostTestStateRe
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInHeaterOnEntryState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -2633,7 +2867,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInHeaterOnState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInHeaterOnState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2642,7 +2876,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInHeaterOnState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInHeaterOnState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2651,7 +2885,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillAndClearTheDefrostTestStateRe
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInHeaterOnState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInHeaterOnState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2660,7 +2894,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesAndVoteDontCareForDwellLoadsWhenIdleTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesAndVoteDontCareForDwellLoadsWhenIdleTestIsRequestedInDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2682,7 +2916,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateReques
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellState)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -2694,10 +2928,12 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestSta
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestAndNotEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestAndNotEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Valid);
+   GivenFreezerThermistorHasBeenDiscovered();
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   GivenFreezerEvapThermistorHasBeenDiscovered();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
@@ -2706,9 +2942,10 @@ TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndCl
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellStateBecauseFreezerThermistorIsInvalid)
+TEST(Defrost_SingleEvapSideBySide, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellStateBecauseFreezerThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Invalid);
+   GivenFreezerThermistorHasBeenDiscovered();
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2717,7 +2954,7 @@ TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndCl
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenDefrostTestIsRequestedInDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2726,7 +2963,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
@@ -2735,7 +2972,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnEntryState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnEntryState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -2744,7 +2981,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInIdle)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -2753,7 +2990,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedI
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechillPrep)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechillPrep)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -2762,16 +2999,16 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedI
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechill)
 {
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDwell)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
@@ -2780,7 +3017,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedI
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPostDwell)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
@@ -2789,7 +3026,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedI
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDisabledState)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDisabledState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
 
@@ -2798,7 +3035,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedI
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenIdleTestIsRequestedInDisabledState)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenIdleTestIsRequestedInDisabledState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
 
@@ -2807,7 +3044,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenIdleTestIsRequestedInDisabledState)
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenDefrostTestIsRequestedInDisabledState)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenDefrostTestIsRequestedInDisabledState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
 
@@ -2816,7 +3053,7 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenDefrostTestIsRequestedInDisabledStat
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldDoNothingWhenPrechillTestIsRequestedInDisabledState)
+TEST(Defrost_SingleEvapSideBySide, ShouldDoNothingWhenPrechillTestIsRequestedInDisabledState)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
 
@@ -2825,14 +3062,14 @@ TEST(Defrost_SingleEvap, ShouldDoNothingWhenPrechillTestIsRequestedInDisabledSta
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldThrowAssertionWhenFreezerFilteredTemperatureTooWarmOnPowerUpReadyIsSet)
+TEST(Defrost_SingleEvapSideBySide, ShouldThrowAssertionWhenFreezerFilteredTemperatureTooWarmOnPowerUpReadyIsSet)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
 
    ShouldAssertOnInitialization();
 }
 
-TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAPrechillTestAsFirstFullDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAPrechillTestAsFirstFullDefrost)
 {
    Given FreezerThermistorValidityIs(true);
    Given FreezerEvaporatorThermistorValidityIs(true);
@@ -2844,7 +3081,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAnIdleTestAfterItExitsIdle)
+TEST(Defrost_SingleEvapSideBySide, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAnIdleTestAfterItExitsIdle)
 {
    Given FreezerThermistorValidityIs(true);
    Given FreezerEvaporatorThermistorValidityIs(true);
@@ -2860,7 +3097,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningADefrostTestAsFirstFullDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningADefrostTestAsFirstFullDefrost)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -2870,7 +3107,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDontSkipPrechillPrepFlagIsSet)
+TEST(Defrost_SingleEvapSideBySide, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDontSkipPrechillPrepFlagIsSet)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    And DontSkipPrechillErdIs(SET);
@@ -2880,7 +3117,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDon
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenSabbathIsReadyToDefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenSabbathIsReadyToDefrost)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(ENABLED);
@@ -2890,7 +3127,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenSab
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathModesAreActiveAndEnhancedSabbathIsRequestingADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathModesAreActiveAndEnhancedSabbathIsRequestingADefrost)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(ENABLED);
@@ -2901,7 +3138,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsRea
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndSabbathModeIsInactiveAndEnhancedSabbathModeIsActiveAndEnhancedSabbathIsRequestingADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndSabbathModeIsInactiveAndEnhancedSabbathModeIsActiveAndEnhancedSabbathIsRequestingADefrost)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(DISABLED);
@@ -2912,7 +3149,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsRea
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToPrechillPrepWhenSabbathIsReadyToDefrostAndSabbathModeIsActiveAndEnhancedSabbathModeIsInactiveAndEnhancedSabbathIsRequestingADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionFromIdleToPrechillPrepWhenSabbathIsReadyToDefrostAndSabbathModeIsActiveAndEnhancedSabbathModeIsInactiveAndEnhancedSabbathIsRequestingADefrost)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -2924,7 +3161,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToPrechillPrepWhenSabbathIsRead
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathAreActiveAndEnhancedSabbathModeDidNotRequestADefrost)
+TEST(Defrost_SingleEvapSideBySide, ShouldStayInIdleWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathAreActiveAndEnhancedSabbathModeDidNotRequestADefrost)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(ENABLED);
@@ -2935,7 +3172,7 @@ TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostAndBothSabba
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenEnhancedSabbathIsRequestingADefrostAndSabbathIsAlreadyReadyToDefrostAndEnhancedSabbathIsAlreadyActive)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryWhenEnhancedSabbathIsRequestingADefrostAndSabbathIsAlreadyReadyToDefrostAndEnhancedSabbathIsAlreadyActive)
 {
    GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(DISABLED);
@@ -2946,7 +3183,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenEnhancedSabbathIsReq
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsTooWarmOnPowerUpWhileDefrostStateIsHeaterOnOnInit)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsTooWarmOnPowerUpWhileDefrostStateIsHeaterOnOnInit)
 {
    GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    GivenClearedEepromOnStartupIs(true);
@@ -2956,7 +3193,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStar
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
    GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    GivenClearedEepromOnStartupIs(true);
@@ -2966,7 +3203,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStar
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
    GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    GivenClearedEepromOnStartupIs(true);
@@ -2976,7 +3213,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStar
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
    GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    GivenClearedEepromOnStartupIs(true);
@@ -2986,7 +3223,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStar
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
+TEST(Defrost_SingleEvapSideBySide, ShouldPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -2996,7 +3233,7 @@ TEST(Defrost_SingleEvap, ShouldPreserveDamperPositionGridVoteWhenPrechillConditi
    FreshFoodDamperPositionVoteShouldBe(someOtherDamperPosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
+TEST(Defrost_SingleEvapSideBySide, ShouldPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -3006,7 +3243,7 @@ TEST(Defrost_SingleEvap, ShouldPreserveSealedSystemValvePositionGridVoteWhenPrec
    SealedSystemValvePositionVoteShouldBe(someOtherValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -3016,7 +3253,7 @@ TEST(Defrost_SingleEvap, ShouldNotPreserveDamperPositionGridVoteWhenPrechillCond
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillData.prechillFreshFoodDamperPosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
@@ -3026,10 +3263,9 @@ TEST(Defrost_SingleEvap, ShouldNotPreserveSealedSystemValvePositionGridVoteWhenP
    SealedSystemValvePositionVoteShouldBe(defrostData.prechillData.prechillSealedSystemValvePosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreezerTemperatureIsMinAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreezerTemperatureIsMinAndThermistorIsValid)
 {
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    WhenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreezerMinTempInDegFx100 + 1);
@@ -3039,10 +3275,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleComp
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMinAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMinAndThermistorIsValid)
 {
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    WhenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
@@ -3052,10 +3287,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleComp
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMaxAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMaxAndThermistorIsValid)
 {
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
+   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
 
    WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    WhenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100 - 1);
@@ -3065,10 +3299,17 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndConvertibleComp
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetExitConditionIsHitButThermistorIsNotValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotGoToHeaterOnEntryWhenInPrechillAndConvertibleCompartmentCabinetExitConditionIsHitButThermistorIsNotValid)
 {
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   GivenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given FreshFoodThermistorValidityIs(Valid);
    GivenConvertibleCompartmentCabinetThermistorValidityIs(Invalid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
    WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    WhenConvertibleCompartmentCabinetTemperatureIs(defrostData.prechillData.prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100);
@@ -3082,7 +3323,7 @@ TEST(Defrost_SingleEvap, ShouldNotGoToHeaterOnEntryWhenInPrechillAndConvertibleC
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreezerTemperatureIsMinAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreezerTemperatureIsMinAndThermistorIsValid)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
@@ -3095,7 +3336,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertib
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMinAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMinAndThermistorIsValid)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
@@ -3108,7 +3349,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertib
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMaxAndThermistorIsValid)
+TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertibleCompartmentCabinetAsFreshFoodTemperatureIsMaxAndThermistorIsValid)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
    GivenConvertibleCompartmentCabinetThermistorValidityIs(Valid);
@@ -3119,4 +3360,1328 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenPrechillIsEnteredIfConvertib
 
    WhenPrechillConditionsAreMet();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST_GROUP(Defrost_SingleEvapAllFreezer)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   Defrost_t instance;
+   PlatformData_t platformData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleDoorSingleEvapAllFreezer);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Freezer);
+      platformData.numberOfEvaporators = 1;
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
+   }
+
+   void DefrostIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostType_t currentDefrostType;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &currentDefrostType);
+
+      switch(state)
+      {
+         case DefrostHsmState_Idle:
+            GivenDefrostStateIs(DefrostState_Idle);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            break;
+
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given FreezerEvaporatorThermistorValidityIs(Valid);
+            Given FreezerThermistorValidityIs(Valid);
+
+            When ReadyToDefrost();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         default:
+            break;
+      }
+   }
+
+   void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t convertibleCompartmentStateType)
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &convertibleCompartmentStateType);
+   }
+
+   void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
+   {
+      DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
+   }
+
+   void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FreezerEvaporatorThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void CompressorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
+   }
+
+   void CoolingModeIs(CoolingMode_t mode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
+   }
+
+   void ReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
+   }
+
+   void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
+   {
+      DefrostHsmState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WhenTripleEvapPrechillConditionsAreMet()
+   {
+      CompressorIs(ON);
+      CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   }
+};
+
+TEST(Defrost_SingleEvapAllFreezer, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapAllFreezer, ShouldGoToPrechillWhenEnteringPrechillPrepAndCompressorIsOnAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapAllFreezer, ShouldGoToPrechillWhenCompressorTurnsOnWhileInPrechillPrep)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST_GROUP(Defrost_SingleEvapAllFreshFood)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   Defrost_t instance;
+   PlatformData_t platformData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleDoorSingleEvapAllFreshFood);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_FreshFood);
+      platformData.numberOfEvaporators = 1;
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
+   }
+
+   void DefrostIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostType_t currentDefrostType;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &currentDefrostType);
+
+      switch(state)
+      {
+         case DefrostHsmState_Idle:
+            GivenDefrostStateIs(DefrostState_Idle);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            break;
+
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given FreezerEvaporatorThermistorValidityIs(Valid);
+            Given FreezerThermistorValidityIs(Valid);
+
+            When ReadyToDefrost();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         default:
+            break;
+      }
+   }
+
+   void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t convertibleCompartmentStateType)
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &convertibleCompartmentStateType);
+   }
+
+   void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
+   {
+      DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
+   }
+
+   void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FreezerEvaporatorThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void FreshFoodThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
+   }
+
+   void CompressorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
+   }
+
+   void CoolingModeIs(CoolingMode_t mode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
+   }
+
+   void ReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
+   }
+
+   void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
+   {
+      DefrostHsmState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WhenTripleEvapPrechillConditionsAreMet()
+   {
+      CompressorIs(ON);
+      CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   }
+};
+
+TEST(Defrost_SingleEvapAllFreshFood, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   Given FreezerThermistorValidityIs(Invalid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvapAllFreshFood, ShouldGoToPrechillWhenEnteringPrechillPrepAndCompressorIsOnAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   Given FreezerThermistorValidityIs(Invalid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapAllFreshFood, ShouldGoToPrechillWhenCompressorTurnsOnWhileInPrechillPrep)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Invalid);
+   Given FreezerThermistorValidityIs(Invalid);
+   Given FreshFoodThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvapAllFreshFood, ShouldGoToPrechillWhenEnteringPrechillPrepIfFreezerTemperatureIsLessThanPrechillMinFreezerTemperatureIfFreezerThermistorIsInvalid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+static const DefrostIdleData_t dualEvapIdleData = {
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
+   .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 6 * MINUTES_PER_HOUR
+};
+
+static const DefrostPrechillPrepData_t dualEvapPrechillPrepData = {
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 2,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 1,
+   .maxPrechillPrepTimeInMinutes = 5
+};
+
+static const DefrostPrechillData_t dualEvapPrechillData = {
+   .maxPrechillTimeInMinutes = 10,
+   .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
+   .prechillSealedSystemValvePosition = SealedSystemValvePosition_B,
+   .prechillCompressorSpeed = CompressorSpeed_Low,
+   .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
+   .prechillFreshFoodEvapFanSpeed = FanSpeed_Low,
+   .prechillIceCabinetFanSpeed = FanSpeed_Medium,
+   .prechillDeliFanSpeed = FanSpeed_High,
+   .prechillConvertibleCompartmentDamperPosition = DamperPosition_Open,
+   .prechillConvertibleCompartmentFanSpeed = FanSpeed_High,
+   .prechillFreshFoodDamperPosition = DamperPosition_Closed,
+   .prechillFreezerMinTempInDegFx100 = -600,
+   .prechillFreshFoodMinTempInDegFx100 = 3200,
+   .prechillFreshFoodMaxTempInDegFx100 = 4600,
+   .prechillConvertibleCompartmentAsFreezerMinTempInDegFx100 = -600,
+   .prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 = 3200,
+   .prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100 = 4600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000
+};
+
+static const DefrostHeaterOnEntryData_t dualEvapHeaterOnEntryData = {
+   .defrostHeaterOnDelayAfterCompressorOffInSeconds = 2,
+   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open,
+   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_A
+};
+
+static const DefrostHeaterOnData_t dualEvapHeaterOnData = {
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
+   .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 20,
+   .freshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
+   .convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 35,
+   .convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 2,
+   .convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 25
+};
+
+static const DefrostDwellData_t dualEvapDwellData = {
+   .dwellTimeInMinutes = 7,
+   .dwellFreshFoodDamperPosition = DamperPosition_Closed,
+   .dwellSealedSystemValvePosition = SealedSystemValvePosition_B
+};
+
+static const DefrostPostDwellData_t dualEvapPostDwellData = {
+   .postDwellExitTimeInMinutes = 5,
+   .secondaryOnlyPostDwellExitTimeInMinutes = 10,
+   .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
+   .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
+   .postDwellSealedSystemValvePosition = SealedSystemValvePosition_B,
+   .postDwellCompressorSpeed = CompressorSpeed_Low,
+   .postDwellCondenserFanSpeed = FanSpeed_Low,
+   .postDwellFreshFoodDamperPosition = DamperPosition_Closed
+};
+
+static const DefrostData_t dualEvapDefrostData = {
+   .idleData = dualEvapIdleData,
+   .prechillPrepData = dualEvapPrechillPrepData,
+   .prechillData = dualEvapPrechillData,
+   .heaterOnEntryData = dualEvapHeaterOnEntryData,
+   .heaterOnData = dualEvapHeaterOnData,
+   .dwellData = dualEvapDwellData,
+   .postDwellData = dualEvapPostDwellData
+};
+
+TEST_GROUP(Defrost_DualEvapThreeDoor)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   Defrost_t instance;
+   PlatformData_t platformData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapThreeDoor);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_FreshFood);
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Freezer);
+      platformData.numberOfEvaporators = 2;
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig, &dualEvapDefrostData, &platformData);
+   }
+
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
+   }
+
+   void DefrostIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostType_t currentDefrostType;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &currentDefrostType);
+
+      switch(state)
+      {
+         case DefrostHsmState_Idle:
+            GivenDefrostStateIs(DefrostState_Idle);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            break;
+
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given FreezerEvaporatorThermistorValidityIs(Valid);
+            Given FreezerThermistorValidityIs(Valid);
+
+            When ReadyToDefrost();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         default:
+            break;
+      }
+   }
+
+   void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t convertibleCompartmentStateType)
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &convertibleCompartmentStateType);
+   }
+
+   void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
+   {
+      DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
+   }
+
+   void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FreezerEvaporatorThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void CompressorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
+   }
+
+   void CoolingModeIs(CoolingMode_t mode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
+   }
+
+   void ReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
+   }
+
+   void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
+   {
+      DefrostHsmState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WhenTripleEvapPrechillConditionsAreMet()
+   {
+      CompressorIs(ON);
+      CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   }
+};
+
+TEST(Defrost_DualEvapThreeDoor, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCoolingModeIsFreshFoodAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_DualEvapThreeDoor, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValid)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_DualEvapThreeDoor, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvapThreeDoor, ShouldGoToPrechillWhenCompressorTurnsOnAndPrechillConditionsMetWhileInPrechillPrep)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvapThreeDoor, ShouldGoToPrechillWhenCoolingModeChangesToFreezerAndPrechillConditionsMetWhileInPrechillPrep)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When CoolingModeIs(CoolingMode_Freezer);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST_GROUP(Defrost_DualEvapFourDoor)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   Defrost_t instance;
+   PlatformData_t platformData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapFourDoor);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_FreshFood);
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Freezer);
+      platformData.numberOfEvaporators = 2;
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig, &dualEvapDefrostData, &platformData);
+   }
+
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
+   }
+
+   void DefrostIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostType_t currentDefrostType;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &currentDefrostType);
+
+      switch(state)
+      {
+         case DefrostHsmState_Idle:
+            GivenDefrostStateIs(DefrostState_Idle);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            break;
+
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given FreezerEvaporatorThermistorValidityIs(Valid);
+            Given FreezerThermistorValidityIs(Valid);
+
+            When ReadyToDefrost();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         default:
+            break;
+      }
+   }
+
+   void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t convertibleCompartmentStateType)
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &convertibleCompartmentStateType);
+   }
+
+   void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
+   {
+      DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
+   }
+
+   void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FreezerEvaporatorThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void CompressorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
+   }
+
+   void CoolingModeIs(CoolingMode_t mode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
+   }
+
+   void ReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
+   }
+
+   void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
+   {
+      DefrostHsmState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WhenTripleEvapPrechillConditionsAreMet()
+   {
+      CompressorIs(ON);
+      CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   }
+};
+
+TEST(Defrost_DualEvapFourDoor, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCoolingModeIsFreshFoodAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_DualEvapFourDoor, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValid)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_DualEvapFourDoor, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvapFourDoor, ShouldGoToPrechillWhenCompressorTurnsOnAndPrechillConditionsMetWhileInPrechillPrep)
+{
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvapFourDoor, ShouldGoToPrechillWhenCoolingModeChangesToFreezerAndPrechillConditionsMetWhileInPrechillPrep)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+
+   When CoolingModeIs(CoolingMode_Freezer);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+static const DefrostIdleData_t tripleEvapIdleData = {
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
+   .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 6 * MINUTES_PER_HOUR
+};
+
+static const DefrostPrechillPrepData_t tripleEvapPrechillPrepData = {
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 2,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 1,
+   .maxPrechillPrepTimeInMinutes = 5
+};
+
+static const DefrostPrechillData_t tripleEvapPrechillData = {
+   .maxPrechillTimeInMinutes = 10,
+   .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
+   .prechillSealedSystemValvePosition = SealedSystemValvePosition_B,
+   .prechillCompressorSpeed = CompressorSpeed_Low,
+   .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
+   .prechillFreshFoodEvapFanSpeed = FanSpeed_Low,
+   .prechillIceCabinetFanSpeed = FanSpeed_Medium,
+   .prechillDeliFanSpeed = FanSpeed_High,
+   .prechillConvertibleCompartmentDamperPosition = DamperPosition_Open,
+   .prechillConvertibleCompartmentFanSpeed = FanSpeed_High,
+   .prechillFreshFoodDamperPosition = DamperPosition_Closed,
+   .prechillFreezerMinTempInDegFx100 = -600,
+   .prechillFreshFoodMinTempInDegFx100 = 3200,
+   .prechillFreshFoodMaxTempInDegFx100 = 4600,
+   .prechillConvertibleCompartmentAsFreezerMinTempInDegFx100 = -600,
+   .prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 = 3200,
+   .prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100 = 4600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000
+};
+
+static const DefrostHeaterOnEntryData_t tripleEvapHeaterOnEntryData = {
+   .defrostHeaterOnDelayAfterCompressorOffInSeconds = 2,
+   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open,
+   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_A
+};
+
+static const DefrostHeaterOnData_t tripleEvapHeaterOnData = {
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
+   .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 20,
+   .freshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
+   .convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 35,
+   .convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 2,
+   .convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 25
+};
+
+static const DefrostDwellData_t tripleEvapDwellData = {
+   .dwellTimeInMinutes = 7,
+   .dwellFreshFoodDamperPosition = DamperPosition_Closed,
+   .dwellSealedSystemValvePosition = SealedSystemValvePosition_B
+};
+
+static const DefrostPostDwellData_t tripleEvapPostDwellData = {
+   .postDwellExitTimeInMinutes = 5,
+   .secondaryOnlyPostDwellExitTimeInMinutes = 10,
+   .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
+   .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
+   .postDwellSealedSystemValvePosition = SealedSystemValvePosition_B,
+   .postDwellCompressorSpeed = CompressorSpeed_Low,
+   .postDwellCondenserFanSpeed = FanSpeed_Low,
+   .postDwellFreshFoodDamperPosition = DamperPosition_Closed
+};
+
+static const DefrostData_t tripleEvapDefrostData = {
+   .idleData = tripleEvapIdleData,
+   .prechillPrepData = tripleEvapPrechillPrepData,
+   .prechillData = tripleEvapPrechillData,
+   .heaterOnEntryData = tripleEvapHeaterOnEntryData,
+   .heaterOnData = tripleEvapHeaterOnData,
+   .dwellData = tripleEvapDwellData,
+   .postDwellData = tripleEvapPostDwellData
+};
+
+TEST_GROUP(Defrost_TripleEvap)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   Defrost_t instance;
+   PlatformData_t platformData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentTripleEvaporator);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_FreshFood);
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Freezer);
+      BITMAP_SET(platformData.compartmentBitmap.bitmap, Compartment_Convertible);
+      platformData.numberOfEvaporators = 3;
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig, &tripleEvapDefrostData, &platformData);
+   }
+
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
+   }
+
+   void DefrostIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData, &platformData);
+   }
+
+   void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostType_t currentDefrostType;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &currentDefrostType);
+
+      switch(state)
+      {
+         case DefrostHsmState_Idle:
+            GivenDefrostStateIs(DefrostState_Idle);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            break;
+
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given FreezerEvaporatorThermistorValidityIs(Valid);
+            Given FreezerThermistorValidityIs(Valid);
+
+            When ReadyToDefrost();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         default:
+            break;
+      }
+   }
+
+   void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t convertibleCompartmentStateType)
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &convertibleCompartmentStateType);
+   }
+
+   void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
+   {
+      DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
+   }
+
+   void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
+   }
+
+   void FreezerEvaporatorThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void CompressorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
+   }
+
+   void CoolingModeIs(CoolingMode_t mode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
+   }
+
+   void ReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
+   }
+
+   void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
+   {
+      DefrostHsmState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WhenTripleEvapPrechillConditionsAreMet()
+   {
+      CompressorIs(ON);
+      CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   }
+};
+
+TEST(Defrost_TripleEvap, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCoolingModeIsFreezerAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreezer)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_TripleEvap, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreezer)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreezer)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenCompressorTurnsOnAndPrechillConditionsMetWhileInPrechillPrepAndConvertibleCompartmentIsActingAsAFreezer)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenCoolingModeChangesToConvertibleCompartmentAndPrechillConditionsMetWhileInPrechillPrepAndConvertibleCompartmentIsActingAsAFreezer)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When CoolingModeIs(CoolingMode_ConvertibleCompartment);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_TripleEvap, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCoolingModeIsConvertibleCompartmentAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreshFood)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_TripleEvap, ShouldNotGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAreNotAlreadyMetBecauseCompressorIsOffAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreshFood)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValidAndConvertibleCompartmentIsActingAsAFreshFood)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FreezerEvaporatorThermistorValidityIs(Valid);
+   Given FreezerThermistorValidityIs(Valid);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenCompressorTurnsOnAndPrechillConditionsMetWhileInPrechillPrepAndConvertibleCompartmentIsActingAsAFreshFood)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(OFF);
+   Given CoolingModeIs(CoolingMode_Freezer);
+
+   When CompressorIs(ON);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_TripleEvap, ShouldGoToPrechillWhenCoolingModeChangesToFreezerAndPrechillConditionsMetWhileInPrechillPrepAndConvertibleCompartmentIsActingAsAFreshFood)
+{
+   GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   Given CompressorIs(ON);
+   Given CoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   When CoolingModeIs(CoolingMode_Freezer);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }

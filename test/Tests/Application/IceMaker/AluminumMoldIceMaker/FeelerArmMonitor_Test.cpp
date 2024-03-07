@@ -22,10 +22,10 @@ extern "C"
 #define When
 
 static const FeelerArmMonitorConfig_t config = {
-   .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
+   .feelerArmMonitoringRequestErd = Erd_IceMaker1_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
-   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
-   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition
+   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest,
+   .feelerArmPositionErd = Erd_IceMaker1_FeelerArmPosition
 };
 
 TEST_GROUP(FeelerArmMonitor)
@@ -52,18 +52,18 @@ TEST_GROUP(FeelerArmMonitor)
 
    void FeelerArmMonitoringRequestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmMonitoringRequest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmMonitoringRequest, &state);
    }
 
    void FeelerArmPositionIs(FeelerArmPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmPosition, &position);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmPosition, &position);
    }
 
    void FeelerArmIsReadyToEnterHarvestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -74,7 +74,7 @@ TEST_GROUP(FeelerArmMonitor)
 
    void FeelerArmIsReadyToEnterHarvestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest, &state);
    }
 };
 

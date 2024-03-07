@@ -419,8 +419,12 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-I_DataSource_t *DataSource_RampingLedPwm_Init(I_Interrupt_t *interrupt)
+I_DataSource_t *DataSource_RampingLedPwm_Init(
+   Event_Synchronous_t *onChangeEvent,
+   I_Interrupt_t *interrupt)
 {
+   (void)onChangeEvent;
+
    instance.interface.api = &api;
 
    for(uint16_t channel = 0; channel < NUM_ELEMENTS(rampingLedPortsAndPins); channel++)

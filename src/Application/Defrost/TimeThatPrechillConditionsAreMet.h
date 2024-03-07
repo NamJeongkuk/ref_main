@@ -15,7 +15,7 @@
 #include "Timer.h"
 #include "Fsm.h"
 #include "I_DataModel.h"
-#include "EvaporatorData.h"
+#include "PlatformData.h"
 
 typedef struct
 {
@@ -35,7 +35,7 @@ typedef struct
       Timer_t periodicTimer;
       EventSubscription_t dataModelSubscription;
       const TimeThatPrechillConditionsAreMetConfiguration_t *config;
-      const EvaporatorData_t *evaporatorParametricData;
+      uint8_t numberOfEvaporators;
    } _private;
 } TimeThatPrechillConditionsAreMet_t;
 

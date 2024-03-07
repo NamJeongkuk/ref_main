@@ -27,7 +27,9 @@ enum
       Erd_BspRampingLedPwm_End
 };
 
-I_DataSource_t *DataSource_RampingLedPwm_Init(I_Interrupt_t *interrupt);
+I_DataSource_t *DataSource_RampingLedPwm_Init(
+   Event_Synchronous_t *onChangeEvent,
+   I_Interrupt_t *interrupt);
 
 extern volatile struct st_dtc_full tmr0CompareMatchA;
 extern volatile struct st_dtc_full tmr1CompareMatchA;

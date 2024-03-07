@@ -53,8 +53,7 @@ static void VoteForFreezerEvaporatorFanSpeed(CompressorStartupFanVotes_t *instan
 
 static int NumberOfEvaporators(CompressorStartupFanVotes_t *instance)
 {
-   const EvaporatorData_t *evaporatorParametricData = PersonalityParametricData_Get(instance->_private.dataModel)->evaporatorData;
-   return evaporatorParametricData->numberOfEvaporators;
+   return PersonalityParametricData_Get(instance->_private.dataModel)->platformData->numberOfEvaporators;
 }
 
 static CoolingMode_t CoolingMode(CompressorStartupFanVotes_t *instance)

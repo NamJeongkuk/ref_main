@@ -9,7 +9,7 @@ extern "C"
 {
 #include "TimeThatPrechillConditionsAreMet.h"
 #include "DataModelErdPointerAccess.h"
-#include "EvaporatorData.h"
+#include "PlatformData.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
@@ -217,7 +217,7 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_DualEvap)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvaporator);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapFourDoor);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 

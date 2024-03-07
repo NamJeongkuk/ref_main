@@ -10,12 +10,13 @@
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "SystemErds.h"
 #include "uassert.h"
+#include "DefrostConfiguration.h"
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
-   .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
-   .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
+   .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,
+   .freshFoodEvaporatorThermistorIsValidResolvedErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
-   .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
+   .convertibleCompartmentEvaporatorThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
@@ -226,7 +227,8 @@ void FourDoorDualEvapDefrostPlugin_Init(FourDoorDualEvapDefrostPlugin_t *instanc
       &instance->_private.defrost,
       dataModel,
       &defrostConfiguration,
-      PersonalityParametricData_Get(dataModel)->defrostData);
+      PersonalityParametricData_Get(dataModel)->defrostData,
+      PersonalityParametricData_Get(dataModel)->platformData);
 
    DefrostHeaterOnTimeCounter_Init(
       &instance->_private.freshFoodDefrostHeaterOnTimeCounter,

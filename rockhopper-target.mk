@@ -67,7 +67,6 @@ SRC_DIRS:=\
   src/Application/DutyCycle \
   src/Application/EnhancedSabbath \
   src/Application/ErdService \
-  src/Application/Evaporator \
   src/Application/Factory \
   src/Application/Fan \
   src/Application/Fault \

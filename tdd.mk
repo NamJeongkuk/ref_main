@@ -22,6 +22,7 @@ SRC_DIRS:=\
   src/Application/Cooling \
   src/Application/Damper \
   src/Application/DataSource \
+  src/Application/DataSource/BspDataSource \
   src/Application/DataSource/ConvertedDataSource \
   src/Application/Debounce \
   src/Application/Defrost \
@@ -31,7 +32,6 @@ SRC_DIRS:=\
   src/Application/DutyCycle \
   src/Application/EnhancedSabbath \
   src/Application/ErdService \
-  src/Application/Evaporator \
   src/Application/Factory \
   src/Application/FaultHandlers \
   src/Application/Fan \
@@ -142,13 +142,15 @@ SRC_DIRS += \
   test/Tests/Application/Integration
 endif
 
+SRC_FILES+=\
+  src/Bsp/DataSource_Bsp.c \
+
 INC_DIRS:=\
   lib/applcommon/src/Hardware/Rx130 \
   lib/applcommon/src/Hardware/Rx2xx \
   lib/applcommon/src/Hardware/Kpit/Rx130 \
   src/Bsp \
   src/Application/DataSource/ApplianceApiDataSource \
-  src/Application/DataSource/BspDataSource \
   src/Application/ModelInformation \
   src/Hardware \
   src/Hardware/Eeprom \

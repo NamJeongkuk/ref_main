@@ -88,7 +88,7 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *i
    instance.dataSources[index++] = DataSource_Gpio_Init(&instance.OnDataChange, interrupt);
    instance.dataSources[index++] = DataSource_SoftPwmGpio_Init(&instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Pwm_Init();
-   instance.dataSources[index++] = DataSource_RampingLedPwm_Init(interrupt);
+   instance.dataSources[index++] = DataSource_RampingLedPwm_Init(&instance.OnDataChange, interrupt);
    instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Adc_Init();
 

@@ -21,18 +21,18 @@ return function(core)
         u8(lighting_bitmap)
       )
     )
-    end)
+  end)
 
-    return function(config)
-      validate_arguments(
-        config,
-        {
-          lights = {
-            constraint.array_elements({
-              constraint.in_set(enum.keys(interior_light_enum))
-            })
-          }
-        })
+  return function(config)
+    validate_arguments(
+      config,
+      {
+        lights = {
+          constraint.array_elements({
+            constraint.in_set(enum.keys(interior_light_enum))
+          })
+        }
+      })
     return generate(config)
   end
 end

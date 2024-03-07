@@ -8,7 +8,7 @@ return parametric_data({
   personalities = {
     import('./Personality/personalitySwqa.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvap.lua'),
-    import('./Personality/personalityTestDrivenDevelopmentDualEvap.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentDualEvapThreeDoor.lua'),
     import('./Personality/personalityTestDrivenDevelopmentTripleEvap.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleSpeedCompressor.lua'),
     import('./Personality/personalityTestDrivenDevelopmentVariableSpeedCoolingModeIndependentCompressor.lua'),
@@ -26,6 +26,7 @@ return parametric_data({
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage.lua'),
     import('./Personality/personalityTestDrivenDevelopmentDualEvapFourDoor.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentNoAdcsMapped.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreezer.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua')
   }

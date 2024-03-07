@@ -72,7 +72,7 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      sensorData = ((PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator))->sensorData;
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    }
 
    void After(TimerTicks_t ticks)
@@ -285,6 +285,15 @@ TEST(SensorFiltering_SlewEnabled, ShouldClearThermistorIsInvalidFaultErdWhenSeed
    ThermistorIsInvalidFaultErdShouldBe(CLEAR);
 }
 
+TEST(SensorFiltering_SlewEnabled, ShouldSetThermistorIsInvalidFaultErdWhenSeededWithInvalidValueAndIsBspMappedAndNotDiscoverable)
+{
+   GivenThermistorIsInvalidFaultErdIs(CLEAR);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenThermistorWasSeededWithInvalidValue();
+
+   ThermistorIsInvalidFaultErdShouldBe(SET);
+}
+
 TEST(SensorFiltering_SlewEnabled, ShouldWriteTheInvalidMappedTemperatureToUnfilteredTemperatureErdWhenSeededWithInvalidValue)
 {
    GivenInitialAdcCountsAre(InvalidAdcCount);
@@ -366,21 +375,13 @@ TEST(SensorFiltering_SlewEnabled, ShouldSetSensorAsHasBeenDiscoveredIfSensorIsVa
    SensorHasBeenDiscoveredShouldBe(SET);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldNotSetSensorAsHasBeenDiscoveredIfSensorIsValidAndSensorIsNotDiscoverable)
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorAsHasBeenDiscoveredIfSensorIsSeededWithInvalidValue)
 {
    GivenSensorHasBeenDiscovered(CLEAR);
    GivenSensorIsNotDiscoverableInParametric();
    GivenThermistorWasSeededWithInvalidValue();
 
-   SensorHasBeenDiscoveredShouldBe(CLEAR);
-
-   WhenAdcCountChangesTo(ValidAdcCount1);
-
-   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
-   SensorHasBeenDiscoveredShouldBe(CLEAR);
-
-   After(1);
-   SensorHasBeenDiscoveredShouldBe(CLEAR);
+   SensorHasBeenDiscoveredShouldBe(SET);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldSetFaultWhenFallbackFilterReadsAsInvalidAfterSensorIsDiscoveredIfDiscoverable)
@@ -622,7 +623,7 @@ TEST(SensorFiltering_SlewEnabled, ShouldDoOnlyExponentialWeightedMovingAverageAf
    FilteredTemperatureShouldBe(MappedValidTemperature4);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldSetSensorIsInSystemIfInitialFallbackFilterValueIsValidAndSensorIsDiscoverable)
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorHasBeenDiscoveredIfInitialFallbackFilterValueIsValidAndSensorIsDiscoverable)
 {
    GivenSensorHasBeenDiscovered(CLEAR);
    GivenInitialAdcCountsAre(ValidAdcCount1);
@@ -632,17 +633,17 @@ TEST(SensorFiltering_SlewEnabled, ShouldSetSensorIsInSystemIfInitialFallbackFilt
    SensorHasBeenDiscoveredShouldBe(SET);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldNotSetSensorIsInSystemIfInitialFallbackFilterValueIsValidAndSensorIsNotDiscoverable)
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorHasBeenDiscoveredIfInitialFallbackFilterValueIsValidAndSensorIsNotDiscoverableAndSensorIsMappedInBsp)
 {
    GivenSensorHasBeenDiscovered(CLEAR);
    GivenInitialAdcCountsAre(ValidAdcCount1);
    GivenSensorIsNotDiscoverableInParametric();
    GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-   SensorHasBeenDiscoveredShouldBe(CLEAR);
+   SensorHasBeenDiscoveredShouldBe(SET);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldSetSensorIsInSystemWhenFallbackFilterValueIsValidAndSensorIsDiscoverable)
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorHasBeenDiscoveredWhenFallbackFilterValueIsValidAndSensorIsDiscoverable)
 {
    GivenSensorHasBeenDiscovered(CLEAR);
    GivenSensorIsDiscoverableInParametric();
@@ -741,4 +742,161 @@ TEST(SensorFiltering_SlewDisabled, ShouldNotLimitSlewRateWhichAllowsFilteredTemp
 
    After(1);
    FilteredTemperatureShouldBe(1809);
+}
+
+TEST_GROUP(SensorFiltering_NotMappedInBsp)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   SensorFiltering_t instance;
+   const SensorData_t *sensorData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentNoAdcsMapped);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+   }
+
+   void GivenSensorHasBeenDiscovered(bool state)
+   {
+      DataModel_Write(dataModel, Erd_AmbientThermistorDiscovered, &state);
+   }
+
+   void GivenInitialAdcCountsAre(AdcCounts_t counts)
+   {
+      DataModel_Write(dataModel, Erd_AmbientThermistor_AdcCount, &counts);
+   }
+
+   void GivenSensorIsNotDiscoverableInParametric()
+   {
+      sensorData->ambientThermistor->discoverable = false;
+   }
+
+   void GivenSensorIsDiscoverableInParametric()
+   {
+      sensorData->ambientThermistor->discoverable = true;
+   }
+
+   void GivenSensorWithSlewRateFilterEnabledIsInitialized()
+   {
+      SensorFiltering_Init(
+         &instance,
+         dataModel,
+         &sensorConfigWithSlewRateFilterEnabled,
+         sensorData->ambientThermistor,
+         sensorData->periodicUpdateRateInMs);
+   }
+
+   void SensorHasBeenDiscoveredShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AmbientThermistorDiscovered, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void WhenAdcCountChangesTo(AdcCounts_t count)
+   {
+      DataModel_Write(dataModel, Erd_AmbientThermistor_AdcCount, &count);
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void ThermistorIsInvalidFaultErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AmbientThermistorIsInvalidFault, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void FilteredTemperatureShouldBe(TemperatureDegFx100_t expected)
+   {
+      TemperatureDegFx100_t actual;
+      DataModel_Read(dataModel, Erd_Ambient_FilteredInternalTemperatureInDegFx100, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenThermistorWasSeededWithInvalidValue()
+   {
+      GivenInitialAdcCountsAre(InvalidAdcCount);
+      GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+      FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+   }
+};
+
+TEST(SensorFiltering_NotMappedInBsp, ShouldNotSetSensorHasBeenDiscoveredIfNotMappedInBspAndNotDiscoverableAndReadingValidValueOnInit)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_NotMappedInBsp, ShouldNotSetSensorHasBeenDiscoveredIfNotMappedInBspAndDiscoverableAndReadingValidValueOnInit)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_NotMappedInBsp, ShouldNotSetSensorAsHasBeenDiscoveredIfNotMappedInBspAndNotDiscoverableAndSensorIsSeededWithInvalidValue)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenThermistorWasSeededWithInvalidValue();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_NotMappedInBsp, ShouldNotSetSensorHasBeenDiscoveredWhenItHasValidReadingsLaterIfSensorIsNotDiscoverableAndIsNotBspMapped)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   After(1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_NotMappedInBsp, ShouldNotSetSensorHasBeenDiscoveredWhenItHasValidReadingsLaterIfSensorIsDiscoverableAndIsNotBspMapped)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   After(1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
 }

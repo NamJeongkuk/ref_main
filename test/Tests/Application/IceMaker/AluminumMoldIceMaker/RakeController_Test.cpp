@@ -21,14 +21,14 @@ extern "C"
 #define And
 
 static const RakeControllerConfig_t config = {
-   .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
+   .rakeControlRequestErd = Erd_IceMaker1_RakeControlRequest,
    .rakeMotorVoteErd = Erd_IceMaker1_RakeMotor_IceMakerVote,
-   .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
+   .rakeCompletedRevolutionErd = Erd_IceMaker1_RakeCompletedRevolution,
    .timerModuleErd = Erd_TimerModule,
-   .rakePositionErd = Erd_IceMaker0_RakePosition,
-   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
-   .rakePositionHasNotBeenHomeErd = Erd_IceMaker0_RakeHasNotBeenHome,
-   .feelerArmPositionHasBeenBucketFullErd = Erd_IceMaker0_FeelerArmHasBeenBucketFull
+   .rakePositionErd = Erd_IceMaker1_RakePosition,
+   .feelerArmPositionErd = Erd_IceMaker1_FeelerArmPosition,
+   .rakePositionHasNotBeenHomeErd = Erd_IceMaker1_RakeHasNotBeenHome,
+   .feelerArmPositionHasBeenBucketFullErd = Erd_IceMaker1_FeelerArmHasBeenBucketFull
 };
 
 TEST_GROUP(RakeController)
@@ -100,7 +100,7 @@ TEST_GROUP(RakeController)
 
    void RakeControlRequestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_RakeControlRequest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakeControlRequest, &state);
    }
 
    void RakeMotorVoteShouldBe(IceMakerMotorState_t expectedState, Vote_t expectedCare)
@@ -114,48 +114,48 @@ TEST_GROUP(RakeController)
 
    void RakeCompletedRevolutionIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakeCompletedRevolution, &state);
    }
 
    void RakeCompletedRevolutionShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0_RakeCompletedRevolution, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_RakeCompletedRevolution, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void RakePositionIs(RakePosition_t state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_RakePosition, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakePosition, &state);
    }
 
    void FeelerArmPositionIs(FeelerArmPosition_t state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmPosition, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmPosition, &state);
    }
 
    void RakePositionHasNotBeenHomeShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0_RakeHasNotBeenHome, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_RakeHasNotBeenHome, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void FeelerArmPositionHasBeenBucketFullShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0_FeelerArmHasBeenBucketFull, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_FeelerArmHasBeenBucketFull, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void FeelerArmPositionHasBeenBucketFullIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmHasBeenBucketFull, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_FeelerArmHasBeenBucketFull, &state);
    }
 
    void RakePositionHasNotBeenHomeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_RakeHasNotBeenHome, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakeHasNotBeenHome, &state);
    }
 
    void GivenRakeHasCompletedARevolutionAndBucketIsFullAndRakeIsHome()

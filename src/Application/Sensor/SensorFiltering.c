@@ -8,6 +8,8 @@
 #include "SensorFiltering.h"
 #include "PersonalityParametricData.h"
 #include "DataModelErdPointerAccess.h"
+#include "DataModelErdPointerAccessMacros.h"
+#include "SystemErds.h"
 #include "Constants_Binary.h"
 #include <stdint.h>
 
@@ -98,12 +100,12 @@ static void UpdateSensorValues(void *context)
    SetSensorIsValidTo(instance, fallbackFilterValue.isValid);
    SetFilteredSensorValueTo(instance, fallbackFilterValue.filteredValue);
 
-   if(fallbackFilterValue.isValid && instance->_private.sensorParametricData->discoverable)
+   if(fallbackFilterValue.isValid)
    {
       SetSensorDiscoveredTo(instance, SET);
    }
 
-   if((SensorIsDiscovered(instance)) || !instance->_private.sensorParametricData->discoverable)
+   if(SensorIsDiscovered(instance))
    {
       SetSensorIsInvalidFaultTo(instance, !fallbackFilterValue.isValid);
    }
@@ -119,6 +121,12 @@ void SensorFiltering_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
    instance->_private.sensorParametricData = sensorParametricData;
+
+   I_DataSource_t *bspDataSource = DataModelErdPointerAccess_GetDataSource(dataModel, Erd_BspDataSource);
+
+   bool bspMapped = DataSource_Has(
+      bspDataSource,
+      instance->_private.config->sensorAdcCountErd);
 
    Mapper_UnsignedSignedLookupTable_Init(
       &instance->_private.lookupTable,
@@ -175,16 +183,19 @@ void SensorFiltering_Init(
 
    if(fallbackFilterValue.isValid)
    {
-      if(sensorParametricData->discoverable)
-      {
-         SetSensorDiscoveredTo(instance, SET);
-      }
+      SetSensorDiscoveredTo(instance, SET);
       SetSensorIsValidTo(instance, SET);
       SetSensorIsInvalidFaultTo(instance, CLEAR);
    }
    else
    {
       SetSensorIsValidTo(instance, CLEAR);
+
+      if(bspMapped && !instance->_private.sensorParametricData->discoverable)
+      {
+         SetSensorDiscoveredTo(instance, SET);
+         SetSensorIsInvalidFaultTo(instance, SET);
+      }
    }
 
    TimerModule_StartPeriodic(

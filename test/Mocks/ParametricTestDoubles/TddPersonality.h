@@ -12,7 +12,7 @@ enum
 {
    TddPersonality_Swqa,
    TddPersonality_DevelopmentSingleEvaporator,
-   TddPersonality_DevelopmentDualEvaporator,
+   TddPersonality_DevelopmentDualEvapThreeDoor,
    TddPersonality_DevelopmentTripleEvaporator,
    TddPersonality_DevelopmentSingleSpeedCompressor,
    TddPersonality_DevelopmentVariableSpeedCoolingModeIndependentCompressor,
@@ -30,6 +30,7 @@ enum
    TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage,
    TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage,
    TddPersonality_DevelopmentDualEvapFourDoor,
+   TddPersonality_DevelopmentNoAdcsMapped,
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreezer,
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreshFood,
    TddPersonality_MaxDevelopment

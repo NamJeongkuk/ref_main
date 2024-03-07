@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
+#include "PlatformData.h"
 #include "Timer.h"
 #include "Hsm.h"
 
@@ -26,9 +27,6 @@ typedef struct
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t readyToDefrostErd; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
-   Erd_t freezerEvaporatorThermistorIsValidErd; // bool
-   Erd_t freshFoodThermistorIsValidResolvedErd; // bool
-   Erd_t freezerThermistorIsValidResolvedErd; // bool
    Erd_t compressorIsOnErd; // bool
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
@@ -39,9 +37,6 @@ typedef struct
    Erd_t freezerEvapFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t iceCabinetFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
-   Erd_t freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
-   Erd_t freezerFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
-   Erd_t freshFoodFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t freezerDefrostHeaterVoteErd; // HeaterVotedState_t
    Erd_t numberOfFreezerDefrostsErd; // uint16_t
    Erd_t numberOfFreezerAbnormalDefrostsErd; // uint16_t
@@ -69,9 +64,21 @@ typedef struct
    Erd_t sealedSystemValvePositionGridVoteErd; // SealedSystemValveVotedPosition_t
    Erd_t freshFoodDamperPositionGridVoteErd; // DamperVotedPosition_t
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
-   Erd_t convertibleCompartmentTemperatureErd; // TemperatureDegFx100_t
-   Erd_t convertibleCompartmentThermistorIsValidErd; // bool
+   Erd_t convertibleCompartmentFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t convertibleCompartmentThermistorIsValidResolvedErd; // bool
    Erd_t convertibleCompartmentDamperPositionVoteErd; // DamperVotedPosition_t
+
+   Erd_t freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t freezerEvaporatorThermistorIsValidResolvedErd; // bool
+   Erd_t freezerEvaporatorThermistorHasBeenDiscoveredErd; // bool
+
+   Erd_t freezerFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t freezerThermistorIsValidResolvedErd; // bool
+   Erd_t freezerThermistorHasBeenDiscoveredErd; // bool
+
+   Erd_t freshFoodFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t freshFoodThermistorIsValidResolvedErd; // bool
+   Erd_t freshFoodThermistorHasBeenDiscoveredErd; // bool
 } DefrostConfiguration_t;
 
 typedef struct
@@ -83,7 +90,8 @@ typedef struct
       Timer_t defrostTimer;
       EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
-      const DefrostData_t *defrostParametricData;
+      const DefrostData_t *defrostData;
+      const PlatformData_t *platformData;
    } _private;
 } Defrost_t;
 
@@ -91,6 +99,7 @@ void Defrost_Init(
    Defrost_t *instance,
    I_DataModel_t *dataModel,
    const DefrostConfiguration_t *defrostConfig,
-   const DefrostData_t *defrostData);
+   const DefrostData_t *defrostData,
+   const PlatformData_t *platformData);
 
 #endif
