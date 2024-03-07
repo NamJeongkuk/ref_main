@@ -34,7 +34,6 @@ return function(directory)
   import('Platform/Platform')
   import('Sensor/Sensors')
   import('Sensor/SensorType')
-  import('Sensor/ConvertibleCompartmentSensorType')
   import('Sensor/HumiditySensorType')
   import('SystemMonitor/SystemMonitor')
   import('Damper/DamperPositionType')
@@ -140,7 +139,6 @@ return function(directory)
   platform = Platform(core)
   sensors = Sensors(core)
   sensor_type = SensorType(core)
-  convertible_compartment_sensor_type = ConvertibleCompartmentSensorType(core)
   humidity_sensor_type = HumiditySensorType(core)
   system_monitor = SystemMonitor(core)
   fan_care_about_cooling_mode_speed_table = FanCareAboutCoolingModeSpeedTable(core)
@@ -247,7 +245,6 @@ return function(directory)
     platform = platform,
     sensors = sensors,
     sensor_type = sensor_type,
-    convertible_compartment_sensor_type = convertible_compartment_sensor_type,
     humidity_sensor_type = humidity_sensor_type,
     system_monitor = system_monitor,
     fan_care_about_cooling_mode_speed_table = fan_care_about_cooling_mode_speed_table,

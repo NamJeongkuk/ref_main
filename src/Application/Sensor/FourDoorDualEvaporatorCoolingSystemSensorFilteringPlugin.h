@@ -30,6 +30,8 @@ typedef struct
    SensorFiltering_t freshFoodCabinetThermistor;
    SensorFiltering_t freezerEvapThermistor;
    SensorFiltering_t freshFoodEvapThermistor;
+   SensorFiltering_t convertibleCompartmentCabinetAsFreezer;
+   SensorFiltering_t convertibleCompartmentCabinetAsFreshFood;
 } FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_t;
 
 void FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(

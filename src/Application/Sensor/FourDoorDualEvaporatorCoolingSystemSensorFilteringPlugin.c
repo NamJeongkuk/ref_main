@@ -158,11 +158,13 @@ static const OverrideArbiterConfiguration_t freshFoodEvaporatorFilteredTemperatu
 };
 
 static const Erd_t convertibleCompartmentCabinetFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_ConvertibleCompartmentState,
    Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t convertibleCompartmentCabinetFilteredTemperatureValueErdList[] = {
-   Erd_ConvertibleCompartmentCabinet_FilteredTemperatureInDegFx100,
+   Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100,
+   Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100,
    Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100
 };
 
@@ -190,6 +192,26 @@ static const SensorFilteringConfig_t freshFoodCabinetThermistorConfig = {
    .sensorIsValidErd = Erd_FreshFood_ThermistorIsValid,
    .sensorIsInvalidFaultErd = Erd_FreshFoodThermistorIsInvalidFault,
    .sensorDiscoveredErd = Erd_FreshFoodThermistorDiscovered,
+   .timerModuleErd = Erd_TimerModule
+};
+
+static const SensorFilteringConfig_t convertibleCompartmentCabinetAsFreezerThermistorConfig = {
+   .sensorAdcCountErd = Erd_ConvertibleCompartmentCabinetThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_ConvertibleCompartmentCabinetThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_ConvertibleCompartmentCabinetThermistorDiscovered,
+   .timerModuleErd = Erd_TimerModule
+};
+
+static const SensorFilteringConfig_t convertibleCompartmentCabinetAsFreshFoodThermistorConfig = {
+   .sensorAdcCountErd = Erd_ConvertibleCompartmentCabinetThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_ConvertibleCompartmentCabinetThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_ConvertibleCompartmentCabinetThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -305,6 +327,20 @@ static void InitializeSensorFiltering(
       dataModel,
       &freshFoodEvapThermistorConfig,
       sensorData->freshFoodEvapThermistor,
+      sensorData->periodicUpdateRateInMs);
+
+   SensorFiltering_Init(
+      &instance->convertibleCompartmentCabinetAsFreezer,
+      dataModel,
+      &convertibleCompartmentCabinetAsFreezerThermistorConfig,
+      sensorData->convertibleCompartmentAsFreezer,
+      sensorData->periodicUpdateRateInMs);
+
+   SensorFiltering_Init(
+      &instance->convertibleCompartmentCabinetAsFreshFood,
+      dataModel,
+      &convertibleCompartmentCabinetAsFreshFoodThermistorConfig,
+      sensorData->convertibleCompartmentAsFreshFood,
       sensorData->periodicUpdateRateInMs);
 }
 

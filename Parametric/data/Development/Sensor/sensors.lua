@@ -1,9 +1,10 @@
 return sensors({
   freezer_cabinet_thermistor = import("../Sensor/sensorTypes/freezer_cabinet_thermistor.lua"),
   fresh_food_cabinet_thermistor = import("../Sensor/sensorTypes/fresh_food_cabinet_thermistor.lua"),
+  convertible_compartment_as_freezer = import("../Sensor/sensorTypes/convertible_compartment_as_freezer.lua"),
+  convertible_compartment_as_fresh_food = import("../Sensor/sensorTypes/convertible_compartment_as_fresh_food.lua"),
   freezer_evap_thermistor = import("../Sensor/sensorTypes/freezer_evap_thermistor.lua"),
   fresh_food_evap_thermistor = import("../Sensor/sensorTypes/fresh_food_evap_thermistor.lua"),
-  convertible_compartment_cabinet_thermistor = import("../Sensor/sensorTypes/convertible_compartment_cabinet_thermistor.lua"),
   ambient_thermistor = import("../Sensor/sensorTypes/ambient_thermistor.lua"),
   ambient_humidity_sensor = import("../Sensor/sensorTypes/ambient_humidity_sensor.lua"),
   convertible_compartment_evap_thermistor = import("../Sensor/sensorTypes/convertible_compartment_evap_thermistor.lua"),

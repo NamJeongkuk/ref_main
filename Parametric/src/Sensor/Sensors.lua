@@ -13,9 +13,10 @@ return function(core)
       structure(
         pointer(config.freezer_cabinet_thermistor),
         pointer(config.fresh_food_cabinet_thermistor),
+        pointer(config.convertible_compartment_as_freezer),
+        pointer(config.convertible_compartment_as_fresh_food),
         pointer(config.freezer_evap_thermistor),
         pointer(config.fresh_food_evap_thermistor),
-        pointer(config.convertible_compartment_cabinet_thermistor),
         pointer(config.ambient_thermistor),
         pointer(config.ambient_humidity_sensor),
         pointer(config.convertible_compartment_evap_thermistor),
@@ -33,9 +34,10 @@ return function(core)
       {
         freezer_cabinet_thermistor = { constraint.typed_string('sensor_type') },
         fresh_food_cabinet_thermistor = { constraint.typed_string('sensor_type') },
+        convertible_compartment_as_freezer = { constraint.typed_string('sensor_type') },
+        convertible_compartment_as_fresh_food = { constraint.typed_string('sensor_type') },
         freezer_evap_thermistor = { constraint.typed_string('sensor_type') },
         fresh_food_evap_thermistor = { constraint.typed_string('sensor_type') },
-        convertible_compartment_cabinet_thermistor = { constraint.typed_string('convertible_compartment_sensor_type') },
         ambient_thermistor = { constraint.typed_string('sensor_type') },
         ambient_humidity_sensor = { constraint.typed_string('humidity_sensor_type') },
         convertible_compartment_evap_thermistor = { constraint.typed_string('sensor_type') },

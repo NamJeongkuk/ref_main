@@ -1381,6 +1381,83 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Convertible Compartment Thermistor Unfiltered Temperature",
+          "name": "Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Thermistor As Freezer Filtered Temperature",
+          "name": "Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Thermistor As Fresh Food Filtered Temperature",
+          "name": "Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment IsValid Override Request",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment IsValid Override Value",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment FilteredTemp Override Request",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment FilteredTemp Override Value",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment FilteredTemp Resolved",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F007 Convertible Compartment Thermistor Is Invalid",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Thermistor Has Been Discovered",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistorDiscovered",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Ambient Thermistor AdcCount",
           "name": "Erd_AmbientThermistor_AdcCount",
           "read": true,

@@ -35,25 +35,12 @@ typedef struct
 
 typedef struct
 {
-   Mapper_UnsignedSignedLookupTableConfiguration_t *lookupTable;
-   int16_t freshFoodFallbackValueDegFx100;
-   int16_t freezerFallbackValueDegFx100;
-   uint8_t alphaNum;
-   uint8_t alphaDenom;
-   uint8_t windowSize;
-   SensorDataSlewRateData_t clampData;
-   uint16_t goodReadingCounterMax;
-   uint16_t badReadingCounterMax;
-   bool discoverable;
-} SensorDataConvertibleCompartmentSensorType_t;
-
-typedef struct
-{
    SensorDataSensorType_t *freezerCabinetThermistor;
    SensorDataSensorType_t *freshFoodCabinetThermistor;
+   SensorDataSensorType_t *convertibleCompartmentAsFreezer;
+   SensorDataSensorType_t *convertibleCompartmentAsFreshFood;
    SensorDataSensorType_t *freezerEvapThermistor;
    SensorDataSensorType_t *freshFoodEvapThermistor;
-   SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
    SensorDataSensorType_t *ambientHumiditySensor;
    SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
