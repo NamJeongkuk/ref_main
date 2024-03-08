@@ -9,7 +9,7 @@
 #include "SystemErds.h"
 
 static const ShiftOffsetCalculatorConfig_t convertibleCompartmentShiftOffsetCalculatorConfig = {
-   .filteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartment_FilteredTemperatureResolvedInDegFx100,
+   .filteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
    .adjustedSetpointErd = Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
