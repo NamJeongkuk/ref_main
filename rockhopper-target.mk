@@ -1,7 +1,7 @@
 include tools/kpit-rx/setup.mk
 
 export TARGET:=rockhopper
-OUTPUT_DIR:=build/$(TARGET)
+export OUTPUT_DIR:=build/$(TARGET)
 BOOT_LOADER_DIR:=lib/rockhopper-boot-loader
 BOOT_LOADER_TARGET:=rockhopper
 BOOT_LOADER_UPDATER_DIR:=$(BOOT_LOADER_DIR)/lib/boot-loader-updater
@@ -9,6 +9,16 @@ CPU:=rx100
 TOOLCHAIN_VERSION:=8.3.0.202305-gdb-12.1
 LINKER_SCRIPT:=$(TARGET).ld
 export IMAGE_CRC
+
+export NV_USAGE_REPORT_WRITES_PER_YEAR_INDEX:=9
+export NV_USAGE_REPORT_ERD_MEMORY_TYPE_INDEX:=7
+export NV_USAGE_REPORT_ERD_TYPES:=NvUserSetting NvUnitSetting NvFaultSnapshot NvCycleHistory NvUsageProfile NvRfid NvProtected
+export NV_USAGE_REPORT_PRODUCT_LIFE:=20
+export NV_USAGE_REPORT_MAXIMUM_ERASE_COUNT:=1000000
+export NV_USAGE_REPORT_EEPROM_SIZE:=32768
+export NV_USAGE_REPORT_WRITE_ALIGNMENT:=1
+
+export SYSTEM_ERDS:=src/Application/DataSource/SystemErds.h
 
 DEVICE:=R5F51308
 SVD:=tools/kpit-rx/svd/rx130.svd
@@ -164,13 +174,15 @@ all: info
 .PHONY: info
 info: build_all
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+	@echo
+	@cat $(OUTPUT_DIR)/$(TARGET)_nv_usage_report.md
 
 .PHONY: build_all
 build_all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
-target: erd_definitions
+target: erd_definitions nv_usage_report
 
 .PHONY: package
 package: build_all artifacts erd_lock
@@ -210,5 +222,10 @@ erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@$(CC) $(addprefix -I,$(INC_DIRS) $(SRC_DIRS)) -E -P -MMD src/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
+
+.PHONY: nv_usage_report
+nv_usage_report: erd_definitions
+	@echo Generating NV usage report...
+	@$(LUA53) generate_nv_usage_report.lua
 
 include tools/kpit-rx/worker.mk

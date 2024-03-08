@@ -31,3 +31,6 @@
 [submodule "post_processing/lib/lua-pretty-json"]
 	path = post_processing/lib/lua-pretty-json
 	url = https://github.com/geappliances/lua-pretty-json.git
+[submodule "tools/lua-nv-erd-tools"]
+	path = tools/lua-nv-erd-tools
+	url = https://github.com/geappliances/applcommon.lua-nv-erd-tools
