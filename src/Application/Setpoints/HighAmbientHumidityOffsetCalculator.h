@@ -18,7 +18,7 @@ typedef struct
    Erd_t highAmbientOffsetErd; // TemperatureDegFx100_t
    Erd_t ambientFilteredHumidityResolvedPercentx100Erd; // TemperatureDegFx100_t
    Erd_t ambientHumiditySensorIsValidResolvedErd; // bool
-} HighAmbientCalculatorConfig_t;
+} HighAmbientOffsetCalculatorConfig_t;
 
 typedef struct
 {
@@ -28,9 +28,9 @@ typedef struct
       EventSubscription_t setpointStatusSubscription;
       EventSubscription_t filteredHumidityResolvedPercentx100Subscription;
       const HighAmbientOffsetData_t *highAmbientOffsetData;
-      const HighAmbientCalculatorConfig_t *config;
+      const HighAmbientOffsetCalculatorConfig_t *config;
    } _private;
-} HighAmbientCalculator_t;
+} HighAmbientOffsetCalculator_t;
 
 /*!
  * Initialize High Ambient Offset Calculator
@@ -40,9 +40,9 @@ typedef struct
  * @param config high ambient calculator config - Erds
  */
 void HighAmbientHumidityOffsetCalculator_Init(
-   HighAmbientCalculator_t *instance,
+   HighAmbientOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    const HighAmbientOffsetData_t *data,
-   const HighAmbientCalculatorConfig_t *config);
+   const HighAmbientOffsetCalculatorConfig_t *config);
 
 #endif

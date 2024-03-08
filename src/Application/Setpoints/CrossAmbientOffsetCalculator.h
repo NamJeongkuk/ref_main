@@ -16,7 +16,7 @@ typedef struct
 {
    Erd_t crossAmbientWindowAveragedTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t crossAmbientOffsetInDegFx100Erd; // TemperatureDegFx100_t
-} CrossAmbientCalculatorConfig_t;
+} CrossAmbientOffsetCalculatorConfig_t;
 
 typedef struct
 {
@@ -25,14 +25,14 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t crossAmbientWindowAveragedTemperatureSubscription;
       const CrossAmbientOffsetData_t *crossAmbientOffsetData;
-      const CrossAmbientCalculatorConfig_t *config;
+      const CrossAmbientOffsetCalculatorConfig_t *config;
    } _private;
-} CrossAmbientCalculator_t;
+} CrossAmbientOffsetCalculator_t;
 
 void CrossAmbientOffsetCalculator_Init(
-   CrossAmbientCalculator_t *instance,
+   CrossAmbientOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    const CrossAmbientOffsetData_t *data,
-   const CrossAmbientCalculatorConfig_t *config);
+   const CrossAmbientOffsetCalculatorConfig_t *config);
 
 #endif

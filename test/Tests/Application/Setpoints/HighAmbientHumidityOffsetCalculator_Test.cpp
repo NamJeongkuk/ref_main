@@ -30,7 +30,7 @@ enum
    GreaterThanFreshFoodRelativeHumidityTrigger = 4000,
 };
 
-static const HighAmbientCalculatorConfig_t freshFoodConfig = {
+static const HighAmbientOffsetCalculatorConfig_t freshFoodConfig = {
    .setpointStatusErd = Erd_FreshFoodSetpointStatus,
    .highAmbientOffsetErd = Erd_FreshFood_HighAmbientOffsetInDegFx100,
    .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
@@ -42,7 +42,7 @@ TEST_GROUP(HighAmbientOffsetCalculator)
    I_DataModel_t *dataModel;
    const HighAmbientOffsetData_t *freshFoodHighAmbientOffsetData;
 
-   HighAmbientCalculator_t instance;
+   HighAmbientOffsetCalculator_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
 
    void setup()

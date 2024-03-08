@@ -22,8 +22,8 @@ typedef struct
    struct
    {
       FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
-      CrossAmbientCalculator_t freshFoodCrossAmbientOffsetCalculator;
-      HighAmbientCalculator_t freshFoodHighAmbientOffsetCalculator;
+      CrossAmbientOffsetCalculator_t freshFoodCrossAmbientOffsetCalculator;
+      HighAmbientOffsetCalculator_t freshFoodHighAmbientOffsetCalculator;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freshFoodErdAdder;
       ResolvedSetpointWriter_t freshFoodResolvedSetpointWriter;

@@ -14,7 +14,7 @@
 static void CalculateCrossAmbientOffsetInDegFx100(void *context, const void *args)
 {
    IGNORE(args);
-   CrossAmbientCalculator_t *instance = context;
+   CrossAmbientOffsetCalculator_t *instance = context;
 
    TemperatureDegFx100_t averageTemperature;
    DataModel_Read(
@@ -31,10 +31,10 @@ static void CalculateCrossAmbientOffsetInDegFx100(void *context, const void *arg
 }
 
 void CrossAmbientOffsetCalculator_Init(
-   CrossAmbientCalculator_t *instance,
+   CrossAmbientOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    const CrossAmbientOffsetData_t *data,
-   const CrossAmbientCalculatorConfig_t *config)
+   const CrossAmbientOffsetCalculatorConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;

@@ -2737,6 +2737,13 @@
           "name": "Erd_Freezer_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
+          "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -3743,6 +3750,13 @@
           "name": "Erd_FreshFood_HighAmbientOffsetInDegFx100",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Cross Ambient Offset",
+          "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -3992,8 +4006,43 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Filterd Temperature",
+          "displayName": "Fresh Food Filtered Temperature",
           "name": "Erd_FreshFood_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Thermal Shift",
+          "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Long Term Average",
+          "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Adjusted Setpoint",
+          "name": "Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Adjusted Setpoint Without Shift",
+          "name": "Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Filtered Temperature",
+          "name": "Erd_ConvertibleCompartment_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         }

@@ -68,12 +68,12 @@ static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWrit
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
-static const CrossAmbientCalculatorConfig_t freshFoodCrossAmbientOffsetCalculatorConfig = {
+static const CrossAmbientOffsetCalculatorConfig_t freshFoodCrossAmbientOffsetCalculatorConfig = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
 };
 
-static const HighAmbientCalculatorConfig_t freshFoodHighAmbientOffsetCalculatorConfig = {
+static const HighAmbientOffsetCalculatorConfig_t freshFoodHighAmbientOffsetCalculatorConfig = {
    .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
    .highAmbientOffsetErd = Erd_FreshFood_HighAmbientOffsetInDegFx100,
    .setpointStatusErd = Erd_FreshFoodSetpointStatus,

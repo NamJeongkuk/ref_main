@@ -22,8 +22,8 @@ typedef struct
    struct
    {
       FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
-      CrossAmbientCalculator_t freezerCrossAmbientOffsetCalculator;
-      HighAmbientCalculator_t freezerHighAmbientOffsetCalculator;
+      CrossAmbientOffsetCalculator_t freezerCrossAmbientOffsetCalculator;
+      HighAmbientOffsetCalculator_t freezerHighAmbientOffsetCalculator;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freezerErdAdder;
       ResolvedSetpointWriter_t freezerResolvedSetpointWriter;

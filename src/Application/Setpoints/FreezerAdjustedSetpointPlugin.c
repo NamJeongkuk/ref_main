@@ -32,12 +32,12 @@ static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriter
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
-static const CrossAmbientCalculatorConfig_t freezerCrossAmbientOffsetCalculatorConfig = {
+static const CrossAmbientOffsetCalculatorConfig_t freezerCrossAmbientOffsetCalculatorConfig = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_Freezer_CrossAmbientOffsetInDegFx100,
 };
 
-static const HighAmbientCalculatorConfig_t freezerHighAmbientOffsetCalculatorConfig = {
+static const HighAmbientOffsetCalculatorConfig_t freezerHighAmbientOffsetCalculatorConfig = {
    .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
    .setpointStatusErd = Erd_FreezerSetpointStatus,
    .highAmbientOffsetErd = Erd_Freezer_HighAmbientOffsetInDegFx100,

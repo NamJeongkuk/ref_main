@@ -9,6 +9,7 @@
 #define FOURDOORADJUSTEDSETPOINTPLUGIN_H
 
 #include "I_DataModel.h"
+#include "ConvertibleCompartmentAdjustedSetpointPlugin.h"
 #include "FreezerAdjustedSetpointPlugin.h"
 #include "FreshFoodAdjustedSetpointPlugin.h"
 
@@ -18,6 +19,7 @@ typedef struct
    {
       FreezerAdjustedSetpointPlugin_t freezerAdjustedSetpointPlugin;
       FreshFoodAdjustedSetpointPlugin_t freshFoodAdjustedSetpointPlugin;
+      ConvertibleCompartmentAdjustedSetpointPlugin_t convertibleCompartmentAdjustedSetpointPlugin;
    } _private;
 } FourDoorAdjustedSetpointPlugin_t;
 

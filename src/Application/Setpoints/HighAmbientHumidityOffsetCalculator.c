@@ -13,7 +13,7 @@
 
 static void CalculateHighAmbientHumidityOffset(void *context, const void *args)
 {
-   HighAmbientCalculator_t *instance = context;
+   HighAmbientOffsetCalculator_t *instance = context;
    IGNORE(args);
 
    Setpoint_t userSetpointStatus;
@@ -54,10 +54,10 @@ static void CalculateHighAmbientHumidityOffset(void *context, const void *args)
 }
 
 void HighAmbientHumidityOffsetCalculator_Init(
-   HighAmbientCalculator_t *instance,
+   HighAmbientOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    const HighAmbientOffsetData_t *data,
-   const HighAmbientCalculatorConfig_t *config)
+   const HighAmbientOffsetCalculatorConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;

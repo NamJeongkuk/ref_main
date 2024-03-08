@@ -31,7 +31,7 @@ enum
    TemperatureGreaterThanMaxAmbientOffsetInDegFx100 = 11000
 };
 
-static const CrossAmbientCalculatorConfig_t config = {
+static const CrossAmbientOffsetCalculatorConfig_t config = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
 };
@@ -41,7 +41,7 @@ TEST_GROUP(CrossAmbientOffsetCalculator)
    I_DataModel_t *dataModel;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
 
-   CrossAmbientCalculator_t instance;
+   CrossAmbientOffsetCalculator_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
 
    void setup()
