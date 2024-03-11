@@ -998,11 +998,6 @@ static TimerTicks_t PrechillTimeLeft(Defrost_t *instance)
 
 static bool PrechillExitConditionMetForFreezerEvaporator(Defrost_t *instance)
 {
-   if(!FreezerEvaporatorThermistorIsValid(instance))
-   {
-      return false;
-   }
-
    TemperatureDegFx100_t temperature;
    DataModel_Read(
       instance->_private.dataModel,
@@ -1014,11 +1009,6 @@ static bool PrechillExitConditionMetForFreezerEvaporator(Defrost_t *instance)
 
 static bool PrechillExitConditionMetForFreezer(Defrost_t *instance)
 {
-   if(!FreezerThermistorIsValid(instance))
-   {
-      return false;
-   }
-
    TemperatureDegFx100_t temperature;
    DataModel_Read(
       instance->_private.dataModel,
@@ -1030,11 +1020,6 @@ static bool PrechillExitConditionMetForFreezer(Defrost_t *instance)
 
 static bool PrechillExitConditionMetForFreshFood(Defrost_t *instance)
 {
-   if(!FreshFoodThermistorIsValid(instance))
-   {
-      return false;
-   }
-
    TemperatureDegFx100_t temperature;
    DataModel_Read(
       instance->_private.dataModel,
@@ -1048,11 +1033,6 @@ static bool PrechillExitConditionMetForFreshFood(Defrost_t *instance)
 
 static bool PrechillExitConditionMetForConvertibleCompartment(Defrost_t *instance)
 {
-   if(!ConvertibleCompartmentThermistorIsValid(instance))
-   {
-      return false;
-   }
-
    TemperatureDegFx100_t temperature;
    DataModel_Read(
       instance->_private.dataModel,
@@ -1277,10 +1257,10 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          VoteForPrechillLoads(instance, Vote_Care);
 
          if(PrechillTimeLeft(instance) == 0 ||
-            PrechillExitConditionMetForFreezer(instance) ||
-            PrechillExitConditionMetForFreezerEvaporator(instance) ||
-            PrechillExitConditionMetForFreshFood(instance) ||
-            PrechillExitConditionMetForConvertibleCompartment(instance))
+            (FreezerThermistorIsValid(instance) && PrechillExitConditionMetForFreezer(instance)) ||
+            (FreezerEvaporatorThermistorIsValid(instance) && PrechillExitConditionMetForFreezerEvaporator(instance)) ||
+            (FreshFoodThermistorIsValid(instance) && PrechillExitConditionMetForFreshFood(instance)) ||
+            (ConvertibleCompartmentThermistorIsValid(instance) && PrechillExitConditionMetForConvertibleCompartment(instance)))
          {
             Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
             break;
