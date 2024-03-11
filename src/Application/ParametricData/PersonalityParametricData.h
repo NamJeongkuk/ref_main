@@ -36,6 +36,7 @@
 #include "WaterValveFlowRate.h"
 #include "CabinetTemperatureExceededData.h"
 #include "SealedSystemValveData.h"
+#include "FreshFoodNonHeatedCycleDefrostData.h"
 
 enum
 {
@@ -72,6 +73,7 @@ typedef struct
    const WaterValveFlowRate_t *waterValveFlowRate;
    const CabinetTemperatureExceededData_t *cabinetTemperatureExceeded;
    const SealedSystemValveData_t *sealedSystemValve;
+   const FreshFoodNonHeatedCycleDefrostData_t *freshFoodNonHeatedCycleDefrost;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

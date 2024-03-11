@@ -152,6 +152,7 @@ INC_DIRS:=\
   src/Bsp \
   src/Application/DataSource/ApplianceApiDataSource \
   src/Application/ModelInformation \
+  src/Application/NonHeatedCycleDefrost \
   src/Hardware \
   src/Hardware/Eeprom \
   lib/Common/Source/Gea \

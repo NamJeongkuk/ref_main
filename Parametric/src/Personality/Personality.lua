@@ -37,7 +37,8 @@ return function(core)
         pointer(config.filter_data),
         pointer(config.water_valve_flow_rate),
         pointer(config.cabinet_temperature_exceeded),
-        pointer(config.sealed_system_valve)
+        pointer(config.sealed_system_valve),
+        pointer(config.fresh_food_non_heated_cycle_defrost)
       ))
   end)
 
@@ -70,7 +71,8 @@ return function(core)
       filter_data = { constraint.typed_string('filter_data') },
       water_valve_flow_rate = { constraint.typed_string('water_valve_flow_rate') },
       cabinet_temperature_exceeded = { constraint.typed_string('cabinet_temperature_exceeded') },
-      sealed_system_valve = { constraint.typed_string('sealed_system_valve' ) }
+      sealed_system_valve = { constraint.typed_string('sealed_system_valve') },
+      fresh_food_non_heated_cycle_defrost = { constraint.typed_string('fresh_food_non_heated_cycle_defrost') }
     })
     return generate(config)
   end

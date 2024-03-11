@@ -4042,7 +4042,7 @@
         {
           "namespace": "mb",
           "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartment_FilteredTemperatureResolvedInDegFx100",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         }

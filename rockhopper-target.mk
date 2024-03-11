@@ -136,6 +136,7 @@ INC_DIRS:=\
   src/Application/Grid/GridFunctions \
   src/Application/RequestStatusUpdater \
   src/Application/ModelInformation \
+  src/Application/NonHeatedCycleDefrost \
   src/Application/Sabbath \
   src/Application/SystemMonitor \
   src/Application/ServiceDiagnostics \

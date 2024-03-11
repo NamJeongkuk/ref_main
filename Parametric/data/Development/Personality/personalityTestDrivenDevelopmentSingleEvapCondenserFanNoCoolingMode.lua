@@ -26,5 +26,6 @@ return personality({
   filter_data = import("../FilterData/filter_data.lua"),
   water_valve_flow_rate = import("../WaterValveFlowRate/water_valve_flow_rate.lua"),
   cabinet_temperature_exceeded = import("../Cooling/cabinet_temperature_exceeded.lua"),
-  sealed_system_valve = import("../SealedSystemValve/sealed_system_valve.lua")
+  sealed_system_valve = import("../SealedSystemValve/sealed_system_valve.lua"),
+  fresh_food_non_heated_cycle_defrost = import("../NonHeatedCycleDefrost/fresh_food_non_heated_cycle_defrost.lua")
 })

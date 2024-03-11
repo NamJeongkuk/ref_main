@@ -106,6 +106,7 @@ return function(directory)
   import('Cooling/LoadOffDoorOpenCompartmentList')
   import('Cooling/CabinetTemperatureExceeded')
   import('SealedSystemValve/SealedSystemValve')
+  import('NonHeatedCycleDefrost/FreshFoodNonHeatedCycleDefrost')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -213,6 +214,7 @@ return function(directory)
   load_off_door_open_compartment_list = LoadOffDoorOpenCompartmentList(core)
   cabinet_temperature_exceeded = CabinetTemperatureExceeded(core)
   sealed_system_valve = SealedSystemValve(core)
+  fresh_food_non_heated_cycle_defrost = FreshFoodNonHeatedCycleDefrost(core)
 
   return {
     core = core,
@@ -323,6 +325,7 @@ return function(directory)
     load_off_door_open_compartment_list = load_off_door_open_compartment_list,
     cabinet_temperature_exceeded = cabinet_temperature_exceeded,
     sealed_system_valve = sealed_system_valve,
+    fresh_food_non_heated_cycle_defrost = fresh_food_non_heated_cycle_defrost,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
