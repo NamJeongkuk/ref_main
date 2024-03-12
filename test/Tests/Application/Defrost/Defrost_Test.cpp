@@ -54,7 +54,7 @@ enum
    DoesNotCareAbout = Vote_DontCare,
 };
 
-const DefrostConfiguration_t defrostConfig = {
+static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostStateErd = Erd_DefrostState,
    .waitingForDefrostErd = Erd_WaitingToDefrost,
@@ -616,6 +616,14 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
       CHECK_FALSE(actual.care);
    }
 
+   void ConvertibleCompartmentDefrostHeaterVoteShouldBeDontCare()
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
    void ConvertibleCompartmentHeaterVoteShouldBeDontCare()
    {
       HeaterVotedState_t actual;
@@ -670,6 +678,31 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
 
       CHECK_EQUAL(expected, actual.state);
       CHECK_TRUE(actual.care);
+   }
+
+   void ConvertibleCompartmentDefrostHeaterVoteIs(HeaterState_t state)
+   {
+      HeaterVotedState_t vote;
+      vote.state = state;
+      vote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &vote);
+   }
+
+   void ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_t expected)
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.state);
+      CHECK_TRUE(actual.care);
+   }
+
+   void FreshFoodDefrostHeaterIsVoted(HeaterState_t state)
+   {
+      HeaterVotedState_t vote;
+      vote.state = state;
+      vote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &vote);
    }
 
    void IceCabinetFanSpeedVoteShouldBe(FanSpeed_t expected)
@@ -991,15 +1024,6 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
    {
       HeaterVotedState_t actual;
       DataModel_Read(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &actual);
-
-      CHECK_EQUAL(expected, actual.state);
-      CHECK_TRUE(actual.care);
-   }
-
-   void ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_t expected)
-   {
-      HeaterVotedState_t actual;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &actual);
 
       CHECK_EQUAL(expected, actual.state);
       CHECK_TRUE(actual.care);
@@ -2258,12 +2282,16 @@ TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfHeaterOnLoadsWhenDefros
    CompressorSpeedVoteShouldBeDontCare();
    FanSpeedVotesShouldBeDontCare();
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   FreshFoodDefrostHeaterVoteShouldBe(HeaterState_Off);
+   ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_Off);
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
    ConvertibleCompartmentDamperVoteShouldBeDontCare();
    SealedSystemValvePositionVoteShouldBeDontCare();
 
    When DisableDefrostIs(false);
    FreezerDefrostHeaterVoteShouldBeDontCare();
+   FreshFoodDefrostHeaterVoteShouldBeDontCare();
+   ConvertibleCompartmentDefrostHeaterVoteShouldBeDontCare();
 }
 
 TEST(Defrost_SingleEvapSideBySide, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsValid)
@@ -2630,9 +2658,13 @@ TEST(Defrost_SingleEvapSideBySide, ShouldVoteFreezerDefrostHeaterOffWhenTransiti
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    Given FreezerDefrostHeaterVoteIs(HeaterState_On);
+   Given FreshFoodDefrostHeaterIsVoted(HeaterState_On);
+   Given ConvertibleCompartmentDefrostHeaterVoteIs(HeaterState_On);
 
    When DisableDefrostIs(true);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   FreshFoodDefrostHeaterVoteShouldBe(HeaterState_Off);
+   ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_Off);
 }
 
 TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBecomesEnabledAndTransitionsFromDisabledToIdle)

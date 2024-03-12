@@ -592,7 +592,10 @@ static void VoteForFreezerDefrostHeater(
       &heaterVote);
 }
 
-static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, HeaterState_t state, bool care)
+static void VoteForFreshFoodDefrostHeater(
+   Defrost_t *instance,
+   HeaterState_t state,
+   Vote_t care)
 {
    HeaterVotedState_t heaterVote = {
       .state = state,
@@ -604,7 +607,10 @@ static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, HeaterState_t sta
       &heaterVote);
 }
 
-static void VoteForConvertibleCompartmentDefrostHeater(Defrost_t *instance, HeaterState_t state, bool care)
+static void VoteForConvertibleCompartmentDefrostHeater(
+   Defrost_t *instance,
+   HeaterState_t state,
+   Vote_t care)
 {
    HeaterVotedState_t heaterVote = {
       .state = state,
@@ -1541,6 +1547,8 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Disabled);
          VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_Care);
+         VoteForFreshFoodDefrostHeater(instance, HeaterState_Off, Vote_Care);
+         VoteForConvertibleCompartmentDefrostHeater(instance, HeaterState_Off, Vote_Care);
          SetWaitingToDefrostTo(instance, false);
          SetDefrostingTo(instance, false);
          break;
@@ -1555,9 +1563,11 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_ExitDefrostHeaterOnStateTestRequest:
          ClearDefrostTestStateRequest(instance);
          break;
-
+         
       case Hsm_Exit:
          VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_DontCare);
+         VoteForFreshFoodDefrostHeater(instance, HeaterState_Off, Vote_DontCare);
+         VoteForConvertibleCompartmentDefrostHeater(instance, HeaterState_Off, Vote_DontCare);
          break;
 
       default:
