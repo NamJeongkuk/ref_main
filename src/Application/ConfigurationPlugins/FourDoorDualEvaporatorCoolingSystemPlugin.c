@@ -37,11 +37,6 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_FourDoorDualEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
    DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
-   // remove when grid is plugged in
-   DataModel_Write(
-      dataModel,
-      Erd_GridPluginReady,
-      set);
 
    FourDoorSetpointPlugin_Init(&instance->_private.fourDoorSetpointPlugin, dataModel);
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(
@@ -50,6 +45,7 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
 
    AmbientTemperatureAndHumidityPlugin_Init(&instance->_private.ambientTemperatureAndHumidityPlugin, dataModel);
 
+   GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    FourDoorFanPlugin_Init(&instance->_private.fourDoorFanPlugin, dataModel);
    ThreeWaySealedSystemValvePlugin_Init(&instance->_private.threeWaySealedSystemValvePlugin, dataModel);
