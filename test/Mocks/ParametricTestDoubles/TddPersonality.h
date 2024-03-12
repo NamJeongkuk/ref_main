@@ -10,7 +10,10 @@
 
 enum
 {
-   TddPersonality_Swqa,
+   TddPersonality_SwqaSideBySide,
+   TddPersonality_SwqaMultidoor,
+   TddPersonality_SwqaAllRefrigerator,
+   TddPersonality_SwqaAllFreezer,
    TddPersonality_DevelopmentSingleEvaporator,
    TddPersonality_DevelopmentDualEvapThreeDoor,
    TddPersonality_DevelopmentTripleEvaporator,

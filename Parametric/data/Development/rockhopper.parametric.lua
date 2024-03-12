@@ -6,7 +6,10 @@ return parametric_data({
   major_version = major_version,
   minor_version = minor_version,
   personalities = {
-    import('./Personality/personalitySwqa.lua'),
+    import('./Personality/personality0SwqaSideBySide.lua'),
+    import('./Personality/personality1SwqaMultidoor.lua'),
+    import('./Personality/personality2SwqaAllRefrigerator.lua'),
+    import('./Personality/personality3SwqaAllFreezer.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvap.lua'),
     import('./Personality/personalityTestDrivenDevelopmentDualEvapThreeDoor.lua'),
     import('./Personality/personalityTestDrivenDevelopmentTripleEvap.lua'),

@@ -25,7 +25,10 @@ enum
 };
 
 static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScriptName] = {
-   { "Parametric/data/Development/Personality/", "personalitySwqa.lua" },
+   { "Parametric/data/Development/Personality/", "personality0SwqaSideBySide.lua" },
+   { "Parametric/data/Development/Personality/", "personality1SwqaMultidoor.lua" },
+   { "Parametric/data/Development/Personality/", "personality2SwqaAllRefrigerator.lua" },
+   { "Parametric/data/Development/Personality/", "personality3SwqaAllFreezer.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvap.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvapThreeDoor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentTripleEvap.lua" },
