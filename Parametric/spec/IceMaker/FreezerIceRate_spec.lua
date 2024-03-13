@@ -17,8 +17,19 @@ describe('FreezerIceRate', function()
     }, overrides or {})
   end
 
+  local function generate_disabled_config(overrides)
+    return require 'lua-common'.table.merge({
+      time_in_minutes = 0
+    }, overrides or {})
+  end
+
   it('should require all arguments', function()
     should_require_args(freezer_ice_rate, generate_config())
+  end)
+
+  it('should require only time argument if time is 0', function()
+    should_require_args(freezer_ice_rate, generate_disabled_config({
+    }))
   end)
 
   it('should assert if time_in_minutes is not in range', function()
@@ -58,6 +69,23 @@ describe('FreezerIceRate', function()
       time_in_minutes = 2,
       freezer_setpoint_in_degfx100 = 250,
       freezer_evaporator_fan_speed = 'medium_speed'
+    })
+
+    assert.equals(expected, remove_whitespace(tostring(actual)))
+    assert(actual.is_of_type('freezer_ice_rate'))
+  end)
+
+  it('should generate a typed string with the correct data and type for disabled freezer ice rate', function()
+    local expected = remove_whitespace([[
+        structure(
+          u8(0),
+          i16(0),
+          u8(0)
+        )
+      ]])
+
+    local actual = freezer_ice_rate({
+      time_in_minutes = 0
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

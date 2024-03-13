@@ -531,7 +531,7 @@ TEST_GROUP(FactoryModeIntegration)
 
    void GivenTheTwistIceMakerMotorControlRequestIs(bool request)
    {
-      DataModel_Write(dataModel, Erd_TwistIceMakerMotorControlRequest, &request);
+      DataModel_Write(dataModel, Erd_IceMaker0_TwistMotorControlRequest, &request);
    }
 };
 

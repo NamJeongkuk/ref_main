@@ -9,21 +9,16 @@
 #include "SystemErds.h"
 #include "DataSource_Gpio.h"
 
-static const Output_TwistTrayIceMakerMotorStateConfig_t outputMotorStateConfig = {
-   .motorDrivePositiveClockwiseChannel = Erd_BspGpio_MTR_DRV_00,
-   .motorDriveNegativeCounterClockwiseChannel = Erd_BspGpio_MTR_DRV_01
-};
-
 static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerConfig = {
    .resolvedVoteErd = Erd_IceMaker2_TwistMotor_ResolvedVote,
-   .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
+   .motorRequestErd = Erd_IceMaker2_TwistMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_IceMaker2_MotorActionResult,
    .motorRequestedStateErd = Erd_IceMaker2_MotorRequestedState
 };
 
 static const TwistTrayIceMakerMotorSwitchMonitorConfig_t motorSwitchMonitorConfig = {
-   .switchInputErd = Erd_Gpio_GPIO_IN_02
+   .switchInputErd = Erd_IceMaker2_TwistMotorSwitchState
 };
 
 static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
@@ -220,7 +215,6 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
 
 static const TwistTrayIceMakerPlugConfig_t config = {
    .iceMakerEnableResolverConfig = &iceMakerEnableResolverConfig,
-   .outputMotorStateConfig = &outputMotorStateConfig,
    .motorRequestManagerConfig = &motorRequestManagerConfig,
    .motorSwitchMonitorConfig = &motorSwitchMonitorConfig,
    .freezerIceRateHandlerConfig = &freezerIceRateHandlerConfig,
@@ -237,7 +231,8 @@ static const TwistTrayIceMakerPlugConfig_t config = {
    .harvestCountCalculatorConfig = &harvestCountCalculatorConfig,
    .motorControllerValueUpdaterConfig = &motorControllerValueUpdaterConfig,
    .filteredTemperatureArbiterConfig = &filteredTemperatureArbiterConfig,
-   .twistTrayIceMakerConfig = &twistTrayIceMakerConfig
+   .twistTrayIceMakerConfig = &twistTrayIceMakerConfig,
+   .twistTrayMotorOutputErd = Erd_IceMaker2_TwistTrayMotorOutput
 };
 
 void TwistTrayIceMaker2Configurator_Init(TwistTrayIceMakerConfigurator_t *instance, I_DataModel_t *dataModel)

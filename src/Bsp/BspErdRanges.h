@@ -29,7 +29,9 @@ enum
    BspErdInputCaptureStart = BspErdRampingLedPwmEnd + 1,
    BspErdInputCaptureEnd = BspErdInputCaptureStart + BspErdRangeSize,
    BspErdPersonalityStart = BspErdInputCaptureEnd + 1,
-   BspErdPersonalityEnd = BspErdPersonalityStart + BspErdRangeSize
+   BspErdPersonalityEnd = BspErdPersonalityStart + BspErdRangeSize,
+   BspErdTwistTrayMotorStart = BspErdPersonalityEnd + 1,
+   BspErdTwistTrayMotorEnd = BspErdTwistTrayMotorStart + BspErdRangeSize
 };
 
 #endif

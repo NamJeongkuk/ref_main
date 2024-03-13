@@ -31,6 +31,7 @@ return parametric_data({
     import('./Personality/personalityTestDrivenDevelopmentDualEvapFourDoor.lua'),
     import('./Personality/personalityTestDrivenDevelopmentNoAdcsMapped.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreezer.lua'),
-    import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua')
+    import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapDualTwistIceMakers.lua')
   }
 })

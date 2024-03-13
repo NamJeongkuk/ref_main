@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "MotorDriverArbitrator.h"
+#include "ErdLogicService.h"
 
 typedef struct
 {
    struct
    {
       MotorDriverArbitrator_t motorDriverArbitrator;
+      ErdLogicService_t erdLogicService;
    } _private;
 } ParallelMotorControlPlugin_t;
 

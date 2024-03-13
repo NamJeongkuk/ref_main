@@ -32,9 +32,14 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_IceMaker2_WaterValveRelay,                 output = bsp_erd.Erd_Gpio_RLY_07 },
   { input = bsp_mapped_erd.Erd_LeftSideFreezerDoorStatus,                 output = bsp_erd.Erd_Gpio_DOOR_INT },
   { input = bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus,              output = bsp_erd.Erd_Gpio_DOOR_01 },
+  { input = bsp_mapped_erd.Erd_IceMaker0_TwistMotorSwitchState,           output = bsp_erd.Erd_Gpio_GPIO_IN_02 },
+  { input = bsp_mapped_erd.Erd_IceMaker1_TwistMotorSwitchState,           output = bsp_erd.Erd_Gpio_GPIO_IN_01 },
   { input = bsp_mapped_erd.Erd_IceMaker1_FeelerArmPosition,               output = bsp_erd.Erd_Gpio_GPIO_IN_03 },
   { input = bsp_mapped_erd.Erd_CompressorRelay,                           output = bsp_erd.Erd_Gpio_PWM_VAR_01 },
-  { input = bsp_mapped_erd.Erd_IceMaker1_RakePosition,                    output = bsp_erd.Erd_Gpio_CAPTURE_03 }
+  { input = bsp_mapped_erd.Erd_IceMaker1_RakePosition,                    output = bsp_erd.Erd_Gpio_CAPTURE_03 },
+
+  { input = bsp_mapped_erd.Erd_IceMaker0_TwistTrayMotorOutput,            output = bsp_erd.Erd_TwistTrayMotorOutput_MTR_DRV_00_01 },
+  { input = bsp_mapped_erd.Erd_IceMaker1_TwistTrayMotorOutput,            output = bsp_erd.Erd_TwistTrayMotorOutput_MTR_DRV_02_03 },
 }
 
 return bsp_configuration({

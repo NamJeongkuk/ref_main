@@ -952,6 +952,11 @@ enum
    ENTRY(Erd_AugerMotorControllerFsmState,                  0xF162, AugerMotorControllerFsmState_t,                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_PrivateDispensingRequest,                      0xF163, DispensingRequest_t,                                Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_PrivateDispensingResultStatus,                 0xF164, DispenseStatus_t,                                   Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_IceMaker0_TwistMotorSwitchState,               0xF165, bool,                                               Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistMotorSwitchState,               0xF166, bool,                                               Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistMotorSwitchState,               0xF167, bool,                                               Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   \
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
@@ -1029,6 +1034,13 @@ enum
    \
    ENTRY(Erd_IceMaker1_FeelerArmPosition,                   0xF1B1, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_FeelerArmPosition,                   0xF1B2, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_IceMaker0_TwistTrayMotorOutput,                0xF1B3, I_Output_t *,                                       Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistTrayMotorOutput,                0xF1B4, I_Output_t *,                                       Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistTrayMotorOutput,                0xF1B5, I_Output_t *,                                       Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_TwistMotorControlRequest,            0xF1B6, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistMotorControlRequest,            0xF1B7, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistMotorControlRequest,            0xF1B8, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF200, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF201, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1561,6 +1573,9 @@ enum
    ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF592, InputCaptureCounts_t,                               Swap_Yes, Io_None, Sub_N, Bsp,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_04,                       0xF593, InputCaptureMicroSeconds_t,                         Swap_Yes, Io_None, Sub_N, Bsp,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_05,                       0xF594, InputCaptureMicroSeconds_t,                         Swap_Yes, Io_None, Sub_N, Bsp,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_TwistTrayMotorOutput_MTR_DRV_00_01,            0xF595, I_Output_t *,                                       Swap_No,  Io_None, Sub_N, Bsp,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_TwistTrayMotorOutput_MTR_DRV_02_03,            0xF596, I_Output_t *,                                       Swap_No,  Io_None, Sub_N, Bsp,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_Adc_ADC_0,                                     0xF59A, AdcCounts_t,                                        Swap_Range_S, Io_None, Sub_N, Bsp,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_Adc_ADC_1,                                     0xF59B, AdcCounts_t,                                        Swap_Range,   Io_None, Sub_N, Bsp,                NotNv,                                                       NotNv,         NotFault) \

@@ -49,6 +49,9 @@ return enum({
   Erd_IceMaker0_RakePosition = 0xF156,
   Erd_IceMaker1_RakePosition = 0xF14E,
   Erd_IceMaker2_RakePosition = 0xF14F,
+  Erd_IceMaker0_TwistMotorSwitchState = 0xF165, 
+  Erd_IceMaker1_TwistMotorSwitchState = 0xF166,
+  Erd_IceMaker2_TwistMotorSwitchState = 0xF167, 
 
   Erd_FreshFoodBackWallLight_RampingPwm = 0xF55B,
   Erd_FreshFoodTopLight_RampingPwm = 0xF55C,
@@ -72,4 +75,8 @@ return enum({
 
   Erd_DamperStepperMotorDriveEnable = 0xF54F,
   Erd_TwistIceMakerMotorDriveEnable = 0xF550,
+
+  Erd_IceMaker0_TwistTrayMotorOutput = 0xF1B3,
+  Erd_IceMaker1_TwistTrayMotorOutput = 0xF1B4,
+  Erd_IceMaker2_TwistTrayMotorOutput = 0xF1B5
 })

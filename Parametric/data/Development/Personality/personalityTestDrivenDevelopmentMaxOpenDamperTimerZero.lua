@@ -16,7 +16,7 @@ return personality({
   damper = import("../Damper/fresh_food_damper_with_zero_max_open_time_out.lua"),
   damper_heater = import("../Damper/damper_heater.lua"),
   pulldown = import("../Grid/pulldown.lua"),
-  ice_maker = import("../IceMaker/ice_maker.lua"),
+  ice_maker = import("../IceMaker/ice_maker_sxs.lua"),
   flow_meter = import("../FlowMeter/flow_meter.lua"),
   dispenser = import("../Dispenser/dispenser.lua"),
   recess_heater = import("../RecessHeater/recess_heater.lua"),

@@ -69,5 +69,8 @@ return enum({
   Erd_Gpio_GPIO_IN_02 = 0xF635,
   Erd_Gpio_GPIO_IN_03 = 0xF636,
   Erd_Gpio_PWM_VAR_01 = 0xF638,
-  Erd_Gpio_CAPTURE_03 = 0xF639
+  Erd_Gpio_CAPTURE_03 = 0xF639,
+
+  Erd_TwistTrayMotorOutput_MTR_DRV_00_01 = 0xF595,
+  Erd_TwistTrayMotorOutput_MTR_DRV_02_03 = 0xF596
 })

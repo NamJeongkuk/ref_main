@@ -63,6 +63,7 @@ typedef struct
       bool pauseFillMonitoring;
       bool delayFillMonitoring;
       bool doorOpenCheckTimeElapsed;
+      bool motorHarvested;
 
       const TwistTrayIceMakerData_t *parametric;
       const TwistTrayIceMakerConfiguration_t *config;

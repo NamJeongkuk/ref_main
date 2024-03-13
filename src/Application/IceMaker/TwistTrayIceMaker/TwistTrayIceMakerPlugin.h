@@ -15,7 +15,6 @@
 #include "I_DataModel.h"
 #include "ErdResolver.h"
 #include "TwistTrayIceMakerMotorRequestManager.h"
-#include "Output_TwistTrayIceMakerMotorState.h"
 #include "TwistTrayIceMakerRunner.h"
 #include "TwistTrayIceMakerMotorSwitchMonitor.h"
 #include "FillTubeHeaterVotingFrameworkPlugin.h"
@@ -34,7 +33,6 @@
 typedef struct
 {
    const ErdLogicServiceConfiguration_t *iceMakerEnableResolverConfig;
-   const Output_TwistTrayIceMakerMotorStateConfig_t *outputMotorStateConfig;
    const TwistTrayIceMakerMotorRequestManagerConfig_t *motorRequestManagerConfig;
    const TwistTrayIceMakerMotorSwitchMonitorConfig_t *motorSwitchMonitorConfig;
    const FreezerIceRateHandlerConfig_t *freezerIceRateHandlerConfig;
@@ -52,6 +50,7 @@ typedef struct
    const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t *motorControllerValueUpdaterConfig;
    const OverrideArbiterConfiguration_t *filteredTemperatureArbiterConfig;
    const TwistTrayIceMakerConfiguration_t *twistTrayIceMakerConfig;
+   Erd_t twistTrayMotorOutputErd;
 } TwistTrayIceMakerPlugConfig_t;
 
 typedef struct
@@ -61,7 +60,6 @@ typedef struct
       IceMakerEnableResolver_t iceMakerEnableResolver;
       SensorFiltering_t sensorFilter;
       TwistTrayIceMaker_t twistTrayIceMaker;
-      Output_TwistTrayIceMakerMotorState_t motorStateOutput;
       TwistTrayIceMakerMotorController_t twistTrayMotorController;
       TwistTrayIceMakerMotorControllerValueUpdater_t twistTrayMotorControllerValueUpdater;
       TwistTrayIceMakerRunner_t twistTrayIceMakerMotorControllerRunner;

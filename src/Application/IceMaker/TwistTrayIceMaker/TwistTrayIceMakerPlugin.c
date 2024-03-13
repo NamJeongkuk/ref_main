@@ -82,10 +82,7 @@ void TwistTrayIceMakerPlugin_Init(
    TwistTrayIceMakerMotorController_Init(
       &instance->_private.twistTrayMotorController,
       twistTrayData,
-      Output_TwistTrayIceMakerMotorState_Init(
-         &instance->_private.motorStateOutput,
-         DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-         config->outputMotorStateConfig),
+      DataModelErdPointerAccess_GetOutput(dataModel, config->twistTrayMotorOutputErd),
       dataModel,
       config->motorControllerConfig);
 

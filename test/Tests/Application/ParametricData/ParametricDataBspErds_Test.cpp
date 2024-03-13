@@ -356,6 +356,30 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_IceMaker2_RakePosition);
 }
 
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0TwistMotorSwitch)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_TwistMotorSwitchState)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker0_TwistMotorSwitchState);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker1TwistMotorSwitch)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker1_TwistMotorSwitchState)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker1_TwistMotorSwitchState);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker2TwistMotorSwitch)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker2_TwistMotorSwitchState)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker2_TwistMotorSwitchState);
+}
+
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerEvapFanInputCaptureTime)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerEvapFan_InputCaptureTime)");
@@ -434,6 +458,30 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentEvapThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0TwistTrayMotorOutput)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_TwistTrayMotorOutput)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker0_TwistTrayMotorOutput);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker1TwistTrayMotorOutput)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker1_TwistTrayMotorOutput)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker1_TwistTrayMotorOutput);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker2TwistTrayMotorOutput)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker2_TwistTrayMotorOutput)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker2_TwistTrayMotorOutput);
 }
 
 TEST_GROUP(ParametricDataBspErds_Output){};
@@ -916,4 +964,20 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_Adc_HW_PERSONALITY_01);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForTwistTrayMotor00_01)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_TwistTrayMotorOutput_MTR_DRV_00_01)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_TwistTrayMotorOutput_MTR_DRV_00_01);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForTwistTrayMotor02_03)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_TwistTrayMotorOutput_MTR_DRV_02_03)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_TwistTrayMotorOutput_MTR_DRV_02_03);
 }

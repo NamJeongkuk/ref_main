@@ -697,7 +697,7 @@
          ]
       },
       {
-         "title": "Twist IM",
+         "title": "Primary Twist IM",
          "erds": [
             {
                "namespace": "mb",
@@ -801,6 +801,116 @@
                "namespace": "mb",
                "displayName": "IM Fill Tube Heater State",
                "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Secondary Twist IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "IM Info",
+               "name": "Erd_IceMaker2_TypeInformation",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM State Machine State",
+               "name": "Erd_IceMaker2_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Motor Operation State",
+               "name": "Erd_IceMaker2_MotorOperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Motor Action Result",
+               "name": "Erd_IceMaker2_MotorActionResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Motor Fault Active Flag",
+               "name": "Erd_IceMaker2_TwistTrayMotorFault",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Twist Motor State",
+               "name": "Erd_IceMaker2_TwistMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Valve State",
+               "name": "Erd_IceMaker2_WaterValve_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Freeze Integration Count",
+               "name": "Erd_IceMaker2_FreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Minimum Freeze Time Counter In Minutes",
+               "name": "Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Ice Rate Active?",
+               "name": "Erd_Freezer_IceRateIsActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Fill Tube Heater State",
+               "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
                "read": true,
                "interval": 1000000000
             }
@@ -1026,7 +1136,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Test Request",
+               "displayName": "Primary IM Test Request",
                "name": "Erd_IceMaker0_TestRequest",
                "read": true,
                "write": true,
@@ -1034,22 +1144,51 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM State Machine State",
+               "displayName": "Primary IM State Machine State",
                "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "IM Enable Request",
+               "displayName": "Secondary IM Test Request",
+               "name": "Erd_IceMaker2_TestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM State Machine State",
+               "name": "Erd_IceMaker2_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Primary IM Enable Request",
                "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "IM Enable Status",
+               "displayName": "Primary IM Enable Status",
                "name": "Erd_IceMaker0_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
                "read": true,
                "interval": 1000000000
             }

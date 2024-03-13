@@ -27,6 +27,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "GpioGroup_TestDouble.h"
 #include "Interrupt_TestDouble.h"
+#include "TwistTrayMotorOutput_TestDouble.h"
 #include "uassert_test.h"
 
 enum
@@ -56,6 +57,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    Interrupt_TestDouble_t *interruptTestDouble;
    Interrupt_TestDouble_t *fastInterruptTestDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   TwistTrayMotorOutput_TestDouble_t *twistTrayMotorOutputTestDouble;
 
    void setup()
    {
@@ -66,6 +68,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       gpioGroupTestDouble = (GpioGroup_TestDouble_t *)DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface);
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
       fastInterruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
+      twistTrayMotorOutputTestDouble = (TwistTrayMotorOutput_TestDouble_t *)DataModelErdPointerAccess_GetOutput(dataModel, Erd_IceMaker0_TwistTrayMotorOutput);
 
       twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->twistTrayData;
       twistTrayIceMakerFillMonitorData = twistTrayIceMakerData->fillData.iceMakerFillMonitorData;
@@ -165,7 +168,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheMotorSwitchIsDebouncedHigh(void)
    {
-      DataModel_Write(dataModel, Erd_Gpio_GPIO_IN_02, clear);
+      DataModel_Write(dataModel, Erd_IceMaker0_TwistMotorSwitchState, clear);
    }
 
    void WhenTheMotorSwitchIsDebouncedHigh(void)
@@ -175,7 +178,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheMotorSwitchIsDebouncedLow(void)
    {
-      DataModel_Write(dataModel, Erd_Gpio_GPIO_IN_02, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_TwistMotorSwitchState, set);
    }
 
    void GivenSabbathModeIs(bool state)
@@ -361,31 +364,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void TheMotorStateShouldBe(TwistTrayIceMakerMotorState_t expected)
    {
-      switch(expected)
-      {
-         case TwistTrayIceMakerMotorState_Coasting:
-            CHECK_EQUAL(false, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_00));
-            CHECK_EQUAL(false, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_01));
-            break;
-
-         case TwistTrayIceMakerMotorState_Untwisting:
-            CHECK_EQUAL(false, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_00));
-            CHECK_EQUAL(true, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_01));
-            break;
-
-         case TwistTrayIceMakerMotorState_Twisting:
-            CHECK_EQUAL(true, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_00));
-            CHECK_EQUAL(false, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_01));
-            break;
-
-         case TwistTrayIceMakerMotorState_Braking:
-            CHECK_EQUAL(true, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_00));
-            CHECK_EQUAL(true, GpioGroup_TestDouble_ReadOutputState(gpioGroupTestDouble, Erd_BspGpio_MTR_DRV_01));
-            break;
-
-         default:
-            CHECK_FALSE("Invalid State");
-      };
+      CHECK_EQUAL(expected, TwistTrayMotorOutput_TestDouble_GetTwistTrayMotorOutputState(twistTrayMotorOutputTestDouble));
    }
 
    void WhenTheMotorActionResultIs(IceMakerMotorActionResult_t motorActionResult)

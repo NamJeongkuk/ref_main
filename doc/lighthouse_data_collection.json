@@ -428,12 +428,17 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMaker0_TypeInformation",
+         "name": "Erd_IceMaker2_FillTubeHeater_WinningVoteErd",
          "interval": 60000
       },
       {
          "namespace": "mb",
          "name": "Erd_DamperHeater_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker0_TypeInformation",
          "interval": 60000
       },
       {
@@ -539,6 +544,76 @@
       {
          "namespace": "mb",
          "name": "Erd_Freezer_IceRateIsActive",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_TypeInformation",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_StateMachineState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_WaterValve_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_SkipFillRequest",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_EnableStatus",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_EnabledResolved",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_MotorOperationState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_MotorActionResult",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_TwistTrayMotorFault",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_TwistMotor_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMaker2_FreezeIntegrationCount",
          "interval": 60000
       },
       {

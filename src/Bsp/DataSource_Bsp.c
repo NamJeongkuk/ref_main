@@ -16,10 +16,11 @@
 #include "DataSource_Pwm.h"
 #include "DataSource_RampingLedPwm.h"
 #include "DataSource_InputCapture.h"
+#include "DataSource_TwistTrayMotor.h"
 
 enum
 {
-   BspDataSourceCount = 7
+   BspDataSourceCount = 8
 };
 
 static struct
@@ -91,6 +92,10 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *i
    instance.dataSources[index++] = DataSource_RampingLedPwm_Init(&instance.OnDataChange, interrupt);
    instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Adc_Init();
+
+   I_GpioGroup_t *gpioGroup;
+   DataSource_Read(&instance.interface, Erd_GpioGroupInterface, &gpioGroup); 
+   instance.dataSources[index++] = DataSource_TwistTrayMotor_Init(gpioGroup);
 
    uassert(index <= NUM_ELEMENTS(instance.dataSources));
 

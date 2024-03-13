@@ -186,6 +186,15 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldUpdateMotorRequestedStateToTheM
    MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One);
 }
 
+TEST(TwistTrayIceMakerMotorRequestManager, ShouldUpdateMotorRequestedStateToTheMotorResolvedVoteIfMotorDriveIsAlreadyEnabled)
+{
+   GivenTheMotorDriveEnableIs(SET);
+   GivenTheModuleIsInitialized();
+
+   WhenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One);
+}
+
 TEST(TwistTrayIceMakerMotorRequestManager, ShouldIncrementMotorRequestedStateSignalMultipleTimesWhenMotorDriveIsEnabled)
 {
    GivenTheMotorResolvedVoteIs(IceMakerMotorState_Run);

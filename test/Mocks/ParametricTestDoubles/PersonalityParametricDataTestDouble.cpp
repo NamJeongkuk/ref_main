@@ -50,7 +50,8 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvapFourDoor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentNoAdcsMapped.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreezer.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapDualTwistIceMakers.lua" },
 };
 
 static bool loaded[NumberOfPersonalities];

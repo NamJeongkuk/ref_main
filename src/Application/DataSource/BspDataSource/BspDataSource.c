@@ -15,6 +15,7 @@
 #include "DataSource_Pwm.h"
 #include "DataSource_RampingLedPwm.h"
 #include "DataSource_InputCapture.h"
+#include "DataSource_TwistTrayMotor.h"
 #include "PersonalityParametricData.h"
 #include "DataSource_SoftPwmGpio.h"
 
@@ -93,7 +94,9 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_InputCapture_CAPTURE_02, Erd_BspInputCapture_CAPTURE_02 },
    { Erd_InputCapture_CAPTURE_03, Erd_BspInputCapture_CAPTURE_03 },
    { Erd_InputCapture_CAPTURE_04, Erd_BspInputCapture_CAPTURE_04 },
-   { Erd_InputCapture_CAPTURE_05, Erd_BspInputCapture_CAPTURE_05 }
+   { Erd_InputCapture_CAPTURE_05, Erd_BspInputCapture_CAPTURE_05 },
+   { Erd_TwistTrayMotorOutput_MTR_DRV_00_01, Erd_BspTwistTrayMotorOutput_MTR_DRV_00_01 },
+   { Erd_TwistTrayMotorOutput_MTR_DRV_02_03, Erd_BspTwistTrayMotorOutput_MTR_DRV_02_03 }
 };
 
 static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {

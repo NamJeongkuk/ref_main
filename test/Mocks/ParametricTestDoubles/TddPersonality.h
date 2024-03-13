@@ -36,6 +36,7 @@ enum
    TddPersonality_DevelopmentNoAdcsMapped,
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreezer,
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreshFood,
+   TddPersonality_DevelopmentDualTwistTrayIceMaker,
    TddPersonality_MaxDevelopment
 };
 

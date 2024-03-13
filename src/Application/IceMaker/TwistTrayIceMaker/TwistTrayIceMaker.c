@@ -210,13 +210,6 @@ static void StopFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
    TimerModule_Stop(instance->_private.timerModule, &instance->_private.fillTubeHeaterTimer);
 }
 
-static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, IceMakerMotorActionResult_t expected)
-{
-   IceMakerMotorActionResult_t actual;
-   DataSource_Read(instance->_private.dataSource, instance->_private.config->motorActionResultErd, &actual);
-   return actual == expected;
-}
-
 static bool HarvestDoorDelayHasElapsed(TwistTrayIceMaker_t *instance)
 {
    return instance->_private.doorHarvestDelayHasElapsed;
@@ -488,7 +481,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_FillTubeHeaterTimerExpired:
          VoteForFillTubeHeaterOffAndDontCare(instance);
 
-         if(MotorActionResultIs(instance, Harvested))
+         if(instance->_private.motorHarvested)
          {
             if(!IceMakerThermistorIsValid(instance))
             {
@@ -502,6 +495,8 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultHarvested:
+         instance->_private.motorHarvested = true;
+         RequestMotorState(instance, Idle);
          UpdateIceMakerFullStatus(instance, CLEAR);
          if(FillTubeHeaterTimerHasExpired(instance))
          {
@@ -551,7 +546,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_TestRequest_Fill:
-         if(MotorActionResultIs(instance, Harvested))
+         if(instance->_private.motorHarvested)
          {
             Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
@@ -560,6 +555,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Fsm_Exit:
          VoteForFillTubeHeaterOffAndDontCare(instance);
          StopFillTubeHeaterTimer(instance);
+         instance->_private.motorHarvested = false;
          RequestMotorState(instance, Idle);
          break;
    }
@@ -1066,6 +1062,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.pauseFillMonitoring = false;
    instance->_private.delayFillMonitoring = false;
    instance->_private.doorOpenCheckTimeElapsed = false;
+   instance->_private.motorHarvested = false;
 
    EventSubscription_Init(
       &instance->_private.dataSourceChangeEventSubscription,
