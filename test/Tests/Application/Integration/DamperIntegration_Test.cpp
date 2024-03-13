@@ -25,6 +25,7 @@ extern "C"
 #include "TimerModule_TestDouble.h"
 #include "uassert_test.h"
 #include "Interrupt_TestDouble.h"
+#include "PersonalityTestSetup.h"
 
 #define Given
 #define When
@@ -49,9 +50,9 @@ TEST_GROUP(DamperIntegration)
    Interrupt_TestDouble_t *interruptTestDouble;
    const DamperData_t *damperData;
 
-   void setup()
+   void setup(PersonalityId_t personality)
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, personality);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
@@ -455,6 +456,9 @@ TEST_GROUP(DamperIntegration)
    }
 };
 
+#define PERSONALITIES(ENTRY) \
+   ENTRY(TddPersonality_DevelopmentSingleEvaporator)
+
 TEST(DamperIntegration, ShouldInitialize)
 {
    GivenApplicationHasBeenInitialized();
@@ -745,144 +749,11 @@ TEST(DamperIntegration, FactoryVoteShouldTakePriorityForDamperHeater)
    DamperHeaterWinningErdShouldBe(Erd_DamperHeater_FactoryVote);
 }
 
-TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
-{
-   Application_t instance;
-   ReferDataModel_TestDouble_t dataModelDouble;
-   I_DataModel_t *dataModel;
-   ResetReason_t resetReason;
-   TimerModule_TestDouble_t *timerModuleTestDouble;
-   const DamperData_t *damperData;
+#undef PERSONALITIES
+#define PERSONALITIES(ENTRY) \
+   ENTRY(TddPersonality_DevelopmentMaxOpenDamperTimerZero)
 
-   void setup()
-   {
-      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentMaxOpenDamperTimerZero);
-      dataModel = dataModelDouble.dataModel;
-      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      damperData = PersonalityParametricData_Get(dataModelDouble.dataModel)->damperData;
-   }
-
-   void GivenApplicationHasBeenInitialized()
-   {
-      Application_Init(
-         &instance,
-         dataModel,
-         resetReason);
-   }
-
-   void TargetThermistorIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidOverrideValue, set);
-      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidOverrideRequest, &state);
-   }
-
-   void SourceThermistorIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidOverrideValue, set);
-      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidOverrideRequest, &state);
-   }
-
-   void SourceTemperatureIsLessThanSourceCompartmentMaximumTemperatureToRunCheck()
-   {
-      TemperatureDegFx100_t temperature = damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1;
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100, &temperature);
-   }
-
-   void DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_t expectedState)
-   {
-      DamperFreezePreventionFsmState_t actualState;
-      DataModel_Read(dataModel, Erd_DamperFreezePreventionFsmState, &actualState);
-
-      CHECK_EQUAL(expectedState, actualState);
-   }
-
-   void GivenThatTheApplicationHasStartedAndDamperIsInMonitoringTemperatureChangesState()
-   {
-      Given TargetThermistorIs(Valid);
-      Given SourceThermistorIs(Valid);
-      Given SourceTemperatureIsLessThanSourceCompartmentMaximumTemperatureToRunCheck();
-
-      GivenApplicationHasBeenInitialized();
-      DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_MonitoringTemperatureChange);
-   }
-
-   void TargetTemperatureIs(TemperatureDegFx100_t targetTemperature)
-   {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &targetTemperature);
-   }
-
-   void StepsAreSetToZero()
-   {
-      StepperPositionRequest_t position;
-      DataModel_Read(
-         dataModelDouble.dataModel,
-         Erd_DamperStepperMotorPositionRequest,
-         &position);
-
-      position.stepsToMove = 0;
-      DataModel_Write(
-         dataModelDouble.dataModel,
-         Erd_DamperStepperMotorPositionRequest,
-         &position);
-   }
-
-   void DamperCurrentPositionShouldBe(DamperPosition_t expectedPosition)
-   {
-      DamperPosition_t actualPosition;
-      DataModel_Read(dataModel, Erd_DamperCurrentPosition, &actualPosition);
-
-      CHECK_EQUAL(expectedPosition, actualPosition);
-   }
-
-   void HomingHasCompleted()
-   {
-      When StepsAreSetToZero();
-      DamperCurrentPositionShouldBe(DamperPosition_Closed);
-   }
-
-   void DamperPositionShouldBeDontCareForMaxOpenTimeVote()
-   {
-      DamperVotedPosition_t actualPosition;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-
-      CHECK_EQUAL(Vote_DontCare, actualPosition.care);
-   }
-
-   void GridDamperPositionVoteIsOpenAndCare()
-   {
-      DamperVotedPosition_t vote;
-      vote.position = DamperPosition_Open;
-      vote.care = Vote_Care;
-
-      DataModel_Write(dataModel, Erd_FreshFoodDamperPosition_GridVote, &vote);
-   }
-
-   void DamperPositionWinningVoteErdShouldBe(Erd_t expectedErd)
-   {
-      Erd_t actualErd;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_WinningVoteErd, &actualErd);
-
-      CHECK_EQUAL(expectedErd, actualErd);
-   }
-
-   void DamperPositionResolvedVoteShouldBe(DamperPosition_t expectedPosition)
-   {
-      DamperVotedPosition_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_ResolvedVote, &vote);
-
-      CHECK_EQUAL(expectedPosition, vote.position);
-      CHECK_TRUE(vote.care);
-   }
-
-   void After(TimerTicks_t ticks)
-   {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, 1000);
-   }
-};
-
-TEST(DamperIntegration_MaxOpenTimeZero, ShouldNotVoteToCloseDamperHeaterWhenMaxTimeToReachIsSetToZeroInParametric)
+TEST(DamperIntegration, ShouldNotVoteToCloseDamperHeaterWhenMaxTimeToReachIsSetToZeroInParametric)
 {
    GivenThatTheApplicationHasStartedAndDamperIsInMonitoringTemperatureChangesState();
    When HomingHasCompleted();
