@@ -1,0 +1,2774 @@
+{
+   "name": "MD & AFAR Combined GUI",
+   "tabs": [
+      {
+         "title": "Versions",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Application Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric Version",
+               "name": "Erd_ParametricVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric CRC",
+               "name": "Erd_ParametricDataImageCrc",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Git Hash",
+               "name": "Erd_GitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "MB Parametric Short Git Hash",
+               "name": "Erd_ParametricShortGitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Personality",
+               "name": "Erd_AppliancePersonality",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Reset Mainboard in X Seconds",
+               "name": "Erd_Reset",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Bootloader Version",
+               "name": "Erd_BootLoaderVersion",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Quick Status",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Filtered Temperature (DegF x100)",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Filtered Temperature (DegF x100)",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Filtered Evap Temperature (DegF x100)",
+               "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Filtered Temperature (DegF x100)",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Filtered Temperature (DegF x100)",
+               "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Filtered Temperature (DegF x100)",
+               "name": "Erd_IceCabinet_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Temperature (DegF x100)",
+               "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Humidity (Percent x100)",
+               "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Speed",
+               "name": "Erd_CoolingSpeed",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor - Resolved Speed",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper - Resolved Position",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper - Resolved Position",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Sealed System Valve - Resolved Position",
+               "name": "Erd_SealedSystemValvePosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Resolved Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Resolved Speed",
+               "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Actual RPM",
+               "name": "Erd_FreshFoodEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Resolved Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Resolved Speed",
+               "name": "Erd_IceCabinetFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Actual RPM",
+               "name": "Erd_IceCabinetFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater",
+               "name": "Erd_FreshFoodDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Left Door Open?",
+               "name": "Erd_LeftSideFreshFoodDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Right Door Open?",
+               "name": "Erd_RightSideFreshFoodDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Door Open?",
+               "name": "Erd_LeftSideFreezerDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Door Open?",
+               "name": "Erd_ConvertibleCompartmentDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Door-in-Door Door Open?",
+               "name": "Erd_DoorInDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost State",
+               "name": "Erd_DefrostState",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Compressor",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Compressor State",
+               "name": "Erd_CompressorState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed Winning Vote",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed Resolved Vote",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed Factory Vote",
+               "name": "Erd_CompressorSpeed_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+
+         ]
+      },
+      {
+         "title": "Dampers/SS Valve",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper - Resolved Position",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper - Winning Vote",
+               "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper - Resolved Position",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper - Winning Vote",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Sealed System Valve - Resolved Position",
+               "name": "Erd_SealedSystemValvePosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Sealed System Valve - Winning Vote",
+               "name": "Erd_SealedSystemValvePosition_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Position - Factory Vote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Position - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Sealed System Valve Position - Factory Vote",
+               "name": "Erd_SealedSystemValvePosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+
+         ]
+      },
+      {
+         "title": "Fans",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Resolved Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Target RPM/PWM",
+               "name": "Erd_CalculatedCondenserFanControl",
+               "read": true,
+               "interval": 1000000000
+            }, 
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Winning Vote",
+               "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Resolved Speed",
+               "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Target RPM/PWM",
+               "name": "Erd_CalculatedFreshFoodEvapFanControl",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Winning Vote",
+               "name": "Erd_FreshFoodEvapFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Actual RPM",
+               "name": "Erd_FreshFoodEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Resolved Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Target RPM/PWM",
+               "name": "Erd_CalculatedFreezerEvapFanControl",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Winning Vote",
+               "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Resolved Speed",
+               "name": "Erd_IceCabinetFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Target RPM/PWM",
+               "name": "Erd_CalculatedIceCabinetFanControl",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Winning Vote",
+               "name": "Erd_IceCabinetFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Actual RPM",
+               "name": "Erd_IceCabinetFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Factory/Service Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Factory/Service Vote",
+               "name": "Erd_FreshFoodEvapFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Factory/Service Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Factory/Service Vote",
+               "name": "Erd_IceCabinetFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "FF/FZ Grid",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Area",
+               "name": "Erd_GridArea",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Previous Grid Blocks",
+               "name": "Erd_Grid_PreviousBlocks",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Calculated Grid Lines",
+               "name": "Erd_Grid_CalculatedGridLines",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Mode",
+               "name": "Erd_CoolingMode",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Speed",
+               "name": "Erd_CoolingSpeed",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "SEVS Pulldown Active - Grid Flag Status",
+               "name": "Erd_SingleEvaporatorPulldownActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Trip Mitigation - Grid Flag Status",
+               "name": "Erd_CompressorTripMitigationActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Pulldown in Medium - Grid Flag Status",
+               "name": "Erd_PulldownInMediumCompressorSpeedEnabled",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Anti-Sweat Behavior - Grid Flag Status",
+               "name": "Erd_CondenserFanAntiSweatBehaviorEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Max Time in Vavle A - Grid Flag Status",
+               "name": "Erd_MaxValveTimeInPosAEnabled",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Makers Enabled - Grid Flag Status",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Delay Convertible Compartment Cooling - Grid Flag Status",
+               "name": "Erd_DelayConvertibleCompartmentCooling",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Cool Convertible Compartment Before Off - Grid Flag Status",
+               "name": "Erd_CoolConvertibleCompartmentBeforeOff",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Delayed Convertible Compartment Cooling Low Speed - Grid Flag Status",
+               "name": "Erd_DelayedConvertibleCompartmentCoolingLowSpeed",
+               "read": true,
+               "interval": 1000000000
+            }
+
+         ]
+      },
+      {
+         "title": "FF/FZ Setpoints",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food User Setpoint - Request (DegF)",
+               "name": "Erd_FreshFoodSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer User Setpoint - Request (DegF)",
+               "name": "Erd_FreezerSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food User Setpoint (DegF)",
+               "name": "Erd_FreshFoodSetpointStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer User Setpoint (DegF)",
+               "name": "Erd_FreezerSetpointStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Resolved Setpoint - Winning Vote",
+               "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Resolved Setpoint - Winning Vote",
+               "name": "Erd_FreezerSetpoint_WinningVoteErd",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Resolved Setpoint Vote (DegF x100)",
+               "name": "Erd_FreshFoodSetpoint_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Resolved Setpoint Vote (DegF x100)",
+               "name": "Erd_FreezerSetpoint_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Adjusted Setpoint (DegF x100)",
+               "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Adjusted Setpoint (DegF x100)",
+               "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Thermal Shift (DegF x100)",
+               "name": "Erd_FreshFood_ThermalShiftInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Thermal Shift (DegF x100)",
+               "name": "Erd_Freezer_ThermalShiftInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Cabinet Offset (DegF x100)",
+               "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Cabinet Offset (DegF x100)",
+               "name": "Erd_Freezer_CabinetOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Cross Ambient Offset (DegF x100)",
+               "name": "Erd_FreshFood_CrossAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Cross Ambient Offset (DegF x100)",
+               "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food High Ambient Offset (DegF x100)",
+               "name": "Erd_FreshFood_HighAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer High Ambient Offset (DegF x100)",
+               "name": "Erd_Freezer_HighAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Offset (DegF x100)",
+               "name": "Erd_FreshFood_SetpointOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Defrost",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost State (Simplified)",
+               "name": "Erd_DefrostState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost HSM State",
+               "name": "Erd_DefrostHsmState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Last Freezer Defrost Was Abnormal?",
+               "name": "Erd_FreezerDefrostWasAbnormal",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Last Fresh Food Defrost Was Abnormal?",
+               "name": "Erd_FreshFoodDefrostWasAbnormal",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of Freezer Abnormal Defrosts",
+               "name": "Erd_NumberOfFreezerAbnormalDefrosts",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of Fresh Food Abnormal Defrosts",
+               "name": "Erd_NumberOfFreshFoodAbnormalDefrosts",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Defrost Type",
+               "name": "Erd_CurrentDefrostType",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Next Defrost Type",
+               "name": "Erd_NextDefrostTypeOverride",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of Full Defrosts",
+               "name": "Erd_NumberOfFreezerDefrosts",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of Secondary Only Defrosts",
+               "name": "Erd_NumberOfSecondaryOnlyDefrosts",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of Secondary Only Defrosts Before a Full Defrost",
+               "name": "Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost",
+               "read": true,
+               "interval": 1000000000
+            },              
+            {
+               "namespace": "mb",
+               "displayName": "Time That Prechill Conditions Are Met in Minutes",
+               "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer",
+               "name": "Erd_TimeBetweenDefrostsInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request Status",
+               "name": "Erd_DefrostTestRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer - Freezer Door Acceleration in Compressor-Seconds",
+               "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer - Fresh Food Door Acceleration in Compressor-Seconds",
+               "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater Defrost Vote",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater Defrost Vote",
+               "name": "Erd_FreshFoodDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Doors",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Left Door Open?",
+               "name": "Erd_LeftSideFreshFoodDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Right Door Open?",
+               "name": "Erd_RightSideFreshFoodDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Door Open?",
+               "name": "Erd_LeftSideFreezerDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Door Open?",
+               "name": "Erd_ConvertibleCompartmentDoorStatusResolved",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Door-in-Door Door Open?",
+               "name": "Erd_DoorInDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]   
+      },
+      {
+         "title": "Thermistors",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Filtered Temperature (DegF x100)",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Filtered Temperature (DegF x100)",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Unfiltered Temperature (DegF x100)",
+               "name": "Erd_Freezer_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_FreshFood_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_Freezer_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap FilteredTemperature (DegF x100)",
+               "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap FilteredTemperature (DegF x100)",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Filtered Temperature (DegF x100)",
+               "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Temperature (DegF x100)",
+               "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Unfiltered Temperature (DegF x100)",
+               "name": "Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Unfiltered Temperature (DegF x100)",
+               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Unfiltered Humidity (Percent x100)",
+               "name": "Erd_AmbientHumidity_UnfilteredRelativeHumidityPercentx100",
+               "read": true,
+               "interval": 1000000000
+            }, 
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Mold Unfiltered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Humidity (Percent x100)",
+               "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Mold Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Mold Unfiltered Temperature (DegF x100)",
+               "name": "Erd_IceMaker1_MoldThermistor_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Mold Unfiltered Temperature (DegF x100)",
+               "name": "Erd_IceMaker2_MoldThermistor_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Mold Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Mold Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Filtered Temperature (DegF x100)",
+               "name": "Erd_IceCabinet_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+             {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Unfiltered Temperature (DegF x100)",
+               "name": "Erd_IceCabinet_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_IceCabinet_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            }
+            
+         ]
+      },
+      {
+         "title": "Heaters",
+         "erds":[
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater - Resolved State",
+               "name": "Erd_FreshFoodDefrostHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater - Factory Vote",
+               "name": "Erd_FreshFoodDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater - Resolved State",
+               "name": "Erd_FreezerDefrostHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater - Factory Vote",
+               "name": "Erd_FreezerDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Heater - Resolved Vote",
+               "name": "Erd_DamperHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Heater - Factory Vote",
+               "name": "Erd_DamperHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Heater - Resolved Vote",
+               "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Heater - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Fill Tube Heater - Resolved Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Fill Tube Heater - Resolved Vote",
+               "name": "Erd_IceMaker1_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Fill Tube Heater - Resolved Vote",
+               "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
+               "read": true,      
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker2_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Heater - Resolved Vote",
+               "name": "Erd_ConvertibleCompartmentHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Heater - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Convertible Compartment -inwork",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment User Setpoint Request (DegF)",
+               "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Grid Block",
+               "name": "Erd_ConvertibleCompartmentGridBlockNumber",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Resolved Setpoint Vote (DegF x100)",
+               "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Delay Convertible Compartment Cooling - Grid Flag Status",
+               "name": "Erd_DelayConvertibleCompartmentCooling",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Adjusted Setpoint (DegF x100)",
+               "name": "Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Cool Convertible Compartment Before Off - Grid Flag Status",
+               "name": "Erd_CoolConvertibleCompartmentBeforeOff",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Thermal Shift (DegF x100)",
+               "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Delayed Convertible Compartment Cooling Low Speed - Grid Flag Status",
+               "name": "Erd_DelayedConvertibleCompartmentCoolingLowSpeed",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Setpoint Offset (DegF x100)",
+               "name": "Erd_ConvertibleCompartment_SetpointOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Position",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Cross Ambient Offset (DegF x100)",
+               "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Heater - Resolved Vote",
+               "name": "Erd_ConvertibleCompartmentHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Ice Cabinet - inwork",
+         "erds": [
+
+         ]
+      },
+      {
+         "title": "Primary FZ IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Info",
+               "name": "Erd_IceMaker0_TypeInformation",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Makers Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Ice Rate Active?",
+               "name": "Erd_Freezer_IceRateIsActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Fill Tube Heater State",
+               "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count",
+               "name": "Erd_IceMaker0_FreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count Reached?",
+               "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Minimum Freeze Time Counter (mins)",
+               "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Operation State",
+               "name": "Erd_IceMaker0_MotorOperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Feeler Arm Position",
+               "name": "Erd_IceMaker0_FeelerArmPosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Action Result",
+               "name": "Erd_IceMaker0_MotorActionResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Rake Position",
+               "name": "Erd_IceMaker0_RakePosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Fault Active Flag",
+               "name": "Erd_IceMaker0_TwistTrayMotorFault",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Arm is OK to Harvest?",
+               "name": "Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor State",
+               "name": "Erd_IceMaker0_TwistMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Door IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Request",
+               "name": "Erd_IceMaker1_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Info",
+               "name": "Erd_IceMaker1_TypeInformation",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Status",
+               "name": "Erd_IceMaker1_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Makers Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Ice Formation Active?",
+               "name": "Erd_IceCabinet_IceFormationIsActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker State Machine State",
+               "name": "Erd_IceMaker1_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Fill Tube Heater State",
+               "name": "Erd_IceMaker1_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count",
+               "name": "Erd_IceMaker1_FreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count Reached?",
+               "name": "Erd_IceMaker1_HarvestCountIsReadyToHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Minimum Freeze Time Counter (mins)",
+               "name": "Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Operation State",
+               "name": "Erd_IceMaker1_MotorOperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Feeler Arm Position",
+               "name": "Erd_IceMaker1_FeelerArmPosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Action Result",
+               "name": "Erd_IceMaker1_MotorActionResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Rake Position",
+               "name": "Erd_IceMaker1_RakePosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Fault Active Flag",
+               "name": "Erd_IceMaker1_TwistTrayMotorFault",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Arm is OK to Harvest?",
+               "name": "Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor State",
+               "name": "Erd_IceMaker1_TwistMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Secondary FZ IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Info",
+               "name": "Erd_IceMaker2_TypeInformation",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Makers Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Ice Rate Active?",
+               "name": "Erd_Freezer_IceRateIsActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker State Machine State",
+               "name": "Erd_IceMaker2_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Fill Tube Heater State",
+               "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count",
+               "name": "Erd_IceMaker2_FreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Freeze Integration Count Reached?",
+               "name": "Erd_IceMaker2_HarvestCountIsReadyToHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker Minimum Freeze Time Counter (mins)",
+               "name": "Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Operation State",
+               "name": "Erd_IceMaker2_MotorOperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Feeler Arm Position",
+               "name": "Erd_IceMaker2_FeelerArmPosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Action Result",
+               "name": "Erd_IceMaker2_MotorActionResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Rake Position",
+               "name": "Erd_IceMaker2_RakePosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor Fault Active Flag",
+               "name": "Erd_IceMaker2_TwistTrayMotorFault",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Ice Maker Arm is OK to Harvest?",
+               "name": "Erd_IceMaker2_FeelerArmIsReadyToEnterHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Ice Maker Motor State",
+               "name": "Erd_IceMaker2_TwistMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Dispensing",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Dispensing Request",
+               "name": "Erd_DispensingRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dispensing Status",
+               "name": "Erd_DispensingRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "User Dispense Water Valve Resolved Vote",
+               "name": "Erd_DispenserWaterValve_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Auger Motor Resolved vote",
+               "name": "Erd_AugerMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dispense Inhibited Reason",
+               "name": "Erd_DispensingInhibitedReason",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Factory",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Factory Mode Enable Request in Minutes",
+               "name": "Erd_FactoryModeEnableRequestInMinutes",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed - Factory Vote",
+               "name": "Erd_CompressorSpeed_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Position - Factory Vote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Position - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentDamperPosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Sealed System Valve Position - Factory Vote",
+               "name": "Erd_SealedSystemValvePosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan - Factory Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan - Factory Vote",
+               "name": "Erd_FreshFoodEvapFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan - Factory Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Fan - Factory Vote",
+               "name": "Erd_IceCabinetFanSpeed_FactoryServiceVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater - Factory Vote",
+               "name": "Erd_FreshFoodDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater - Factory Vote",
+               "name": "Erd_FreezerDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },   
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Heater - Factory Vote",
+               "name": "Erd_DamperHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Damper Heater - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Fill Tube Heater - Factory Vote",
+               "name": "Erd_IceMaker2_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Heater - Factory Vote",
+               "name": "Erd_RecessHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Convertible Compartment Heater - Factory Vote",
+               "name": "Erd_ConvertibleCompartmentHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Auger Motor - Factory Vote",
+               "name": "Erd_AugerMotor_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Back Wall Light - Factory Vote",
+               "name": "Erd_FreshFoodBackWallLight_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Top Light - Factory Vote",
+               "name": "Erd_FreshFoodTopLight_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Back Wall Light - Factory Vote",
+               "name": "Erd_FreezerBackWallLight_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Top Light - Factory Vote",
+               "name": "Erd_FreezerTopLight_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Isolation Water Valve - Factory Vote",
+               "name": "Erd_IsolationWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Water Valve - Factory Vote",
+               "name": "Erd_IceMaker0_WaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Water Valve - Factory Vote",
+               "name": "Erd_IceMaker1_WaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Water Valve - Factory Vote",
+               "name": "Erd_IceMaker2_WaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dispenser Water Valve - Factory Vote",
+               "name": "Erd_DispenserWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Lab",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request",
+               "name": "Erd_DefrostTestRequest",
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request Status",
+               "name": "Erd_DefrostTestRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 (Primary FZ IM) Test Request",
+               "name": "Erd_IceMaker0_TestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 (Primary FZ IM) State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 (Primary FZ IM) User Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 (Primary FZ IM) User Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 (Door IM) Test Request",
+               "name": "Erd_IceMaker1_TestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 (Door IM) State Machine State",
+               "name": "Erd_IceMaker1_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 (Door IM) User Enable Request",
+               "name": "Erd_IceMaker1_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 (Door IM) User Enable Status",
+               "name": "Erd_IceMaker1_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 (Secondary FZ IM) Test Request",
+               "name": "Erd_IceMaker2_TestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 (Secondary FZ IM) State Machine State",
+               "name": "Erd_IceMaker2_StateMachineState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 (Secondary FZ IM) User Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 (Secondary FZ IM) User Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Sabbath",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Normal Sabbath Mode",
+               "name": "Erd_SabbathModeEnable",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Enhanced Sabbath Mode",
+               "name": "Erd_EnhancedSabbathModeEnable",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "RFID",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter State",
+               "name": "Erd_WaterFilterState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Remaining Usage",
+               "name": "Erd_WaterFilterRemainingUsage",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Volume Usage In Ounces x100",
+               "name": "Erd_WaterFilterVolumeUsageInOuncesX100",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "water Filter Calendar Usage In Seconds",
+               "name": "Erd_WaterFilterCalendarUsageInSeconds",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Volume Usage In Ounces x100 Eeprom",
+               "name": "Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Calendar Usage In Seconds Eeprom",
+               "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Filter Data Request",
+               "name": "Erd_RfidFilterDataRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Read Write Result",
+               "name": "Erd_RfidFilterReadWriteResult_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Uid",
+               "name": "Erd_RfidFilterUid_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Identifier",
+               "name": "Erd_RfidFilterIdentifier_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Water Volume Usage In Ounces x100",
+               "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Calendar Usage In Seconds",
+               "name": "Erd_RfidFilterCalendarUsageInSeconds_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Leak Detected Time In Seconds",
+               "name": "Erd_RfidFilterLeakDetectedTimeInSeconds_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Number Of Write Operations",
+               "name": "Erd_RfidFilterNumberOfWriteOperations_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Status",
+               "name": "Erd_RfidFilterStatus_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Initialization Error Bitfield",
+               "name": "Erd_RfidFilterInitializationErrorBitfield_RfidBoard",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "WiFi",
+         "erds": [
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Mac Address",
+               "name": "Erd_MacAddress",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "SSID",
+               "name": "Erd_WiFiApSsid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Password",
+               "name": "Erd_WiFiApPassword",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network State",
+               "name": "Erd_NetworkState",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Server",
+               "name": "Erd_HeartbeatServerType",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "AP Service",
+               "name": "Erd_ApServiceModeRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network SSID",
+               "name": "Erd_ConnectedNetworkSSID",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Debug",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Reset Count",
+               "name": "Erd_ResetCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Reset Reason",
+               "name": "Erd_ResetReason",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Seconds Since Last Reset",
+               "name": "Erd_SecondsSinceLastReset",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Free Stack %",
+               "name": "Erd_StackPercentFree",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Winning Vote Erd",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Evap Fan Winning Vote Erd",
+               "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Evap Fan Winning Vote Erd",
+               "name": "Erd_FreshFoodEvapFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Winning Vote Erd",
+               "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Winning Vote Erd",
+               "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Winning Vote Erd",
+               "name": "Erd_FreezerSetpoint_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Defrost Heater Winning Vote Erd",
+               "name": "Erd_FreezerDefrostHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Damper Heater Winning Vote Erd",
+               "name": "Erd_DamperHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Fill Tube Heater Winning Vote Erd",
+               "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Mobile App",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Request",
+               "name": "Erd_FreshFoodSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Status",
+               "name": "Erd_FreshFoodSetpointStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Range",
+               "name": "Erd_FreshFoodSetpointRangeData",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Request",
+               "name": "Erd_FreezerSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Status",
+               "name": "Erd_FreezerSetpointStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Range",
+               "name": "Erd_FreezerSetpointRangeData",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Left Side Freezer Door Status",
+               "name": "Erd_LeftSideFreezerDoorStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Right Side Fresh Food Door Status",
+               "name": "Erd_RightSideFreshFoodDoorStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter State",
+               "name": "Erd_WaterFilterState",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Type",
+               "name": "Erd_WaterFilterType",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Has Been Discovered",
+               "name": "Erd_IceMaker0_HasBeenDiscovered",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Full Status",
+               "name": "Erd_IceMaker0_FullStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Type Info",
+               "name": "Erd_IceMaker0_TypeInformation",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 1 Has Been Discovered",
+               "name": "Erd_IceMaker1_HasBeenDiscovered",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 1 Enable Request",
+               "name": "Erd_IceMaker1_EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 1 Enable Status",
+               "name": "Erd_IceMaker1_EnableStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 1 Full Status",
+               "name": "Erd_IceMaker1_FullStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 1 Type Info",
+               "name": "Erd_IceMaker1_TypeInformation",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 2 Has Been Discovered",
+               "name": "Erd_IceMaker2_HasBeenDiscovered",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 2 Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 2 Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
+               "read": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 2 Full Status",
+               "name": "Erd_IceMaker2_FullStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM 2 Type Info",
+               "name": "Erd_IceMaker2_TypeInformation",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Hydration - Total Dispensed Ounces",
+               "name": "Erd_CumulativeWaterDispensedOunces",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Remaining Usage",
+               "name": "Erd_WaterFilterRemainingUsage",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Request",
+               "name": "Erd_TurboCoolOnOffRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Request",
+               "name": "Erd_TurboFreezeOnOffRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Status",
+               "name": "Erd_TurboCoolOnOffStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Status",
+               "name": "Erd_TurboFreezeOnOffStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Presence Sensing Enable Request",
+               "name": "Erd_PresenceSensingEnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Presence Sensing Enable Status",
+               "name": "Erd_PresenceSensingEnableStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Request",
+               "name": "Erd_PresenceSensedActivatesRecessLightRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Status",
+               "name": "Erd_PresenceSensedActivatesRecessLightStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Percent Level Request",
+               "name": "Erd_DimmableLight0PercentLevelRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Percent Level Status",
+               "name": "Erd_DimmableLight0PercentLevelStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Configuration",
+               "name": "Erd_DimmableLight0Configuration",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Night Time Snack Mode Enable Request",
+               "name": "Erd_NightTimeSnackModeEnableRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Night Time Snack Mode Enable Status",
+               "name": "Erd_NightTimeSnackModeEnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Temperature Units",
+               "name": "Erd_TemperatureDisplayUnits",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Notifications Bitmap",
+               "name": "Erd_NotificationsBitmap",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      }
+   ]
+}
