@@ -28,8 +28,8 @@
 
 enum
 {
-   SendBufferSize = 251,
-   ReceiveBufferSize = 251,
+   SendBufferSize = Gea2Interface_FullDuplexMaxSendBufferSize,
+   ReceiveBufferSize = Gea2Interface_FullDuplexMaxReceiveBufferSize,
    SendReceiveBufferSize = Gea2Interface_SingleWireMaxSendReceiveBufferSize,
    PacketQueueStorageSize = 300,
    DynamicRoutingTableBufferSize = 8,
