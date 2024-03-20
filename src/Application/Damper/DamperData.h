@@ -10,10 +10,33 @@
 
 #include <stdint.h>
 
+enum
+{
+   DamperId_NormalDamper,
+   DamperId_ConvertibleCompartmentDamper
+};
+typedef uint8_t DamperId_t;
+
 typedef struct
 {
    uint16_t stepsToOpen;
    uint16_t stepsToClose;
+} DamperStepData_t;
+
+typedef struct
+{
+   DamperStepData_t damperStepsAsFreshFood;
+   DamperStepData_t damperStepsAsFreezer;
+} ConvertibleDamperStepData_t;
+
+typedef struct
+{
+   DamperId_t damperId;
+   union
+   {
+      DamperStepData_t *damperStepData;
+      ConvertibleDamperStepData_t *convertibleDamperStepData;
+   };
    uint16_t stepsToHome;
    uint8_t delayBetweenStepEventsInHundredsOfMicroseconds;
    uint8_t maxTimeForDamperToBeOpenInMinutes;

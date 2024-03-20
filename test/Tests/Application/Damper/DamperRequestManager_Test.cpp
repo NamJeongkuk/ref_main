@@ -11,6 +11,7 @@ extern "C"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "PersonalityParametricData.h"
+#include "TddPersonality.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -31,11 +32,21 @@ enum
    StepsToHome = 1850
 };
 
+enum
+{
+   ConvertibleStepsToOpenAsFreshFood = 650,
+   ConvertibleStepsToCloseAsFreshFood = 700,
+   ConvertibleStepsToOpenAsFreezer = 750,
+   ConvertibleStepsToCloseAsFreezer = 800,
+   ConvertibleStepsToHome = 1850
+};
+
 static const DamperRequestManagerConfiguration_t config = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
-   .damperCurrentPositionErd = Erd_DamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
 TEST_GROUP(DamperRequestManager)
@@ -45,9 +56,9 @@ TEST_GROUP(DamperRequestManager)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
 
-   void setup()
+   void GivenTheDataModelIsInitializedWithPersonality(PersonalityId_t personalityForTest)
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, personalityForTest);
       dataModel = dataModelDouble.dataModel;
    }
 
@@ -125,6 +136,17 @@ TEST_GROUP(DamperRequestManager)
          clear);
    }
 
+   void StepsToMoveShouldBe(uint16_t expectedStepsToMove)
+   {
+      StepperPositionRequest_t position;
+      DataModel_Read(
+         dataModel,
+         Erd_DamperStepperMotorPositionRequest,
+         &position);
+
+      CHECK_EQUAL(expectedStepsToMove, position.stepsToMove);
+   }
+
    void StepsAreSetToZero()
    {
       StepperPositionRequest_t position;
@@ -190,15 +212,30 @@ TEST_GROUP(DamperRequestManager)
          Erd_DamperCurrentPosition,
          &position);
    }
+
+   void GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_t state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_ConvertibleCompartmentState,
+         &state);
+   }
+
+   void WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_t state)
+   {
+      GivenConvertibleCompartmentStateIs(state);
+   }
 };
 
 TEST(DamperRequestManager, ShouldInitializeTheModule)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    TheModuleIsInitialized();
 }
 
 TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseAndResetSubstepOnInitialization)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    Given TheModuleIsInitialized();
 
    DamperMotorRequestedStepsShouldBe(StepsToHome);
@@ -208,6 +245,7 @@ TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwis
 
 TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToCounterClockwiseAndResetSubstepToFalseWhenOpenPositionRequested)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    Given TheRequestedPositionIs(DamperPosition_Closed);
    And TheModuleIsInitialized();
    And TheDamperCompletesPositionChange();
@@ -220,6 +258,7 @@ TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToCounterClockwi
 
 TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToClockwiseWhenClosedPositionRequested)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    When TheRequestedPositionIs(DamperPosition_Closed);
 
@@ -230,6 +269,7 @@ TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToClockwiseWhen
 
 TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
    And TheRequestedPositionIs(DamperPosition_Open);
@@ -242,6 +282,7 @@ TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
 
 TEST(DamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
    And TheRequestedPositionIs(DamperPosition_Open);
@@ -257,6 +298,7 @@ TEST(DamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
 
 TEST(DamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
 
@@ -269,6 +311,7 @@ TEST(DamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwi
 
 TEST(DamperRequestManager, ShouldSetPositionToClosedAfterHoming)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
 
@@ -282,6 +325,7 @@ TEST(DamperRequestManager, ShouldSetPositionToClosedAfterHoming)
 
 TEST(DamperRequestManager, ShouldOpenCloseThenOpenAgain)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And TheRequestedPositionIs(DamperPosition_Open);
    And TheRequestedPositionIs(DamperPosition_Closed);
@@ -291,8 +335,9 @@ TEST(DamperRequestManager, ShouldOpenCloseThenOpenAgain)
    DirectionShouldBe(TurningDirection_CounterClockwise);
 }
 
-TEST(DamperRequestManager, ShouldChangeDamperStateAfterDamperCompletesMovement)
+TEST(DamperRequestManager, ShouldChangeDamperPositionAfterDamperCompletesMovement)
 {
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
 
    When TheRequestedPositionIs(DamperPosition_Open);
@@ -300,4 +345,81 @@ TEST(DamperRequestManager, ShouldChangeDamperStateAfterDamperCompletesMovement)
 
    When TheDamperCompletesPositionChange();
    TheCurrentPositionShouldBe(DamperPosition_Open);
+}
+
+TEST(DamperRequestManager, ShouldUseCorrectStepsForConvertibleCompartmentAsFreshFood)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreshFood);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   When TheRequestedPositionIs(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToCloseAsFreshFood);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+}
+
+TEST(DamperRequestManager, ShouldUseCorrectStepsForConvertibleCompartmentAsFreezer)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   When TheRequestedPositionIs(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToCloseAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+}
+
+TEST(DamperRequestManager, ShouldHomeAndReopenAfterConvertibleCompartmentStateChangesWhileDamperIsOpen)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   When TheDamperCompletesPositionChange();
+
+   WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
+   StepsToMoveShouldBe(ConvertibleStepsToHome);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreshFood);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   StepsToMoveShouldBe(ConvertibleStepsToHome);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+}
+
+TEST(DamperRequestManager, ShouldNotHomeWhenConvertibleCompartmentStateChangesWhileDamperIsClosed)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
+   StepsToMoveShouldBe(0);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+
+   WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   StepsToMoveShouldBe(0);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
 }

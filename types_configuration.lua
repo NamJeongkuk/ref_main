@@ -9,6 +9,7 @@ return {
     '_mbstate_t',
     'FanCareAboutCoolingModeSpeedData_t',
     'FanData_t',
+    'DamperData_t',
     'CompressorSpeeds_t',
     'VariableSweatHeaterData_t',
     'IceMakerSlotData_t'

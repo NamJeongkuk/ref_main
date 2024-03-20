@@ -21,6 +21,7 @@ typedef struct
    Erd_t damperStepperMotorPositionRequestErd;
    Erd_t damperHomingRequestErd;
    Erd_t damperCurrentPositionErd;
+   Erd_t convertibleCompartmentStateErd;
 } DamperRequestManagerConfiguration_t;
 
 typedef struct
@@ -33,6 +34,7 @@ typedef struct
       EventSubscription_t dataModelSubscription;
       const DamperRequestManagerConfiguration_t *configuration;
       const DamperData_t *damperData;
+      DamperStepData_t *currentDamperStepData;
    } _private;
 } DamperRequestManager_t;
 

@@ -61,6 +61,9 @@ return function(directory)
   import('Setpoints/HighAmbientOffset')
   import('Setpoints/CabinetOffset')
   import('Damper/Damper')
+  import('Damper/DamperId')
+  import('Damper/DamperSteps')
+  import('Damper/ConvertibleDamperStepData')
   import('Setpoints/UserSetpoint')
   import('Setpoints/UserSetpointData')
   import('Damper/DamperHeater')
@@ -165,6 +168,9 @@ return function(directory)
   high_ambient_offset = HighAmbientOffset(core)
   cabinet_offset = CabinetOffset(core)
   damper = Damper(core)
+  damper_id = DamperId
+  damper_steps = DamperSteps(core)
+  convertible_damper_step_data = ConvertibleDamperStepData(core)
   user_setpoint = UserSetpoint(core)
   user_setpoint_data = UserSetpointData(core)
   damper_heater = DamperHeater(core)
@@ -275,6 +281,9 @@ return function(directory)
     high_ambient_offset = high_ambient_offset,
     cabinet_offset = cabinet_offset,
     damper = damper,
+    damper_id = damper_id,
+    damper_steps = damper_steps,
+    convertible_damper_step_data = convertible_damper_step_data,
     user_setpoint = user_setpoint,
     user_setpoint_data = user_setpoint_data,
     damper_heater = damper_heater,

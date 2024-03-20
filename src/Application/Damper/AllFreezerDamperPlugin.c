@@ -32,7 +32,8 @@ static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
-   .damperCurrentPositionErd = Erd_DamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
 void AllFreezerDamperPlugin_Init(AllFreezerDamperPlugin_t *instance, I_DataModel_t *dataModel)

@@ -94,12 +94,12 @@ static void SetCurrentPositionRequestTo(DamperRequestManager_t *instance, Damper
    if(requestedPosition.position == DamperPosition_Open)
    {
       stepRequest.direction = TurningDirection_CounterClockwise;
-      stepRequest.stepsToMove = instance->_private.damperData->stepsToOpen;
+      stepRequest.stepsToMove = instance->_private.currentDamperStepData->stepsToOpen;
    }
    else if(requestedPosition.position == DamperPosition_Closed)
    {
       stepRequest.direction = TurningDirection_Clockwise;
-      stepRequest.stepsToMove = instance->_private.damperData->stepsToClose;
+      stepRequest.stepsToMove = instance->_private.currentDamperStepData->stepsToClose;
    }
 
    SetDamperStepperMotorPositionRequest(instance, stepRequest);
@@ -191,6 +191,18 @@ static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    }
 }
 
+static void SetCurrentStepsUsingConvertibleCompartmentState(DamperRequestManager_t *instance, ConvertibleCompartmentStateType_t currentState)
+{
+   if(currentState == ConvertibleCompartmentStateType_FreshFood)
+   {
+      instance->_private.currentDamperStepData = &instance->_private.damperData->convertibleDamperStepData->damperStepsAsFreshFood;
+   }
+   else if(currentState == ConvertibleCompartmentStateType_Freezer)
+   {
+      instance->_private.currentDamperStepData = &instance->_private.damperData->convertibleDamperStepData->damperStepsAsFreezer;
+   }
+}
+
 static void OnDataModelChange(void *context, const void *_args)
 {
    DamperRequestManager_t *instance = context;
@@ -216,6 +228,19 @@ static void OnDataModelChange(void *context, const void *_args)
          Fsm_SendSignal(&instance->_private.fsm, Signal_HomeRequested, NULL);
       }
    }
+   else if(args->erd == instance->_private.configuration->convertibleCompartmentStateErd)
+   {
+      if(instance->_private.damperData->damperId == DamperId_ConvertibleCompartmentDamper)
+      {
+         const ConvertibleCompartmentStateType_t *convertibleCompartmentState = args->data;
+         SetCurrentStepsUsingConvertibleCompartmentState(instance, *convertibleCompartmentState);
+
+         if(CurrentDamperPosition(instance) == DamperPosition_Open)
+         {
+            Fsm_SendSignal(&instance->_private.fsm, Signal_HomeRequested, NULL);
+         }
+      }
+   }
 }
 
 void DamperRequestManager_Init(
@@ -227,6 +252,20 @@ void DamperRequestManager_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = config;
    instance->_private.damperData = damperData;
+
+   if(damperData->damperId == DamperId_NormalDamper)
+   {
+      instance->_private.currentDamperStepData = damperData->damperStepData;
+   }
+   else if(damperData->damperId == DamperId_ConvertibleCompartmentDamper)
+   {
+      ConvertibleCompartmentStateType_t convertibleCompartmentState;
+      DataModel_Read(
+         dataModel,
+         instance->_private.configuration->convertibleCompartmentStateErd,
+         &convertibleCompartmentState);
+      SetCurrentStepsUsingConvertibleCompartmentState(instance, convertibleCompartmentState);
+   }
 
    Fsm_Init(&instance->_private.fsm, State_Homing);
 

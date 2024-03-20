@@ -129,7 +129,7 @@ TEST_GROUP(DamperIntegration)
       StepperMotorDriveEnableShouldBe(SET);
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
-      AfterNInterrupts(damperData->stepsToOpen * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1));
+      AfterNInterrupts(damperData->damperStepData->stepsToOpen * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1));
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
       AfterNInterrupts(1);
@@ -357,7 +357,7 @@ TEST_GROUP(DamperIntegration)
       DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &stepRequest);
 
       CHECK_EQUAL(TurningDirection_Clockwise, stepRequest.direction);
-      CHECK_EQUAL(damperData->stepsToClose, stepRequest.stepsToMove);
+      CHECK_EQUAL(damperData->damperStepData->stepsToClose, stepRequest.stepsToMove);
    }
 
    void StepRequestShouldBeDoorPositionOpen()
@@ -366,7 +366,7 @@ TEST_GROUP(DamperIntegration)
       DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &stepRequest);
 
       CHECK_EQUAL(TurningDirection_CounterClockwise, stepRequest.direction);
-      CHECK_EQUAL(damperData->stepsToOpen, stepRequest.stepsToMove);
+      CHECK_EQUAL(damperData->damperStepData->stepsToOpen, stepRequest.stepsToMove);
    }
 
    void StepRequestShouldBeDoorPositionHome()
@@ -530,7 +530,7 @@ TEST(DamperIntegration, ShouldResetMinimumTemperatureChangeTimerWhenDamperPositi
    DamperCurrentPositionShouldBe(DamperPosition_Open);
    DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
 
-   AfterNInterrupts(damperData->stepsToClose * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
+   AfterNInterrupts(damperData->damperStepData->stepsToClose * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
    AfterTheEventQueueIsRun();
    StepsShouldBeSetToZero();
    StepperMotorControlRequestShouldBe(CLEAR);

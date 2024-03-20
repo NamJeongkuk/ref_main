@@ -46,7 +46,8 @@ static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
-   .damperCurrentPositionErd = Erd_DamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
 static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
