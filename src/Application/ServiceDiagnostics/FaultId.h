@@ -41,6 +41,7 @@ enum
    FaultId_FreshFoodTemperatureExceeded = 303,
    FaultId_FreezerTemperatureExceeded = 304,
    FaultId_IceWaterStopsDispensingBasedOnTime = 401,
+   FaultId_IceCabinetThermistorIsInvalid = 512,
    FaultId_DoorBoardCommunicationFault = 523,
    FaultId_IceMaker1TwistTrayMotorFault = 615,
    FaultId_IceMaker0TwistTrayMotorFault = 661,

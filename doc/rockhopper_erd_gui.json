@@ -1763,6 +1763,83 @@
           "name": "Erd_IceMaker0_HasBeenDiscovered",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermistor AdcCount",
+          "name": "Erd_IceCabinetThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Unfiltered Temperature",
+          "name": "Erd_IceCabinet_UnfilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Filtered Temperature",
+          "name": "Erd_IceCabinet_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermistor IsValid Override Request",
+          "name": "Erd_IceCabinetThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermistor IsValid Override Value",
+          "name": "Erd_IceCabinetThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermistor IsValid Resolved",
+          "name": "Erd_IceCabinetThermistor_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Filtered Temperature Override Request",
+          "name": "Erd_IceCabinet_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Filtered Temperature Override Value",
+          "name": "Erd_IceCabinet_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Filtered Temperature Resolved",
+          "name": "Erd_IceCabinet_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F512 Ice Cabinet Thermistor Is Invalid",
+          "name": "Erd_IceCabinetThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermistor Has Been Discovered",
+          "name": "Erd_IceCabinetThermistorDiscovered",
+          "read": true,
+          "write": true
         }
       ]
     },
