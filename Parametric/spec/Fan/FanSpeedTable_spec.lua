@@ -89,31 +89,23 @@ describe('FanSpeedTable', function()
       structure(
         structure(
           u8(0),
-          u8(0),
-          u8(10),
-          u8(0)
+          u16(10)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(50),
-          u8(0)
+          u16(50)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1800)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(100),
-          u8(0)
+          u16(100)
         )
       )
       ]])
@@ -136,7 +128,6 @@ describe('FanSpeedTable', function()
         bool(false),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         )
       )

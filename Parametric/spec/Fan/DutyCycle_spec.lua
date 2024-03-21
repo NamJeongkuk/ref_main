@@ -21,7 +21,7 @@ describe('DutyCycle', function()
   it('should assert if duty_cycle is not in range', function()
     should_fail_with('duty_cycle=102 must be in [0, 100]', function()
       duty_cycle(generate_config({
-         duty_cycle = 102
+        duty_cycle = 102
       }))
     end)
   end)
@@ -30,9 +30,8 @@ describe('DutyCycle', function()
     local expected = remove_whitespace([[
       structure(
         u8(0),
-        u8(0),
-        u8(77),
-        u8(0))
+        u16(77)
+      )
       ]])
 
     local actual = duty_cycle({

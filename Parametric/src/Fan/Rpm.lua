@@ -12,7 +12,6 @@ return function(core)
       { 'speed' },
       structure(
         u8(fan_control_type.rpm),
-        u8(0),
         u16(config.rpm)
       )
     )

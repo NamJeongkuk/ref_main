@@ -21,7 +21,7 @@ describe('Rpm', function()
   it('should assert if rpm is not in range', function()
     should_fail_with('rpm=70000 must be in [0, 65535]', function()
       rpm(generate_config({
-         rpm = 70000
+        rpm = 70000
       }))
     end)
   end)
@@ -30,7 +30,6 @@ describe('Rpm', function()
     local expected = remove_whitespace([[
       structure(
         u8(1),
-        u8(0),
         u16(2200))
       ]])
 

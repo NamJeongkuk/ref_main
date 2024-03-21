@@ -12,9 +12,7 @@ return function(core)
       { 'speed' },
       structure(
         u8(fan_control_type.duty_cycle),
-        u8(0), -- padding/unused
-        u8(config.duty_cycle),
-        u8(0) --unused, kept for padding with Rpm
+        u16(config.duty_cycle)
       )
     )
   end)

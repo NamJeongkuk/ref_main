@@ -148,12 +148,10 @@ describe('FanList', function()
           pointer(some_speed_table),
           structure(
             u8(1),
-            u8(0),
             u16(1000)
           ),
           structure(
             u8(1),
-            u8(0),
             u16(1025)
           ),
           i16(8200),
@@ -189,53 +187,10 @@ describe('FanList', function()
           pointer(some_speed_table),
           structure(
             u8(1),
-            u8(0),
             u16(0)
           ),
           structure(
             u8(1),
-            u8(0),
-            u16(0)
-          ),
-          i16(0),
-          u16(0)
-        ),
-        structure(
-          bool(false),
-          u8(4),
-          u8(4),
-          bool(false),
-          u16(16),
-          structure(
-            structure(
-              i32(20),
-              u8(21)
-            ),
-            structure(
-              i32(22),
-              u8(23)
-            ),
-            structure(
-              i32(24),
-              u8(25)
-            ),
-            i32(26),
-            i32(27)
-          ),
-          structure(
-            u8(20),
-            u8(21),
-            u8(22)
-          ),
-          pointer(some_speed_table),
-          structure(
-            u8(1),
-            u8(0),
-            u16(0)
-          ),
-          structure(
-            u8(1),
-            u8(0),
             u16(0)
           ),
           i16(0),
@@ -271,53 +226,10 @@ describe('FanList', function()
           pointer(some_speed_table),
           structure(
             u8(1),
-            u8(0),
             u16(0)
           ),
           structure(
             u8(1),
-            u8(0),
-            u16(0)
-          ),
-          i16(0),
-          u16(0)
-        ),
-        structure(
-          bool(false),
-          u8(4),
-          u8(4),
-          bool(false),
-          u16(16),
-          structure(
-            structure(
-              i32(20),
-              u8(21)
-            ),
-            structure(
-              i32(22),
-              u8(23)
-            ),
-            structure(
-              i32(24),
-              u8(25)
-            ),
-            i32(26),
-            i32(27)
-          ),
-          structure(
-            u8(20),
-            u8(21),
-            u8(22)
-          ),
-          pointer(some_speed_table),
-          structure(
-            u8(1),
-            u8(0),
-            u16(0)
-          ),
-          structure(
-            u8(1),
-            u8(0),
             u16(0)
           ),
           i16(0),
@@ -353,12 +265,88 @@ describe('FanList', function()
           pointer(some_speed_table),
           structure(
             u8(1),
-            u8(0),
             u16(0)
           ),
           structure(
             u8(1),
-            u8(0),
+            u16(0)
+          ),
+          i16(0),
+          u16(0)
+        ),
+        structure(
+          bool(false),
+          u8(4),
+          u8(4),
+          bool(false),
+          u16(16),
+          structure(
+            structure(
+              i32(20),
+              u8(21)
+            ),
+            structure(
+              i32(22),
+              u8(23)
+            ),
+            structure(
+              i32(24),
+              u8(25)
+            ),
+            i32(26),
+            i32(27)
+          ),
+          structure(
+            u8(20),
+            u8(21),
+            u8(22)
+          ),
+          pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          i16(0),
+          u16(0)
+        ),
+        structure(
+          bool(false),
+          u8(4),
+          u8(4),
+          bool(false),
+          u16(16),
+          structure(
+            structure(
+              i32(20),
+              u8(21)
+            ),
+            structure(
+              i32(22),
+              u8(23)
+            ),
+            structure(
+              i32(24),
+              u8(25)
+            ),
+            i32(26),
+            i32(27)
+          ),
+          structure(
+            u8(20),
+            u8(21),
+            u8(22)
+          ),
+          pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
             u16(0)
           ),
           i16(0),

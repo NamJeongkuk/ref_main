@@ -259,87 +259,65 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
         bool(true),
         structure(
           u8(0),
-          u8(0),
-          u8(10),
-          u8(0)
+          u16(10)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1100)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(12),
-          u8(0)
+          u16(12)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(13),
-          u8(0)
+          u16(13)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1200)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1300)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(14),
-          u8(0)
+          u16(14)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(15),
-          u8(0)
+          u16(15)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1400)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1500)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(16),
-          u8(0)
+          u16(16)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1600)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1700)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(18),
-          u8(0)
+          u16(18)
         ))
-     ]])
+    ]])
 
     local actual = fan_care_about_cooling_mode_speed_table({
       care_about_freezer_setpoint = true,
@@ -370,84 +348,65 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
         bool(false),
         structure(
           u8(0),
-          u8(0),
-          u8(10),
-          u8(0)
+          u16(10)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(15),
-          u8(0)
+          u16(15)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1400)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(16),
-          u8(0)
+          u16(16)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1600)
         ),
         structure(
           u8(0),
-          u8(0),
-          u8(18),
-          u8(0)
+          u16(18)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ))
-     ]])
+    ]])
 
     local actual = fan_care_about_cooling_mode_speed_table({
       care_about_freezer_setpoint = false,

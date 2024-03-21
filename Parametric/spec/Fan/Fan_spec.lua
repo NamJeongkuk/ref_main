@@ -165,12 +165,10 @@ describe('Fan', function()
         pointer(fan_speed_table),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         i16(0),
@@ -224,12 +222,10 @@ describe('Fan', function()
         pointer(fan_care_about_cooling_mode_speed_table),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(0)
         ),
         i16(0),

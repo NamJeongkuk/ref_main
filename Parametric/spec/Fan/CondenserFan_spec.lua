@@ -199,12 +199,10 @@ describe('CondenserFan', function()
         pointer(fan_speed_table),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1200)
         ),
         i16(8200),
@@ -262,12 +260,10 @@ describe('CondenserFan', function()
         pointer(fan_care_about_cooling_mode_speed_table),
         structure(
           u8(1),
-          u8(0),
           u16(1000)
         ),
         structure(
           u8(1),
-          u8(0),
           u16(1200)
         ),
         i16(8200),
