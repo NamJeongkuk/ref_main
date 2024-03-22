@@ -54,4 +54,6 @@ void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(
    AllFreshFoodDefrostPlugin_Init(&instance->_private.allFreshFoodDefrostPlugin, dataModel);
 
    AllFreshFoodDamperPlugin_Init(&instance->_private.allFreshFoodDamperPlugin, dataModel);
+
+   FreshFoodNonHeatedCycleDefrostPlugin_Init(&instance->_private.freshFoodNonHeatedCycleDefrostPlugin, dataModel);
 }

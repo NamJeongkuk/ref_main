@@ -18,6 +18,7 @@
 #include "AllFreshFoodDefrostPlugin.h"
 #include "AllFreshFoodDamperPlugin.h"
 #include "GridPlugin.h"
+#include "FreshFoodNonHeatedCycleDefrostPlugin.h"
 
 typedef struct
 {
@@ -33,6 +34,7 @@ typedef struct
       AllFreshFoodDefrostPlugin_t allFreshFoodDefrostPlugin;
       AllFreshFoodDamperPlugin_t allFreshFoodDamperPlugin;
       GridPlugin_t gridPlugin;
+      FreshFoodNonHeatedCycleDefrostPlugin_t freshFoodNonHeatedCycleDefrostPlugin;
    } _private;
 } AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t;
 

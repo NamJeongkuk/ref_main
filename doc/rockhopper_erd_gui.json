@@ -5923,6 +5923,18 @@
           "interval": 1000000000
         }
       ]
+    },
+    {
+      "title": "Fresh Food Non Heated Cycle Defrost",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Fan Speed Non Heated Cycle DefrostVote",
+          "name": "Erd_FreshFoodEvapFanSpeed_NonHeatedCycleDefrostVote",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

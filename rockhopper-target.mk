@@ -86,6 +86,7 @@ SRC_DIRS:=\
   src/Application/Gea \
   src/Application/Mapper \
   src/Application/Motor \
+  src/Application/NonHeatedCycleDefrost \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \

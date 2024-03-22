@@ -52,6 +52,7 @@ SRC_DIRS:=\
   src/Application/Lighting \
   src/Application/Mapper \
   src/Application/Motor \
+  src/Application/NonHeatedCycleDefrost \
   src/Application/Notifications \
   src/Application/ParametricData \
   src/Application/Plugins \
@@ -118,6 +119,7 @@ SRC_DIRS:=\
   test/Tests/Application/Mapper \
   test/Tests/Application/Motor \
   test/Tests/Application/Notifications \
+  test/Tests/Application/NonHeatedCycleDefrost \
   test/Tests/Application/ParametricData \
   test/Tests/Application/PersonalityEeprom \
   test/Tests/Application/RequestStatusUpdater \

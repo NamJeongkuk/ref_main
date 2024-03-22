@@ -37,6 +37,9 @@ enum
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreezer,
    TddPersonality_DevelopmentSingleDoorSingleEvapAllFreshFood,
    TddPersonality_DevelopmentDualTwistTrayIceMaker,
+   TddPersonality_DevelopmentSingleEvaporatorFanEnableOff,
+   TddPersonality_DevelopmentDualEvaporatorFanEnableOff,
+   TddPersonality_DevelopmentTripleEvaporatorFanEnableOff,
    TddPersonality_MaxDevelopment
 };
 

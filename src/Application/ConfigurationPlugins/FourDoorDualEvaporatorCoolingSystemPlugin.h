@@ -21,6 +21,7 @@
 #include "ThreeWaySealedSystemValvePlugin.h"
 #include "ConvertibleCompartmentDamperPlugin.h"
 #include "ConvertibleCompartmentStatePlugin.h"
+#include "FreshFoodNonHeatedCycleDefrostPlugin.h"
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
       ThreeWaySealedSystemValvePlugin_t threeWaySealedSystemValvePlugin;
       ConvertibleCompartmentDamperPlugin_t convertibleCompartmentDamperPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
+      FreshFoodNonHeatedCycleDefrostPlugin_t freshFoodNonHeatedCycleDefrostPlugin;
    } _private;
 } FourDoorDualEvaporatorCoolingSystemPlugin_t;
 

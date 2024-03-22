@@ -60,4 +60,6 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
    FourDoorDualEvapDefrostPlugin_Init(
       &instance->_private.fourDoorDualEvapDefrostPlugin,
       dataModel);
+
+   FreshFoodNonHeatedCycleDefrostPlugin_Init(&instance->_private.freshFoodNonHeatedCycleDefrostPlugin, dataModel);
 }

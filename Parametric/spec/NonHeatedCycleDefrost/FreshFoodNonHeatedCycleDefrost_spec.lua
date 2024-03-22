@@ -13,7 +13,7 @@ describe('ConvertibleCompartment', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
       fan_speed_compressor_off_enable = true,
-      selaed_system_valve_change_enable = false,
+      sealed_system_valve_change_enable = false,
       default_time_valve_change_in_minutes = 10,
       sealed_system_valve_change_slope_in_minutesx10_per_degf = 20,
       max_time_valve_change_in_minutes = 30,
@@ -35,10 +35,10 @@ describe('ConvertibleCompartment', function()
     end)
   end)
 
-  it('should assert if selaed_system_valve_change_enable is not a bool', function()
-    should_fail_with('selaed_system_valve_change_enable must be of type boolean but is of type string', function()
+  it('should assert if sealed_system_valve_change_enable is not a bool', function()
+    should_fail_with('sealed_system_valve_change_enable must be of type boolean but is of type string', function()
       fresh_food_non_heated_cycle_defrost(generate_config({
-        selaed_system_valve_change_enable = "📮 false 📮"
+        sealed_system_valve_change_enable = "📮 false 📮"
       }))
     end)
   end)
