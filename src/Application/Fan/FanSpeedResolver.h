@@ -22,7 +22,6 @@ typedef struct
    Erd_t ambientFilteredHumidityPercentx100ResolvedErd; // RelativeHumidityPercentx100_t
    Erd_t ambientThermistorIsValidErd; // bool
    Erd_t ambientHumiditySensorIsValidErd; // bool
-   Erd_t pullDownIsActiveErd; // bool
    Erd_t fanAntiSweatBehaviorEnabledErd; // bool
 } FanSpeedResolverConfig_t;
 

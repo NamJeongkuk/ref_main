@@ -61,17 +61,6 @@ static bool AmbientThermistorIsValid(FanSpeedResolver_t *instance)
    return ambientThermistorIsValid;
 }
 
-static bool PullDownIsActive(FanSpeedResolver_t *instance)
-{
-   bool pullDownIsActive;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->pullDownIsActiveErd,
-      &pullDownIsActive);
-
-   return pullDownIsActive;
-}
-
 static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
 {
    return instance->_private.fanData->careAboutCoolingMode;
@@ -99,7 +88,7 @@ static FanControl_t SuperLowFanControl(FanSpeedResolver_t *instance, FanControl_
 
    if(CareAboutHighAmbientTemperature(instance) && FanAntiSweatBehaviorIsEnabled(instance))
    {
-      if(AmbientHumiditySensorIsValid(instance) && AmbientThermistorIsValid(instance) && !PullDownIsActive(instance))
+      if(AmbientHumiditySensorIsValid(instance) && AmbientThermistorIsValid(instance))
       {
          if(AmbientHumidity(instance) >= instance->_private.fanData->highAmbientTriggerHumidityInPercentx100)
          {
@@ -399,7 +388,6 @@ static void DataModelChanged(void *context, const void *_args)
 
    if((erd == instance->_private.config->resolvedFanSpeedVoteErd) ||
       erd == instance->_private.config->coolingModeErd ||
-      erd == instance->_private.config->pullDownIsActiveErd ||
       erd == instance->_private.config->ambientHumiditySensorIsValidErd ||
       erd == instance->_private.config->ambientThermistorIsValidErd ||
       erd == instance->_private.config->ambientFilteredTemperatureResolvedInDegFx100Erd ||
