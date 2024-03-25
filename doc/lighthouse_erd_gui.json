@@ -201,6 +201,13 @@
                "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Heater State",
+               "name": "Erd_DamperHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },
@@ -412,6 +419,46 @@
                "namespace": "mb",
                "displayName": "Condenser Fan Target RPM/PWM",
                "name": "Erd_CalculatedCondenserFanControl",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Heaters",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Heater State",
+               "name": "Erd_FreezerDefrostHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Primary IM Fill Tube Heater State",
+               "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM Fill Tube Heater State",
+               "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Heater State",
+               "name": "Erd_RecessHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Damper Heater State",
+               "name": "Erd_DamperHeater_ResolvedVote",
                "read": true,
                "interval": 1000000000
             }
@@ -970,11 +1017,10 @@
             },
             {
                "namespace": "mb",
-               "displayName": "FF Damper Heater Factory Vote",
-               "name": "Erd_DamperHeater_FactoryVote",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
+               "displayName": "Reset Mainboard in X Seconds",
+               "name": "Erd_Reset",
+               "read": false,
+               "write": true
             },
             {
                "namespace": "mb",
@@ -1001,17 +1047,10 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Fill Tube Heater",
-               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "displayName": "FF Damper Heater Factory Vote",
+               "name": "Erd_DamperHeater_FactoryVote",
                "read": true,
                "write": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "FZ Evap Unfiltered Temperature",
-               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
-               "read": true,
                "interval": 1000000000
             },
             {
@@ -1070,6 +1109,46 @@
             },
             {
                "namespace": "mb",
+               "displayName": "IM Isolation Valve Factory Vote",
+               "name": "Erd_IsolationWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Water Valve Factory Vote",
+               "name": "Erd_IceMaker0_WaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Primary IM Fill Tube Heater Factory Vote",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM Fill Tube Heater",
+               "name": "Erd_IceMaker2_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Heater Factory Vote",
+               "name": "Erd_RecessHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Fresh Food Back Wall Light Factory Vote",
                "name": "Erd_FreshFoodBackWallLight_FactoryVote",
                "read": true,
@@ -1096,22 +1175,6 @@
                "namespace": "mb",
                "displayName": "Freezer Top Light Factory Vote",
                "name": "Erd_FreezerTopLight_FactoryVote",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "IM Isolation Valve Factory Vote",
-               "name": "Erd_IsolationWaterValve_FactoryVote",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Twist IM Water Valve Factory Vote",
-               "name": "Erd_IceMaker0_WaterValve_FactoryVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1490,8 +1553,22 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Fill Tube Heater Winning Vote Erd",
+               "displayName": "Primary IM Fill Tube Heater Winning Vote Erd",
                "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Secondary IM Fill Tube Heater Winning Vote Erd",
+               "name": "Erd_IceMaker2_FillTubeHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Heater Winning Vote Erd",
+               "name": "Erd_RecessHeater_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             }

@@ -438,6 +438,13 @@
       },
       {
          "namespace": "mb",
+         "displayName": "Recess Heater Winning Vote Erd",
+         "name": "Erd_RecessHeater_WinningVoteErd",
+         "read": true,
+         "interval": 1000000000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_IceMaker0_TypeInformation",
          "interval": 60000
       },
