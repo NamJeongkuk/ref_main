@@ -1,5 +1,5 @@
 ---
-name: Design ticket
+name: Rockhopper Design ticket
 about: Design ticket
 title: ''
 labels: Design

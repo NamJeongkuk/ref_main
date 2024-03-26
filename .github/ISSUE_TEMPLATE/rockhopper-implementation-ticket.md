@@ -1,5 +1,5 @@
 ---
-name: Implementation ticket
+name: Rockhopper Implementation ticket
 about: Implementation ticket
 title: ''
 labels: ''

@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Rockhopper Feature request
 about: Template for new feature requests by Systems team
 title: ''
 labels: ''
