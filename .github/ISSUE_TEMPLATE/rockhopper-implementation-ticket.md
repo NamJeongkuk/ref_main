@@ -1,8 +1,8 @@
 ---
-name: Lighthouse Implementation ticket
-about: Lighthouse Implementation ticket
+name: Implementation ticket
+about: Implementation ticket
 title: ''
-labels: 'Lighthouse'
+labels: ''
 assignees: ''
 
 ---

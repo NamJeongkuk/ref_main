@@ -1,8 +1,8 @@
 ---
-name: Lighthouse Feature request
+name: Feature request
 about: Template for new feature requests by Systems team
 title: ''
-labels: 'Lighthouse'
+labels: ''
 assignees: ''
 
 ---

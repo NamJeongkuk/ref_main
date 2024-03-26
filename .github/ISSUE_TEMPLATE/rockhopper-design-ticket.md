@@ -1,8 +1,8 @@
 ---
-name: Lighthouse Design ticket
+name: Design ticket
 about: Design ticket
 title: ''
-labels: Lighthouse, Design
+labels: Design
 assignees: ''
 
 ---
