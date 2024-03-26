@@ -72,7 +72,7 @@ typedef struct
    const FilterData_t *filterData;
    const WaterValveFlowRate_t *waterValveFlowRate;
    const CabinetTemperatureExceededData_t *cabinetTemperatureExceeded;
-   const SealedSystemValveData_t *sealedSystemValve;
+   const SealedSystemValveData_t *sealedSystemValveData;
    const FreshFoodNonHeatedCycleDefrostData_t *freshFoodNonHeatedCycleDefrost;
 } PersonalityParametricData_t;
 

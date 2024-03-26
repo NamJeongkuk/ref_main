@@ -4,6 +4,7 @@ local should_memoize_calls = require 'lua-common'.util.should_memoize_calls
 local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
+local sealed_system_valve_position_type = require 'SealedSystemValve.SealedSystemValvePositionType'
 
 describe('SealedSystemValve', function()
   local sealed_system_valve = SealedSystemValve(core_mock)
@@ -16,7 +17,9 @@ describe('SealedSystemValve', function()
       step_position_D = 30,
       homing_steps = 200,
       coil_excitation_delay_in_ms = 500,
-      delay_between_steps_in_ms = 33
+      delay_between_steps_in_ms = 33,
+      power_up_service_position = 'position_A',
+      power_up_time_in_seconds = 5
     }, overrides or {})
   end
 
@@ -134,6 +137,22 @@ describe('SealedSystemValve', function()
     end)
   end)
 
+  it('should require sealed system valve position argument of power_up_service_position to be valid sealed system valve position', function()
+    should_fail_with("power_up_service_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+      sealed_system_valve(generate_config({
+        power_up_service_position = 'not a valid position'
+      }))
+    end)
+  end)
+
+  it('should assert if power_up_time_in_seconds is not in range', function()
+    should_fail_with('power_up_time_in_seconds=-1 must be in [0, 255]', function()
+      sealed_system_valve(generate_config({
+        power_up_time_in_seconds = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type sealed_system_valve', function()
     local expected = remove_whitespace([[
     structure(
@@ -143,7 +162,9 @@ describe('SealedSystemValve', function()
       u8(30),
       u16(200),
       u16(500),
-      u8(33))
+      u8(33),
+      u8(]] .. sealed_system_valve_position_type.position_A .. [[),
+      u8(5))
     ]])
 
     local actual = sealed_system_valve({
@@ -153,7 +174,9 @@ describe('SealedSystemValve', function()
       step_position_D = 30,
       homing_steps = 200,
       coil_excitation_delay_in_ms = 500,
-      delay_between_steps_in_ms = 33
+      delay_between_steps_in_ms = 33,
+      power_up_service_position = 'position_A',
+      power_up_time_in_seconds = 5
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

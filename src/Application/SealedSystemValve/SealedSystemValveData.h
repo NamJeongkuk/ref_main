@@ -9,6 +9,7 @@
 #define SEALEDSYSTEMVALVEDATA_H
 
 #include <stdint.h>
+#include "SealedSystemValvePosition.h"
 
 typedef struct
 {
@@ -19,6 +20,8 @@ typedef struct
    uint16_t numberOfStepsToHome;
    uint16_t excitationDelayInMilliseconds;
    uint8_t delayBetweenStepEventsInMilliseconds;
+   SealedSystemValvePosition_t refrigerantValvePowerUpServicePosition;
+   uint8_t refrigerantValvePowerUpTimeInSeconds;
 } SealedSystemValveData_t;
 
 #endif

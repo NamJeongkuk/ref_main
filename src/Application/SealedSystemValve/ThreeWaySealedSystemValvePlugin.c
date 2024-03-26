@@ -13,6 +13,7 @@
 #include "DataSource_Gpio.h"
 #include "DataModelErdPointerAccess.h"
 #include "EventQueueInterruptSafePlugin.h"
+#include "SealedSystemValveControlOnPowerUp.h"
 
 static const StepperMotorPins_t valvePins = {
    .motorDriveA = Erd_BspGpio_REF_VAL_00,
@@ -43,6 +44,10 @@ static const SealedSystemValveRequestManagerConfiguration_t requestManagerConfig
    .homingRequestErd = Erd_SealedSystemValveHomingRequest,
    .currentPositionErd = Erd_SealedSystemValveCurrentPosition,
    .previousPositionErd = Erd_SealedSystemValvePreviousPosition
+};
+
+static const SealedSystemValveControlOnPowerUpConfig_t valveControlOnPowerUpConfig = {
+   .sealedSystemValvePositionPowerUpVoteErd = Erd_SealedSystemValvePosition_PowerUpVote
 };
 
 static const StepperMotorDriverConfiguration_t stepperMotorDriverConfig = {
@@ -86,12 +91,18 @@ void ThreeWaySealedSystemValvePlugin_Init(ThreeWaySealedSystemValvePlugin_t *ins
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
       (DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt))->OnInterrupt,
       EventQueueInterruptSafePlugin_GetEventQueueInterface(),
-      &PersonalityParametricData_Get(dataModel)->sealedSystemValve->delayBetweenStepEventsInMilliseconds,
-      &PersonalityParametricData_Get(dataModel)->sealedSystemValve->excitationDelayInMilliseconds);
+      &PersonalityParametricData_Get(dataModel)->sealedSystemValveData->delayBetweenStepEventsInMilliseconds,
+      &PersonalityParametricData_Get(dataModel)->sealedSystemValveData->excitationDelayInMilliseconds);
 
    SealedSystemValveRequestManager_Init(
       &instance->_private.requestManager,
       dataModel,
       &requestManagerConfig,
-      PersonalityParametricData_Get(dataModel)->sealedSystemValve);
+      PersonalityParametricData_Get(dataModel)->sealedSystemValveData);
+
+   SealedSystemValveControlOnPowerUp_Init(
+      &instance->_private.valveControlOnPowerUp,
+      dataModel,
+      &valveControlOnPowerUpConfig,
+      PersonalityParametricData_Get(dataModel)->sealedSystemValveData);
 }

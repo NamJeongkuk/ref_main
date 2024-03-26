@@ -44,7 +44,9 @@ static const SealedSystemValveData_t parameters = {
    .positionDStep = 10,
    .numberOfStepsToHome = StepsToHome,
    .excitationDelayInMilliseconds = 500,
-   .delayBetweenStepEventsInMilliseconds = DontCare
+   .delayBetweenStepEventsInMilliseconds = DontCare,
+   .refrigerantValvePowerUpServicePosition = SealedSystemValvePosition_Home,
+   .refrigerantValvePowerUpTimeInSeconds = DontCare
 };
 
 TEST_GROUP(SealedSystemValveRequestManager)

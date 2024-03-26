@@ -149,6 +149,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Valve Position Power Up Vote",
+          "name": "Erd_SealedSystemValvePosition_PowerUpVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Valve Position Factory Vote",
           "name": "Erd_SealedSystemValvePosition_FactoryVote",
           "read": true,
