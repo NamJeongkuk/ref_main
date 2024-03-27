@@ -10,21 +10,22 @@
 
 static void UpdateAllFreshFoodDoorStatus(AllFreshFoodDoorStatus_t *instance)
 {
-   bool rightFreshFoodDoorIsOpen;
-   bool leftFreshFoodDoorIsOpen;
-   bool allFreshFoodDoorsAreClosed;
+   bool allFreshFoodDoorsAreClosed = true;
 
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->rightFreshDoorStatusErd,
-      &rightFreshFoodDoorIsOpen);
+   for(uint8_t i = 0; i < instance->_private.config->doorStatusErds->numDoorStatusErds; i++)
+   {
+      bool doorIsOpen;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->doorStatusErds->doorStatusErdList[i],
+         &doorIsOpen);
 
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->leftFreshDoorStatusErd,
-      &leftFreshFoodDoorIsOpen);
-
-   allFreshFoodDoorsAreClosed = (!rightFreshFoodDoorIsOpen) && (!leftFreshFoodDoorIsOpen);
+      if(doorIsOpen)
+      {
+         allFreshFoodDoorsAreClosed = false;
+         break;
+      }
+   }
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -34,14 +35,16 @@ static void UpdateAllFreshFoodDoorStatus(AllFreshFoodDoorStatus_t *instance)
 
 static void DataModelChanged(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, AllFreshFoodDoorStatus_t *);
-   REINTERPRET(onChangeData, _args, const DataModelOnDataChangeArgs_t *);
-   REINTERPRET(erd, onChangeData->erd, Erd_t);
+   AllFreshFoodDoorStatus_t *instance = context;
+   const DataModelOnDataChangeArgs_t *onChangeData = _args;
 
-   if(erd == instance->_private.config->rightFreshDoorStatusErd ||
-      erd == instance->_private.config->leftFreshDoorStatusErd)
+   for(uint8_t i = 0; i < instance->_private.config->doorStatusErds->numDoorStatusErds; i++)
    {
-      UpdateAllFreshFoodDoorStatus(instance);
+      if(onChangeData->erd == instance->_private.config->doorStatusErds->doorStatusErdList[i])
+      {
+         UpdateAllFreshFoodDoorStatus(instance);
+         break;
+      }
    }
 }
 

@@ -12,9 +12,14 @@
 
 typedef struct
 {
-   Erd_t rightFreshDoorStatusErd; // bool
-   Erd_t leftFreshDoorStatusErd; // bool
-   Erd_t allFreshFoodDoorsAreClosedErd; // bool
+   const Erd_t *doorStatusErdList;
+   const uint8_t numDoorStatusErds;
+} DoorStatusErds_t;
+
+typedef struct
+{
+   const DoorStatusErds_t *doorStatusErds;
+   const Erd_t allFreshFoodDoorsAreClosedErd; // bool
 } AllFreshFoodDoorStatusConfiguration_t;
 
 typedef struct

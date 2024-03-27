@@ -29,9 +29,18 @@ enum
    Open = Opens
 };
 
-static const AllFreshFoodDoorStatusConfiguration_t AllFreshFoodDoorStatusConfiguration = {
-   .rightFreshDoorStatusErd = Erd_RightSideFreshFoodDoorStatusResolved,
-   .leftFreshDoorStatusErd = Erd_LeftSideFreshFoodDoorStatusResolved,
+static const Erd_t doorStatusErdList[] = {
+   Erd_LeftSideFreshFoodDoorStatusResolved,
+   Erd_RightSideFreshFoodDoorStatusResolved
+};
+
+static const DoorStatusErds_t doorStatusErds = {
+   .doorStatusErdList = doorStatusErdList,
+   .numDoorStatusErds = NUM_ELEMENTS(doorStatusErdList)
+};
+
+static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
+   .doorStatusErds = &doorStatusErds,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
 };
 
@@ -49,7 +58,7 @@ TEST_GROUP(AllFreshFoodDoorStatus)
 
    void AllFreshFoodDoorStatusInitialized()
    {
-      AllFreshFoodDoorStatus_Init(&instance, dataModel, &AllFreshFoodDoorStatusConfiguration);
+      AllFreshFoodDoorStatus_Init(&instance, dataModel, &allFreshFoodDoorStatusConfiguration);
    }
 
    void RightFreshFoodDoorIs(bool actual)

@@ -8,9 +8,18 @@
 #include "FourDoorDoorPlugin.h"
 #include "SystemErds.h"
 
+static const Erd_t doorStatusErdList[] = {
+   Erd_LeftSideFreshFoodDoorStatusResolved,
+   Erd_RightSideFreshFoodDoorStatusResolved
+};
+
+static const DoorStatusErds_t doorStatusErds = {
+   .doorStatusErdList = doorStatusErdList,
+   .numDoorStatusErds = NUM_ELEMENTS(doorStatusErdList)
+};
+
 static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
-   .rightFreshDoorStatusErd = Erd_RightSideFreshFoodDoorStatusResolved,
-   .leftFreshDoorStatusErd = Erd_LeftSideFreshFoodDoorStatusResolved,
+   .doorStatusErds = &doorStatusErds,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
 };
 
