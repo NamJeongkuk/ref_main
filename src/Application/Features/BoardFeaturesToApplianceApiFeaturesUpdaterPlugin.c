@@ -23,14 +23,12 @@ static const FeatureMap_t dispenserUiManifestOneMap[] = {
    },
 };
 
-static const FeatureMapData_t dispenserUiManifestOneMapData = {
-   .listOfFeatureMaps = dispenserUiManifestOneMap,
-   .manifestErd = Erd_ApplianceApiApplianceTypeManifest1,
-   .numberOfFeatureMaps = NUM_ELEMENTS(dispenserUiManifestOneMap)
-};
-
 static const FeatureMapData_t listOfDispenserFeatureMaps[] = {
-   dispenserUiManifestOneMapData
+   {
+      .listOfFeatureMaps = dispenserUiManifestOneMap,
+      .manifestErd = Erd_ApplianceApiApplianceTypeManifest1,
+      .numberOfFeatureMaps = NUM_ELEMENTS(dispenserUiManifestOneMap),
+   }
 };
 
 static const BoardFeaturesToApplianceApiFeaturesUpdaterConfig_t dispenserUiFeatureMapConfig = {

@@ -31,13 +31,6 @@ enum
    UserRequestedPercentage = 50
 };
 
-static const Erd_t bspLightsErdList[] = {
-   Erd_FreshFoodBackWallLight_RampingPwm,
-   Erd_FreshFoodTopLight_RampingPwm,
-   Erd_FreezerBackWallLight_RampingPwm,
-   Erd_FreezerTopLight_RampingPwm
-};
-
 enum
 {
    SabbathGpioDelayInMilliseconds = 100, // Electron travel time

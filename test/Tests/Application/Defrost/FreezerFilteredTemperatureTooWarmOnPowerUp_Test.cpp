@@ -34,17 +34,15 @@ enum
    Valid = true
 };
 
-static CalculatedAxisGridLines_t freshFoodCalcAxis = {
+static const CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
 };
 
-static CalculatedAxisGridLines_t freezerCalcAxis = {
+static const CalculatedAxisGridLines_t freezerCalcAxis = {
    .gridLinesDegFx100 = { -250, 0, 250, 600, 750, 5500 }
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
-
-static CalculatedGridLines_t calcGridLines = {
+static const CalculatedGridLines_t calcGridLines = {
    .freshFoodGridLine = freshFoodCalcAxis,
    .freezerGridLine = freezerCalcAxis
 };

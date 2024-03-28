@@ -53,13 +53,11 @@ static const Erd_t freezerSetpointVoteErds[] = {
    Erd_FreezerSetpoint_UserVote
 };
 
-static const ErdList_t erdListOfFreezerSetpointVoteErds = {
-   .erds = freezerSetpointVoteErds,
-   .numberOfErds = NUM_ELEMENTS(freezerSetpointVoteErds)
-};
-
 static const ColdestOfSetpointVotesConfiguration_t coldestOfFreezerSetpointsConfiguration = {
-   .listOfSetpointVoteErds = erdListOfFreezerSetpointVoteErds,
+   .listOfSetpointVoteErds = {
+      .erds = freezerSetpointVoteErds,
+      .numberOfErds = NUM_ELEMENTS(freezerSetpointVoteErds),
+   },
    .coldestSetpointVoteErd = Erd_FreezerSetpoint_ColdestSetpointVote,
    .coldestSetpointWinningVoteErd = Erd_FreezerSetpoint_ColdestSetpointWinningVote
 };
@@ -69,13 +67,11 @@ static const Erd_t freshFoodSetpointVoteErds[] = {
    Erd_FreshFoodSetpoint_UserVote
 };
 
-static const ErdList_t erdListOfFreshFoodSetpointVoteErds = {
-   .erds = freshFoodSetpointVoteErds,
-   .numberOfErds = NUM_ELEMENTS(freshFoodSetpointVoteErds)
-};
-
 static const ColdestOfSetpointVotesConfiguration_t coldestOfFreshFoodSetpointsConfiguration = {
-   .listOfSetpointVoteErds = erdListOfFreshFoodSetpointVoteErds,
+   .listOfSetpointVoteErds = {
+      .erds = freshFoodSetpointVoteErds,
+      .numberOfErds = NUM_ELEMENTS(freshFoodSetpointVoteErds),
+   },
    .coldestSetpointVoteErd = Erd_FreshFoodSetpoint_ColdestSetpointVote,
    .coldestSetpointWinningVoteErd = Erd_FreshFoodSetpoint_ColdestSetpointWinningVote
 };

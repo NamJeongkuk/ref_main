@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "DataSource_SoftPwmGpio.h"
 #include "iodefine.h"
 #include "I_GpioGroup.h"

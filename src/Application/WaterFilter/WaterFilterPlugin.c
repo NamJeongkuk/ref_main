@@ -83,18 +83,19 @@ static const Erd_t waterVolumeUsageInOuncesX100Erds[] = {
    Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 
-static const ErdList_t waterVolumeUsageInOuncesX100ErdList = {
-   .erds = waterVolumeUsageInOuncesX100Erds,
-   .numberOfErds = NUM_ELEMENTS(waterVolumeUsageInOuncesX100Erds)
-};
-
 static const ErdAccumulatorServiceConfig_t waterFilterValveAccumulatorConfig = {
-   .inputErdList = waterVolumeUsageInOuncesX100ErdList,
+   .inputErdList = {
+      .erds = waterVolumeUsageInOuncesX100Erds,
+      .numberOfErds = NUM_ELEMENTS(waterVolumeUsageInOuncesX100Erds),
+   },
    .cumulativeValueErd = Erd_WaterFilterVolumeUsageInOuncesX100
 };
 
 static const ErdAccumulatorServiceConfig_t unitLifetimeWaterValveAccumulatorConfig = {
-   .inputErdList = waterVolumeUsageInOuncesX100ErdList,
+   .inputErdList = {
+      .erds = waterVolumeUsageInOuncesX100Erds,
+      .numberOfErds = NUM_ELEMENTS(waterVolumeUsageInOuncesX100Erds),
+   },
    .cumulativeValueErd = Erd_UnitLifetimeWaterVolumeUsageInOuncesX100
 };
 
@@ -102,13 +103,11 @@ static const Erd_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds[] = {
    Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 
-static const ErdList_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList = {
-   .erds = unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds,
-   .numberOfErds = NUM_ELEMENTS(unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds)
-};
-
 static const ErdAccumulatorServiceConfig_t unitLifetimeDispensedWaterValveAccumulatorConfig = {
-   .inputErdList = unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList,
+   .inputErdList = {
+      .erds = unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds,
+      .numberOfErds = NUM_ELEMENTS(unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds),
+   },
    .cumulativeValueErd = Erd_UnitLifetimeDispensedWaterInOuncesX100
 };
 

@@ -34,13 +34,11 @@ static const Erd_t freshFoodSetpointVoteErds[] = {
    Erd_FreshFoodSetpoint_UserVote
 };
 
-static const ErdList_t erdListOfFreshFoodSetpointVoteErds = {
-   .erds = freshFoodSetpointVoteErds,
-   .numberOfErds = NUM_ELEMENTS(freshFoodSetpointVoteErds)
-};
-
 static const ColdestOfSetpointVotesConfiguration_t coldestOfFreshFoodSetpointsConfiguration = {
-   .listOfSetpointVoteErds = erdListOfFreshFoodSetpointVoteErds,
+   .listOfSetpointVoteErds = {
+      .erds = freshFoodSetpointVoteErds,
+      .numberOfErds = NUM_ELEMENTS(freshFoodSetpointVoteErds),
+   },
    .coldestSetpointVoteErd = Erd_FreshFoodSetpoint_ColdestSetpointVote,
    .coldestSetpointWinningVoteErd = Erd_FreshFoodSetpoint_ColdestSetpointWinningVote
 };

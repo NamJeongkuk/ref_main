@@ -57,7 +57,8 @@ void NonVolatileAsyncDataSource_Init(
          ClientVersion,
          timerModule,
          TimerTicksBetweenRetriesInMsec,
-         NumberOfRetriesBeforeErase);
+         NumberOfRetriesBeforeErase,
+         true);
    }
 
    AsyncDataSource_Eeprom_Init(
@@ -72,7 +73,8 @@ void NonVolatileAsyncDataSource_Init(
       HarnessEepromClientVersion,
       timerModule,
       TimerTicksBetweenRetriesInMsec,
-      HarnessEepromRetriesBeforeErase);
+      HarnessEepromRetriesBeforeErase,
+      true);
 
    for(uint8_t i = 0; i < AsyncDataSourceCount; i++)
    {

@@ -36,13 +36,11 @@ static const Erd_t freezerSetpointVoteErds[] = {
    Erd_FreezerSetpoint_UserVote
 };
 
-static const ErdList_t erdListOfFreezerSetpointVoteErds = {
-   .erds = freezerSetpointVoteErds,
-   .numberOfErds = NUM_ELEMENTS(freezerSetpointVoteErds)
-};
-
 static const ColdestOfSetpointVotesConfiguration_t coldestOfFreezerSetpointsConfiguration = {
-   .listOfSetpointVoteErds = erdListOfFreezerSetpointVoteErds,
+   .listOfSetpointVoteErds = {
+      .erds = freezerSetpointVoteErds,
+      .numberOfErds = NUM_ELEMENTS(freezerSetpointVoteErds),
+   },
    .coldestSetpointVoteErd = Erd_FreezerSetpoint_ColdestSetpointVote,
    .coldestSetpointWinningVoteErd = Erd_FreezerSetpoint_ColdestSetpointWinningVote
 };

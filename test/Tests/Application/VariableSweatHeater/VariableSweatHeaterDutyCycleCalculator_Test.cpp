@@ -137,30 +137,6 @@ static const VariableSweatHeaterData_t variableSweatHeaterDataType6 = {
    .heaterType6Data = &heaterType6
 };
 
-static const VariableSweatHeaterDataType7_t heaterType7 = {
-   .temperatureCoefficient = 2100,
-   .humidityCoefficient = 7100,
-   .freshFoodCoefficient = -6900,
-   .freezerCoefficient = -1200,
-   .temperatureSquaredCoefficient = 12,
-   .humiditySquaredCoefficient = -20,
-   .freshFoodSquaredCoefficient = 157,
-   .freezerSquaredCoefficient = 121,
-   .temperatureHumidityCoefficient = -13,
-   .temperatureFreshFoodCoefficient = -38,
-   .temperatureFreezerCoefficient = -40,
-   .humidityFreshFoodCoefficient = -37,
-   .humidityFreezerCoefficient = -42,
-   .freshFoodFreezerCoefficient = -38,
-   .interceptCoefficient = -205000
-};
-
-static const VariableSweatHeaterData_t variableSweatHeaterDataType7 = {
-   .heaterControlType = 7,
-   .variableHeaterFallbackDutyCycleInPercent = 100,
-   .heaterType7Data = &heaterType7
-};
-
 TEST_GROUP(VariableSweatHeaterDutyCycleCalculator)
 {
    ReferDataModel_TestDouble_t dataModelDouble;

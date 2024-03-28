@@ -76,24 +76,20 @@ static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
    .I16ErdAdderConfig = &freezerErdAdderI16Config
 };
 
-static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
-   .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
-   .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
-};
-
-static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
-   .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
-   .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
-};
-
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
    .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
    .gridLineAdjustmentErds = {
-      freshFoodGridLineAdjustmentErds,
-      freezerGridLineAdjustmentErds,
+      {
+         .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
+         .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100,
+      },
+      {
+         .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
+         .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
+      },
    }
 };
 

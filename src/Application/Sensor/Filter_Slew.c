@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "Filter_Slew.h"
 #include "utils.h"
 

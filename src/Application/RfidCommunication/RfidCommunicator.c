@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "RfidCommunicator.h"
 #include "Gea2Addresses.h"
 #include "DataSourceErdPointerAccess.h"

@@ -16,18 +16,16 @@ static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min },
 };
 
-static const CoolingSystemRequestVoteList_t coolingSystemRequestVoteList = {
-   .pairs = votingPairs,
-   .numberOfPairs = NUM_ELEMENTS(votingPairs)
-};
-
 static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHandlerConfig = {
    .requestErd = Erd_CoolingOffRequest,
    .statusErd = Erd_CoolingOffStatus,
    .disableDefrostErd = Erd_DisableDefrost,
    .turboCoolOnOffRequestErd = Erd_TurboCoolOnOffRequest,
    .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
-   .coolingSystemRequestVoteList = coolingSystemRequestVoteList
+   .coolingSystemRequestVoteList = {
+      .pairs = votingPairs,
+      .numberOfPairs = NUM_ELEMENTS(votingPairs),
+   }
 };
 
 void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(

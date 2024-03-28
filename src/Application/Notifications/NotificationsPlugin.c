@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "NotificationsPlugin.h"
 #include "SystemErds.h"
 

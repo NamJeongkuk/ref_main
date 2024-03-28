@@ -154,7 +154,7 @@ TEST_GROUP(LightingIntegration)
 
    void TheLightBspErdsShouldBe(PwmDutyCycle_t expectedPwmDutyCycle)
    {
-      for(uint8_t i; i < NUM_ELEMENTS(bspLightsErdList); i++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(bspLightsErdList); i++)
       {
          RampingPwmDutyCycle_t actualPwmDutyCycle;
          DataModel_Read(

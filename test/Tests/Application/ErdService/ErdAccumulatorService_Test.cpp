@@ -15,12 +15,12 @@ extern "C"
 #include "DataModel_TestDouble.h"
 #include "uassert_test.h"
 
+constexpr uint64_t SomeU64Value1 = 9223372036854775808ULL;
+constexpr uint64_t SomeU64Value2 = 64116860184273880;
+constexpr uint64_t SomeU64Value3 = 46116860227223553;
+
 enum
 {
-   SomeU64Value1 = 9223372036854775808ULL,
-   SomeU64Value2 = 64116860184273880,
-   SomeU64Value3 = 46116860227223553,
-
    SomeI64Value1 = 2251799813685248,
    SomeI64Value2 = 2252899325313024,
    SomeI64Value3 = -1133871366144,

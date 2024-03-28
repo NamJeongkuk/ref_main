@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "GridLineCalculator.h"
 #include "CalculatedGridLines.h"
 #include "DataModelErdPointerAccess.h"
@@ -69,7 +70,7 @@ static void CalculateAxisGridLines(
 
       crossAmbientHysteresisAdjustment =
          ((int32_t)crossAmbientHysteresisAdjustment *
-         CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(axisDimension, line)) /
+            CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(axisDimension, line)) /
          CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(axisDimension, line);
 
       axisToCalculate->gridLinesDegFx100[line] += crossAmbientHysteresisAdjustment;

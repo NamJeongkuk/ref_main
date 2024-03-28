@@ -8,7 +8,7 @@
 
 extern "C"
 {
-#include <cstring>
+#include <string.h>
 }
 
 #include "AsyncDataSource_Eeprom_TestDouble.h"
@@ -95,7 +95,8 @@ void AsyncDataSource_Eeprom_TestDouble_Init(
       ClientVersion,
       timerModule,
       timerTicksBetweenRetries,
-      numberOfRetriesBeforeErase);
+      numberOfRetriesBeforeErase,
+      true);
 }
 
 I_AsyncDataSource_t *AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(Instance_t *instance)

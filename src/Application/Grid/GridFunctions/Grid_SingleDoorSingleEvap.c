@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "SystemErds.h"
 #include "utils.h"
 #include "Grid.h"

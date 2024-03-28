@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "DataSource_RampingLedPwm.h"
 #include "iodefine.h"
 #include "PwmDutyCycle.h"

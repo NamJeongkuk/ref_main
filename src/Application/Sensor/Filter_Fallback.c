@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "Filter_Fallback.h"
 #include "Constants_Binary.h"
 #include "uassert.h"

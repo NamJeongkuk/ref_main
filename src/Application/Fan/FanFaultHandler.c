@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "FanFaultHandler.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"

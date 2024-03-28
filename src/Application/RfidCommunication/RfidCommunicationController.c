@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "RfidCommunicationController.h"
 #include "utils.h"
 #include "RfidTypes.h"
@@ -621,8 +622,8 @@ static void OnDataModelChange(void *context, const void *_args)
             RequestTagAuthenticationFailedFault(instance, SET);
          }
 
-         ReadWriteResultIsAReadFailure(readWriteResult) ? 
-            Hsm_SendSignal(&instance->_private.hsm, Signal_ReadFailure, NULL) : 
+         ReadWriteResultIsAReadFailure(readWriteResult) ?
+            Hsm_SendSignal(&instance->_private.hsm, Signal_ReadFailure, NULL) :
             Hsm_SendSignal(&instance->_private.hsm, Signal_WriteFailure, NULL);
       }
       else if(readWriteResult->result == ReadWriteResult_HardwareFailure)

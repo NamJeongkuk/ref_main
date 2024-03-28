@@ -3,10 +3,12 @@ include lib/applcommon/setup.mk
 TARGET:=rockhopper
 OUTPUT_DIR:=build/test
 DISPLAY_ASCII_ART_RESULTS?=Y
+TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 
 include lib/applcommon/defaults.mk
 
 CPPFLAGS+=-Og
+CXXFLAGS+=-Wno-unneeded-internal-declaration -Wno-overloaded-virtual
 
 DEFINES+=TDD_BUILD
 

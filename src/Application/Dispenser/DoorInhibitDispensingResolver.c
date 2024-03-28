@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "DoorInhibitDispensingResolver.h"
 #include "Constants_Binary.h"
 #include "DoorIndex.h"

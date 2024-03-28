@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "ServiceModeRequestHandler.h"
 #include "ServiceModeTestStatus.h"
 #include "ServiceModeTestRequest.h"

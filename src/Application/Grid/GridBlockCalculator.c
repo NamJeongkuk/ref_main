@@ -6,6 +6,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "GridBlockCalculator.h"
 #include "GridBlockNumber.h"
 #include "SystemErds.h"

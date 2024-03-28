@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "WaterFilterUsageSinceExpirationUpdater.h"
 #include "WaterFilterUsageSinceExpiration.h"
 #include "WaterFilterLifeStatus.h"

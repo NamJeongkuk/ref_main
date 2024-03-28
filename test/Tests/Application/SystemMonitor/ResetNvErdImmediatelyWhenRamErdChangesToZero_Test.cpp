@@ -29,10 +29,6 @@ enum
    AnotherValue = 860
 };
 
-static const SystemMonitorData_t systemMonitorData = {
-   .periodicNvUpdateInMinutes = 60
-};
-
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
    { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },

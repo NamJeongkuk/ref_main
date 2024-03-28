@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "NewFilterInstalledHandler.h"
 #include "utils.h"
 #include "RfidTypes.h"

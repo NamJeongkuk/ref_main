@@ -48,109 +48,28 @@ enum
    Valid = true
 };
 
-static const CrossAmbientHysteresisAdjustmentData_t disabledCrossAmbientHysteresisAdjustment = {
-   .multiplier = 0,
-   .divider = 1
-};
-
-static const DeltaGridLineData_t freshFoodGridLineData[] = {
-   {
-      .gridLinesDegFx100 = -450,
-      .correction = DeltaGridLinesCorrection_Offset,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 0,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 150,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 450,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 950,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 1150,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-};
-
-static const DeltaGridLineData_t freezerGridLineData[] = {
-   {
-      .gridLinesDegFx100 = -250,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 0,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 250,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 600,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 750,
-      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-   {
-      .gridLinesDegFx100 = 5500,
-      .correction = DeltaGridLinesCorrection_Offset,
-      .crossAmbientAdjustment = &disabledCrossAmbientHysteresisAdjustment,
-   },
-};
-
-static const DeltaAxisGridLines_t freshFoodAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLineData = freshFoodGridLineData,
-};
-
-static const DeltaAxisGridLines_t freezerAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLineData = freezerGridLineData
-};
-
-static CalculatedAxisGridLines_t freshFoodCalculatedAxis = {
+static const CalculatedAxisGridLines_t freshFoodCalculatedAxis = {
    .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 5500 }
 };
 
-static CalculatedAxisGridLines_t freezerCalculatedAxis = {
+static const CalculatedAxisGridLines_t freezerCalculatedAxis = {
    .gridLinesDegFx100 = { -250, 0, 150, 250, 350, 2150 }
 };
 
-static CalculatedAxisGridLines_t differentFreshFoodCalculatedAxis = {
+static const CalculatedAxisGridLines_t differentFreshFoodCalculatedAxis = {
    .gridLinesDegFx100 = { 150, 250, 350, 450, 550, 5500 }
 };
 
-static CalculatedAxisGridLines_t differentFreezerCalculatedAxis = {
+static const CalculatedAxisGridLines_t differentFreezerCalculatedAxis = {
    .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 2150 }
 };
 
-static CalculatedGridLines_t calculatedGridLines = {
+static const CalculatedGridLines_t calculatedGridLines = {
    .freshFoodGridLine = freshFoodCalculatedAxis,
    .freezerGridLine = freezerCalculatedAxis
 };
 
-static CalculatedGridLines_t differentCalculatedGridLines = {
+static const CalculatedGridLines_t differentCalculatedGridLines = {
    .freshFoodGridLine = differentFreshFoodCalculatedAxis,
    .freezerGridLine = differentFreezerCalculatedAxis
 };

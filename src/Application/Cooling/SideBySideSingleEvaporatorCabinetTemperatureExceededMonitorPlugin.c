@@ -12,13 +12,11 @@ static const Erd_t freshFoodDoors[] = {
    Erd_RightSideFreshFoodDoorStatusResolved
 };
 
-static const ErdList_t freshFoodDoorList = {
-   .erds = freshFoodDoors,
-   .numberOfErds = NUM_ELEMENTS(freshFoodDoors)
-};
-
 static const CabinetTemperatureExceededMonitorConfiguration_t freshFoodCabinetTemperatureExceededMonitorConfig = {
-   .doorErdList = freshFoodDoorList,
+   .doorErdList = {
+      .erds = freshFoodDoors,
+      .numberOfErds = NUM_ELEMENTS(freshFoodDoors),
+   },
    .cabinetFilteredTemperatureInDegFX100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .cabinetThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .cabinetSetpointTemperatureInDegFErd = Erd_FreshFoodSetpointStatus,
@@ -30,13 +28,11 @@ static const Erd_t freezerDoors[] = {
    Erd_LeftSideFreezerDoorStatusResolved
 };
 
-static const ErdList_t freezerDoorList = {
-   .erds = freezerDoors,
-   .numberOfErds = NUM_ELEMENTS(freezerDoors)
-};
-
 static const CabinetTemperatureExceededMonitorConfiguration_t freezerCabinetTemperatureExceededMonitorConfig = {
-   .doorErdList = freezerDoorList,
+   .doorErdList = {
+      .erds = freezerDoors,
+      .numberOfErds = NUM_ELEMENTS(freezerDoors),
+   },
    .cabinetFilteredTemperatureInDegFX100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .cabinetThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
    .cabinetSetpointTemperatureInDegFErd = Erd_FreezerSetpointStatus,

@@ -86,7 +86,7 @@ TEST_GROUP(AllFreshFoodDoorStatus)
       {
          expectedState = false;
       }
-      else if(expected == Closed)
+      else
       {
          expectedState = true;
       }

@@ -43,11 +43,6 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    // It should be configured in lightVoteErds
 };
 
-static const FactoryVoteList_t factoryVoteList = {
-   .pairs = factoryVotePairs,
-   .numberOfPairs = NUM_ELEMENTS(factoryVotePairs)
-};
-
 static const Erd_t lightVoteErds[] = {
    Erd_FreshFoodBackWallLight_FactoryVote,
    Erd_FreshFoodTopLight_FactoryVote,
@@ -63,7 +58,10 @@ static const ErdList_t lightVoteErdList = {
 static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
-   .factoryVoteList = factoryVoteList,
+   .factoryVoteList = {
+      .pairs = factoryVotePairs,
+      .numberOfPairs = NUM_ELEMENTS(factoryVotePairs),
+   },
    .lightVoteErdList = &lightVoteErdList
 };
 

@@ -34,11 +34,6 @@ static const Erd_t lightVotes[] = {
    Erd_FreezerTopLight_EnhancedSabbathVote,
 };
 
-static const ErdList_t lightVoteErdList = {
-   .erds = lightVotes,
-   .numberOfErds = NUM_ELEMENTS(lightVotes)
-};
-
 static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_EnhancedSabbathVote,
@@ -64,7 +59,10 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .enhancedSabbathStageFreezerCoolingIsActiveErd = Erd_EnhancedSabbathStageFreezerCoolingIsActive,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
    .enhancedSabbathRunTimeInMinutesErd = Erd_EnhancedSabbathRunTimeInMinutes,
-   .lightVoteErdList = lightVoteErdList
+   .lightVoteErdList = {
+      .erds = lightVotes,
+      .numberOfErds = NUM_ELEMENTS(lightVotes),
+   }
 };
 
 static void InitializeEnhancedSabbathAverageTemperatureFiltering(

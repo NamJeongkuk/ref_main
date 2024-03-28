@@ -39,11 +39,9 @@ const uint8_t Uid[RfidUidSizeInBytes] = "ABCDEF";
 const uint8_t GivenUnitSerialNumber[32] = "123456789ABCDEFG";
 const uint8_t GivenUnitSerialNumberFirstEightBytes[UnitSerialNumberSizeInBytes] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 const uint8_t UnitSerialNumber[UnitSerialNumberSizeInBytes] = "ABCDEF";
-const uint8_t BlankSerialNumber[UnitSerialNumberSizeInBytes] = "";
 const uint8_t PreviousUnitSerialNumber[UnitSerialNumberSizeInBytes] = "ZYXWVUT";
 const uint8_t FilterIdentifier[FilterIdentifierSizeInBytes] = "ABCDEFGHIJKLMNO";
 const uint8_t LastTwelveMonthsOfWaterUsageInGallons[MonthlyGallonUsageSizeInBytes] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B };
-const uint8_t LastTwelveMonthsOfWaterUsageInGallonsEmpty[MonthlyGallonUsageSizeInBytes] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 TEST_GROUP(RfidCommunicationIntegration)
 {

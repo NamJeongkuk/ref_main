@@ -12,13 +12,11 @@ static const LoadVotePair_t freezerCompartmentLoadVotePairs[] = {
    { Erd_FreezerEvapFanSpeed_LoadOffDoorOpenVote, FanSpeed_Off }
 };
 
-static const CompartmentVoteErdList_t freezerCompartmentVoteErdList = {
-   .pairs = freezerCompartmentLoadVotePairs,
-   .numberOfPairs = NUM_ELEMENTS(freezerCompartmentLoadVotePairs)
-};
-
 static const LoadOffDoorOpenConfiguration_t freezerConfig = {
-   .compartmentVoteErdList = freezerCompartmentVoteErdList,
+   .compartmentVoteErdList = {
+      .pairs = freezerCompartmentLoadVotePairs,
+      .numberOfPairs = NUM_ELEMENTS(freezerCompartmentLoadVotePairs),
+   },
    .timerModuleErd = Erd_TimerModule,
    .doorStatus = {
       .leftSideFreshFoodDoorErd = Erd_Invalid,
