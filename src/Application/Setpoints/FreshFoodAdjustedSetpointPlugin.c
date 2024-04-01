@@ -36,7 +36,7 @@ static const I16ErdAdderConfiguration_t freshFoodErdAdderConfig = {
    },
 };
 
-static ErdWriterOnCompareMatchConfigurationEntry_t erdWriteOnCompareMatchEntries[] = {
+static const ErdWriterOnCompareMatchConfigurationEntry_t erdWriteOnCompareMatchEntries[] = {
    {
       .erdToCompare = Erd_FreshFoodSetpointZone,
       .erdToWrite = Erd_FreshFood_SetpointOffsetInDegFx100,

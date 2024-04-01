@@ -9,6 +9,7 @@
 #include "PersonalityParametricData.h"
 #include "SetpointZone.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 static const Erd_t freezerAdjustedSetpointErds[] = {
    Erd_Freezer_ResolvedSetpointInDegFx100,

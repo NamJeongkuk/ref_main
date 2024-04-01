@@ -475,7 +475,7 @@
 
 enum
 {
-   RamErdBase = 0xFD00
+   RamErdBase = 0xFC00
 };
 
 //       Name,                                              Number, DataType,                                           Swap,     Io,      Sub,   StorageType,            NvDefaultData,                                               YearlyWrites,  FaultId
@@ -891,6 +891,9 @@ enum
    ENTRY(Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,   0xF116, TemperatureDegFx100_t,                        Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100, 0xF117, TemperatureDegFx100_t,                        Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartment_ThermalShiftInDegFx100,       0xF118, TemperatureDegFx100_t,                        Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_IceCabinet_IceFormationOffsetInDegFx100,       0xF119, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceCabinet_IceFormationIsActive,               0xF11A, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_FreezerSetpointZone,                           0xF120, SetpointZone_t,                                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF121, SetpointZone_t,                                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1791,13 +1794,6 @@ enum
    ENTRY(Erd_ConvertibleCompartmentCabinetThermistorDiscovered, 0xFB97, bool,                                           Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_IceMakerCabinetThermistorDiscovered,           0xFB98, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_IceCabinetThermistorDiscovered,                0xFB99, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
-   \
-   ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_NvReservedUserSetting,                         0xFCFC, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvUserSetting,         NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvRfid,                NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
    \
    ENTRY(Erd_PersonalityEepromMetadata,                     0xFFFE, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N,  PersonalityEeprom,     NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
 

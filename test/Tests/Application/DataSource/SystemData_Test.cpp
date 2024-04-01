@@ -25,6 +25,7 @@ extern "C"
 #include "Crc16Calculator_TestDouble.h"
 #include "AsyncDataSource_Eeprom_TestDouble.h"
 #include "PersonalityParametricDataTestDouble.h"
+#include <sstream>
 
 #define AllErds                \
    size_t i = 0;               \
@@ -319,6 +320,28 @@ TEST_GROUP(SystemData)
       ShouldFailAssertionWhen(DataModel_Subscribe(dataModel, erd, &subscription));
    }
 };
+
+TEST(SystemData, ShouldHaveUniqueErdEnumValues)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(size_t i = 0; i < NUM_ELEMENTS(erdTable); i++)
+   {
+      for(size_t j = 0; j < NUM_ELEMENTS(erdTable); j++)
+      {
+         if(i != j)
+         {
+            if(erdTable[i].erd == erdTable[j].erd)
+            {
+               std::stringstream ss;
+               ss << "ERD 0x" << std::uppercase << std::hex << erdTable[i].externalErd;
+               ss << " shadows ERD 0x" << std::uppercase << std::hex << erdTable[j].externalErd;
+               FAIL(ss.str().c_str());
+            }
+         }
+      }
+   }
+}
 
 TEST(SystemData, ShouldSupportReadsAndWritesToInternalDataModel)
 {
