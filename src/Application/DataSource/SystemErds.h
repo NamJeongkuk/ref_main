@@ -137,6 +137,7 @@
 #include "RecessLightOnRequest.h"
 #include "IceMakerStateMachineState.h"
 #include "SealedSystemValvePosition.h"
+#include "FeaturePanMode.h"
 
 // clang-format off
 
@@ -700,6 +701,7 @@ enum
    ENTRY(Erd_IceCabinetHighSpeedOverrideEnabledByGrid,      0xF024, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_UseDelayedConvertibleCompartmentCoolingSpeedEnabledByGrid, 0xF025, bool,                                   Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FeaturePanGridBlockNumber,                     0xF026, GridBlockNumber_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_FeaturePanMode,                                0xF027, FeaturePanMode_t,                                   Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF030, GridBlockNumber_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF031, PreviousGridBlockNumbers_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1089,7 +1091,8 @@ enum
    ENTRY(Erd_FreezerEvapFanSpeed_SabbathVote,               0xF231, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_CompressorStartUpVote,     0xF232, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_FreezerIceRateVote,        0xF233, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF234, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_FeaturePanVote,            0xF234, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF235, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentEvapFanSpeed_ResolvedVote,         0xF23A, FanVotedSpeed_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvapFanSpeed_WinningVoteErd,       0xF23B, WinningVoteErd_t,                         Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \

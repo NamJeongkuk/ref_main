@@ -18,4 +18,5 @@ void FourDoorConfigurationPlugin_Init(FourDoorConfigurationPlugin_t *instance, I
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
    FourDoorBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.booleanRequestStatusUpdaterPlugin, dataModel);
    FourDoorDoorPlugin_Init(&instance->_private.fourDoorDoorPlugin, dataModel);
+   FeaturePanPlugin_Init(&instance->_private.FeaturePanPlugin, dataModel);
 }

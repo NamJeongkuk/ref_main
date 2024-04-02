@@ -81,6 +81,7 @@ SRC_DIRS:=\
   src/Application/Fan \
   src/Application/Fault \
   src/Application/FaultHandlers \
+  src/Application/FeaturePan \
   src/Application/Features \
   src/Application/FlowMeter \
   src/Application/Gea \

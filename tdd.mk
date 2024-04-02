@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/Application/FaultHandlers \
   src/Application/Fan \
   src/Application/Fault \
+  src/Application/FeaturePan \
   src/Application/Features \
   src/Application/FlowMeter \
   src/Application/Grid \
@@ -111,6 +112,7 @@ SRC_DIRS:=\
   test/Tests/Application/FaultHandlers \
   test/Tests/Application/Fan \
   test/Tests/Application/Fault \
+  test/Tests/Application/FeaturePan \
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
   test/Tests/Application/Grid \
