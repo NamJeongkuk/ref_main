@@ -128,6 +128,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_FreshFood_CrossAmbientOffsetInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
          "interval": 60000
       },
@@ -154,6 +159,11 @@
       {
          "namespace": "mb",
          "name": "Erd_Freezer_HighAmbientOffsetInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
          "interval": 60000
       },
       {
