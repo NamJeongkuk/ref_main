@@ -74,7 +74,7 @@ void NonVolatileAsyncDataSource_Init(
       timerModule,
       TimerTicksBetweenRetriesInMsec,
       HarnessEepromRetriesBeforeErase,
-      true);
+      false);
 
    for(uint8_t i = 0; i < AsyncDataSourceCount; i++)
    {
