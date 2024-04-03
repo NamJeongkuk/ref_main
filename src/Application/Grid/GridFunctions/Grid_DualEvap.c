@@ -166,11 +166,11 @@ static void ExecuteGridVote(I_DataModel_t *dataModel, FourDoorDualEvaporatorVote
       sealedSystemValveVotedPosition.care = Vote_DontCare;
    }
 
+   DataModel_Write(dataModel, Erd_SealedSystemValvePosition_GridVote, &sealedSystemValveVotedPosition);
    DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVotedSpeed);
    DataModel_Write(dataModel, Erd_CondenserFanSpeed_GridVote, &condenserFanVotedSpeed);
    DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &freezerEvapFanVotedSpeed);
    DataModel_Write(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, &freshFoodEvapFanVotedSpeed);
-   DataModel_Write(dataModel, Erd_SealedSystemValvePosition_GridVote, &sealedSystemValveVotedPosition);
 }
 
 static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t blockNumber, FourDoorDualEvaporatorVotes_t *votes)

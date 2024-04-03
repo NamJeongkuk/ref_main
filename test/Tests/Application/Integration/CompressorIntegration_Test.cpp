@@ -366,3 +366,77 @@ TEST(VariableSpeedCompressorIntegration, ShouldUpdateCompressorFrequencyWhenDisa
    CompressorFrequencyShouldBe(
       compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
 }
+
+TEST_GROUP(VariableSpeedCompressorIntegrationWithSealedSystemValve)
+{
+   ReferDataModel_TestDouble_t dataModelDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   I_DataModel_t *dataModel;
+   Application_t instance;
+   ResetReason_t resetReason;
+   const CompressorData_t *compressorData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapFourDoor);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
+   }
+
+   void GivenApplicationHasBeenInitialized()
+   {
+      Application_Init(
+         &instance,
+         dataModel,
+         resetReason);
+   }
+
+   void WhenCompressorSpeedChangesTo(CompressorSpeed_t compressorSpeed)
+   {
+      CompressorVotedSpeed_t compressorVote;
+      compressorVote.speed = compressorSpeed;
+      compressorVote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_CompressorSpeed_FactoryVote, &compressorVote);
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+
+   void SealedSystemValvePositionResolvedVoteShouldBe(SealedSystemValveVotedPosition_t expected)
+   {
+      SealedSystemValveVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValvePosition_ResolvedVote, &actual);
+
+      CHECK_EQUAL(expected.position, actual.position);
+      CHECK_EQUAL(expected.care, actual.care);
+   }
+
+   void TheCompressorHsmStateShouldBe(CompressorState_t expected)
+   {
+      CompressorState_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_CompressorState,
+         &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+};
+
+TEST(VariableSpeedCompressorIntegrationWithSealedSystemValve, ShouldTransitionToSabbathDelayWhenTheCompressorSpeedChangesWhileInRemainOffAfterValveMoveState)
+{
+   GivenApplicationHasBeenInitialized();
+   SealedSystemValvePositionResolvedVoteShouldBe({ .position = SealedSystemValvePosition_A, .care = Vote_Care });
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   WhenCompressorSpeedChangesTo(CompressorSpeed_Medium);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
+}

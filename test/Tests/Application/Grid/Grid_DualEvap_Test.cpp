@@ -39,6 +39,7 @@ TEST_GROUP(Grid_DualEvap_Test)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    ConstArrayMap_FourDoorDualEvap_t fourDoorDualEvapConstArrayMap;
    const FreshFoodAdjustedSetpointData_t *freshFoodAdjustedSetpointData;
+   EventSubscription_t dataModelOnChangeSubscription;
 
    void setup()
    {
@@ -49,6 +50,59 @@ TEST_GROUP(Grid_DualEvap_Test)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
       DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
+   }
+
+   static void DataModelChanged(void *context, const void *_args)
+   {
+      IGNORE(context);
+      const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
+
+      if(args->erd == Erd_SealedSystemValvePosition_GridVote)
+      {
+         const SealedSystemValveVotedPosition_t *vote = (const SealedSystemValveVotedPosition_t *)args->data;
+
+         mock()
+            .actualCall("SealedSystemValveVoteChanged")
+            .withParameter("position", vote->position)
+            .withParameter("care", vote->care);
+      }
+      else if(args->erd == Erd_CompressorSpeed_GridVote)
+      {
+         const CompressorVotedSpeed_t *vote = (const CompressorVotedSpeed_t *)args->data;
+
+         mock()
+            .actualCall("CompressorSpeedVoteChanged")
+            .withParameter("speed", vote->speed)
+            .withParameter("care", vote->care);
+      }
+   }
+
+   void TheSealedSystemValveVoteShouldChangeTo(SealedSystemValveVotedPosition_t vote)
+   {
+      mock()
+         .expectOneCall("SealedSystemValveVoteChanged")
+         .withParameter("position", vote.position)
+         .withParameter("care", vote.care);
+   }
+
+   void TheCompressorSpeedVoteShouldChangeTo(CompressorVotedSpeed_t vote)
+   {
+      mock()
+         .expectOneCall("CompressorSpeedVoteChanged")
+         .withParameter("speed", vote.speed)
+         .withParameter("care", vote.care);
+   }
+
+   void GivenDataModelSubscriptionIsInitialized()
+   {
+      EventSubscription_Init(
+         &dataModelOnChangeSubscription,
+         NULL,
+         DataModelChanged);
+
+      DataModel_SubscribeAll(
+         dataModel,
+         &dataModelOnChangeSubscription);
    }
 
    void GridBlockBecomes(GridBlockNumber_t actual)
@@ -296,6 +350,18 @@ TEST_GROUP(Grid_DualEvap_Test)
       CHECK_FALSE(sealedSystemValvePositionVote.care);
    }
 };
+
+TEST(Grid_DualEvap_Test, ShouldVoteForSealedSystemValveBeforeCompressorSpeedVote)
+{
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(0);
+
+   GivenDataModelSubscriptionIsInitialized();
+
+   TheSealedSystemValveVoteShouldChangeTo({ SealedSystemValvePosition_B, Vote_Care });
+   TheCompressorSpeedVoteShouldChangeTo({ CompressorSpeed_SuperLow, Vote_Care });
+   When The GridIsRun();
+}
 
 TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks0And1And2)
 {

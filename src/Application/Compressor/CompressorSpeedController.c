@@ -591,6 +591,10 @@ static bool State_RemainOffAfterValveMove(Hsm_t *hsm, HsmSignal_t signal, const 
          {
             Hsm_Transition(hsm, State_MinimumOffTime);
          }
+         else if(ResolvedCompressorVotedSpeed(instance) != CompressorSpeed_Off)
+         {
+            Hsm_Transition(hsm, State_SabbathDelay);
+         }
          else
          {
             Hsm_Transition(hsm, State_OffAndReadyToChange);

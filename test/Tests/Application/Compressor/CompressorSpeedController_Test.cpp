@@ -256,6 +256,18 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
          TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
       }
    }
+
+   void GivenCompressorSpeedControllerIsInRemainOffAfterValveMoveStateAndMinimumOffTimerHasCompleted()
+   {
+      Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+      And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+      After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN);
+      TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+
+      When TheValvePositionChanges();
+      TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+   }
 };
 
 TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoOffAndReadyToChangeIfVotedSpeedIsZero)
@@ -842,6 +854,19 @@ TEST(VariableSpeedCompressorSpeedController, ShouldDisableCompressorTimesWhenMin
 
    After(1);
    TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromRemainOffAfterValveMoveToSabbathDelayIfCompressorSpeedResolvedVoteChangesBeforeRemainOffTimeCompletes)
+{
+   GivenCompressorSpeedControllerIsInRemainOffAfterValveMoveStateAndMinimumOffTimerHasCompleted();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveLowAmbientTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
 }
 
 TEST_GROUP(SingleSpeedCompressorSpeedController)
