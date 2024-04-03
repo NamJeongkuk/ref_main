@@ -1,5 +1,5 @@
 {
-   "name": "MD & AFAR Combined GUI",
+   "name": "MD & AFAR GUI Rev 24.1",
    "tabs": [
       {
          "title": "Versions",
@@ -309,8 +309,15 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed",
+               "name": "Erd_CompressorInverterDriver",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
             }
-
          ]
       },
       {
@@ -782,6 +789,13 @@
                "namespace": "mb",
                "displayName": "Fresh Food Setpoint Offset (DegF x100)",
                "name": "Erd_FreshFood_SetpointOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Pulldown Offset (DegF x100)",
+               "name": "Erd_FreshFood_PulldownOffsetInDegFx100",
                "read": true,
                "interval": 1000000000
             }

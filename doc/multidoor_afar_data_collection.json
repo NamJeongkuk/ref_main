@@ -1,5 +1,5 @@
 {
-   "name": "Rockhopper_Data_Collection",
+   "name": "MD_AFAR_Data_Collection_1.1",
    "options": {
       "continuous": false,
       "period": 60000,
@@ -9,6 +9,11 @@
       {
          "namespace": "mb",
          "name": "Erd_CompressorSpeed_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_CompressorInverterDriver",
          "interval": 60000
       },
       {
