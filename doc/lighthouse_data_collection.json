@@ -448,10 +448,8 @@
       },
       {
          "namespace": "mb",
-         "displayName": "Recess Heater Winning Vote Erd",
          "name": "Erd_RecessHeater_WinningVoteErd",
-         "read": true,
-         "interval": 1000000000
+         "interval": 60000
       },
       {
          "namespace": "mb",
