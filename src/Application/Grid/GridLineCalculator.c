@@ -94,6 +94,7 @@ static void ConfigureGridLines(GridLineCalculator_t *instance)
          instance,
          &instance->_private.oneDimensionalCalculatedGridLines.gridLines,
          FirstDimension);
+      instance->_private.oneDimensionalCalculatedGridLines.numberOfGridLines = instance->_private.gridData->deltaGridLines->gridLines[FirstDimension].numberOfLines;
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->calculatedGridLineErd,
@@ -109,6 +110,7 @@ static void ConfigureGridLines(GridLineCalculator_t *instance)
          instance,
          &instance->_private.twoDimensionalCalculatedGridLines.secondDimensionGridLines,
          SecondDimension);
+      instance->_private.twoDimensionalCalculatedGridLines.numberOfGridLinesPerDimension = instance->_private.gridData->deltaGridLines->gridLines[FirstDimension].numberOfLines;
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->calculatedGridLineErd,

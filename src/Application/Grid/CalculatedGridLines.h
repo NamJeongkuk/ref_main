@@ -27,13 +27,31 @@ typedef CalculatedAxisGridLines_t TwoDimensionalSecondDimensionCalculatedAxisGri
 typedef CalculatedAxisGridLines_t OneDimensionalCalculatedAxisGridLines_t;
 
 #define SWAP_DEFINITION_TwoDimensionalFirstDimensionCalculatedAxisGridLines_t(_name, _type) \
-   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_7]),
 
 #define SWAP_DEFINITION_TwoDimensionalSecondDimensionCalculatedAxisGridLines_t(_name, _type) \
-   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_7]),
 
 #define SWAP_DEFINITION_OneDimensionalCalculatedAxisGridLines_t(_name, _type) \
-   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[GridLine_7]),
 
 typedef struct
 {
@@ -43,8 +61,20 @@ typedef struct
 } TwoDimensionalCalculatedGridLines_t;
 
 #define SWAP_DEFINITION_TwoDimensionalCalculatedGridLines_t(_name, _type)  \
-   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100), \
-      SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100),
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100[GridLine_7]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100[GridLine_7]),
 
 typedef struct
 {
@@ -53,6 +83,12 @@ typedef struct
 } OneDimensionalCalculatedGridLines_t;
 
 #define SWAP_DEFINITION_OneDimensionalCalculatedGridLines_t(_name, _type) \
-   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100),
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_1]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_2]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_3]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_4]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_5]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_6]), \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100[GridLine_7]),
 
 #endif

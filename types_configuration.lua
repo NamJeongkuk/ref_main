@@ -18,24 +18,37 @@ return {
   -- Types that can't be automatically generated but need to be defined
   type_overrides = {
     GridBlockNumber_t = 'uint8_t',
-    FreshFoodCalculatedAxisGridLines_t = [[
+    TwoDimensionalFirstDimensionCalculatedAxisGridLines_t = [[
       struct {
-        TemperatureDegFx100_t 'nflGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowHystDeltaGridLinesDegFx100',
-        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
-        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodNflGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodLowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodLowHystDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodHighHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodExtraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'freshFoodSuperHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'unused',
       }
     ]],
-    FreezerCalculatedAxisGridLines_t = [[
+    TwoDimensionalSecondDimensionCalculatedAxisGridLines_t = [[
       struct {
-        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'deltaGridLinesDegFx100',
-        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerLowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerHighHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerExtraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerSuperHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'freezerExtremeHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'unused',
+      }
+    ]],
+    OneDimensionalCalculatedAxisGridLines_t = [[
+      struct {
         TemperatureDegFx100_t 'superHighGridLinesDegFx100',
-        TemperatureDegFx100_t 'extremeHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'highGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'setpointDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowGridLinesDegFx100',
+        TemperatureDegFx100_t 'superLowGridLinesDegFx100',
       }
     ]],
     FeaturePanCalculatedAxisGridLines_t = [[

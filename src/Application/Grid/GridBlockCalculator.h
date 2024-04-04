@@ -15,29 +15,32 @@
 
 enum
 {
-   NumberOfPreviousGridBlocksStored = 5
+   GridBlockCalculator_NumberOfPreviousGridBlocksToStore = 5
 };
 
 typedef struct
 {
-   Erd_t freshFoodFilteredResolvedTemperatureInDegFx100; // TemperatureDegFx100_t
-   Erd_t freezerFilteredResolvedTemperatureInDegFx100; // TemperatureDegFx100_t
+   Erd_t filteredResolvedTemperatureInDegFx100; // TemperatureDegFx100_t
+   Erd_t thermistorIsValidResolvedErd; // TemperatureDegFx100_t
+} GridBlockAdjustmentErds_t;
+
+typedef struct
+{
+   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t currentGridBlockNumberErd; // GridBlockNumber_t
-   Erd_t calculatedGridLinesErd; // TwoDimensionalCalculatedGridLines_t
    Erd_t previousGridBlockNumbersErd; // PreviousGridBlockNumbers_t
-   Erd_t freezerThermistorIsValidResolvedErd; // bool
-   Erd_t freshFoodThermistorIsValidResolvedErd; // bool
+   GridBlockAdjustmentErds_t gridBlockAdjustmentErds[CalculatedGridLines_MaxGridDimensionsCount];
 } GridBlockCalculatorConfiguration_t;
 
 typedef struct
 {
    struct
    {
-      EventSubscription_t dataModelOnChangedSubscription;
+      EventSubscription_t subscription;
       const GridBlockCalculatorConfiguration_t *config;
       I_DataModel_t *dataModel;
       RingBuffer_t ringBuffer;
-      uint8_t ringBufferArray[NumberOfPreviousGridBlocksStored];
+      uint8_t ringBufferArray[GridBlockCalculator_NumberOfPreviousGridBlocksToStore];
       const GridData_t *gridData;
    } _private;
 } GridBlockCalculator_t;

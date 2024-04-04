@@ -1,7 +1,10 @@
 /*!
  * @file Grid Block Calculator
- * @brief Calculates main grid blocks based on if grid lines or fresh Food / freezer resolved cabinet temperatures change
- * Also updates previous grid blocks on change
+ * @brief Calculates main grid blocks based on if grid lines or first/second dimension resolved cabinet temperatures change.
+ * Also updates previous grid blocks on change.
+ *
+ * Note that currently this assumes all one-dimensional grids will be inverted
+ * (i.e. a higher adjusted setpoint temperature results in a lower grid block number)
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -18,52 +21,20 @@ enum
    FirstDimension,
    SecondDimension,
 
+   TwoDimensions = 2,
+
    NonInvertedGridLine = 0,
    InvertedGridLine = 1,
 
-   NumberOfGridLinesPerAxis = 6,
    PreviousGridBlockDefaultValue = 0xFF,
 };
 
-static void UpdatePreviousGridBlocks(GridBlockCalculator_t *instance);
-
-static CalculatedAxisGridLines_t CalculatedGridLine(
-   GridBlockCalculator_t *instance,
-   uint8_t gridLineDimension)
-{
-   TwoDimensionalCalculatedGridLines_t calculatedGridLines;
-
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->calculatedGridLinesErd,
-      &calculatedGridLines);
-
-   if(gridLineDimension == FirstDimension)
-   {
-      return calculatedGridLines.firstDimensionGridLines;
-   }
-   else
-   {
-      return calculatedGridLines.secondDimensionGridLines;
-   }
-}
-
-static bool FreezerThermistorIsValid(GridBlockCalculator_t *instance)
+static bool ThermistorIsValid(GridBlockCalculator_t *instance, uint8_t dimension)
 {
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerThermistorIsValidResolvedErd,
-      &state);
-   return state;
-}
-
-static bool FreshFoodThermistorIsValid(GridBlockCalculator_t *instance)
-{
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodThermistorIsValidResolvedErd,
+      instance->_private.config->gridBlockAdjustmentErds[dimension].thermistorIsValidResolvedErd,
       &state);
    return state;
 }
@@ -71,29 +42,28 @@ static bool FreshFoodThermistorIsValid(GridBlockCalculator_t *instance)
 static uint8_t GridLineIndex(
    GridBlockCalculator_t *instance,
    bool gridLineIsInverted,
-   uint8_t gridLineDimension)
+   uint8_t dimension)
 {
    TemperatureDegFx100_t temperature;
 
-   if(gridLineDimension == FirstDimension)
-   {
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100,
-         &temperature);
-   }
-   else
-   {
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100,
-         &temperature);
-   }
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->gridBlockAdjustmentErds[dimension].filteredResolvedTemperatureInDegFx100,
+      &temperature);
 
-   CalculatedAxisGridLines_t calculatedGridLine = CalculatedGridLine(instance, gridLineDimension);
+   TwoDimensionalCalculatedGridLines_t calculatedGridLines;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->calculatedGridLinesErd,
+      &calculatedGridLines);
+
+   CalculatedAxisGridLines_t calculatedGridLine =
+      (dimension == FirstDimension) ? calculatedGridLines.firstDimensionGridLines : calculatedGridLines.secondDimensionGridLines;
+
    uint8_t index;
 
-   for(index = 0; index < NumberOfGridLinesPerAxis; index++)
+   for(index = 0; index < (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines); index++)
    {
       if(temperature <= calculatedGridLine.gridLinesDegFx100[index])
       {
@@ -103,18 +73,18 @@ static uint8_t GridLineIndex(
 
    if(gridLineIsInverted)
    {
-      index = NumberOfGridLinesPerAxis - index;
+      index = (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines) - index;
    }
 
    return index;
 }
 
 static GridBlockNumber_t GridBlock(
-   uint8_t freshFoodIndex,
-   uint8_t freezerIndex,
+   uint8_t firstDimensionIndex,
+   uint8_t secondDimensionIndex,
    uint8_t numCols)
 {
-   return (freezerIndex * numCols) + freshFoodIndex % numCols;
+   return (secondDimensionIndex * numCols) + firstDimensionIndex % numCols;
 }
 
 static void AddGridBlockToRingBufferIfDifferent(
@@ -143,38 +113,55 @@ static void AddGridBlockToRingBufferIfDifferent(
 
 static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *instance)
 {
-   uint8_t firstDimensionGridLinesIndex;
-   uint8_t secondDimensionGridLinesIndex;
+   uint8_t firstDimensionGridLinesIndex = 0;
+   uint8_t secondDimensionGridLinesIndex = 0;
 
-   if(FreshFoodThermistorIsValid(instance))
+   if(instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions)
    {
-      firstDimensionGridLinesIndex = GridLineIndex(
-         instance,
-         NonInvertedGridLine,
-         FirstDimension);
+      if(ThermistorIsValid(instance, FirstDimension))
+      {
+         firstDimensionGridLinesIndex = GridLineIndex(
+            instance,
+            NonInvertedGridLine,
+            FirstDimension);
+      }
+      else
+      {
+         firstDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFirstDimensionThermistorColumn;
+      }
+
+      if(ThermistorIsValid(instance, SecondDimension))
+      {
+         secondDimensionGridLinesIndex = GridLineIndex(
+            instance,
+            InvertedGridLine,
+            SecondDimension);
+      }
+      else
+      {
+         secondDimensionGridLinesIndex = instance->_private.gridData->gridInvalidSecondDimensionThermistorRow;
+      }
    }
    else
    {
-      firstDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFreshFoodThermistorColumn;
-   }
-
-   if(FreezerThermistorIsValid(instance))
-   {
-      secondDimensionGridLinesIndex = GridLineIndex(
-         instance,
-         InvertedGridLine,
-         SecondDimension);
-   }
-   else
-   {
-      secondDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFreezerThermistorRow;
+      if(ThermistorIsValid(instance, FirstDimension))
+      {
+         firstDimensionGridLinesIndex = GridLineIndex(
+            instance,
+            InvertedGridLine,
+            FirstDimension);
+      }
+      else
+      {
+         firstDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFirstDimensionThermistorColumn;
+      }
    }
 
    GridBlockNumber_t calculatedBlockNumber =
       GridBlock(
          firstDimensionGridLinesIndex,
          secondDimensionGridLinesIndex,
-         (NumberOfGridLinesPerAxis + 1));
+         (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines + 1));
 
    return calculatedBlockNumber;
 }
@@ -187,6 +174,35 @@ static void UpdateGridBlock(GridBlockCalculator_t *instance)
       instance->_private.dataModel,
       instance->_private.config->currentGridBlockNumberErd,
       &calculatedBlockNumber);
+}
+
+static void CopyFifoOrder(GridBlockCalculator_t *instance, PreviousGridBlockNumbers_t *outputBlocks)
+{
+   uint8_t j = GridBlockCalculator_NumberOfPreviousGridBlocksToStore - 1;
+   for(uint8_t i = 0; i < outputBlocks->count; i++)
+   {
+      RingBuffer_At(&instance->_private.ringBuffer, &outputBlocks->blockNumbers[j--], i);
+   }
+}
+
+static void UpdatePreviousGridBlocks(GridBlockCalculator_t *instance)
+{
+   PreviousGridBlockNumbers_t previousGridBlockNumbers;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->previousGridBlockNumbersErd,
+      &previousGridBlockNumbers);
+
+   previousGridBlockNumbers.count = MIN(
+      GridBlockCalculator_NumberOfPreviousGridBlocksToStore,
+      RingBuffer_Count(&instance->_private.ringBuffer));
+
+   CopyFifoOrder(instance, &previousGridBlockNumbers);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->previousGridBlockNumbersErd,
+      &previousGridBlockNumbers);
 }
 
 static void UpdateGridBlockIfDifferent(GridBlockCalculator_t *instance)
@@ -225,50 +241,32 @@ static void WriteDefaultValuesToPreviousGridBlockErd(GridBlockCalculator_t *inst
       &defaultValue);
 }
 
-static void CopyFifoOrder(GridBlockCalculator_t *instance, PreviousGridBlockNumbers_t *outputBlocks)
-{
-   uint8_t j = NumberOfPreviousGridBlocksStored - 1;
-   for(uint8_t i = 0; i < outputBlocks->count; i++)
-   {
-      RingBuffer_At(&instance->_private.ringBuffer, &outputBlocks->blockNumbers[j--], i);
-   }
-}
-
-static void UpdatePreviousGridBlocks(GridBlockCalculator_t *instance)
-{
-   PreviousGridBlockNumbers_t previousGridBlockNumbers;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->previousGridBlockNumbersErd,
-      &previousGridBlockNumbers);
-
-   previousGridBlockNumbers.count = MIN(
-      NumberOfPreviousGridBlocksStored,
-      RingBuffer_Count(&instance->_private.ringBuffer));
-
-   CopyFifoOrder(instance, &previousGridBlockNumbers);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->previousGridBlockNumbersErd,
-      &previousGridBlockNumbers);
-}
-
 static void OnDataModelChanged(void *context, const void *args)
 {
-   const DataModelOnDataChangeArgs_t *arguments = args;
    GridBlockCalculator_t *instance = context;
-   Erd_t erd = arguments->erd;
+   const DataModelOnDataChangeArgs_t *onChangeData = args;
+   const Erd_t erd = onChangeData->erd;
 
-   if((erd == instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100) ||
-      (erd == instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100) ||
-      (erd == instance->_private.config->calculatedGridLinesErd) ||
-      (erd == instance->_private.config->freezerThermistorIsValidResolvedErd) ||
-      (erd == instance->_private.config->freshFoodThermistorIsValidResolvedErd))
+   if(erd == instance->_private.config->calculatedGridLinesErd)
    {
-      if(FreshFoodThermistorIsValid(instance) || FreezerThermistorIsValid(instance))
+      if(ThermistorIsValid(instance, FirstDimension) || ThermistorIsValid(instance, SecondDimension))
       {
          UpdateGridBlockIfDifferent(instance);
+      }
+   }
+   else
+   {
+      for(uint8_t i = 0; i < instance->_private.gridData->deltaGridLines->dimensions; i++)
+      {
+         if((erd == instance->_private.config->gridBlockAdjustmentErds[i].filteredResolvedTemperatureInDegFx100) ||
+            (erd == instance->_private.config->gridBlockAdjustmentErds[i].thermistorIsValidResolvedErd))
+         {
+            if(ThermistorIsValid(instance, FirstDimension) || ThermistorIsValid(instance, SecondDimension))
+            {
+               UpdateGridBlockIfDifferent(instance);
+               break;
+            }
+         }
       }
    }
 }
@@ -293,7 +291,7 @@ void GridBlockCalculator_Init(
    RingBuffer_Init(
       &instance->_private.ringBuffer,
       &instance->_private.ringBufferArray,
-      NumberOfPreviousGridBlocksStored,
+      GridBlockCalculator_NumberOfPreviousGridBlocksToStore,
       sizeof(GridBlockNumber_t));
 
    WriteDefaultValuesToPreviousGridBlockErd(instance);
@@ -301,11 +299,11 @@ void GridBlockCalculator_Init(
    UpdateGridBlock(instance);
 
    EventSubscription_Init(
-      &instance->_private.dataModelOnChangedSubscription,
+      &instance->_private.subscription,
       instance,
       OnDataModelChanged);
 
    DataModel_SubscribeAll(
       dataModel,
-      &instance->_private.dataModelOnChangedSubscription);
+      &instance->_private.subscription);
 }

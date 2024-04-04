@@ -92,13 +92,15 @@ static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
 };
 
 static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
-   .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
    .calculatedGridLinesErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
+   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
    .previousGridBlockNumbersErd = Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
-   .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
-   .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved
+   .gridBlockAdjustmentErds = {
+      { .filteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+         .thermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved },
+      { .filteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+         .thermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved },
+   }
 };
 
 static const Erd_t gridBlockNumberOverrideRequestErdList[] = {

@@ -26,6 +26,7 @@ describe('Grid', function()
     return require 'lua-common'.table.merge({
       grid_id = grid_id_type.grid_feature_pan,
       grid_deltas = TypedString('grid_deltas', 'grid_deltas'),
+      grid_invalid_thermistor_fallback_block = 1,
       minimum_cross_ambient_adjusted_hysteresis_in_degfx100 = -20,
       cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 500,
       grid_periodic_run_rate_in_msec = 1000
@@ -121,7 +122,7 @@ describe('Grid', function()
         u8(]] .. grid_id_type.grid_feature_pan .. [[),
         pointer(grid_deltas),
         u8(0),
-        u8(0),
+        u8(1),
         i16(-20),
         u16(500),
         u16(1000)

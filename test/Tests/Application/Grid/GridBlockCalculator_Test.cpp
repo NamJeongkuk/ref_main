@@ -32,7 +32,7 @@ extern "C"
       .count = _count,                                                     \
       .blockNumbers = { _one, _two, _three, _four, _five }                 \
    };                                                                      \
-   The PreviousGridBlocksShouldBe(&expectedPreviousGridBlockNumbers);
+   The PreviousGridBlocksForTwoDimensionalGridShouldBe(&expectedPreviousGridBlockNumbers);
 
 enum
 {
@@ -64,6 +64,10 @@ static const CalculatedAxisGridLines_t differentFreezerCalculatedAxis = {
    .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 2150 }
 };
 
+static CalculatedAxisGridLines_t oneDimensionalCalculatedAxis = {
+   .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 1000, 5500 }
+};
+
 static TwoDimensionalCalculatedGridLines_t calculatedGridLines = {
    .firstDimensionGridLines = freshFoodCalculatedAxis,
    .secondDimensionGridLines = freezerCalculatedAxis,
@@ -76,14 +80,35 @@ static TwoDimensionalCalculatedGridLines_t differentCalculatedGridLines = {
    .numberOfGridLinesPerDimension = NUM_ELEMENTS(differentFreshFoodCalculatedAxis.gridLinesDegFx100)
 };
 
-static const GridBlockCalculatorConfiguration_t config = {
-   .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
+static OneDimensionalCalculatedGridLines_t oneDimensionalCalculatedGridLines = {
+   .gridLines = oneDimensionalCalculatedAxis,
+   .numberOfGridLines = NUM_ELEMENTS(oneDimensionalCalculatedAxis.gridLinesDegFx100)
+};
+
+static const GridBlockAdjustmentErds_t firstDimensionGridBlockAdjustmentErds = {
+   .filteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .thermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved
+};
+
+static const GridBlockAdjustmentErds_t secondDimensionGridBlockAdjustmentErds = {
+   .filteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .thermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved
+};
+
+static const GridBlockCalculatorConfiguration_t twoDimensionalConfig = {
    .calculatedGridLinesErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
+   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
    .previousGridBlockNumbersErd = Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
-   .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
-   .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved
+   .gridBlockAdjustmentErds = {
+      firstDimensionGridBlockAdjustmentErds,
+      secondDimensionGridBlockAdjustmentErds }
+};
+
+static const GridBlockCalculatorConfiguration_t oneDimensionalConfig = {
+   .calculatedGridLinesErd = Erd_FeaturePanGrid_CalculatedGridLines,
+   .currentGridBlockNumberErd = Erd_FeaturePanGrid_BlockNumber,
+   .previousGridBlockNumbersErd = Erd_FeaturePanGrid_PreviousBlocks,
+   .gridBlockAdjustmentErds = { firstDimensionGridBlockAdjustmentErds }
 };
 
 TEST_GROUP(GridBlockCalculator)
@@ -104,13 +129,22 @@ TEST_GROUP(GridBlockCalculator)
          &timerModuleTestDouble->timerModule);
    }
 
-   void ModuleIsInitialized(void)
+   void ModuleIsInitializedWithTwoDimensionalGrid(void)
    {
       GridBlockCalculator_Init(
          &instance,
-         &config,
+         &twoDimensionalConfig,
          dataModel,
          PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData);
+   }
+
+   void ModuleIsInitializedWithOneDimensionalGrid(void)
+   {
+      GridBlockCalculator_Init(
+         &instance,
+         &oneDimensionalConfig,
+         dataModel,
+         PersonalityParametricData_Get(dataModel)->featurePanGridData);
    }
 
    void GridLinesAreReady()
@@ -124,6 +158,12 @@ TEST_GROUP(GridBlockCalculator)
       DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &gridLines);
    }
 
+   void OneDimensionalCalculatedGridLinesAre(OneDimensionalCalculatedGridLines_t gridLines)
+   {
+      GridLinesAreReady();
+      DataModel_Write(dataModel, Erd_FeaturePanGrid_CalculatedGridLines, &gridLines);
+   }
+
    void FreshFoodFilteredTemperatureIs(TemperatureDegFx100_t temperature)
    {
       DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
@@ -134,12 +174,7 @@ TEST_GROUP(GridBlockCalculator)
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
-   void CalculatedGridBlockIs(GridBlockNumber_t gridBlockNumber)
-   {
-      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_BlockNumber, &gridBlockNumber);
-   }
-
-   void CurrentGridBlockShouldBe(GridBlockNumber_t expected)
+   void CurrentGridBlockForTwoDimensionalGridShouldBe(GridBlockNumber_t expected)
    {
       GridBlockNumber_t actual;
 
@@ -147,7 +182,15 @@ TEST_GROUP(GridBlockCalculator)
       CHECK_EQUAL(expected, actual);
    }
 
-   void PreviousGridBlockCountShouldBe(uint8_t expected)
+   void CurrentGridBlockForOneDimensionalGridShouldBe(GridBlockNumber_t expected)
+   {
+      GridBlockNumber_t actual;
+
+      DataModel_Read(dataModel, Erd_FeaturePanGrid_BlockNumber, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void PreviousGridBlockCountForTwoDimensionalGridShouldBe(uint8_t expected)
    {
       PreviousGridBlockNumbers_t previousGridBlockNumbers;
       DataModel_Read(
@@ -158,7 +201,7 @@ TEST_GROUP(GridBlockCalculator)
       CHECK_EQUAL(expected, previousGridBlockNumbers.count);
    }
 
-   void PreviousGridBlocksShouldBe(GridBlockNumber_t * expected)
+   void PreviousGridBlocksForTwoDimensionalGridShouldBe(GridBlockNumber_t * expected)
    {
       PreviousGridBlockNumbers_t previousGridBlockNumbers;
 
@@ -172,10 +215,10 @@ TEST_GROUP(GridBlockCalculator)
 
    void AddBlockToExpectedArray(GridBlockNumber_t * expected, GridBlockNumber_t currentBlockNumber, uint8_t currentBlockCount)
    {
-      if(currentBlockCount >= NumberOfPreviousGridBlocksStored)
+      if(currentBlockCount >= GridBlockCalculator_NumberOfPreviousGridBlocksToStore)
       {
          uint8_t i;
-         for(i = NumberOfPreviousGridBlocksStored - 1; i > 0; i--)
+         for(i = GridBlockCalculator_NumberOfPreviousGridBlocksToStore - 1; i > 0; i--)
          {
             expected[i] = expected[i - 1];
          }
@@ -183,13 +226,8 @@ TEST_GROUP(GridBlockCalculator)
       }
       else
       {
-         expected[(NumberOfPreviousGridBlocksStored - 1) - currentBlockCount] = currentBlockNumber;
+         expected[(GridBlockCalculator_NumberOfPreviousGridBlocksToStore - 1) - currentBlockCount] = currentBlockNumber;
       }
-   }
-
-   void FreezerThermistorValidityIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
    }
 
    void FreshFoodThermistorValidityIs(bool state)
@@ -197,404 +235,438 @@ TEST_GROUP(GridBlockCalculator)
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
    }
 
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
    void BothThermistorsAreValid(void)
    {
-      FreezerThermistorValidityIs(Valid);
       FreshFoodThermistorValidityIs(Valid);
+      FreezerThermistorValidityIs(Valid);
    }
 };
 
-TEST(GridBlockCalculator, ShouldInitialize)
+TEST(GridBlockCalculator, ShouldInitializeWithAOneDimensionalGrid)
+{
+   Given OneDimensionalCalculatedGridLinesAre(oneDimensionalCalculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And The ModuleIsInitializedWithOneDimensionalGrid();
+}
+
+TEST(GridBlockCalculator, ShouldInitializeWithATwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperatures)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAOneDimensionalGrid)
+{
+   Given OneDimensionalCalculatedGridLinesAre(oneDimensionalCalculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreshFoodThermistorValidityIs(Valid);
+   And The ModuleIsInitializedWithOneDimensionalGrid();
+
+   CurrentGridBlockForOneDimensionalGridShouldBe(0);
+
+   When FreshFoodFilteredTemperatureIs(AVeryLowTemp);
+   CurrentGridBlockForOneDimensionalGridShouldBe(7);
+
+   When FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   CurrentGridBlockForOneDimensionalGridShouldBe(0);
+
+   When FreshFoodFilteredTemperatureIs(350);
+   CurrentGridBlockForOneDimensionalGridShouldBe(4);
+
+   When FreshFoodFilteredTemperatureIs(351);
+   CurrentGridBlockForOneDimensionalGridShouldBe(3);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithATwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreshFoodFilteredTemperatureIs(349);
    And FreezerFilteredTemperatureIs(149);
-   And CurrentGridBlockShouldBe(31);
+   And CurrentGridBlockForTwoDimensionalGridShouldBe(31);
 
    When FreshFoodFilteredTemperatureIs(AVeryLowTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
-   CurrentGridBlockShouldBe(42);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(42);
 
    When FreshFoodFilteredTemperatureIs(AVeryLowTemp);
    And FreezerFilteredTemperatureIs(AVeryHighTemp);
-   CurrentGridBlockShouldBe(0);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(0);
 
    When FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryHighTemp);
-   CurrentGridBlockShouldBe(6);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(6);
 
    When FreshFoodFilteredTemperatureIs(350);
    And FreezerFilteredTemperatureIs(150);
-   CurrentGridBlockShouldBe(31);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(31);
 
    When FreshFoodFilteredTemperatureIs(351);
    And FreezerFilteredTemperatureIs(150);
-   CurrentGridBlockShouldBe(32);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(32);
 
    When FreshFoodFilteredTemperatureIs(351);
    And FreezerFilteredTemperatureIs(151);
-   CurrentGridBlockShouldBe(25);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(25);
 }
 
-TEST(GridBlockCalculator, ShouldCalculatePreviousGridBlocks)
+TEST(GridBlockCalculator, ShouldCalculatePreviousGridBlocks_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   The CurrentGridBlockShouldBe(48);
-   GridBlockNumber_t expectedPreviousBlocks[NumberOfPreviousGridBlocksStored] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(48);
+   GridBlockNumber_t expectedPreviousBlocks[GridBlockCalculator_NumberOfPreviousGridBlocksToStore] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
    uint8_t expectedBlockIndex = 0;
 
-   PreviousGridBlockCountShouldBe(0);
-   PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   PreviousGridBlockCountForTwoDimensionalGridShouldBe(0);
+   PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 48, expectedBlockIndex++);
 
    When FreshFoodFilteredTemperatureIs(AVeryLowTemp);
-   CurrentGridBlockShouldBe(42);
-   And PreviousGridBlockCountShouldBe(1);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(42);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(1);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 42, expectedBlockIndex++);
 
    When FreezerFilteredTemperatureIs(AVeryHighTemp);
-   The CurrentGridBlockShouldBe(0);
-   And PreviousGridBlockCountShouldBe(2);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(2);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 0, expectedBlockIndex++);
 
    When FreshFoodFilteredTemperatureIs(AVeryHighTemp);
-   CurrentGridBlockShouldBe(6);
-   And The PreviousGridBlockCountShouldBe(3);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(6);
+   And The PreviousGridBlockCountForTwoDimensionalGridShouldBe(3);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 6, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(AVeryLowTemp);
-   The CurrentGridBlockShouldBe(48);
-   And PreviousGridBlockCountShouldBe(4);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(48);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(4);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 48, expectedBlockIndex++);
 
    When FreezerFilteredTemperatureIs(350);
-   The CurrentGridBlockShouldBe(20);
-   And PreviousGridBlockCountShouldBe(5);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(20);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(5);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 20, expectedBlockIndex++);
 
    When FreshFoodFilteredTemperatureIs(0);
-   The CurrentGridBlockShouldBe(14);
-   And PreviousGridBlockCountShouldBe(5);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(14);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(5);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 14, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(4500);
-   The CurrentGridBlockShouldBe(0);
-   And PreviousGridBlockCountShouldBe(5);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(5);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 }
 
-TEST(GridBlockCalculator, ShouldRecalculateBlocksAndAddToPreviousBlocksWhenCalculatedGridLinesChange)
+TEST(GridBlockCalculator, ShouldRecalculateBlocksAndAddToPreviousBlocksWhenCalculatedGridLinesChange_TwoDimensionalGrid)
 {
-   GridBlockNumber_t expectedPreviousBlocks[NumberOfPreviousGridBlocksStored] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+   GridBlockNumber_t expectedPreviousBlocks[GridBlockCalculator_NumberOfPreviousGridBlocksToStore] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
    uint8_t expectedBlockIndex = 0;
 
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(275);
    And FreezerFilteredTemperatureIs(0);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(38);
-   And PreviousGridBlockCountShouldBe(0);
-   And PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(38);
+   And PreviousGridBlockCountForTwoDimensionalGridShouldBe(0);
+   And PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 38, expectedBlockIndex++);
 
    When CalculatedGridLinesAre(differentCalculatedGridLines);
-   CurrentGridBlockShouldBe(44);
-   The PreviousGridBlockCountShouldBe(1);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(44);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(1);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 }
 
-TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChange)
+TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChange_TwoDimensionalGrid)
 {
    uint8_t expectedBlockIndex = 0;
-   GridBlockNumber_t expectedPreviousBlocks[NumberOfPreviousGridBlocksStored] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+   GridBlockNumber_t expectedPreviousBlocks[GridBlockCalculator_NumberOfPreviousGridBlocksToStore] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(275);
    And FreezerFilteredTemperatureIs(0);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(38);
-   The PreviousGridBlockCountShouldBe(0);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(38);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(0);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When FreshFoodFilteredTemperatureIs(276);
-   CurrentGridBlockShouldBe(38);
-   The PreviousGridBlockCountShouldBe(0);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(38);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(0);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When FreshFoodFilteredTemperatureIs(277);
-   CurrentGridBlockShouldBe(38);
-   The PreviousGridBlockCountShouldBe(0);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(38);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(0);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 38, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(1);
-   CurrentGridBlockShouldBe(31);
-   The PreviousGridBlockCountShouldBe(1);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(31);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(1);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When The FreezerFilteredTemperatureIs(2);
-   CurrentGridBlockShouldBe(31);
-   The PreviousGridBlockCountShouldBe(1);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(31);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(1);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When The FreezerFilteredTemperatureIs(3);
-   CurrentGridBlockShouldBe(31);
-   The PreviousGridBlockCountShouldBe(1);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(31);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(1);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    AddBlockToExpectedArray(expectedPreviousBlocks, 31, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(5900);
-   CurrentGridBlockShouldBe(3);
-   The PreviousGridBlockCountShouldBe(2);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(3);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(2);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When The FreezerFilteredTemperatureIs(5901);
-   CurrentGridBlockShouldBe(3);
-   The PreviousGridBlockCountShouldBe(2);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(3);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(2);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 
    When The FreezerFilteredTemperatureIs(5902);
-   CurrentGridBlockShouldBe(3);
-   The PreviousGridBlockCountShouldBe(2);
-   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(3);
+   The PreviousGridBlockCountForTwoDimensionalGridShouldBe(2);
+   And The PreviousGridBlocksForTwoDimensionalGridShouldBe(expectedPreviousBlocks);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreshFoodThermistor)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreshFoodThermistor_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And FreezerThermistorValidityIs(Valid);
    And FreshFoodThermistorValidityIs(Invalid);
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(43);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(43);
 
    When FreshFoodFilteredTemperatureIs(349);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 
    When FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(349);
-   The CurrentGridBlockShouldBe(15);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(15);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(1);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(1);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreezerThermistor)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreezerThermistor_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And FreezerThermistorValidityIs(Invalid);
    And FreshFoodThermistorValidityIs(Valid);
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(27);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(27);
 
    When FreshFoodFilteredTemperatureIs(349);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(24);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(24);
 
    When FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(349);
-   The CurrentGridBlockShouldBe(22);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(22);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(21);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(21);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackOnTemperatureChange)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackOnTemperatureChange_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreezerThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
-   The CurrentGridBlockShouldBe(22);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(22);
 
    When FreezerThermistorValidityIs(Valid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(349);
-   The CurrentGridBlockShouldBe(15);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(15);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(0);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreezerThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
-   The CurrentGridBlockShouldBe(22);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(22);
 
    When FreezerThermistorValidityIs(Valid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
-   The CurrentGridBlockShouldBe(1);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(1);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(0);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackOnTemperatureChange)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackOnTemperatureChange_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreshFoodThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
-   The CurrentGridBlockShouldBe(1);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(1);
 
    When FreshFoodThermistorValidityIs(Valid);
    And FreshFoodFilteredTemperatureIs(149);
    And FreezerFilteredTemperatureIs(349);
-   The CurrentGridBlockShouldBe(15);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(15);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(0);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
 }
 
-TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange)
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreshFoodThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 
    When FreshFoodThermistorValidityIs(Valid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(34);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(34);
 
    When FreshFoodFilteredTemperatureIs(-100);
    And FreezerFilteredTemperatureIs(2500);
-   The CurrentGridBlockShouldBe(0);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(0);
 }
 
-TEST(GridBlockCalculator, ShouldNotCalculateNewGridBlockWhenBothThermistorsChangesFromValidToInvalid)
+TEST(GridBlockCalculator, ShouldNotCalculateNewGridBlockWhenBothThermistorsChangesFromValidToInvalid_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreshFoodThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 
    When FreezerThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 }
 
-TEST(GridBlockCalculator, ShouldRecalculateNewGridBlockWhenOneThermistorChangesBackToValidFromInvalid)
+TEST(GridBlockCalculator, ShouldRecalculateNewGridBlockWhenOneThermistorChangesBackToValidFromInvalid_TwoDimensionalGrid)
 {
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   And The ModuleIsInitialized();
+   And The ModuleIsInitializedWithTwoDimensionalGrid();
 
-   CurrentGridBlockShouldBe(48);
+   CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 
    When FreshFoodThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 
    When FreezerThermistorValidityIs(Invalid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(149);
-   The CurrentGridBlockShouldBe(29);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(29);
 
    When FreshFoodThermistorValidityIs(Valid);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
-   The CurrentGridBlockShouldBe(27);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(27);
 
    When FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
    And BothThermistorsAreValid();
-   The CurrentGridBlockShouldBe(48);
+   The CurrentGridBlockForTwoDimensionalGridShouldBe(48);
 }
