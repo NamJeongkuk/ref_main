@@ -327,6 +327,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Condenser Fan Speed Anti Sweat Behavior Vote",
+          "name": "Erd_CondenserFanSpeed_AntiSweatBehaviorVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Condenser Fan Speed Grid Vote",
           "name": "Erd_CondenserFanSpeed_GridVote",
           "read": true,
@@ -2283,20 +2290,6 @@
           "namespace": "mb",
           "displayName": "F009 Ambient Humidity Is Invalid",
           "name": "Erd_AmbientHumiditySensorIsInvalidFault",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "F010 Ice Maker 0 Thermistor Is Invalid",
-          "name": "Erd_IceMaker0_ThermistorIsInvalidFault",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "F012 Ice Maker 1 Thermistor Is Invalid",
-          "name": "Erd_IceMaker1_ThermistorIsInvalidFault",
           "read": true,
           "write": false
         },

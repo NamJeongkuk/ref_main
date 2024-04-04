@@ -32,12 +32,12 @@ return function(core)
           u8(config.prechill.max_prechill_time_for_secondary_only_defrost_in_minutes),
           u8(sealed_system_valve_position_type[config.prechill.prechill_sealed_system_valve_position]),
           u8(compressor_speed_type[config.prechill.prechill_compressor_speed]),
-          u8(fan_speed_type[config.prechill.prechill_freezer_evap_fan_speed]),
-          u8(fan_speed_type[config.prechill.prechill_fresh_food_evap_fan_speed]),
-          u8(fan_speed_type[config.prechill.prechill_ice_cabinet_fan_speed]),
-          u8(fan_speed_type[config.prechill.prechill_deli_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_freezer_evap_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_fresh_food_evap_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_ice_cabinet_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_deli_fan_speed]),
           u8(damper_position_type[config.prechill.prechill_convertible_compartment_damper_position]),
-          u8(fan_speed_type[config.prechill.prechill_convertible_compartment_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_convertible_compartment_fan_speed]),
           u8(damper_position_type[config.prechill.prechill_fresh_food_damper_position]),
           i16(config.prechill.prechill_freezer_min_temp_in_degfx100),
           i16(config.prechill.prechill_fresh_food_min_temp_in_degfx100),
@@ -81,7 +81,7 @@ return function(core)
           i16(config.post_dwell.secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100),
           u8(sealed_system_valve_position_type[config.post_dwell.post_dwell_sealed_system_valve_position]),
           u8(compressor_speed_type[config.post_dwell.post_dwell_compressor_speed]),
-          u8(fan_speed_type[config.post_dwell.post_dwell_condenser_fan_speed]),
+          u16(fan_speed_type[config.post_dwell.post_dwell_condenser_fan_speed]),
           u8(damper_position_type[config.post_dwell.post_dwell_fresh_food_damper_position])
         )
       )

@@ -15,7 +15,7 @@ return function(core)
         structure(
           u8(config.time_in_minutes),
           i16(config.freezer_setpoint_in_degfx100),
-          u8(fan_speed_type[config.freezer_evaporator_fan_speed])
+          u16(fan_speed_type[config.freezer_evaporator_fan_speed])
         )
       )
     else

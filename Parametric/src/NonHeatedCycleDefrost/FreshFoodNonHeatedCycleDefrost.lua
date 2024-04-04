@@ -19,8 +19,8 @@ return function(core)
         u8(config.sealed_system_valve_change_slope_in_minutesx10_per_degf),
         u8(config.max_time_valve_change_in_minutes),
         u8(config.min_time_valve_change_in_minutes),
-        u8(fan_speed_type[config.fan_speed_compressor_off]),
-        u8(fan_speed_type[config.fan_speed_valve_change])
+        u16(fan_speed_type[config.fan_speed_compressor_off]),
+        u16(fan_speed_type[config.fan_speed_valve_change])
       )
     )
   end)

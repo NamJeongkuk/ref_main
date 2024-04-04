@@ -346,6 +346,36 @@ static FanControl_t CoolingModeFanSpeedWithoutSetpoint(FanSpeedResolver_t *insta
    return control;
 };
 
+static bool VotedSpeedIsCustomSpeedInRpm(FanSpeedResolver_t *instance)
+{
+   FanVotedSpeed_t votedSpeed;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->resolvedFanSpeedVoteErd,
+      &votedSpeed);
+
+   return votedSpeed.speed >= FanSpeed_NumberOfSpeeds;
+}
+
+static void UpdateFanControlToResolvedFanSpeed(FanSpeedResolver_t *instance)
+{
+   FanVotedSpeed_t votedSpeed;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->resolvedFanSpeedVoteErd,
+      &votedSpeed);
+
+   FanControl_t control = {
+      .type = FanControlType_Rpm,
+      .rpm = votedSpeed.speed,
+   };
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->calculatedRequestFanControlErd,
+      &control);
+}
+
 static void CalculateCoolingModeFanSpeed(FanSpeedResolver_t *instance)
 {
    FanControl_t control = {
@@ -370,13 +400,20 @@ static void CalculateCoolingModeFanSpeed(FanSpeedResolver_t *instance)
 
 static void CalculateResolvedFanSpeedBasedOnDependence(FanSpeedResolver_t *instance)
 {
-   if(FanDataCaresAboutCoolingMode(instance))
+   if(VotedSpeedIsCustomSpeedInRpm(instance))
    {
-      CalculateCoolingModeFanSpeed(instance);
+      UpdateFanControlToResolvedFanSpeed(instance);
    }
    else
    {
-      CalculateFanSpeed(instance);
+      if(FanDataCaresAboutCoolingMode(instance))
+      {
+         CalculateCoolingModeFanSpeed(instance);
+      }
+      else
+      {
+         CalculateFanSpeed(instance);
+      }
    }
 }
 

@@ -99,8 +99,8 @@ describe('ConvertibleCompartment', function()
         u8(20),
         u8(30),
         u8(1),
-        u8(]] .. fan_speed_type.low_speed .. [[),
-        u8(]] .. fan_speed_type.low_speed .. [[)
+        u16(]] .. fan_speed_type.low_speed .. [[),
+        u16(]] .. fan_speed_type.low_speed .. [[)
       )
     ]])
 

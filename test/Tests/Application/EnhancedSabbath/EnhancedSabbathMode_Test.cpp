@@ -298,13 +298,13 @@ TEST_GROUP(EnhancedSabbathMode)
    {
       CompressorVotedSpeed_t actualCompressorSpeedVote;
       FanVotedSpeed_t actualCondenserFanVote;
-      DamperVotedPosition_t actualDamperPositionVote;
       FanVotedSpeed_t actualFreezerEvapFanVote;
+      DamperVotedPosition_t actualDamperPositionVote;
 
       DataModel_Read(dataModel, Erd_CompressorSpeed_EnhancedSabbathVote, &actualCompressorSpeedVote);
       DataModel_Read(dataModel, Erd_CondenserFanSpeed_SabbathVote, &actualCondenserFanVote);
-      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &actualDamperPositionVote);
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_EnhancedSabbathVote, &actualFreezerEvapFanVote);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &actualFreezerEvapFanVote);
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_EnhancedSabbathVote, &actualDamperPositionVote);
 
       CHECK_EQUAL(expectedCare, actualCompressorSpeedVote.care);
       CHECK_EQUAL(expectedCare, actualCondenserFanVote.care);

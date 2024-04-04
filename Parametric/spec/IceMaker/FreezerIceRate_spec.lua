@@ -29,7 +29,7 @@ describe('FreezerIceRate', function()
 
   it('should require only time argument if time is 0', function()
     should_require_args(freezer_ice_rate, generate_disabled_config({
-    }))
+      }))
   end)
 
   it('should assert if time_in_minutes is not in range', function()
@@ -61,7 +61,7 @@ describe('FreezerIceRate', function()
         structure(
           u8(2),
           i16(250),
-          u8(]] .. fan_speed_type.medium_speed ..[[)
+          u16(]] .. fan_speed_type.medium_speed ..[[)
         )
       ]])
 

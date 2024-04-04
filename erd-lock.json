@@ -1248,7 +1248,7 @@
         {
           "name": "Erd_CondenserFanSpeed_FactoryServiceVote.speed",
           "offset": 0,
-          "size": 1,
+          "size": 2,
           "type": "enum",
           "values": {
             "0": "FanSpeed_Off",
@@ -1262,13 +1262,19 @@
         },
         {
           "name": "Erd_CondenserFanSpeed_FactoryServiceVote.care",
-          "offset": 1,
+          "offset": 2,
           "size": 1,
           "type": "enum",
           "values": {
             "0": "Vote_DontCare",
             "1": "Vote_Care"
           }
+        },
+        {
+          "name": "padding3",
+          "offset": 3,
+          "size": 1,
+          "type": "padding"
         }
       ],
       "id": "0xF202",
@@ -1283,7 +1289,7 @@
         {
           "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote.speed",
           "offset": 0,
-          "size": 1,
+          "size": 2,
           "type": "enum",
           "values": {
             "0": "FanSpeed_Off",
@@ -1297,13 +1303,19 @@
         },
         {
           "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote.care",
-          "offset": 1,
+          "offset": 2,
           "size": 1,
           "type": "enum",
           "values": {
             "0": "Vote_DontCare",
             "1": "Vote_Care"
           }
+        },
+        {
+          "name": "padding3",
+          "offset": 3,
+          "size": 1,
+          "type": "padding"
         }
       ],
       "id": "0xF22C",

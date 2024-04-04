@@ -757,12 +757,12 @@ describe('Defrost', function()
           u8(20),
           u8(]] .. sealed_system_valve_position_type.position_B .. [[),
           u8(]] .. compressor_speed_type.low_speed .. [[),
-          u8(]] .. fan_speed_type.super_low_speed .. [[),
-          u8(]] .. fan_speed_type.low_speed .. [[),
-          u8(]] .. fan_speed_type.medium_speed .. [[),
-          u8(]] .. fan_speed_type.high_speed .. [[),
+          u16(]] .. fan_speed_type.super_low_speed .. [[),
+          u16(]] .. fan_speed_type.low_speed .. [[),
+          u16(]] .. fan_speed_type.medium_speed .. [[),
+          u16(]] .. fan_speed_type.high_speed .. [[),
           u8(]] .. damper_position_type.open .. [[),
-          u8(]] .. fan_speed_type.super_low_speed .. [[),
+          u16(]] .. fan_speed_type.super_low_speed .. [[),
           u8(]] .. damper_position_type.closed .. [[),
           i16(-600),
           i16(3200),
@@ -806,7 +806,7 @@ describe('Defrost', function()
           i16(-1200),
           u8(]] .. sealed_system_valve_position_type.position_B .. [[),
           u8(]] .. compressor_speed_type.low_speed .. [[),
-          u8(]] .. fan_speed_type.low_speed .. [[),
+          u16(]] .. fan_speed_type.low_speed .. [[),
           u8(]] .. damper_position_type.closed .. [[)
         )
       )

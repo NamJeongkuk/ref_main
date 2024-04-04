@@ -132,6 +132,14 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
 
       CHECK_EQUAL(expectedSpeed, actual.rpm);
    }
+
+   void CalculatedFanControlTypeShouldBe(FanControlType_t expectedType)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedType, actual.type);
+   }
 };
 
 TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToLowWhenRequestedLow)
@@ -139,6 +147,7 @@ TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToLowWhenRequestedL
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->lowSpeed.type);
    CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->lowSpeed.rpm);
 }
 
@@ -147,6 +156,7 @@ TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToMediumWhenRequest
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->mediumSpeed.type);
    CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->mediumSpeed.rpm);
 }
 
@@ -155,6 +165,7 @@ TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToHighWhenRequested
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->highSpeed.type);
    CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->highSpeed.rpm);
 }
 
@@ -163,6 +174,7 @@ TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToMaxWhenRequestedS
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->superHighSpeed.type);
    CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superHighSpeed.rpm);
 }
 
@@ -171,7 +183,69 @@ TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToSuperLowWhenReque
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.type);
    CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsEqualToNumberOfFanSpeeds)
+{
+   GivenInitialization();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanNumberOfFanSpeeds)
+{
+   GivenInitialization();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 1);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 1);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 2);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 2);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetFanControlTypeToRpmAndSetFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanNumberOfFanSpeedsWhileSuperLowSpeedIsVoted)
+{
+   GivenInitialization();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.type);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.rpm);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 10);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 10);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToHighWhenRequestedHighWhileGreaterNumberIsVoted)
+{
+   GivenInitialization();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 20);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 20);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->highSpeed.type);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->highSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedFanControlTypeToDutyCycleAndCalculatedFanControlSpeedToZeroWhenRequestedOff)
+{
+   GivenInitialization();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlTypeShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.type);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.rpm);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Off);
+   CalculatedFanControlTypeShouldBe(FanControlType_DutyCycle);
+   CalculatedFanControlSpeedShouldBe(0);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToZeroOnInitialization)
@@ -240,6 +314,14 @@ TEST_GROUP(FanSpeedResolver_CoolingModeWithoutSetpoint)
          dataModel,
          &combinedFanData->freshFoodEvapFan,
          &coolingModeConfig);
+   }
+
+   void CalculatedFanControlTypeShouldBe(FanControlType_t expectedType)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedType, actual.type);
    }
 };
 
@@ -342,6 +424,33 @@ TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldChangeFanSpeedWhenCoolin
 
    WhenCoolingModeBecomes(CoolingMode_Freezer);
    CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanOrEqualToNumberOfFanSpeeds)
+{
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+   GivenInitializationWithoutCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 1);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 1);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedFanControlTypeToDutyCycleAndCalculatedFanControlSpeedToZeroWhenRequestedOff)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Off);
+   CalculatedFanControlTypeShouldBe(FanControlType_DutyCycle);
+   CalculatedFanControlSpeedShouldBe(0);
 }
 
 TEST_GROUP(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient)
@@ -469,6 +578,14 @@ TEST_GROUP(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient)
    void WhenTheCondenserFanAntiSweatBehaviorIs(bool status)
    {
       DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledErd, &status);
+   }
+
+   void CalculatedFanControlTypeShouldBe(FanControlType_t expectedType)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedType, actual.type);
    }
 };
 
@@ -864,6 +981,32 @@ TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculated
    CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superHighSpeed.rpm);
 }
 
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanOrEqualToNumberOfFanSpeeds)
+{
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 1);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 1);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedFanControlTypeToDutyCycleAndCalculatedFanControlSpeedToZeroWhenRequestedOff)
+{
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Off);
+   CalculatedFanControlTypeShouldBe(FanControlType_DutyCycle);
+   CalculatedFanControlSpeedShouldBe(0);
+}
+
 TEST_GROUP(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient)
 {
    DataModel_TestDouble_t dataModelTestDouble;
@@ -989,6 +1132,14 @@ TEST_GROUP(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient)
    void WhenTheCondenserFanAntiSweatBehaviorIs(bool status)
    {
       DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledErd, &status);
+   }
+
+   void CalculatedFanControlTypeShouldBe(FanControlType_t expectedType)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedType, actual.type);
    }
 };
 
@@ -1212,6 +1363,36 @@ TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalcula
    CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanOrEqualToNumberOfFanSpeeds)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 1);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 1);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedFanControlTypeToDutyCycleAndCalculatedFanControlSpeedToZeroWhenRequestedOff)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Off);
+   CalculatedFanControlTypeShouldBe(FanControlType_DutyCycle);
+   CalculatedFanControlSpeedShouldBe(0);
+}
+
 TEST_GROUP(FanSpeedResolver_NoCoolingModeAndHighAmbient)
 {
    DataModel_TestDouble_t dataModelTestDouble;
@@ -1337,6 +1518,14 @@ TEST_GROUP(FanSpeedResolver_NoCoolingModeAndHighAmbient)
    void WhenTheCondenserFanAntiSweatBehaviorIs(bool status)
    {
       DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledErd, &status);
+   }
+
+   void CalculatedFanControlTypeShouldBe(FanControlType_t expectedType)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedType, actual.type);
    }
 };
 
@@ -1570,4 +1759,34 @@ TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldNotRunCalculatedSpeedLo
    WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
    CalculatedFanControlSpeedShouldBe(condenserFanData->speedData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetFanControlTypeToRpmAndFanControlSpeedToResolvedFanSpeedIfVotedSpeedIsGreaterThanOrEqualToNumberOfFanSpeeds)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds + 1);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds + 1);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedFanControlTypeToDutyCycleAndCalculatedFanControlSpeedToZeroWhenRequestedOff)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_NumberOfSpeeds);
+   CalculatedFanControlTypeShouldBe(FanControlType_Rpm);
+   CalculatedFanControlSpeedShouldBe(FanSpeed_NumberOfSpeeds);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Off);
+   CalculatedFanControlTypeShouldBe(FanControlType_DutyCycle);
+   CalculatedFanControlSpeedShouldBe(0);
 }

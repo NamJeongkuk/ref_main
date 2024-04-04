@@ -22,12 +22,15 @@ enum
    FanSpeed_SuperHigh,
    FanSpeed_NumberOfSpeeds
 };
-typedef uint8_t FanSpeed_t;
+typedef uint16_t FanSpeed_t;
 
 typedef struct
 {
    FanSpeed_t speed;
    Vote_t care;
 } FanVotedSpeed_t;
+
+#define SWAP_DEFINITION_FanVotedSpeed_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, speed),
 
 #endif
