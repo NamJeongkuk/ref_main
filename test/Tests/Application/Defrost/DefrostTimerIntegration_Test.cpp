@@ -60,9 +60,10 @@ static CalculatedAxisGridLines_t freezerCalcAxis = {
    .gridLinesDegFx100 = { -250, 0, 250, 600, 750, 5500 }
 };
 
-static CalculatedGridLines_t calcGridLines = {
-   .freshFoodGridLine = freshFoodCalcAxis,
-   .freezerGridLine = freezerCalcAxis
+static TwoDimensionalCalculatedGridLines_t calcGridLines = {
+   .firstDimensionGridLines = freshFoodCalcAxis,
+   .secondDimensionGridLines = freezerCalcAxis,
+   .numberOfGridLinesPerDimension = NUM_ELEMENTS(freshFoodCalcAxis.gridLinesDegFx100)
 };
 
 TEST_GROUP(DefrostTimerIntegration)
@@ -87,9 +88,9 @@ TEST_GROUP(DefrostTimerIntegration)
       systemMonitorData = PersonalityParametricData_Get(dataModel)->systemMonitorData;
    }
 
-   void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
+   void CalculatedGridLinesAre(TwoDimensionalCalculatedGridLines_t gridLines)
    {
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &gridLines);
+      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &gridLines);
    }
 
    void PluginsAreInitialized()
@@ -118,7 +119,7 @@ TEST_GROUP(DefrostTimerIntegration)
 
       DataModel_Write(
          dataModel,
-         Erd_GridPluginReady,
+         Erd_FreshFoodAndFreezerGridPluginReady,
          set);
 
       DataModel_Write(

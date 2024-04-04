@@ -48,7 +48,7 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
       dataModel = dataModelTestDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
-      gridData = PersonalityParametricData_Get(dataModel)->gridData;
+      gridData = PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData;
    }
 
    void After(TimerTicks_t ticks)

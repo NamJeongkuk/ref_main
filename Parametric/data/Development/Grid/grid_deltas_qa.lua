@@ -1,4 +1,4 @@
-local grid_line_temps = import("../Grid/grid_line_temperatures_qa.lua")
+local grid_line_temps = import("../Grid/fresh_food_and_freezer_grid_line_temperatures_qa.lua")
 
 return grid_deltas({
   deltas = {
@@ -23,8 +23,8 @@ return grid_deltas({
         delta_in_degfx100 = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_set_point_delta_in_degfx100,
         correction = 'adjusted_setpoint',
         cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-        multiplier = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_set_point_delta_in_degfx100,
-        divider = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_low_hyst_in_degfx100
+          multiplier = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_set_point_delta_in_degfx100,
+          divider = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_low_hyst_in_degfx100
         })
       }),
       fresh_food_high_hyst_in_degfx100 = gridline({

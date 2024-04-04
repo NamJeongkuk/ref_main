@@ -1,5 +1,5 @@
 return grid({
-  grid_id = 'grid_single_door_single_evap',
+  grid_id = grid_id_type.grid_single_door_single_evap,
   grid_deltas = import("../Grid/grid_deltas_qa.lua"),
   -- The fallback row and column are used to keep us within
   -- a specific row for all fresh food and column for all freezer

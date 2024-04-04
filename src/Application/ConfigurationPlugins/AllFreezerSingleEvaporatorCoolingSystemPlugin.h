@@ -18,7 +18,7 @@
 #include "SingleDoorFreezerFanPlugin.h"
 #include "AllFreezerDefrostPlugin.h"
 #include "AllFreezerDamperPlugin.h"
-#include "GridPlugin.h"
+#include "FreshFoodAndFreezerGridPlugin.h"
 
 typedef struct
 {
@@ -33,7 +33,7 @@ typedef struct
       ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
       AllFreezerDefrostPlugin_t allFreezerDefrostPlugin;
       AllFreezerDamperPlugin_t allFreezerDamperPlugin;
-      GridPlugin_t gridPlugin;
+      FreshFoodAndFreezerGridPlugin_t freshFoodAndFreezerGridPlugin;
    } _private;
 } AllFreezerSingleEvaporatorCoolingSystemPlugin_t;
 

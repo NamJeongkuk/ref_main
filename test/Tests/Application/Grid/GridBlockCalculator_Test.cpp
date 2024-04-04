@@ -64,22 +64,24 @@ static const CalculatedAxisGridLines_t differentFreezerCalculatedAxis = {
    .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 2150 }
 };
 
-static const CalculatedGridLines_t calculatedGridLines = {
-   .freshFoodGridLine = freshFoodCalculatedAxis,
-   .freezerGridLine = freezerCalculatedAxis
+static TwoDimensionalCalculatedGridLines_t calculatedGridLines = {
+   .firstDimensionGridLines = freshFoodCalculatedAxis,
+   .secondDimensionGridLines = freezerCalculatedAxis,
+   .numberOfGridLinesPerDimension = NUM_ELEMENTS(freshFoodCalculatedAxis.gridLinesDegFx100)
 };
 
-static const CalculatedGridLines_t differentCalculatedGridLines = {
-   .freshFoodGridLine = differentFreshFoodCalculatedAxis,
-   .freezerGridLine = differentFreezerCalculatedAxis
+static TwoDimensionalCalculatedGridLines_t differentCalculatedGridLines = {
+   .firstDimensionGridLines = differentFreshFoodCalculatedAxis,
+   .secondDimensionGridLines = differentFreezerCalculatedAxis,
+   .numberOfGridLinesPerDimension = NUM_ELEMENTS(differentFreshFoodCalculatedAxis.gridLinesDegFx100)
 };
 
 static const GridBlockCalculatorConfiguration_t config = {
    .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks,
+   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
+   .calculatedGridLinesErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
+   .previousGridBlockNumbersErd = Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
    .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
    .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved
 };
@@ -108,7 +110,7 @@ TEST_GROUP(GridBlockCalculator)
          &instance,
          &config,
          dataModel,
-         PersonalityParametricData_Get(dataModel)->gridData);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData);
    }
 
    void GridLinesAreReady()
@@ -116,10 +118,10 @@ TEST_GROUP(GridBlockCalculator)
       DataModel_Write(dataModel, Erd_GridLineCalculatorIsReady, set);
    }
 
-   void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
+   void CalculatedGridLinesAre(TwoDimensionalCalculatedGridLines_t gridLines)
    {
       GridLinesAreReady();
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &gridLines);
+      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &gridLines);
    }
 
    void FreshFoodFilteredTemperatureIs(TemperatureDegFx100_t temperature)
@@ -134,14 +136,14 @@ TEST_GROUP(GridBlockCalculator)
 
    void CalculatedGridBlockIs(GridBlockNumber_t gridBlockNumber)
    {
-      DataModel_Write(dataModel, Erd_Grid_BlockNumber, &gridBlockNumber);
+      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_BlockNumber, &gridBlockNumber);
    }
 
    void CurrentGridBlockShouldBe(GridBlockNumber_t expected)
    {
       GridBlockNumber_t actual;
 
-      DataModel_Read(dataModel, Erd_Grid_BlockNumber, &actual);
+      DataModel_Read(dataModel, Erd_FreshFoodAndFreezerGrid_BlockNumber, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -150,7 +152,7 @@ TEST_GROUP(GridBlockCalculator)
       PreviousGridBlockNumbers_t previousGridBlockNumbers;
       DataModel_Read(
          dataModel,
-         Erd_Grid_PreviousBlocks,
+         Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
          &previousGridBlockNumbers);
 
       CHECK_EQUAL(expected, previousGridBlockNumbers.count);
@@ -162,7 +164,7 @@ TEST_GROUP(GridBlockCalculator)
 
       DataModel_Read(
          dataModel,
-         Erd_Grid_PreviousBlocks,
+         Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
          &previousGridBlockNumbers);
 
       MEMCMP_EQUAL(expected, previousGridBlockNumbers.blockNumbers, PreviousGridBlockNumbers_MaxBlockNumbers);

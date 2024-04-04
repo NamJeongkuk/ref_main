@@ -26,38 +26,55 @@ extern "C"
 enum
 {
    AFreshFoodOffsetTemperature = 10,
-   AnotherFreshFoodOffsetTemperature = 10 * 2,
+   AnotherFreshFoodOffsetTemperature = AFreshFoodOffsetTemperature * 2,
 
    AFreezerOffsetTemperature = 5,
-   AnotherFreezerOffsetTemperature = 5 * 2,
+   AnotherFreezerOffsetTemperature = AFreezerOffsetTemperature * 2,
+
+   AFeaturePanOffsetTemperature = 15,
+   AnotherFeaturePanOffsetTemperature = AFeaturePanOffsetTemperature * 2,
 
    AFreshFoodAdjustedSetpointTemperature = 9,
-   AnotherFreshFoodAdjustedSetpointTemperature = 9 * 2,
+   AnotherFreshFoodAdjustedSetpointTemperature = AFreshFoodAdjustedSetpointTemperature * 2,
 
    AFreezerAdjustedSetpointTemperature = 18,
-   AnotherFreezerAdjustedSetpointTemperature = 18 * 2,
+   AnotherFreezerAdjustedSetpointTemperature = AFreezerAdjustedSetpointTemperature * 2,
+
+   AFeaturePanAdjustedSetpointTemperature = 27,
+   AnotherFeaturePanAdjustedSetpointTemperature = AFeaturePanAdjustedSetpointTemperature * 2,
 
    ACrossAmbientHysteresisAdjustmentInDegFx100 = 23,
 };
 
-static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
+static const GridLineAdjustmentErds_t freshFoodAndFreezerFirstDimensionGridLinesAdjustmentErds = {
    .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
-static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
+static const GridLineAdjustmentErds_t freshFoodAndFreezerSecondDimensionGridLinesAdjustmentErds = {
    .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 
-static const GridLineCalculatorConfiguration_t config = {
-   .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+static const GridLineAdjustmentErds_t featurePanFirstDimensionGridLinesAdjustmentErds = {
+   .offsetInDegFx100Erd = Erd_FeaturePan_CabinetPlusCrossAmbientOffsetInDegFx100,
+   .adjustedSetpointInDegFx100Erd = Erd_FeaturePan_AdjustedSetpointInDegFx100
+};
+
+static const GridLineCalculatorConfiguration_t freshFoodAndFreezerConfig = {
+   .calculatedGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
    .gridLineAdjustmentErds = {
-      freshFoodGridLineAdjustmentErds,
-      freezerGridLineAdjustmentErds,
+      freshFoodAndFreezerFirstDimensionGridLinesAdjustmentErds,
+      freshFoodAndFreezerSecondDimensionGridLinesAdjustmentErds,
+   }
+};
+
+static const GridLineCalculatorConfiguration_t featurePanConfig = {
+   .calculatedGridLineErd = Erd_FeaturePanGrid_CalculatedGridLines,
+   .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridLineAdjustmentErds = {
+      featurePanFirstDimensionGridLinesAdjustmentErds,
    }
 };
 
@@ -80,11 +97,21 @@ TEST_GROUP(GridLineCalculator)
       GivenTheAdjustedSetpointPluginReadyIs(true);
    }
 
-   void GivenTheModuleIsInitialized()
+   void GivenTheModuleIsInitializedForTwoDimensionalGrid()
    {
       GridLineCalculator_Init(
          &instance,
-         &config,
+         &freshFoodAndFreezerConfig,
+         parametric->freshFoodAndFreezerGridData,
+         dataModel);
+   }
+
+   void GivenTheModuleIsInitializedForOneDimensionalGrid()
+   {
+      GridLineCalculator_Init(
+         &instance,
+         &featurePanConfig,
+         parametric->featurePanGridData,
          dataModel);
    }
 
@@ -102,12 +129,21 @@ TEST_GROUP(GridLineCalculator)
          &setpoint);
    }
 
+   void WhenTheFeaturePanAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
+   {
+      DataModel_Write(dataModel,
+         Erd_FeaturePan_AdjustedSetpointInDegFx100,
+         &setpoint);
+   }
+
    void GivenTheAdjustedSetpointsAre(
       TemperatureDegFx100_t freshFoodAdjustedSetpoint,
-      TemperatureDegFx100_t freezerAdjustedSetpoint)
+      TemperatureDegFx100_t freezerAdjustedSetpoint,
+      TemperatureDegFx100_t featurePanAdjustedSetpoint)
    {
       WhenTheFreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
       WhenTheFreshFoodAdjustedSetpointIs(freshFoodAdjustedSetpoint);
+      WhenTheFeaturePanAdjustedSetpointIs(featurePanAdjustedSetpoint);
    }
 
    void WhenTheFreshFoodSumOffsetIs(TemperatureDegFx100_t offset)
@@ -124,12 +160,21 @@ TEST_GROUP(GridLineCalculator)
          &offset);
    }
 
+   void WhenTheFeaturePanSumOffsetIs(TemperatureDegFx100_t offset)
+   {
+      DataModel_Write(dataModel,
+         Erd_FeaturePan_CabinetPlusCrossAmbientOffsetInDegFx100,
+         &offset);
+   }
+
    void GivenTheOffsetsAre(
       TemperatureDegFx100_t freshFoodOffset,
-      TemperatureDegFx100_t freezerOffset)
+      TemperatureDegFx100_t freezerOffset,
+      TemperatureDegFx100_t featurePanOffset)
    {
       WhenTheFreshFoodSumOffsetIs(freshFoodOffset);
       WhenTheFreezerSumOffsetIs(freezerOffset);
+      WhenTheFeaturePanSumOffsetIs(featurePanOffset);
    }
 
    void WhenTheCrossAmbientHysteresisAdjustmentChangesTo(TemperatureDegFx100_t adjustment)
@@ -142,11 +187,15 @@ TEST_GROUP(GridLineCalculator)
 
    void GivenTheGridLineCalculationErdsAreInitialized()
    {
-      GivenTheAdjustedSetpointsAre(AFreshFoodAdjustedSetpointTemperature,
-         AFreezerAdjustedSetpointTemperature);
+      GivenTheAdjustedSetpointsAre(
+         AFreshFoodAdjustedSetpointTemperature,
+         AFreezerAdjustedSetpointTemperature,
+         AFeaturePanAdjustedSetpointTemperature);
 
-      GivenTheOffsetsAre(AFreshFoodOffsetTemperature,
-         AFreezerOffsetTemperature);
+      GivenTheOffsetsAre(
+         AFreshFoodOffsetTemperature,
+         AFreezerOffsetTemperature,
+         AFeaturePanOffsetTemperature);
    }
 
    void GivenTheAdjustedSetpointPluginReadyIs(bool state)
@@ -154,238 +203,285 @@ TEST_GROUP(GridLineCalculator)
       DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, &state);
    }
 
-   void TheCalculatedGridLineTempShouldBe(
+   void TheOneDimensionalCalculatedGridLineTempShouldBe(TemperatureDegFx100_t temperature, uint8_t gridLineIndex)
+   {
+      TwoDimensionalCalculatedGridLines_t calcLines;
+      DataModel_Read(dataModel, Erd_FeaturePanGrid_CalculatedGridLines, &calcLines);
+
+      temperature +=
+         parametric->featurePanGridData->deltaGridLines->gridLines[GridDelta_FirstDimension].gridLineData[gridLineIndex].gridLinesDegFx100;
+
+      CHECK_EQUAL(temperature, calcLines.firstDimensionGridLines.gridLinesDegFx100[gridLineIndex]);
+   }
+
+   void TheTwoDimensionalCalculatedGridLineTempShouldBe(
       TemperatureDegFx100_t temperature,
       uint8_t dimension,
       uint8_t gridLineIndex)
    {
-      CalculatedGridLines_t calcLines;
+      TwoDimensionalCalculatedGridLines_t calcLines;
       DataModel_Read(dataModel,
-         Erd_Grid_CalculatedGridLines,
+         Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
          &calcLines);
 
       temperature +=
-         parametric->gridData->deltaGridLines->gridLines[dimension].gridLineData[gridLineIndex].gridLinesDegFx100;
+         parametric->freshFoodAndFreezerGridData->deltaGridLines->gridLines[dimension].gridLineData[gridLineIndex].gridLinesDegFx100;
 
-      if(dimension == GridDelta_FreshFood)
+      if(dimension == GridDelta_FirstDimension)
       {
          CHECK_EQUAL(temperature,
-            calcLines.freshFoodGridLine.gridLinesDegFx100[gridLineIndex]);
+            calcLines.firstDimensionGridLines.gridLinesDegFx100[gridLineIndex]);
       }
       else
       {
          CHECK_EQUAL(temperature,
-            calcLines.freezerGridLine.gridLinesDegFx100[gridLineIndex]);
+            calcLines.secondDimensionGridLines.gridLinesDegFx100[gridLineIndex]);
       }
    }
 
-   void TheGridLineTemperaturesShouldBeInitializedValues()
+   void TheTwoDimensionalGridLineTemperaturesShouldBeInitializedValues()
    {
-      TheCalculatedGridLineTempShouldBe(
+      TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodOffsetTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_Nfl);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodLowHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodSetpointDelta);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodHighHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodExtraHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodSuperHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerLowHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerSetpointDelta);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerHighHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerExtraHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerSuperHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerOffsetTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerExtremeHigh);
    }
+
+   void TheOneDimensionalGridLineTemperaturesShouldBeInitializedValues()
+   {
+      TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+      And TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
+   }
+
    void TheFreezerGridLineTemperaturesShouldBeInitializedValues()
    {
-      TheCalculatedGridLineTempShouldBe(
+      TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerLowHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerSetpointDelta);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerHighHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerExtraHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerAdjustedSetpointTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerSuperHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreezerOffsetTemperature,
-         GridDelta_Freezer,
+         GridDelta_SecondDimension,
          GridLine_FreezerExtremeHigh);
    }
 
    void TheFreshFoodGridLineTemperaturesShouldBeAdjustedWithCrossAmbientHysteresis()
    {
-      TheCalculatedGridLineTempShouldBe(
+      TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodOffsetTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_Nfl);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodLowHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodSetpointDelta);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodHighHyst);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodExtraHigh);
 
-      And TheCalculatedGridLineTempShouldBe(
+      And TheTwoDimensionalCalculatedGridLineTempShouldBe(
          AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
-         GridDelta_FreshFood,
+         GridDelta_FirstDimension,
          GridLine_FreshFoodSuperHigh);
    };
 };
 
-TEST(GridLineCalculator, ShouldInitialize)
+TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds_TwoDimensionalGrid)
 {
-   GivenTheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitializedForTwoDimensionalGrid();
+   TheTwoDimensionalGridLineTemperaturesShouldBeInitializedValues();
 }
 
-TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit)
+TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit_TwoDimensionalGrid)
 {
    GivenTheAdjustedSetpointPluginReadyIs(false);
-   ShouldFailAssertion(GivenTheModuleIsInitialized());
+   ShouldFailAssertion(GivenTheModuleIsInitializedForTwoDimensionalGrid());
 }
 
-TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds)
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges_TwoDimensionalGrid)
 {
    GivenTheGridLineCalculationErdsAreInitialized();
-   GivenTheModuleIsInitialized();
-   TheGridLineTemperaturesShouldBeInitializedValues();
-}
-
-TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
-{
-   GivenTheGridLineCalculationErdsAreInitialized();
-   GivenTheModuleIsInitialized();
+   GivenTheModuleIsInitializedForTwoDimensionalGrid();
 
    WhenTheFreshFoodSumOffsetIs(AnotherFreshFoodOffsetTemperature);
    WhenTheFreezerSumOffsetIs(AnotherFreezerOffsetTemperature);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreshFoodOffsetTemperature,
-      GridDelta_FreshFood,
+      GridDelta_FirstDimension,
       GridLine_Nfl);
 
-   And TheCalculatedGridLineTempShouldBe(
+   And TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreezerOffsetTemperature,
-      GridDelta_Freezer,
+      GridDelta_SecondDimension,
       GridLine_FreezerExtremeHigh);
 }
 
-TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges_TwoDimensionalGrid)
 {
    GivenTheGridLineCalculationErdsAreInitialized();
-   GivenTheModuleIsInitialized();
+   GivenTheModuleIsInitializedForTwoDimensionalGrid();
 
    WhenTheFreshFoodAdjustedSetpointIs(AnotherFreshFoodAdjustedSetpointTemperature);
    WhenTheFreezerAdjustedSetpointIs(AnotherFreezerAdjustedSetpointTemperature);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreshFoodAdjustedSetpointTemperature,
-      GridDelta_FreshFood,
+      GridDelta_FirstDimension,
       GridLine_FreshFoodLowHyst);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreshFoodAdjustedSetpointTemperature,
-      GridDelta_FreshFood,
+      GridDelta_FirstDimension,
       GridLine_FreshFoodExtraHigh);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreshFoodAdjustedSetpointTemperature,
-      GridDelta_FreshFood,
+      GridDelta_FirstDimension,
       GridLine_FreshFoodSuperHigh);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreezerAdjustedSetpointTemperature,
-      FreezerGridLineDimension,
+      GridDelta_SecondDimension,
       GridLine_FreezerLowHyst);
 
-   TheCalculatedGridLineTempShouldBe(
+   TheTwoDimensionalCalculatedGridLineTempShouldBe(
       AnotherFreezerAdjustedSetpointTemperature,
-      FreezerGridLineDimension,
+      GridDelta_SecondDimension,
       GridLine_FreezerSuperHigh);
 }
 
-TEST(GridLineCalculator, ShouldRecalculateFreshFoodGridLinesWhenCrossAmbientHysteresisAdjustmentChanges)
+TEST(GridLineCalculator, ShouldRecalculateFreshFoodGridLinesWhenCrossAmbientHysteresisAdjustmentChanges_TwoDimensionalGrid)
 {
    GivenTheGridLineCalculationErdsAreInitialized();
-   GivenTheModuleIsInitialized();
+   GivenTheModuleIsInitializedForTwoDimensionalGrid();
 
    WhenTheCrossAmbientHysteresisAdjustmentChangesTo(ACrossAmbientHysteresisAdjustmentInDegFx100);
 
    TheFreshFoodGridLineTemperaturesShouldBeAdjustedWithCrossAmbientHysteresis();
    TheFreezerGridLineTemperaturesShouldBeInitializedValues();
+}
+
+TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds_OneDimensionalGrid)
+{
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitializedForOneDimensionalGrid();
+   TheOneDimensionalGridLineTemperaturesShouldBeInitializedValues();
+}
+
+TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit_OneDimensionalGrid)
+{
+   GivenTheAdjustedSetpointPluginReadyIs(false);
+   ShouldFailAssertion(GivenTheModuleIsInitializedForOneDimensionalGrid());
+}
+
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges_OneDimensionalGrid)
+{
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitializedForOneDimensionalGrid();
+
+   WhenTheFeaturePanAdjustedSetpointIs(AnotherFeaturePanAdjustedSetpointTemperature);
+
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_7);
 }

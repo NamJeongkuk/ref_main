@@ -297,7 +297,7 @@ TEST_GROUP(Grid_DualEvap_Test)
 
    void FeaturePanGridBlockNumberIs(GridBlockNumber_t gridBlockNumber)
    {
-      DataModel_Write(dataModel, Erd_FeaturePanGridBlockNumber, &gridBlockNumber);
+      DataModel_Write(dataModel, Erd_FeaturePanGrid_BlockNumber, &gridBlockNumber);
    }
 
    void GridVotesShouldBe(

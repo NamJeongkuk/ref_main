@@ -15,7 +15,8 @@ describe("Personality", function()
       defrost = TypedString('defrost', 'defrost'),
       enhanced_sabbath = TypedString('enhanced_sabbath', 'enhanced_sabbath'),
       fans = TypedString('fan_list', 'fan_list'),
-      grid = TypedString('grid', 'grid'),
+      fresh_food_and_freezer_grid = TypedString('fresh_food_and_freezer_grid', 'fresh_food_and_freezer_grid'),
+      feature_pan_grid = TypedString('feature_pan_grid', 'feature_pan_grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
       sensors = TypedString('sensors', 'sensors'),
@@ -87,9 +88,17 @@ describe("Personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('grid must be a typed string with type grid, but is a number', function()
+    should_fail_with('fresh_food_and_freezer_grid must be a typed string with type fresh_food_and_freezer_grid, but is a number', function()
       personality(generate_config({
-        grid = -1
+        fresh_food_and_freezer_grid = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('feature_pan_grid must be a typed string with type feature_pan_grid, but is a number', function()
+      personality(generate_config({
+        feature_pan_grid = -1
       }))
     end)
   end)
@@ -286,7 +295,8 @@ describe("Personality", function()
         pointer(defrost),
         pointer(enhanced_sabbath),
         pointer(fan_list),
-        pointer(grid),
+        pointer(fresh_food_and_freezer_grid),
+        pointer(feature_pan_grid),
         pointer(sabbath),
         pointer(convertible_compartment),
         pointer(sensors),

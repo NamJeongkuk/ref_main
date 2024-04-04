@@ -26,7 +26,6 @@
          "name": "Erd_CompressorSpeed_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_CondenserFanSpeed_ResolvedVote",
@@ -47,7 +46,6 @@
          "name": "Erd_CondenserFanSpeed_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
@@ -68,7 +66,6 @@
          "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
@@ -89,7 +86,6 @@
          "name": "Erd_FreshFoodEvapFanSpeed_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IceCabinetFanSpeed_ResolvedVote",
@@ -110,7 +106,6 @@
          "name": "Erd_IceCabinetFanSpeed_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_DamperPosition_ResolvedVote",
@@ -126,7 +121,6 @@
          "name": "Erd_DamperPosition_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
@@ -142,7 +136,6 @@
          "name": "Erd_ConvertibleCompartmentDamperPosition_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_SealedSystemValvePosition_ResolvedVote",
@@ -158,7 +151,6 @@
          "name": "Erd_SealedSystemValvePosition_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
@@ -199,7 +191,6 @@
          "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_FreshFoodSetpointStatus",
@@ -215,7 +206,6 @@
          "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
@@ -280,7 +270,7 @@
          "namespace": "mb",
          "name": "Erd_FreezerSetpoint_WinningVoteErd",
          "interval": 60000
-      },      
+      },
       {
          "namespace": "mb",
          "name": "Erd_FreezerSetpoint_ColdestSetpointWinningVote",
@@ -306,15 +296,14 @@
          "name": "Erd_Freezer_HighAmbientOffsetInDegFx100",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
-         "name": "Erd_Grid_BlockNumber",
+         "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_Grid_PreviousBlocks",
+         "name": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
          "interval": 60000
       },
       {
@@ -339,7 +328,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Grid_CalculatedGridLines",
+         "name": "Erd_FreshFoodAndFreezerGrid_CalculatedGridLines",
          "interval": 60000
       },
       {
@@ -356,22 +345,22 @@
          "namespace": "mb",
          "name": "Erd_CompressorTripMitigationActive",
          "interval": 60000
-      },  
+      },
       {
          "namespace": "mb",
          "name": "Erd_PulldownInMediumCompressorSpeedEnabled",
          "interval": 60000
-      }, 
+      },
       {
          "namespace": "mb",
          "name": "Erd_CondenserFanAntiSweatBehaviorEnabledByGrid",
          "interval": 60000
-      }, 
+      },
       {
          "namespace": "mb",
          "name": "Erd_MaxValveTimeInPosAEnabled",
          "interval": 60000
-      },     
+      },
       {
          "namespace": "mb",
          "name": "Erd_DelayConvertibleCompartmentCooling",
@@ -387,7 +376,6 @@
          "name": "Erd_DelayedConvertibleCompartmentCoolingLowSpeed",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_DefrostCompressorOnTimeInSeconds",
@@ -458,7 +446,6 @@
          "name": "Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_WaitingForDefrostTimeInSeconds",
@@ -494,7 +481,6 @@
          "name": "Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_LeftSideFreezerDoorStatusResolved",
@@ -520,7 +506,6 @@
          "name": "Erd_DoorInDoorIsOpen",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_DefrostState",
@@ -546,7 +531,6 @@
          "name": "Erd_FreshFoodDefrostWasAbnormal",
          "interval": 60000
       },
-      
       {
          "namespace": "mb",
          "name": "Erd_AppliancePersonality",
@@ -582,7 +566,6 @@
          "name": "Erd_ApplicationVersion",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_SabbathModeEnable",
@@ -628,7 +611,6 @@
          "name": "Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry0",
@@ -689,8 +671,6 @@
          "name": "Erd_StackPercentFree",
          "interval": 60000
       },
-
-
       {
          "namespace": "mb",
          "name": "Erd_DamperHeater_ResolvedVote",
@@ -746,7 +726,6 @@
          "name": "Erd_IceMaker2_FillTubeHeater_WinningVoteErd",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IceMakerEnabledByGrid",
@@ -757,7 +736,6 @@
          "name": "Erd_Freezer_IceRateIsActive",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IceMaker0_EnableStatus",
@@ -767,7 +745,7 @@
          "namespace": "mb",
          "name": "Erd_IceMaker0_EnabledResolved",
          "interval": 60000
-      },      
+      },
       {
          "namespace": "mb",
          "name": "Erd_IceMaker0_TypeInformation",
@@ -848,7 +826,6 @@
          "name": "Erd_IceMaker0_TwistMotor_ResolvedVote",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IceMaker1_EnableStatus",
@@ -858,7 +835,7 @@
          "namespace": "mb",
          "name": "Erd_IceMaker1_EnabledResolved",
          "interval": 60000
-      },      
+      },
       {
          "namespace": "mb",
          "name": "Erd_IceMaker1_TypeInformation",
@@ -939,7 +916,6 @@
          "name": "Erd_IceMaker1_TwistMotor_ResolvedVote",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IceMaker2_EnableStatus",
@@ -949,7 +925,7 @@
          "namespace": "mb",
          "name": "Erd_IceMaker2_EnabledResolved",
          "interval": 60000
-      },      
+      },
       {
          "namespace": "mb",
          "name": "Erd_IceMaker2_TypeInformation",
@@ -1030,7 +1006,6 @@
          "name": "Erd_IceMaker2_TwistMotor_ResolvedVote",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_IsolationWaterValve_ResolvedVote",
@@ -1056,7 +1031,6 @@
          "name": "Erd_IceMaker2_WaterValve_ResolvedVote",
          "interval": 60000
       },
-
       {
          "namespace": "mb",
          "name": "Erd_RfidFilterUid",

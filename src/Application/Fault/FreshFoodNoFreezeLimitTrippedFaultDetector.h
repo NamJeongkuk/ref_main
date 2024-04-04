@@ -13,7 +13,7 @@
 
 typedef struct
 {
-   Erd_t calculateGridLineErd; // CalculatedGridLines_t
+   Erd_t calculateGridLineErd; // TwoDimensionalCalculatedGridLines_t
    Erd_t freshFoodFilteredTemperatureErd; // TemperatureDegFx100_t
    Erd_t freshFoodNoFreezeLimitTrippedFaultErd; // bool
 } FreshFoodNoFreezeLimitTrippedFaultDetectorConfig_t;

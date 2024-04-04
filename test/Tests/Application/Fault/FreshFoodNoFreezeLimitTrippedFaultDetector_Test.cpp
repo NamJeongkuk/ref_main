@@ -7,6 +7,7 @@
 
 extern "C"
 {
+#include "CalculatedGridLines.h"
 #include "FreshFoodNoFreezeLimitTrippedFaultDetector.h"
 #include "SystemErds.h"
 }
@@ -21,7 +22,7 @@ enum
 };
 
 static const FreshFoodNoFreezeLimitTrippedFaultDetectorConfig_t config = {
-   .calculateGridLineErd = Erd_Grid_CalculatedGridLines,
+   .calculateGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .freshFoodFilteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freshFoodNoFreezeLimitTrippedFaultErd = Erd_FreshFoodNoFreezeLimitTrippedFault
 };
@@ -53,18 +54,18 @@ TEST_GROUP(FreshFoodNoFreezeLimitTrippedFaultDetector)
 
    void GivenFreshFoodNoFreezeLimitIs(TemperatureDegFx100_t temperature)
    {
-      CalculatedGridLines_t calculatedGridLines;
-      DataModel_Read(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
-      calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl] = temperature;
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
+      TwoDimensionalCalculatedGridLines_t calculatedGridLines;
+      DataModel_Read(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &calculatedGridLines);
+      calculatedGridLines.firstDimensionGridLines.gridLinesDegFx100[GridLine_Nfl] = temperature;
+      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &calculatedGridLines);
    }
 
    void GivenFreshFoodLowHysteresisIs(TemperatureDegFx100_t temperature)
    {
-      CalculatedGridLines_t calculatedGridLines;
-      DataModel_Read(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
-      calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] = temperature;
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
+      TwoDimensionalCalculatedGridLines_t calculatedGridLines;
+      DataModel_Read(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &calculatedGridLines);
+      calculatedGridLines.firstDimensionGridLines.gridLinesDegFx100[GridLine_FreshFoodLowHyst] = temperature;
+      DataModel_Write(dataModel, Erd_FreshFoodAndFreezerGrid_CalculatedGridLines, &calculatedGridLines);
    }
 
    void GivenFreshFoodFilteredTemperatureInDegFx100Is(TemperatureDegFx100_t temperatureDegFx100)

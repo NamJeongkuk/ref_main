@@ -1,5 +1,5 @@
 return grid({
-  grid_id = 'grid_single_evap',
+  grid_id = grid_id_type.grid_single_evap,
   grid_deltas = import("../Grid/grid_deltas_integration.lua"),
   fresh_food_cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 500,
   grid_invalid_freezer_thermistor_fallback_row = 3,

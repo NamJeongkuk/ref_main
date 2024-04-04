@@ -9,7 +9,7 @@
 #define SIDEBYSIDESINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
 
 #include "I_DataModel.h"
-#include "GridPlugin.h"
+#include "FreshFoodAndFreezerGridPlugin.h"
 #include "ConstArrayMap_SideBySideSingleEvap.h"
 #include "CompressorPlugin.h"
 #include "SideBySideDefrostPlugin.h"
@@ -27,7 +27,7 @@ typedef struct
    struct
    {
       SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_t sensorFilteringPlugin;
-      GridPlugin_t gridPlugin;
+      FreshFoodAndFreezerGridPlugin_t freshFoodAndFreezerGridPlugin;
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
       CompressorPlugin_t compressorPlugin;
       SideBySideDefrostPlugin_t sideBySideDefrostPlugin;

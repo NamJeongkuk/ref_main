@@ -13,28 +13,45 @@
 
 enum
 {
-   GridDelta_FreshFood,
-   GridDelta_Freezer,
+   GridDelta_FirstDimension,
+   GridDelta_SecondDimension,
+
+   GridDelta_FeaturePan = GridDelta_FirstDimension,
+   GridDelta_FreshFood = GridDelta_FirstDimension,
+   GridDelta_Freezer = GridDelta_SecondDimension,
 };
 
 enum
 {
-   GridLine_Nfl,
-   GridLine_FreshFoodLowHyst,
-   GridLine_FreshFoodSetpointDelta,
-   GridLine_FreshFoodHighHyst,
-   GridLine_FreshFoodExtraHigh,
-   GridLine_FreshFoodSuperHigh
-};
+   GridLine_1,
+   GridLine_2,
+   GridLine_3,
+   GridLine_4,
+   GridLine_5,
+   GridLine_6,
+   GridLine_7,
 
-enum
-{
-   GridLine_FreezerLowHyst,
-   GridLine_FreezerSetpointDelta,
-   GridLine_FreezerHighHyst,
-   GridLine_FreezerExtraHigh,
-   GridLine_FreezerSuperHigh,
-   GridLine_FreezerExtremeHigh
+   GridLine_FeaturePanSuperHigh = GridLine_1,
+   GridLine_FeaturePanHigh = GridLine_2,
+   GridLine_FeaturePanHighHyst = GridLine_3,
+   GridLine_SetpointDelta = GridLine_4,
+   GridLine_FeaturePanLowHyst = GridLine_5,
+   GridLine_FeaturePanLow = GridLine_6,
+   GridLine_FeaturePanSuperLow = GridLine_7,
+
+   GridLine_Nfl = GridLine_1,
+   GridLine_FreshFoodLowHyst = GridLine_2,
+   GridLine_FreshFoodSetpointDelta = GridLine_3,
+   GridLine_FreshFoodHighHyst = GridLine_4,
+   GridLine_FreshFoodExtraHigh = GridLine_5,
+   GridLine_FreshFoodSuperHigh = GridLine_6,
+
+   GridLine_FreezerLowHyst = GridLine_1,
+   GridLine_FreezerSetpointDelta = GridLine_2,
+   GridLine_FreezerHighHyst = GridLine_3,
+   GridLine_FreezerExtraHigh = GridLine_4,
+   GridLine_FreezerSuperHigh = GridLine_5,
+   GridLine_FreezerExtremeHigh = GridLine_6,
 };
 
 enum

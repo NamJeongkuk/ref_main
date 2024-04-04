@@ -188,7 +188,7 @@ void FourDoorDualEvapDefrostPlugin_Init(FourDoorDualEvapDefrostPlugin_t *instanc
    bool gridPluginReady;
    DataModel_Read(
       dataModel,
-      Erd_GridPluginReady,
+      Erd_FreshFoodAndFreezerGridPluginReady,
       &gridPluginReady);
 
    bool periodicNvUpdaterReady;

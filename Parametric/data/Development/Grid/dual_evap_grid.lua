@@ -1,5 +1,5 @@
 return grid({
-  grid_id = 'grid_dual_evap',
+  grid_id = grid_id_type.grid_dual_evap,
   grid_deltas = import("../Grid/grid_deltas.lua"),
   grid_invalid_freezer_thermistor_fallback_row = 3,
   grid_invalid_fresh_food_thermistor_fallback_column = 1,

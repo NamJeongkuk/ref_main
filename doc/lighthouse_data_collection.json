@@ -168,12 +168,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Grid_BlockNumber",
+         "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_Grid_PreviousBlocks",
+         "name": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
          "interval": 60000
       },
       {
@@ -288,7 +288,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Grid_CalculatedGridLines",
+         "name": "Erd_FreshFoodAndFreezerGrid_CalculatedGridLines",
          "interval": 60000
       },
       {

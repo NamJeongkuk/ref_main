@@ -124,8 +124,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Current Grid Block",
-               "name": "Erd_Grid_BlockNumber",
+               "displayName": "Current FF/FZ Grid Block",
+               "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
                "read": true,
                "interval": 1000000000
             },
@@ -389,7 +389,6 @@
                "write": true,
                "interval": 1000000000
             }
-
          ]
       },
       {
@@ -408,14 +407,14 @@
                "name": "Erd_CalculatedCondenserFanControl",
                "read": true,
                "interval": 1000000000
-            }, 
+            },
             {
                "namespace": "mb",
                "displayName": "Condenser Fan - Winning Vote",
                "name": "Erd_CondenserFanSpeed_WinningVoteErd",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "Condenser Fan - Actual RPM",
@@ -546,8 +545,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Current Grid Block",
-               "name": "Erd_Grid_BlockNumber",
+               "displayName": "Current FF/FZ Grid Block",
+               "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
                "read": true,
                "interval": 1000000000
             },
@@ -560,15 +559,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Previous Grid Blocks",
-               "name": "Erd_Grid_PreviousBlocks",
+               "displayName": "Previous FF/FZ Grid Blocks",
+               "name": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Calculated Grid Lines",
-               "name": "Erd_Grid_CalculatedGridLines",
+               "displayName": "Calculated FF/FZ Grid Lines",
+               "name": "Erd_FreshFoodAndFreezerGrid_CalculatedGridLines",
                "read": true,
                "interval": 1000000000
             },
@@ -649,7 +648,6 @@
                "read": true,
                "interval": 1000000000
             }
-
          ]
       },
       {
@@ -880,7 +878,7 @@
                "name": "Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost",
                "read": true,
                "interval": 1000000000
-            },              
+            },
             {
                "namespace": "mb",
                "displayName": "Time That Prechill Conditions Are Met in Minutes",
@@ -970,7 +968,7 @@
                "read": true,
                "interval": 1000000000
             }
-         ]   
+         ]
       },
       {
          "title": "Thermistors",
@@ -1093,7 +1091,7 @@
                "name": "Erd_AmbientHumidity_UnfilteredRelativeHumidityPercentx100",
                "read": true,
                "interval": 1000000000
-            }, 
+            },
             {
                "namespace": "mb",
                "displayName": "Ice Maker 0 Mold Unfiltered Temperature (DegF x100)",
@@ -1150,7 +1148,7 @@
                "read": true,
                "interval": 1000000000
             },
-             {
+            {
                "namespace": "mb",
                "displayName": "Ice Cabinet Unfiltered Temperature (DegF x100)",
                "name": "Erd_IceCabinet_UnfilteredTemperatureInDegFx100",
@@ -1164,12 +1162,11 @@
                "read": true,
                "interval": 1000000000
             }
-            
          ]
       },
       {
          "title": "Heaters",
-         "erds":[
+         "erds": [
             {
                "namespace": "mb",
                "displayName": "Fresh Food Defrost Heater - Resolved State",
@@ -1264,7 +1261,7 @@
                "namespace": "mb",
                "displayName": "Ice Maker 2 Fill Tube Heater - Resolved Vote",
                "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
-               "read": true,      
+               "read": true,
                "interval": 1000000000
             },
             {
@@ -1379,14 +1376,33 @@
                "name": "Erd_ConvertibleCompartmentHeater_ResolvedVote",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Feature Pan Current Grid Block",
+               "name": "Erd_FeaturePanGrid_BlockNumber",
+               "read": true,
+               "interval": 10000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Feature Pan Previous Grid Blocks",
+               "name": "Erd_FeaturePanGrid_PreviousBlocks",
+               "read": true,
+               "interval": 10000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Feature Pan Calculated Grid Lines",
+               "name": "Erd_FeaturePanGrid_CalculatedGridLines",
+               "read": true,
+               "interval": 10000000000
             }
          ]
       },
       {
          "title": "Ice Cabinet - inwork",
-         "erds": [
-
-         ]
+         "erds": []
       },
       {
          "title": "Primary FZ IM",
@@ -1912,7 +1928,7 @@
                "read": true,
                "write": true,
                "interval": 1000000000
-            },   
+            },
             {
                "namespace": "mb",
                "displayName": "Fresh Food Damper Heater - Factory Vote",

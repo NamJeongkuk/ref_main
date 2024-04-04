@@ -1,6 +1,9 @@
 return
   {
-    deltas = {
+    one_dimensional_grid_deltas = {
+      [1] = "grid_deltas"
+    },
+    two_dimensional_grid_deltas = {
       [1] = "fresh_food_grid_deltas",
       [2] = "freezer_grid_deltas"
     },
@@ -19,5 +22,14 @@ return
       [4] = "freezer_extra_high_hyst_in_degfx100",
       [5] = "freezer_super_high_hyst_in_degfx100",
       [6] = "freezer_extreme_high_hyst_in_degfx100"
-    }
+    },
+    one_dimensional_grid = {
+      [1] = "gridline_1",
+      [2] = "gridline_2",
+      [3] = "gridline_3",
+      [4] = "gridline_4",
+      [5] = "gridline_5",
+      [6] = "gridline_6",
+      [7] = "gridline_7"
+    },
   }

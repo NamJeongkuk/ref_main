@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GRIDPLUGIN_H
-#define GRIDPLUGIN_H
+#ifndef FRESHFOODANDFREEZERGRIDPLUGIN_H
+#define FRESHFOODANDFREEZERGRIDPLUGIN_H
 
 #include "Grid.h"
 #include "I_DataModel.h"
@@ -26,10 +26,10 @@ typedef struct
    GridOffsetAdder_t freezerGridOffsetAdder;
    OverrideArbiter_t gridBlockNumberArbiter;
    CrossAmbientHysteresisAdjustmentCalculator_t crossAmbientHysteresisAdjustmentCalculator;
-} GridPlugin_t;
+} FreshFoodAndFreezerGridPlugin_t;
 
-void GridPlugin_Init(
-   GridPlugin_t *instance,
+void FreshFoodAndFreezerGridPlugin_Init(
+   FreshFoodAndFreezerGridPlugin_t *instance,
    I_DataModel_t *dataModel);
 
 #endif

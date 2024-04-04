@@ -12,7 +12,7 @@ describe('Grid', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      grid_id = 'grid_single_evap',
+      grid_id = grid_id_type.grid_single_evap,
       grid_deltas = TypedString('grid_deltas', 'grid_deltas'),
       grid_invalid_freezer_thermistor_fallback_row = 3,
       grid_invalid_fresh_food_thermistor_fallback_column = 1,
@@ -22,12 +22,26 @@ describe('Grid', function()
     }, overrides or {})
   end
 
+  local function generate_feature_pan_config(overrides)
+    return require 'lua-common'.table.merge({
+      grid_id = grid_id_type.grid_feature_pan,
+      grid_deltas = TypedString('grid_deltas', 'grid_deltas'),
+      minimum_cross_ambient_adjusted_hysteresis_in_degfx100 = -20,
+      cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 500,
+      grid_periodic_run_rate_in_msec = 1000
+    }, overrides or {})
+  end
+
   it('should require all arguments', function()
     should_require_args(grid, generate_config())
   end)
 
+  it('should require all arguments for a feature pan config', function()
+    should_require_args(grid, generate_feature_pan_config())
+  end)
+
   it('should require grid_id to be a valid grid id', function()
-    should_fail_with("must be in the set { 'grid_single_evap', 'grid_dual_evap', 'grid_triple_evap', 'grid_single_door_single_evap' }", function()
+    should_fail_with("grid_id=not a valid grid id is not in the grid_id_type enumeration, allowable values: grid_dual_evap, grid_feature_pan, grid_ice_cabinet, grid_single_door_single_evap, grid_single_evap, grid_triple_evap", function()
       grid(generate_config({
         grid_id = 'not a valid grid id'
       }))
@@ -98,11 +112,30 @@ describe('Grid', function()
     local actual = grid(generate_config())
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
-    assert(actual.is_of_type('grid'))
+    assert(actual.is_of_type('fresh_food_and_freezer_grid'))
+  end)
+
+  it('should generate a typed string with the correct data and type grid for a feature pan config', function()
+    local expected = remove_whitespace([[
+        structure(
+        u8(]] .. grid_id_type.grid_feature_pan .. [[),
+        pointer(grid_deltas),
+        u8(0),
+        u8(0),
+        i16(-20),
+        u16(500),
+        u16(1000)
+      )
+    ]])
+
+    local actual = grid(generate_feature_pan_config())
+
+    assert.equals(expected, remove_whitespace(tostring(actual)))
+    assert(actual.is_of_type('feature_pan_grid'))
   end)
 
   it('should memoize', function()
     should_memoize_calls(grid, generate_config())
+    should_memoize_calls(grid, generate_feature_pan_config())
   end)
-
 end)

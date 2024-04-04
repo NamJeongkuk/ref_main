@@ -124,7 +124,7 @@ static void UseDelayedConvertibleCompartmentCoolingSpeed(I_DataModel_t *dataMode
 static GridBlockNumber_t GetFeaturePanGridBlockNumber(I_DataModel_t *dataModel)
 {
    GridBlockNumber_t gridBlockNumber;
-   DataModel_Read(dataModel, Erd_FeaturePanGridBlockNumber, &gridBlockNumber);
+   DataModel_Read(dataModel, Erd_FeaturePanGrid_BlockNumber, &gridBlockNumber);
    return gridBlockNumber;
 }
 

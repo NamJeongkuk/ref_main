@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "GridPlugin.h"
+#include "FreshFoodAndFreezerGridPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
 #include "Grid_SingleEvap.h"
@@ -77,9 +77,7 @@ static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
 };
 
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
-   .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .calculatedGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
    .gridLineAdjustmentErds = {
       {
@@ -96,9 +94,9 @@ static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
 static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
    .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks,
+   .currentGridBlockNumberErd = Erd_FreshFoodAndFreezerGrid_BlockNumber,
+   .calculatedGridLinesErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
+   .previousGridBlockNumbersErd = Erd_FreshFoodAndFreezerGrid_PreviousBlocks,
    .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
    .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved
 };
@@ -108,7 +106,7 @@ static const Erd_t gridBlockNumberOverrideRequestErdList[] = {
 };
 
 static const Erd_t gridBlockNumberOverrideValueErdList[] = {
-   Erd_Grid_BlockNumber,
+   Erd_FreshFoodAndFreezerGrid_BlockNumber,
    Erd_GridBlockNumberOverrideValue
 };
 
@@ -124,8 +122,8 @@ static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t crossAmbientHyst
    .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
 };
 
-void GridPlugin_Init(
-   GridPlugin_t *instance,
+void FreshFoodAndFreezerGridPlugin_Init(
+   FreshFoodAndFreezerGridPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    OverrideArbiter_Init(
@@ -176,19 +174,20 @@ void GridPlugin_Init(
    CrossAmbientHysteresisAdjustmentCalculator_Init(
       &instance->crossAmbientHysteresisAdjustmentCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->gridData,
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
       &crossAmbientHysteresisAdjustmentCalculatorConfig);
 
    GridLineCalculator_Init(
       &instance->gridLineCalculator,
       &gridLineCalculatorConfig,
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
       dataModel);
 
    GridBlockCalculator_Init(
       &instance->gridBlockCalculator,
       &gridBlockCalculatorConfig,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->gridData);
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData);
 
    Grid_Init(
       &instance->gridInstance,
@@ -197,6 +196,6 @@ void GridPlugin_Init(
 
    DataModel_Write(
       dataModel,
-      Erd_GridPluginReady,
+      Erd_FreshFoodAndFreezerGridPluginReady,
       set);
 }

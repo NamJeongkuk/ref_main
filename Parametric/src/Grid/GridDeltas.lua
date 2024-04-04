@@ -10,14 +10,23 @@ return function(core)
   import(core)
 
   local grid_key_index = 1
+  local config_is_one_dimension = true
 
   local function get_grid_keys()
-    if grid_key_index == 1 then
-      return grid_keys.deltas
-    elseif grid_key_index == 2 then
-      return grid_keys.fresh_food_grid
+    if config_is_one_dimension then
+      if grid_key_index == 1 then
+        return grid_keys.one_dimensional_grid_deltas
+      else
+        return grid_keys.one_dimensional_grid
+      end
     else
-      return grid_keys.freezer_grid
+      if grid_key_index == 1 then
+        return grid_keys.two_dimensional_grid_deltas
+      elseif grid_key_index == 2 then
+        return grid_keys.fresh_food_grid
+      else
+        return grid_keys.freezer_grid
+      end
     end
   end
 
@@ -51,6 +60,7 @@ return function(core)
 
   local generate = memoize(function(config)
     grid_key_index = 1 -- resets to 1
+    config_is_one_dimension = (config.deltas.grid_deltas ~= nil)
 
     return TypedString(
       { 'grid_deltas' },
@@ -66,26 +76,40 @@ return function(core)
   return function(config)
     validate_arguments(config, {
       deltas = {
-        constraint.table_keys({
-          fresh_food_grid_deltas = {constraint.table_keys({
-            fresh_food_no_freeze_limit_in_degfx100 = { constraint.typed_string('gridline') },
-            fresh_food_low_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            fresh_food_set_point_delta_in_degfx100 = { constraint.typed_string('gridline') },
-            fresh_food_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            fresh_food_extra_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            fresh_food_super_high_hyst_in_degfx100 = { constraint.typed_string('gridline') }
-          })},
-          freezer_grid_deltas = {constraint.table_keys({
-            freezer_low_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            freezer_setpoint_delta_in_degfx100 = { constraint.typed_string('gridline') },
-            freezer_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            freezer_extra_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            freezer_super_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
-            freezer_extreme_high_hyst_in_degfx100 = { constraint.typed_string('gridline') }
-          })}
+        constraint.ored({
+          constraint.table_keys({
+            grid_deltas = { constraint.table_keys({
+              gridline_1 = { constraint.typed_string('gridline') },
+              gridline_2 = { constraint.typed_string('gridline') },
+              gridline_3 = { constraint.typed_string('gridline') },
+              gridline_4 = { constraint.typed_string('gridline') },
+              gridline_5 = { constraint.typed_string('gridline') },
+              gridline_6 = { constraint.typed_string('gridline') },
+              gridline_7 = { constraint.typed_string('gridline') }
+            })},
+          }),
+          constraint.table_keys({
+            fresh_food_grid_deltas = { constraint.table_keys({
+              fresh_food_no_freeze_limit_in_degfx100 = { constraint.typed_string('gridline') },
+              fresh_food_low_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              fresh_food_set_point_delta_in_degfx100 = { constraint.typed_string('gridline') },
+              fresh_food_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              fresh_food_extra_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              fresh_food_super_high_hyst_in_degfx100 = { constraint.typed_string('gridline') }
+            })},
+            freezer_grid_deltas = { constraint.table_keys({
+              freezer_low_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              freezer_setpoint_delta_in_degfx100 = { constraint.typed_string('gridline') },
+              freezer_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              freezer_extra_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              freezer_super_high_hyst_in_degfx100 = { constraint.typed_string('gridline') },
+              freezer_extreme_high_hyst_in_degfx100 = { constraint.typed_string('gridline') }
+            })}
+          })
         })
       }
     })
+
     return generate(config)
   end
 end

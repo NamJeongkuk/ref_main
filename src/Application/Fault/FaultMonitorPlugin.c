@@ -9,7 +9,7 @@
 #include "SystemErds.h"
 
 static const FreshFoodNoFreezeLimitTrippedFaultDetectorConfig_t freshFoodNoFreezeLimitTrippedFaultDetectorConfig = {
-   .calculateGridLineErd = Erd_Grid_CalculatedGridLines,
+   .calculateGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .freshFoodFilteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freshFoodNoFreezeLimitTrippedFaultErd = Erd_FreshFoodNoFreezeLimitTrippedFault
 };

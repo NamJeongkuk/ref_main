@@ -44,7 +44,7 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
 
    AmbientTemperatureAndHumidityPlugin_Init(&instance->_private.ambientTemperatureAndHumidityPlugin, dataModel);
 
-   GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
+   FreshFoodAndFreezerGridPlugin_Init(&instance->_private.freshFoodAndFreezerGridPlugin, dataModel);
 
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    SingleDoorFreezerFanPlugin_Init(&instance->_private.singleDoorFreezerFanPlugin, dataModel);

@@ -42,7 +42,7 @@ void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(
 
    AmbientTemperatureAndHumidityPlugin_Init(&instance->_private.ambientTemperatureAndHumidityPlugin, dataModel);
 
-   GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
+   FreshFoodAndFreezerGridPlugin_Init(&instance->_private.freshFoodAndFreezerGridPlugin, dataModel);
 
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    SingleDoorFreshFoodFanPlugin_Init(&instance->_private.singleDoorFreshFoodFanPlugin, dataModel);

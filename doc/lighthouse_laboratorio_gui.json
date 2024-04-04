@@ -90,7 +90,7 @@
             {
                "namespace": "mb",
                "displayName": "Current Grid Block",
-               "name": "Erd_Grid_BlockNumber",
+               "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
                "read": true,
                "interval": 1000000000
             },

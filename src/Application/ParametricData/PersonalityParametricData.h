@@ -50,7 +50,8 @@ typedef struct
    const DefrostData_t *defrostData;
    const EnhancedSabbathData_t *enhancedSabbathData;
    const CombinedFanData_t *fanData;
-   const GridData_t *gridData;
+   const GridData_t *freshFoodAndFreezerGridData;
+   const GridData_t *featurePanGridData;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;
    const SensorData_t *sensorData;

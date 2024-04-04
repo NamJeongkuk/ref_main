@@ -67,7 +67,7 @@ void Grid_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
-   instance->_private.gridData = PersonalityParametricData_Get(instance->_private.dataModel)->gridData;
+   instance->_private.gridData = PersonalityParametricData_Get(instance->_private.dataModel)->freshFoodAndFreezerGridData;
 
    EventSubscription_Init(
       &instance->_private.gridOverrideEnableSubscription,

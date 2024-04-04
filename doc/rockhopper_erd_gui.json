@@ -225,14 +225,14 @@
         {
           "namespace": "mb",
           "displayName": "Calculated Grid Lines",
-          "name": "Erd_Grid_CalculatedGridLines",
+          "name": "Erd_FreshFoodAndFreezerGrid_CalculatedGridLines",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Current Grid Block",
-          "name": "Erd_Grid_BlockNumber",
+          "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
           "read": true,
           "write": true
         },
@@ -260,7 +260,7 @@
         {
           "namespace": "mb",
           "displayName": "Previous Grid Blocks",
-          "name": "Erd_Grid_PreviousBlocks",
+          "name": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
           "read": true,
           "write": true
         }
@@ -2509,14 +2509,14 @@
         {
           "namespace": "mb",
           "displayName": "Current Grid Block Number",
-          "name": "Erd_Grid_BlockNumber",
+          "name": "Erd_FreshFoodAndFreezerGrid_BlockNumber",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Erd_Grid_PreviousBlocks",
-          "name": "Erd_Grid_PreviousBlocks",
+          "displayName": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
+          "name": "Erd_FreshFoodAndFreezerGrid_PreviousBlocks",
           "read": true,
           "write": true
         }

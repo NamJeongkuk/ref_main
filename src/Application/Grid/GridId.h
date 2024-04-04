@@ -13,7 +13,9 @@ enum
    GridId_SingleEvap,
    GridId_DualEvap,
    GridId_TripleEvap,
-   GridId_SingleDoorSingleEvap
+   GridId_SingleDoorSingleEvap,
+   GridId_FeaturePan,
+   GridId_IceCabinet
 };
 typedef uint8_t GridId_t;
 

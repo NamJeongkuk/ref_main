@@ -167,7 +167,7 @@ void AllFreezerDefrostPlugin_Init(AllFreezerDefrostPlugin_t *instance, I_DataMod
    bool gridPluginReady;
    DataModel_Read(
       dataModel,
-      Erd_GridPluginReady,
+      Erd_FreshFoodAndFreezerGridPluginReady,
       &gridPluginReady);
 
    bool periodicNvUpdaterReady;

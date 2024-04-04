@@ -34,13 +34,13 @@ static void SetErdIfFreezerFilteredTemperatureIsTooWarm(I_DataModel_t *dataModel
          Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
          &freezerFilteredResolvedTemperatureInDegFx100);
 
-      CalculatedGridLines_t calcGridLines;
+      TwoDimensionalCalculatedGridLines_t calcGridLines;
       DataModel_Read(
          dataModel,
-         Erd_Grid_CalculatedGridLines,
+         Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
          &calcGridLines);
 
-      TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
+      TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.secondDimensionGridLines.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
 
       freezerTemperatureIsTooWarmState = ((freezerFilteredResolvedTemperatureInDegFx100 > gridFreezerExtremeHystTemperature) ||
          (freezerFilteredResolvedTemperatureInDegFx100 >= defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100));

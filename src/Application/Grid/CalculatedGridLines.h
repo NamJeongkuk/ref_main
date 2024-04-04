@@ -13,46 +13,46 @@
 
 enum
 {
-   FreshFoodGridLineDimension = 0,
-   FreezerGridLineDimension = 1,
-   NumberGridDimensions,
-   NumberOfGridLinesPerAxis = 6,
+   CalculatedGridLines_MaxGridDimensionsCount = 2,
+   CalculatedGridLines_MaxGridLinesCount = 7
 };
 
 typedef struct
 {
-   TemperatureDegFx100_t gridLinesDegFx100[NumberOfGridLinesPerAxis];
+   TemperatureDegFx100_t gridLinesDegFx100[CalculatedGridLines_MaxGridLinesCount];
 } CalculatedAxisGridLines_t;
 
-#define SWAP_DEFINITION_CalculatedAxisGridLines_t(_name, _type) \
-   SWAPPED_FIELD(_name, _type, gridLinesDegFx100[0]),           \
-      SWAPPED_FIELD(_name, _type, gridLinesDegFx100[1]),        \
-      SWAPPED_FIELD(_name, _type, gridLinesDegFx100[2]),        \
-      SWAPPED_FIELD(_name, _type, gridLinesDegFx100[3]),        \
-      SWAPPED_FIELD(_name, _type, gridLinesDegFx100[4]),        \
-      SWAPPED_FIELD(_name, _type, gridLinesDegFx100[5]),
+typedef CalculatedAxisGridLines_t TwoDimensionalFirstDimensionCalculatedAxisGridLines_t;
+typedef CalculatedAxisGridLines_t TwoDimensionalSecondDimensionCalculatedAxisGridLines_t;
+typedef CalculatedAxisGridLines_t OneDimensionalCalculatedAxisGridLines_t;
 
-typedef CalculatedAxisGridLines_t FreshFoodCalculatedAxisGridLines_t;
-typedef CalculatedAxisGridLines_t FreezerCalculatedAxisGridLines_t;
+#define SWAP_DEFINITION_TwoDimensionalFirstDimensionCalculatedAxisGridLines_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
+
+#define SWAP_DEFINITION_TwoDimensionalSecondDimensionCalculatedAxisGridLines_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
+
+#define SWAP_DEFINITION_OneDimensionalCalculatedAxisGridLines_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, gridLinesDegFx100),
 
 typedef struct
 {
-   FreshFoodCalculatedAxisGridLines_t freshFoodGridLine;
-   FreezerCalculatedAxisGridLines_t freezerGridLine;
-} CalculatedGridLines_t;
+   TwoDimensionalFirstDimensionCalculatedAxisGridLines_t firstDimensionGridLines;
+   TwoDimensionalSecondDimensionCalculatedAxisGridLines_t secondDimensionGridLines;
+   uint8_t numberOfGridLinesPerDimension;
+} TwoDimensionalCalculatedGridLines_t;
 
-#define SWAP_DEFINITION_CalculatedGridLines_t(_name, _type)                                              \
-   SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),                       \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),       \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta]), \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst]),      \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodExtraHigh]),     \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh]),     \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst]),           \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta]),     \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst]),          \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh]),         \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh]),         \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh]),
+#define SWAP_DEFINITION_TwoDimensionalCalculatedGridLines_t(_name, _type)  \
+   SWAPPED_FIELD(_name, _type, firstDimensionGridLines.gridLinesDegFx100), \
+      SWAPPED_FIELD(_name, _type, secondDimensionGridLines.gridLinesDegFx100),
+
+typedef struct
+{
+   OneDimensionalCalculatedAxisGridLines_t gridLines;
+   uint8_t numberOfGridLines;
+} OneDimensionalCalculatedGridLines_t;
+
+#define SWAP_DEFINITION_OneDimensionalCalculatedGridLines_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, gridLines.gridLinesDegFx100),
 
 #endif

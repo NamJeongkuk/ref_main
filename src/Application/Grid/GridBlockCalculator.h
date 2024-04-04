@@ -15,8 +15,7 @@
 
 enum
 {
-   NumberOfPreviousGridBlocksStored = 5,
-   PreviousGridBlockDefaultValue = 0xFF
+   NumberOfPreviousGridBlocksStored = 5
 };
 
 typedef struct
@@ -24,7 +23,7 @@ typedef struct
    Erd_t freshFoodFilteredResolvedTemperatureInDegFx100; // TemperatureDegFx100_t
    Erd_t freezerFilteredResolvedTemperatureInDegFx100; // TemperatureDegFx100_t
    Erd_t currentGridBlockNumberErd; // GridBlockNumber_t
-   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
+   Erd_t calculatedGridLinesErd; // TwoDimensionalCalculatedGridLines_t
    Erd_t previousGridBlockNumbersErd; // PreviousGridBlockNumbers_t
    Erd_t freezerThermistorIsValidResolvedErd; // bool
    Erd_t freshFoodThermistorIsValidResolvedErd; // bool

@@ -15,8 +15,14 @@
 
 enum
 {
+   FirstDimension,
+   SecondDimension,
+
    NonInvertedGridLine = 0,
    InvertedGridLine = 1,
+
+   NumberOfGridLinesPerAxis = 6,
+   PreviousGridBlockDefaultValue = 0xFF,
 };
 
 static void UpdatePreviousGridBlocks(GridBlockCalculator_t *instance);
@@ -25,20 +31,20 @@ static CalculatedAxisGridLines_t CalculatedGridLine(
    GridBlockCalculator_t *instance,
    uint8_t gridLineDimension)
 {
-   CalculatedGridLines_t calculatedGridLines;
+   TwoDimensionalCalculatedGridLines_t calculatedGridLines;
 
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->calculatedGridLinesErd,
       &calculatedGridLines);
 
-   if(gridLineDimension == FreshFoodGridLineDimension)
+   if(gridLineDimension == FirstDimension)
    {
-      return calculatedGridLines.freshFoodGridLine;
+      return calculatedGridLines.firstDimensionGridLines;
    }
    else
    {
-      return calculatedGridLines.freezerGridLine;
+      return calculatedGridLines.secondDimensionGridLines;
    }
 }
 
@@ -69,7 +75,7 @@ static uint8_t GridLineIndex(
 {
    TemperatureDegFx100_t temperature;
 
-   if(FreshFoodGridLineDimension == gridLineDimension)
+   if(gridLineDimension == FirstDimension)
    {
       DataModel_Read(
          instance->_private.dataModel,
@@ -137,37 +143,37 @@ static void AddGridBlockToRingBufferIfDifferent(
 
 static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *instance)
 {
-   uint8_t freshFoodGridLineIndex;
-   uint8_t freezerGridLineIndex;
+   uint8_t firstDimensionGridLinesIndex;
+   uint8_t secondDimensionGridLinesIndex;
 
    if(FreshFoodThermistorIsValid(instance))
    {
-      freshFoodGridLineIndex = GridLineIndex(
+      firstDimensionGridLinesIndex = GridLineIndex(
          instance,
          NonInvertedGridLine,
-         FreshFoodGridLineDimension);
+         FirstDimension);
    }
    else
    {
-      freshFoodGridLineIndex = instance->_private.gridData->gridInvalidFreshFoodThermistorColumn;
+      firstDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFreshFoodThermistorColumn;
    }
 
    if(FreezerThermistorIsValid(instance))
    {
-      freezerGridLineIndex = GridLineIndex(
+      secondDimensionGridLinesIndex = GridLineIndex(
          instance,
          InvertedGridLine,
-         FreezerGridLineDimension);
+         SecondDimension);
    }
    else
    {
-      freezerGridLineIndex = instance->_private.gridData->gridInvalidFreezerThermistorRow;
+      secondDimensionGridLinesIndex = instance->_private.gridData->gridInvalidFreezerThermistorRow;
    }
 
    GridBlockNumber_t calculatedBlockNumber =
       GridBlock(
-         freshFoodGridLineIndex,
-         freezerGridLineIndex,
+         firstDimensionGridLinesIndex,
+         secondDimensionGridLinesIndex,
          (NumberOfGridLinesPerAxis + 1));
 
    return calculatedBlockNumber;

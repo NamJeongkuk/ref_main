@@ -1,4 +1,4 @@
-local grid_line_temps = import("../../Grid/grid_line_temperatures.lua")
+local grid_line_temps = import("../../Grid/fresh_food_and_freezer_grid_line_temperatures.lua")
 
 return sensor_type({
   mapping_table = import("../temperature_sensor_15k_resistor.lua"),
