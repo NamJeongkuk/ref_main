@@ -428,7 +428,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_DamperPosition_WinningVoteErd",
+         "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
