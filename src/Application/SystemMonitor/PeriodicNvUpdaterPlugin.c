@@ -15,8 +15,7 @@
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds },
-   { Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_FreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds },
    { Erd_DoorInDoorScaledDoorAccelerationInSeconds, Erd_Eeprom_DoorInDoorScaledDoorAccelerationInSeconds },
    { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
    { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds },
@@ -40,8 +39,7 @@ static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguratio
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds },
-   { Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_FreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds },
    { Erd_DoorInDoorScaledDoorAccelerationInSeconds, Erd_Eeprom_DoorInDoorScaledDoorAccelerationInSeconds },
    { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
    { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds },

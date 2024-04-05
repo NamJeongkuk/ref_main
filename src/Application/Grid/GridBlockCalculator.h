@@ -26,7 +26,7 @@ typedef struct
 
 typedef struct
 {
-   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
+   Erd_t calculatedGridLinesErd; // TwoDimensionalCalculatedGridLines_t
    Erd_t currentGridBlockNumberErd; // GridBlockNumber_t
    Erd_t previousGridBlockNumbersErd; // PreviousGridBlockNumbers_t
    GridBlockAdjustmentErds_t gridBlockAdjustmentErds[CalculatedGridLines_MaxGridDimensionsCount];

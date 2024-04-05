@@ -74,15 +74,15 @@ static bool WaitingToDefrost(ReadyToDefrost_t *instance)
    return waitingToDefrost;
 }
 
-static bool FreezerTooWarmAtPowerUp(ReadyToDefrost_t *instance)
+static bool CabinetTooWarmAtPowerUp(ReadyToDefrost_t *instance)
 {
-   bool freezerTooWarmAtPowerUp;
+   bool cabinetTooWarmAtPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
-      &freezerTooWarmAtPowerUp);
+      instance->_private.config->cabinetFilteredTemperatureTooWarmOnPowerUpErd,
+      &cabinetTooWarmAtPowerUp);
 
-   return freezerTooWarmAtPowerUp;
+   return cabinetTooWarmAtPowerUp;
 }
 
 static void ResetCompressorOnTimeInSecondsToZero(ReadyToDefrost_t *instance)
@@ -149,13 +149,13 @@ static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrost_t *instance)
    bool invalidFreezerEvaporatorThermistorDuringDefrost;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd,
+      instance->_private.config->invalidEvaporatorThermistorDuringDefrostErd,
       &invalidFreezerEvaporatorThermistorDuringDefrost);
 
    bool freezerTooWarmOnPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->cabinetFilteredTemperatureTooWarmOnPowerUpErd,
       &freezerTooWarmOnPowerUp);
 
    bool eepromWasCleared;
@@ -886,19 +886,19 @@ void ReadyToDefrost_Init(
    const ReadyToDefrostConfiguration_t *config,
    const DefrostData_t *defrostData)
 {
-   bool freezerTooWarmOnPowerUpReady;
+   bool defrostPowerUpReady;
    DataModel_Read(
       dataModel,
-      config->freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd,
-      &freezerTooWarmOnPowerUpReady);
+      config->defrostPowerUpReadyErd,
+      &defrostPowerUpReady);
 
-   uassert(freezerTooWarmOnPowerUpReady);
+   uassert(defrostPowerUpReady);
 
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
    instance->_private.defrostData = defrostData;
 
-   if(FreezerTooWarmAtPowerUp(instance))
+   if(CabinetTooWarmAtPowerUp(instance))
    {
       ResetCompressorOnTimeInSecondsToZero(instance);
       ResetDoorAccelerationsInSecondsToZero(instance);

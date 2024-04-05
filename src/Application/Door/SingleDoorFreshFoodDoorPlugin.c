@@ -8,20 +8,6 @@
 #include "SingleDoorFreshFoodDoorPlugin.h"
 #include "SystemErds.h"
 
-static const Erd_t doorStatusErdList[] = {
-   Erd_RightSideFreshFoodDoorStatusResolved
-};
-
-static const DoorStatusErds_t doorStatusErds = {
-   .doorStatusErdList = doorStatusErdList,
-   .numDoorStatusErds = NUM_ELEMENTS(doorStatusErdList)
-};
-
-static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
-   .doorStatusErds = &doorStatusErds,
-   .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
-};
-
 static const SabbathDoorOverridePair_t sabbathOverrideErdPairs[] = {
    {
       .doorStatusOverrideRequestErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest,
@@ -55,6 +41,24 @@ static const OverrideArbiterConfiguration_t rightSideFreshFoodDoorStatusOverride
    .numberOfOverrideRequests = NUM_ELEMENTS(rightSideFreshFoodDoorStatusOverrideRequestErds)
 };
 
+static const Erd_t allFreshFoodDoorsList[] = {
+   Erd_RightSideFreshFoodDoorStatusResolved
+};
+
+static const Erd_t aFreshFoodDoorIsOpenList[] = {
+   Erd_AFreshFoodDoorIsOpen
+};
+
+static const ErdLogicServiceConfigurationEntry_t freshFoodDoorsErdLogicServiceEntries[] = {
+   { ErdLogicServiceOperator_Or, { allFreshFoodDoorsList, NUM_ELEMENTS(allFreshFoodDoorsList) }, Erd_AFreshFoodDoorIsOpen },
+   { ErdLogicServiceOperator_Not, { aFreshFoodDoorIsOpenList, NUM_ELEMENTS(aFreshFoodDoorIsOpenList) }, Erd_AllFreshFoodDoorsAreClosed },
+};
+
+static const ErdLogicServiceConfiguration_t freshFoodDoorsErdLogicServiceConfig = {
+   freshFoodDoorsErdLogicServiceEntries,
+   NUM_ELEMENTS(freshFoodDoorsErdLogicServiceEntries)
+};
+
 void SingleDoorFreshFoodDoorPlugin_Init(
    SingleDoorFreshFoodDoorPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -69,8 +73,8 @@ void SingleDoorFreshFoodDoorPlugin_Init(
       dataModel,
       &sabbathInhibitDoorsConfig);
 
-   AllFreshFoodDoorStatus_Init(
-      &instance->_private.allFreshFoodDoorStatus,
-      dataModel,
-      &allFreshFoodDoorStatusConfiguration);
+   ErdLogicService_Init(
+      &instance->_private.freshFoodDoorsErdLogicService,
+      &freshFoodDoorsErdLogicServiceConfig,
+      DataModel_AsDataSource(dataModel));
 }

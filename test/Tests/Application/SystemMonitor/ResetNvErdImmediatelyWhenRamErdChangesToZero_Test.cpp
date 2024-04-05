@@ -32,7 +32,7 @@ enum
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
    { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
-   { Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_FreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds },
    { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds }
 };
 
@@ -103,14 +103,14 @@ TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImm
    EepromErdShouldBe(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
-TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForLeftSideFreshFoodScaledDoorAccelerationInSeconds)
+TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForFreshFoodScaledDoorAccelerationInSeconds)
 {
-   Given RamErd(Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
-   And EepromErd(Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
+   Given RamErd(Erd_FreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
+   And EepromErd(Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
    And Initialize();
 
-   When RamErd(Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is 0);
-   EepromErdShouldBe(Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
+   When RamErd(Erd_FreshFoodScaledDoorAccelerationInSeconds Is 0);
+   EepromErdShouldBe(Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
 TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds)

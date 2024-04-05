@@ -8,18 +8,18 @@
 #ifndef SINGLEDOORFRESHFOODDOORPLUGIN_H
 #define SINGLEDOORFRESHFOODDOORPLUGIN_H
 
-#include "AllFreshFoodDoorStatus.h"
 #include "I_DataModel.h"
 #include "SabbathInhibitDoors.h"
 #include "OverrideArbiter.h"
+#include "ErdLogicService.h"
 
 typedef struct
 {
    struct
    {
-      AllFreshFoodDoorStatus_t allFreshFoodDoorStatus;
       SabbathInhibitDoors_t sabbathInhibitDoors;
       OverrideArbiter_t rightSideFreshFoodDoorOverrideArbiter;
+      ErdLogicService_t freshFoodDoorsErdLogicService;
    } _private;
 } SingleDoorFreshFoodDoorPlugin_t;
 

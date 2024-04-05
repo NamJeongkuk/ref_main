@@ -7,21 +7,9 @@
 
 #include "AllFreshFoodDefrostPlugin.h"
 #include "DefrostConfiguration.h"
-#include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "SystemErds.h"
 #include "uassert.h"
 #include "DefrostConfiguration.h"
-
-static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
-   .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,
-   .freshFoodEvaporatorThermistorIsValidResolvedErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
-   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
-   .convertibleCompartmentEvaporatorThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
-   .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
-   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd = Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes
-};
 
 static const DefrostHeaterOnTimeCounterConfig_t freshFoodDefrostHeaterOnTimeCounterConfig = {
    .defrostHeaterOnTimeErd = Erd_FreshFoodDefrostHeaterOnTimeInMinutes,
@@ -32,7 +20,7 @@ static const DefrostHeaterOnTimeCounterConfig_t freshFoodDefrostHeaterOnTimeCoun
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
       .doorIsOpenErd = Erd_RightSideFreshFoodDoorStatusResolved,
-      .doorAccelerationErd = Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds,
+      .doorAccelerationErd = Erd_FreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    }
 };
@@ -40,10 +28,10 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
 static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
+   .defrostPowerUpReadyErd = Erd_DefrostPowerUpReady,
+   .cabinetFilteredTemperatureTooWarmOnPowerUpErd = Erd_CabinetFilteredTemperatureTooWarmOnPowerUp,
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
-   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
+   .invalidEvaporatorThermistorDuringDefrostErd = Erd_InvalidEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -56,47 +44,6 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .readyToDefrostHsmStateErd = Erd_ReadyToDefrostHsmState,
    .doorsConfiguration = doorsConfiguration,
    .numberOfDoors = NUM_ELEMENTS(doorsConfiguration)
-};
-
-static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {
-   .compressorIsOnErd = Erd_CompressorIsOn,
-   .coolingModeErd = Erd_CoolingMode,
-   .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .timerModuleErd = Erd_TimerModule
-};
-
-static const NextDefrostTypeOverrideArbiterConfig_t nextDefrostTypeOverrideArbiterConfig = {
-   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
-   .defrostingErd = Erd_Defrosting,
-   .numberOfSecondaryOnlyDefrostsErd = Erd_NumberOfSecondaryOnlyDefrosts,
-   .numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd = Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
-   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp
-};
-
-static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerConfig = {
-   .defrostStateErd = Erd_DefrostState,
-   .defrostTestRequestErd = Erd_DefrostTestRequest,
-   .disableDefrostErd = Erd_DisableDefrost,
-   .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
-   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
-   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
-   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
-   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
-};
-
-static const SabbathReadyToDefrostConfig_t sabbathReadyToDefrostConfig = {
-   .timerModuleErd = Erd_TimerModule,
-   .waitingToDefrostErd = Erd_WaitingToDefrost,
-   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
-   .sabbathTimeBetweenDefrostsInMinutesErd = Erd_SabbathTimeBetweenDefrostsInMinutes,
-   .sabbathWaitingForDefrostTimeInMinutesErd = Erd_SabbathWaitingForDefrostTimeInMinutes
 };
 
 static void UpdateDefrostStateBasedOnDefrostHsmState(I_DataModel_t *dataModel)
@@ -187,14 +134,13 @@ void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_Dat
    DefrostHeaterMaxOnTime_Init(
       &instance->_private.defrostHeaterMaxOnTime,
       dataModel,
-      &defrostHeaterMaxOnTimeConfig);
+      &defrostHeaterMaxOnTimeConfig,
+      &defrostData->heaterOnData);
 
    TimeThatPrechillConditionsAreMet_Init(
       &instance->_private.timeThatPrechillConditionsAreMet,
       dataModel,
       &timeThatPrechillConditionsAreMetConfig);
-
-   FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
 
    FreshFoodDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freshFoodDefrostHeaterVotingFramework, dataModel);
 
@@ -205,7 +151,8 @@ void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_Dat
       dataModel,
       &defrostConfiguration,
       PersonalityParametricData_Get(dataModel)->defrostData,
-      PersonalityParametricData_Get(dataModel)->platformData);
+      PersonalityParametricData_Get(dataModel)->platformData,
+      PersonalityParametricData_Get(dataModel)->enhancedSabbathData);
 
    DefrostHeaterOnTimeCounter_Init(
       &instance->_private.defrostHeaterOnTimeCounter,
@@ -217,11 +164,6 @@ void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_Dat
       dataModel,
       &readyToDefrostConfig,
       defrostData);
-
-   NextDefrostTypeOverrideArbiter_Init(
-      &instance->_private.nextDefrostTypeOverrideArbiter,
-      dataModel,
-      &nextDefrostTypeOverrideArbiterConfig);
 
    DefrostTestRequestHandler_Init(
       &instance->_private.defrostTestRequestHandler,

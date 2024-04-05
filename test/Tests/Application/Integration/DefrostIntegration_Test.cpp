@@ -420,7 +420,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void RightSideFreshFoodScaledDoorAccelerationsInSecondsShouldBe(uint32_t expectedSeconds)
    {
       uint32_t actualSeconds;
-      DataModel_Read(dataModel, Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
+      DataModel_Read(dataModel, Erd_FreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
 
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
@@ -527,25 +527,25 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &validCounts);
    }
 
-   void FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp()
+   void CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp()
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actual);
+      DataModel_Read(dataModel, Erd_CabinetFilteredTemperatureTooWarmOnPowerUp, &actual);
 
       CHECK_FALSE(actual);
    }
 
-   void FreezerCompartmentTemperatureShouldBeTooWarmOnPowerUp()
+   void CabinetFilteredTemperatureShouldBeTooWarmOnPowerUp()
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actual);
+      DataModel_Read(dataModel, Erd_CabinetFilteredTemperatureTooWarmOnPowerUp, &actual);
 
       CHECK_TRUE(actual);
    }
 
-   void GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(bool state)
+   void GivenInvalidEvaporatorThermistorDuringDefrostIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_InvalidFreezerEvaporatorThermistorDuringDefrost, &state);
+      DataModel_Write(dataModel, Erd_InvalidEvaporatorThermistorDuringDefrost, &state);
    }
 
    void GivenEepromWasNotClearedAtStartup()
@@ -562,13 +562,13 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    {
       GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
 
       GivenDefrostStateWas(DefrostState_Idle);
       GivenApplicationHasBeenInitialized();
 
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -578,12 +578,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -593,12 +593,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -608,12 +608,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -623,12 +623,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -638,12 +638,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -653,12 +653,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
       GivenDefrostStateWas(DefrostState_Idle);
 
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -667,12 +667,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenFreezerEvaporatorThermistorIsValid();
       GivenFreshFoodThermistorIsValid();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
 
       GivenDefrostStateWas(DefrostState_Idle);
       GivenApplicationHasBeenInitialized();
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
       GivenFreezerThermistorIsInvalidAfterBeingDiscovered();
@@ -684,13 +684,13 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenFreshFoodThermistorIsValid();
       GivenFreezerThermistorIsValidAndNotTooWarm();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
 
       GivenDefrostStateWas(DefrostState_Idle);
       GivenApplicationHasBeenInitialized();
 
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
       GivenFreezerEvaporatorThermistorIsInvalidAfterBeingDiscovered();
@@ -785,15 +785,15 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void DefrostExitsHeaterOnAndIsInDwellBecauseFreezerEvaporatorReachesTerminationTemperature()
    {
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Dwell);
-      WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100 - 1);
-      WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
+      WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerHeater.defrostTerminationTemperatureInDegFx100 - 1);
+      WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerHeater.defrostTerminationTemperatureInDegFx100);
       DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
    }
 
    void DefrostExitsHeaterOnAndIsInDwellAfterMaxTimeout()
    {
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Dwell);
-      After(defrostData->heaterOnData.freezerDefrostHeaterMaxOnTimeInMinutes * MSEC_PER_MIN);
+      After(defrostData->heaterOnData.freezerHeater.defrostHeaterMaxOnTimeInMinutes * MSEC_PER_MIN);
       DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
    }
 
@@ -889,7 +889,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void GivenEepromRightSideFreshFoodScaledDoorAccelerationInSecondsIs(uint32_t seconds)
    {
-      DataModel_Write(dataModel, Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds, &seconds);
+      DataModel_Write(dataModel, Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds, &seconds);
    }
 
    void GivenEepromSabbathWaitingForDefrostTimeInMinutesIs(uint16_t minutes)
@@ -901,13 +901,13 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    {
       GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
       GivenAllPreviousDefrostsWereNormal();
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
       GivenEepromWasNotClearedAtStartup();
 
       GivenDefrostStateWas(DefrostState_Dwell);
       GivenApplicationHasBeenInitialized();
 
-      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      CabinetFilteredTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 
       mock().disable();
@@ -1008,14 +1008,6 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       WhenFactoryVotesForSetpointsToCauseCompressorToTurnOff();
       WhenGridRunsByWaitingOneSecond();
       CompressorShouldBe(OFF);
-   }
-
-   void NextDefrostTypeOverrideShouldBe(DefrostType_t expected)
-   {
-      DefrostType_t actual;
-      DataModel_Read(dataModel, Erd_NextDefrostTypeOverride, &actual);
-
-      CHECK_EQUAL(expected, actual);
    }
 
    void FreezerDefrostHeaterShouldBe(bool expected)
@@ -1472,7 +1464,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingOnInitIfSavedEepromComp
 
    GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
    GivenAllPreviousDefrostsWereNormal();
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
    GivenEepromWasClearedAtStartup();
 
    GivenDefrostStateWas(DefrostState_Idle);
@@ -1494,7 +1486,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingOnInitIfSavedEepromComp
 
    GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
    GivenAllPreviousDefrostsWereNormal();
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
    GivenEepromWasNotClearedAtStartup();
 
    GivenDefrostStateWas(DefrostState_Idle);
@@ -1562,7 +1554,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToHeaterOnEntryWhenDefrostTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
 
-   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1578,7 +1570,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToHeaterOnEntryWhenDefrostTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
    CompressorOnTimeInSecondsShouldBe(0);
-   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1595,7 +1587,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldReenterHeaterOnEntryWhenDefrostTestReq
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
    CompressorOnTimeInSecondsShouldBe(0);
 
-   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1610,7 +1602,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
 
-   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringWaitingToDefrostState)
@@ -1640,7 +1632,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
 
-   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringDefrostingState)
@@ -1798,7 +1790,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingFromZeroWhenResettingWi
 
    EepromCompressorOnTimeInSecondsShouldBe(0);
    CompressorOnTimeInSecondsShouldBe(0);
-   FreezerCompartmentTemperatureShouldBeTooWarmOnPowerUp();
+   CabinetFilteredTemperatureShouldBeTooWarmOnPowerUp();
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
    WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();

@@ -505,7 +505,7 @@
             {
                "namespace": "mb",
                "displayName": "Defrost Timer - FF Door Acceleration in Compressor-Seconds",
-               "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+               "name": "Erd_FreshFoodScaledDoorAccelerationInSeconds",
                "read": true,
                "interval": 1000000000
             },

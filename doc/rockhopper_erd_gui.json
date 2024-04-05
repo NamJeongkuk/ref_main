@@ -563,15 +563,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Right Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_FreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Right Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -626,8 +626,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
+          "displayName": "Cabinet Filtered Temperature Too Warm At Power Up",
+          "name": "Erd_CabinetFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },
@@ -745,8 +745,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
-          "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
+          "displayName": "Invalid Evaporator Thermistor During Defrost",
+          "name": "Erd_InvalidEvaporatorThermistorDuringDefrost",
           "read": true,
           "write": true
         },
@@ -3889,8 +3889,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer filtered temperature too warm at power up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
+          "displayName": "Cabinet filtered temperature too warm at power up",
+          "name": "Erd_CabinetFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },
@@ -4203,8 +4203,8 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
+          "displayName": "Cabinet Filtered Temperature Too Warm At Power Up",
+          "name": "Erd_CabinetFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },
@@ -4224,8 +4224,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
-          "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
+          "displayName": "Invalid Evaporator Thermistor During Defrost",
+          "name": "Erd_InvalidEvaporatorThermistorDuringDefrost",
           "read": true,
           "write": true
         },
@@ -4280,20 +4280,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Left Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "EEPROM Left Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Right Side Fresh Food Door Status",
           "name": "Erd_RightSideFreshFoodDoorStatus",
           "read": true,
@@ -4301,15 +4287,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Right Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_FreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Right Side Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },

@@ -28,14 +28,14 @@ static void ResolveFreezerDefrostHeaterMaxOnTime(DefrostHeaterMaxOnTime_t *insta
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freezerDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->heaterOnData.freezerDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.heaterOnData->freezerHeater.defrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freezerDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->heaterOnData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.heaterOnData->freezerHeater.invalidThermistorDefrostHeaterMaxOnTimeInMinutes);
    }
 }
 
@@ -46,14 +46,14 @@ static void ResolveFreshFoodDefrostHeaterMaxOnTime(DefrostHeaterMaxOnTime_t *ins
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freshFoodDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->heaterOnData.freshFoodDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.heaterOnData->freshFoodHeater.defrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freshFoodDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->heaterOnData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.heaterOnData->freshFoodHeater.invalidThermistorDefrostHeaterMaxOnTimeInMinutes);
    }
 }
 
@@ -67,7 +67,7 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->heaterOnData.convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.heaterOnData->convertibleCompartmentHeater.defrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
@@ -76,37 +76,37 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
          DataModel_Write(
             instance->_private.dataModel,
             instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-            &instance->_private.defrostParametricData->heaterOnData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+            &instance->_private.heaterOnData->convertibleCompartmentHeaterAsFreezer.invalidThermistorDefrostHeaterMaxOnTimeInMinutes);
       }
       else
       {
          DataModel_Write(
             instance->_private.dataModel,
             instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-            &instance->_private.defrostParametricData->heaterOnData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+            &instance->_private.heaterOnData->convertibleCompartmentHeaterAsFreshFood.invalidThermistorDefrostHeaterMaxOnTimeInMinutes);
       }
    }
 }
 
 static void DataModelChanged(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, DefrostHeaterMaxOnTime_t *);
-   REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
-   REINTERPRET(erd, args->erd, Erd_t);
+   DefrostHeaterMaxOnTime_t *instance = context;
+   const DataModelOnDataChangeArgs_t *args = _args;
+   Erd_t erd = args->erd;
 
    if(erd == instance->_private.config->freezerEvaporatorThermistorIsValidResolvedErd)
    {
-      REINTERPRET(isValid, args->data, const bool *);
+      const bool *isValid = args->data;
       ResolveFreezerDefrostHeaterMaxOnTime(instance, *isValid);
    }
    else if(erd == instance->_private.config->freshFoodEvaporatorThermistorIsValidResolvedErd)
    {
-      REINTERPRET(isValid, args->data, const bool *);
+      const bool *isValid = args->data;
       ResolveFreshFoodDefrostHeaterMaxOnTime(instance, *isValid);
    }
    else if(ThereIsAConvertibleCompartment(instance) && erd == instance->_private.config->convertibleCompartmentEvaporatorThermistorIsValidResolvedErd)
    {
-      REINTERPRET(isValid, args->data, const bool *);
+      const bool *isValid = args->data;
       ConvertibleCompartmentStateType_t convertibleCompartmentState;
       DataModel_Read(
          instance->_private.dataModel,
@@ -119,7 +119,7 @@ static void DataModelChanged(void *context, const void *_args)
    }
    else if(ThereIsAConvertibleCompartment(instance) && erd == instance->_private.config->convertibleCompartmentStateErd)
    {
-      REINTERPRET(convertibleCompartmentState, args->data, const ConvertibleCompartmentStateType_t *);
+      const ConvertibleCompartmentStateType_t *convertibleCompartmentState = args->data;
       bool convertibleCompartmentIsValid;
       DataModel_Read(
          instance->_private.dataModel,
@@ -135,11 +135,12 @@ static void DataModelChanged(void *context, const void *_args)
 void DefrostHeaterMaxOnTime_Init(
    DefrostHeaterMaxOnTime_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostHeaterMaxOnTimeConfiguration_t *config)
+   const DefrostHeaterMaxOnTimeConfiguration_t *config,
+   const DefrostHeaterOnData_t *heaterOnData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
+   instance->_private.heaterOnData = heaterOnData;
 
    EventSubscription_Init(
       &instance->_private.onDataModelChange,

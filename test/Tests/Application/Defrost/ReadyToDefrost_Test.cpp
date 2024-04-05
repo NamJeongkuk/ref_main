@@ -42,7 +42,7 @@ enum
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
       .doorIsOpenErd = Erd_LeftSideFreshFoodDoorStatusResolved,
-      .doorAccelerationErd = Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds,
+      .doorAccelerationErd = Erd_FreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
@@ -60,10 +60,10 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
 static ReadyToDefrostConfiguration_t config = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
+   .defrostPowerUpReadyErd = Erd_DefrostPowerUpReady,
+   .cabinetFilteredTemperatureTooWarmOnPowerUpErd = Erd_CabinetFilteredTemperatureTooWarmOnPowerUp,
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
-   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
+   .invalidEvaporatorThermistorDuringDefrostErd = Erd_InvalidEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -83,7 +83,9 @@ static const DefrostIdleData_t idleData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 10 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 96 * MINUTES_PER_HOUR,
-   .ahamPrechillTimeBetweenDefrostsInMinutes = 6 * MINUTES_PER_HOUR
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 6 * MINUTES_PER_HOUR,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 0
 };
 
 static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
@@ -91,12 +93,12 @@ static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 3 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 5 * MINUTES_PER_HOUR,
-   .ahamPrechillTimeBetweenDefrostsInMinutes = 3 * MINUTES_PER_HOUR
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 3 * MINUTES_PER_HOUR,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 0
 };
 
 static const DefrostPrechillPrepData_t prechillPrepData = {
-   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 0,
-   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 0,
    .maxPrechillPrepTimeInMinutes = 5
 };
 
@@ -105,12 +107,13 @@ static const DefrostPrechillData_t prechillData = {
    .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
    .prechillSealedSystemValvePosition = SealedSystemValvePosition_B,
    .prechillCompressorSpeed = CompressorSpeed_Low,
-   .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
-   .prechillFreshFoodEvapFanSpeed = FanSpeed_Low,
+   .prechillFreezerEvaporatorFanSpeed = FanSpeed_SuperLow,
+   .prechillFreshFoodEvaporatorFanSpeed = FanSpeed_Low,
    .prechillIceCabinetFanSpeed = FanSpeed_Medium,
    .prechillDeliFanSpeed = FanSpeed_High,
    .prechillConvertibleCompartmentDamperPosition = DamperPosition_Open,
-   .prechillConvertibleCompartmentFanSpeed = FanSpeed_High,
+   .prechillDeliDamperPosition = DamperPosition_Closed,
+   .prechillConvertibleCompartmentEvapFanSpeed = FanSpeed_High,
    .prechillFreshFoodDamperPosition = DamperPosition_Closed,
    .prechillFreezerMinTempInDegFx100 = -600,
    .prechillFreshFoodMinTempInDegFx100 = 3200,
@@ -118,31 +121,51 @@ static const DefrostPrechillData_t prechillData = {
    .prechillConvertibleCompartmentAsFreezerMinTempInDegFx100 = -600,
    .prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100 = 3200,
    .prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100 = 4600,
-   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
-   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000
+   .prechillPrimaryEvaporatorExitTemperatureInDegFx100 = -3000
 };
 
 static const DefrostHeaterOnEntryData_t heaterOnEntryData = {
    .defrostHeaterOnDelayAfterCompressorOffInSeconds = 2,
    .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open,
-   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_A
+   .heaterOnEntryConvertibleCompartmentDamperPosition = DamperPosition_Closed,
+   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_D
+};
+
+static const DefrostHeaterData_t freshFoodHeater = {
+   .defrostHeaterMaxOnTimeInMinutes = 60,
+   .invalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
+   .heaterOnTimeToSetAbnormalDefrostInMinutes = 32,
+   .defrostTerminationTemperatureInDegFx100 = 4460
+};
+
+static const DefrostHeaterData_t freezerHeater = {
+   .defrostHeaterMaxOnTimeInMinutes = 60,
+   .invalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
+   .heaterOnTimeToSetAbnormalDefrostInMinutes = 32,
+   .defrostTerminationTemperatureInDegFx100 = 5900
+};
+
+static DefrostConvertibleCompartmentCommonHeaterData_t convertibleCompartmentHeater = {
+   .defrostHeaterMaxOnTimeInMinutes = 30,
+   .defrostTerminationTemperatureInDegFx100 = 4460
+};
+
+static const DefrostConvertibleCompartmentStateDependentHeaterData_t convertibleCompartmentHeaterAsFreshFood = {
+   .invalidThermistorDefrostHeaterMaxOnTimeInMinutes = 2,
+   .heaterOnTimeToSetAbnormalDefrostInMinutes = 21,
+};
+
+static const DefrostConvertibleCompartmentStateDependentHeaterData_t convertibleCompartmentHeaterAsFreezer = {
+   .invalidThermistorDefrostHeaterMaxOnTimeInMinutes = 25,
+   .heaterOnTimeToSetAbnormalDefrostInMinutes = 42,
 };
 
 static const DefrostHeaterOnData_t heaterOnData = {
-   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
-   .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
-   .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
-   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
-   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
-   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
-   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
-   .freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 20,
-   .freshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
-   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
-   .convertibleCompartmentAsFreshFoodHeaterOnTimeToSetAbnormalDefrostInMinutes = 21,
-   .convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 35,
-   .convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 2,
-   .convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 25
+   .freshFoodHeater = freshFoodHeater,
+   .freezerHeater = freezerHeater,
+   .convertibleCompartmentHeater = convertibleCompartmentHeater,
+   .convertibleCompartmentHeaterAsFreshFood = convertibleCompartmentHeaterAsFreshFood,
+   .convertibleCompartmentHeaterAsFreezer = convertibleCompartmentHeaterAsFreezer
 };
 
 static const DefrostDwellData_t dwellData = {
@@ -154,12 +177,14 @@ static const DefrostDwellData_t dwellData = {
 static const DefrostPostDwellData_t postDwellData = {
    .postDwellExitTimeInMinutes = 5,
    .secondaryOnlyPostDwellExitTimeInMinutes = 10,
-   .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
-   .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
+   .postDwellPrimaryEvaporatorExitTemperatureInDegFx100 = -1000,
+   .secondaryOnlyPostDwellPrimaryEvaporatorExitTemperatureInDegFx100 = -1200,
    .postDwellSealedSystemValvePosition = SealedSystemValvePosition_B,
    .postDwellCompressorSpeed = CompressorSpeed_Low,
    .postDwellCondenserFanSpeed = FanSpeed_Low,
-   .postDwellFreshFoodDamperPosition = DamperPosition_Closed
+   .postDwellFreshFoodDamperPosition = DamperPosition_Closed,
+   .postDwellConvertibleCompartmentDamperPosition = DamperPosition_Closed,
+   .postDwellDeliDamperPosition = DamperPosition_Closed
 };
 
 static const DefrostData_t defrostData = {
@@ -201,14 +226,14 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenReadyToDefrostIsInitialized()
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_DefrostPowerUpReady, set);
 
       ReadyToDefrost_Init(&instance, dataModel, &config, &defrostData);
    }
 
    void GivenReadyToDefrostIsInitializedWithLesserTimeBetweenDefrostsInParametric()
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_DefrostPowerUpReady, set);
 
       OldMinimumTimeBetweenDefrostsShouldBeGreaterThanNewMaximumTimeBetweenDefrosts();
       ReadyToDefrost_Init(&instance, dataModel, &config, &shorterTimeBetweenDefrostData);
@@ -239,14 +264,14 @@ TEST_GROUP(ReadyToDefrost)
       WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       WhenWaitingToDefrostIs(true);
    }
-   void GivenFreezerTooWarmOnPowerUpIs(bool state)
+   void GivenCabinetTooWarmOnPowerUpIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &state);
+      DataModel_Write(dataModel, Erd_CabinetFilteredTemperatureTooWarmOnPowerUp, &state);
    }
 
-   void WhenFreezerTooWarmAtPowerUpChangesTo(bool state)
+   void WhenCabinetTooWarmAtPowerUpChangesTo(bool state)
    {
-      GivenFreezerTooWarmOnPowerUpIs(state);
+      GivenCabinetTooWarmOnPowerUpIs(state);
    }
 
    void GivenCompressorOnTimeInSecondsIs(uint32_t seconds)
@@ -322,14 +347,14 @@ TEST_GROUP(ReadyToDefrost)
       GivenConvertibleCompartmentDefrostWasAbnormalIs(state);
    }
 
-   void GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(bool state)
+   void GivenInvalidEvaporatorThermistorDuringDefrostIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_InvalidFreezerEvaporatorThermistorDuringDefrost, &state);
+      DataModel_Write(dataModel, Erd_InvalidEvaporatorThermistorDuringDefrost, &state);
    }
 
    void WhenInvalidFreezerEvaporatorThermistorDuringDefrostChangesTo(bool state)
    {
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(state);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(state);
    }
 
    void GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(bool state)
@@ -431,8 +456,8 @@ TEST_GROUP(ReadyToDefrost)
       GivenFreshFoodDefrostWasAbnormalIs(false);
       GivenFreezerDefrostWasAbnormalIs(true);
       GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-      GivenFreezerTooWarmOnPowerUpIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+      GivenCabinetTooWarmOnPowerUpIs(false);
       GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       GivenEepromClearedFlagIs(false);
    }
@@ -442,8 +467,8 @@ TEST_GROUP(ReadyToDefrost)
       GivenFreshFoodDefrostWasAbnormalIs(false);
       GivenFreezerDefrostWasAbnormalIs(false);
       GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-      GivenFreezerTooWarmOnPowerUpIs(false);
+      GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+      GivenCabinetTooWarmOnPowerUpIs(false);
       GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       GivenEepromClearedFlagIs(false);
    }
@@ -502,25 +527,25 @@ TEST_GROUP(ReadyToDefrost)
       DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
-   void GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)
+   void GivenFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)
    {
       DataModel_Write(
          dataModel,
-         Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds,
+         Erd_FreshFoodScaledDoorAccelerationInSeconds,
          &seconds);
    }
 
-   void WhenLeftSideFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)
+   void WhenFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)
    {
-      GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(seconds);
+      GivenFreshFoodDoorAccelerationInSecondsIs(seconds);
    }
 
-   void LeftSideFreshFoodDoorAccelerationsShouldBe(uint32_t expected)
+   void FreshFoodDoorAccelerationsShouldBe(uint32_t expected)
    {
       uint32_t actual;
       DataModel_Read(
          dataModel,
-         Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds,
+         Erd_FreshFoodScaledDoorAccelerationInSeconds,
          &actual);
 
       CHECK_TRUE((actual <= (expected + expected / 100)) && (actual >= (expected - expected / 100)));
@@ -822,10 +847,10 @@ TEST_GROUP(ReadyToDefrost)
       for(uint8_t i = 0; i < 10; i++)
       {
          After(UpdatePeriodInSeconds * MSEC_PER_SEC - 1);
-         LeftSideFreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+         FreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
          After(1);
-         LeftSideFreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+         FreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
       }
    }
 
@@ -896,22 +921,22 @@ TEST(ReadyToDefrost, ShouldInitializeIntoReadyAndDefrostingWhenSystemIsNotWaitin
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_ReadyAndDefrosting);
 }
 
-TEST(ReadyToDefrost, ShouldResetCompressorOnTimeAndDoorAccelerationsToZeroIfFreezerIsTooWarmAtPowerUpOnInit)
+TEST(ReadyToDefrost, ShouldResetCompressorOnTimeAndDoorAccelerationsToZeroIfCabinetIsTooWarmAtPowerUpOnInit)
 {
    GivenCompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    GivenDoorAccelerationsAre(SomeDoorAccelerationsInSecondsPerSecond);
-   GivenFreezerTooWarmOnPowerUpIs(true);
+   GivenCabinetTooWarmOnPowerUpIs(true);
    GivenReadyToDefrostIsInitialized();
 
    CompressorOnTimeInSecondsShouldBe(0);
    DoorAccelerationsShouldBe(0);
 }
 
-TEST(ReadyToDefrost, ShouldNotResetCompressorOnTimeAndDoorAccelerationsToZeroIfFreezerIsNotTooWarmAtPowerUpOnInit)
+TEST(ReadyToDefrost, ShouldNotResetCompressorOnTimeAndDoorAccelerationsToZeroIfCabinetIsNotTooWarmAtPowerUpOnInit)
 {
    GivenCompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    GivenDoorAccelerationsAre(SomeDoorAccelerationsInSecondsPerSecond);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenReadyToDefrostIsInitialized();
 
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
@@ -951,7 +976,7 @@ TEST(ReadyToDefrost, ShouldTransitionFromWaitingForRemainingTimeBetweenDefrostsT
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeHasNotReachedMinimumButSumOfCompressorOnTimeAndDoorAccelerationsIsEqualToMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -960,7 +985,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeHasNotR
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeHasNotReachedMinimumButSumOfCompressorOnTimeAndDoorAccelerationsIsGreaterThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 2);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 2);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -969,7 +994,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeHasNotR
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqualToMinimumTimeButSumOfCompressorOnTimeAndDoorAccelerationsIsLessThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -978,7 +1003,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqual
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreaterThanMinimumTimeButSumOfCompressorOnTimeAndDoorAccelerationsIsLessThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -987,7 +1012,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreat
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsLessThanMinimumTimeAndSumOfCompressorOnTimeAndDoorAccelerationsIsLessThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -1025,7 +1050,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitIfCompressorOnTimeIsGreaterTha
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqualToMinimumTimeAndTheSumOfCompressorOnTimeAndDoorAccelerationsIsEqualToMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    After(0);
@@ -1035,7 +1060,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqualToM
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqualToMinimumTimeAndTheSumOfCompressorOnTimeAndDoorAccelerationsIsGreaterThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    After(0);
@@ -1045,7 +1070,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsEqualToM
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreaterThanMinimumTimeAndTheSumOfCompressorOnTimeAndDoorAccelerationsIsEqualToMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    After(0);
@@ -1055,7 +1080,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreaterT
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreaterThanMinimumTimeAndTheSumOfCompressorOnTimeAndDoorAccelerationsIsGreaterThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    After(0);
@@ -1065,7 +1090,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostOnInitWhenCompressorOnTimeIsGreaterT
 TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsLessThanMinimumTimeAndTheSumOfCompressorOnTimeAndDoorAccelerationsIsGreaterThanMaximumTimeBetweenDefrostsAndTimeBetweenDefrostsIsMax)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 2);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 2);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
    ReadyToDefrostShouldBe(false);
@@ -1074,7 +1099,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostOnInitWhenCompressorOnTimeIsLessT
 TEST(ReadyToDefrost, ShouldTransitionFromReadyAndDefrostingToWaitingForMinimumTimeBetweenDefrostsWhenWaitingToDefrostChangesToTrueAndShouldResetCompressorOnTimeDoorAccelerationsAndWaitingForDefrostTimeInSecondsToZero)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs(defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsFalse();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_ReadyAndDefrosting);
 
@@ -1091,8 +1116,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMaxTimeBetweenDefrostsWhen
    GivenFreshFoodDefrostWasAbnormalIs(false);
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1116,8 +1141,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenFreshFoodDefrostWasAbnormalIs(true);
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1132,8 +1157,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenFreshFoodDefrostWasAbnormalIs(false);
    GivenFreezerDefrostWasAbnormalIs(true);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1149,8 +1174,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(true);
    GivenItHasAConvertibleCompartmentIs(true);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1166,8 +1191,8 @@ TEST(ReadyToDefrost, ShouldNotUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsW
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(true);
    GivenItHasAConvertibleCompartmentIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1193,8 +1218,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenFreshFoodDefrostWasAbnormalIs(false);
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(true);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(true);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
@@ -1209,8 +1234,8 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenFreshFoodDefrostWasAbnormalIs(false);
    GivenFreezerDefrostWasAbnormalIs(false);
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
-   GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
-   GivenFreezerTooWarmOnPowerUpIs(false);
+   GivenInvalidEvaporatorThermistorDuringDefrostIs(false);
+   GivenCabinetTooWarmOnPowerUpIs(false);
    GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(true);
 
@@ -1686,10 +1711,10 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenADoorClosesThatWasOpenOnIn
    GivenTimeBetweenDefrostsIsMinimumAndWaitingToDefrostIsTrue();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    After(SomeSeconds * MSEC_PER_SEC);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenMoreThanOneDoorIsAlreadyOpenOnInitAndThenOneClosesAfterTheOtherWhileWaitingForMinimumTimeBetweenDefrostsAndOnlyIncrementDoorAccelerationsForTimeThatADoorIsOpen)
@@ -1700,17 +1725,17 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenMoreThanOneDoorIsAlreadyOp
    GivenTimeBetweenDefrostsIsMinimumAndWaitingToDefrostIsTrue();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    WhenFreezerDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    WhenConvertibleCompartmentAsFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(3 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
@@ -1772,7 +1797,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationAndCompressorOnTimeAfterDoorIsO
    WhenLeftSideFreshFoodDoorOpensAfterSomeSeconds();
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
 
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    CompressorOnTimeInSecondsShouldBe(2 * SomeSeconds);
 }
 
@@ -1803,7 +1828,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationForOpenDoorWhenCompressorTurnsO
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOnAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenCompressorTurnsOffAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldNotUpdateDoorAccelerationsWhenCompressorTurnsOffIfDoorIsClosedDuringMinimumTime)
@@ -1811,7 +1836,7 @@ TEST(ReadyToDefrost, ShouldNotUpdateDoorAccelerationsWhenCompressorTurnsOffIfDoo
    GivenLeftSideFreshFoodDoorIsClosedAndCompressorIsOnAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenCompressorTurnsOffAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationForOpenDoorThatClosesAfterCompressorTurnsOffDuringMinimumTime)
@@ -1819,10 +1844,10 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationForOpenDoorThatClosesAfterCompr
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOnAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenCompressorTurnsOffAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatOpensThenClosesWhileCompressorIsOffDuringMinimumTime)
@@ -1830,10 +1855,10 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatOpensThenClosesWhil
    GivenLeftSideFreshFoodDoorIsClosedAndCompressorIsOffAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenLeftSideFreshFoodDoorOpensAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenCompressorTurnsOnAndAfterTheDoorClosesForAnOpenDoorDuringMinimumTime)
@@ -1841,10 +1866,10 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenCompressorTurnsOnAndAfterT
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOffAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenCompressorTurnsOnAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatIsStillOpenWhileAnotherDoorOpenThenClosesAndCompressorIsOffDuringMinimumTime)
@@ -1855,7 +1880,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatIsStillOpenWhileAno
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 }
 
@@ -1864,7 +1889,7 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostWhenTimerExpiresAfterInfiniteTime
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOffAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    After(UINT32_MAX);
    ReadyToDefrostShouldBe(false);
@@ -1875,18 +1900,18 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenMinimumTimeReached)
    GivenLeftSideFreshFoodDoorIsOpenAndFreezerDoorIsClosedAndConvertibleCompartmentDoorAsFreshFoodDoorIsOpenAndCompressorIsOnAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(0);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    WhenFreezerDoorOpensAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(0);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(2 * SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 2 * SomeSeconds * MSEC_PER_SEC);
    ReadyToDefrostShouldBe(true);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe((defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE -
                                        2 * SomeSeconds) *
       defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
@@ -1924,7 +1949,7 @@ TEST(ReadyToDefrost, ShouldNotUpdateCompressorOnTimeOrWaitingToDefrostTimeWhenTi
 
 TEST(ReadyToDefrost, ShouldUpdateWaitingDefrostTimeInSecondsOnEntryToWaitingForRemainingTimeBetweenDefrostsState)
 {
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeSeconds);
+   GivenFreshFoodDoorAccelerationInSecondsIs(SomeSeconds);
    GivenFreezerDoorAccelerationInSecondsIs(SomeSeconds);
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsAtMinimumAndInWaitingForRemainingTimeBetweenDefrostsState();
 
@@ -1959,7 +1984,7 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMaximumTimeBetweenDefrostsIs
 
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMaximumTimeBetweenDefrostsIsReachedWithCompressorOnAndSomePreviousDoorAccelerations)
 {
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeSeconds);
+   GivenFreshFoodDoorAccelerationInSecondsIs(SomeSeconds);
    GivenFreezerDoorAccelerationInSecondsIs(SomeSeconds);
    GivenCompressorIs(ON);
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsAtMinimumAndInWaitingForRemainingTimeBetweenDefrostsState();
@@ -1994,7 +2019,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForOpenDoorsWhenCompressorTurn
    GivenLeftSideFreshFoodDoorIsOpenAndFreezerDoorIsOpenAndCompressorIsOnAndWaitingForRemainingTimeBetweenDefrosts();
 
    WhenCompressorTurnsOffAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(0);
 }
@@ -2028,7 +2053,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForOpenDoorsWhenCompressorTurn
    GivenLeftSideFreshFoodDoorIsOpenAndFreezerDoorIsOpenAndConvertibleCompartmentAsFreshFoodDoorIsClosedAndCompressorIsOffAndWaitingForRemainingTimeBetweenDefrosts();
 
    WhenCompressorTurnsOnAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(0);
 }
@@ -2049,7 +2074,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatClosedWhenDoorClose
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsAtMinimumAndInWaitingForRemainingTimeBetweenDefrostsState();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorsThatRemainOpenWhenADoorClosesAfterBeingOpenUponEntryToWaitingForRemainingTimeBetweenDefrostsState)
@@ -2093,7 +2118,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsForDoorThatWasOpenWhenADiffere
    GivenLeftSideFreshFoodDoorIsClosedAndFreezerDoorIsOpenAndTimeBetweenDefrostsIsMaximumAndInWaitingForRemainingTimeBetweenDefrostsState();
 
    WhenLeftSideFreshFoodDoorOpensAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 }
 
@@ -2309,7 +2334,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenMaximumTimeReachedForOpenD
    GivenLeftSideFreshFoodDoorIsOpenAndFreezerDoorIsOpenAndCompressorIsOffAndTimeBetweenDefrostsIsMaximumAndInWaitingForRemainingTimeBetweenDefrostsState();
 
    WhenLeftSideFreshFoodDoorClosesAfterSomeSeconds();
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
    After((defrostData.idleData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN -
@@ -2322,7 +2347,7 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenMaximumTimeReachedForOpenD
 
    After(1);
    ReadyToDefrostShouldBe(true);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    FreezerDoorAccelerationsShouldBe((defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE -
                                        defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE -
                                        SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond) /
@@ -2455,12 +2480,12 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsPeriodicallyEvenIfDoorsDoNotCl
    for(uint8_t i = 0; i < 10; i++)
    {
       After(UpdatePeriodInSeconds * MSEC_PER_SEC - 1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
       FreezerDoorAccelerationsShouldBe(0);
       ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
       FreezerDoorAccelerationsShouldBe(0);
       ConvertibleCompartmentDoorAsFreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
@@ -2475,10 +2500,10 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsPeriodicallyAfterADoorOpensAnd
    for(uint8_t i = 0; i < 10; i++)
    {
       After(UpdatePeriodInSeconds * MSEC_PER_SEC - 1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
@@ -2491,10 +2516,10 @@ TEST(ReadyToDefrost, ShouldStopUpdatingDoorAccelerationsPeriodicallyAfterTheDoor
    for(uint8_t i = 0; i < 10; i++)
    {
       After(UpdatePeriodInSeconds * MSEC_PER_SEC - 1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(10 * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(10 * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(10 * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(10 * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
@@ -2533,15 +2558,15 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenSomeDoorOpenTimeAfterReset
    GivenCompressorIs(OFF);
    GivenCompressorOnTimeInSecondsIs(0);
    GivenLeftSideFreshFoodDoorIs(Open);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
+   GivenFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
    GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
 
    WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
    After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN + SomeSeconds * MSEC_PER_SEC);
 
    WhenLeftSideFreshFoodDoorIs(Closed);
-   LeftSideFreshFoodDoorAccelerationsShouldBe((defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + SomeSeconds) *
+   FreshFoodDoorAccelerationsShouldBe((defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + SomeSeconds) *
       defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
@@ -2628,21 +2653,21 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterALessThanPeriodicUpdateTimeA
 
 TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsCorrectlyAfterUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangesToTrueDuringAPeriodicUpdatePeriod)
 {
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
+   GivenFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOffAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    After((UpdatePeriodInSeconds * MSEC_PER_SEC / 2));
    WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
 
    After((UpdatePeriodInSeconds * MSEC_PER_SEC / 2));
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
 
    After((UpdatePeriodInSeconds * MSEC_PER_SEC / 2) - 1);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(0);
+   FreshFoodDoorAccelerationsShouldBe(0);
 
    After(1);
-   LeftSideFreshFoodDoorAccelerationsShouldBe(((UpdatePeriodInSeconds * MSEC_PER_SEC) / MSEC_PER_SEC) * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationsShouldBe(((UpdatePeriodInSeconds * MSEC_PER_SEC) / MSEC_PER_SEC) * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
 TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterHalfAPeriodicUpdatePeriodWithTheCompressorOnIfCompressorOnTimeIsMaxMinusHalfAPeriodicUpdatePeriodWhenInitializedIntoWaitingForRemainingTimeBetweenDefrosts)
@@ -2837,11 +2862,11 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsPeriodicallyWhileWaitingForRem
    for(uint8_t i = 0; i < maxPeriodicUpdatesBeforeReadyToDefrost; i++)
    {
       After(UpdatePeriodInSeconds * MSEC_PER_SEC - 1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
       FreezerDoorAccelerationsShouldBe(i * UpdatePeriodInSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      LeftSideFreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
       FreezerDoorAccelerationsShouldBe((i + 1) * UpdatePeriodInSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
    }
 }
@@ -2851,7 +2876,7 @@ TEST(ReadyToDefrost, ShouldNotUpdateDoorAccelerationsAfterAllDoorsHaveBeenClosed
    GivenCompressorIs(OFF);
    GivenLeftSideFreshFoodDoorIs(Open);
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
+   GivenFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
    GivenWaitingToDefrostIs(true);
    GivenSystemConditionsAreSuchThatTimeBetweenDefrostsIsMaximum();
    GivenReadyToDefrostIsInitialized();
@@ -2861,7 +2886,7 @@ TEST(ReadyToDefrost, ShouldNotUpdateDoorAccelerationsAfterAllDoorsHaveBeenClosed
    for(uint8_t i = 0; i < 10; i++)
    {
       After(UpdatePeriodInSeconds * MSEC_PER_SEC);
-      LeftSideFreshFoodDoorAccelerationsShouldBe(SomeDoorAccelerationsInSecondsPerSecond);
+      FreshFoodDoorAccelerationsShouldBe(SomeDoorAccelerationsInSecondsPerSecond);
    }
 }
 
@@ -2872,7 +2897,7 @@ TEST(ReadyToDefrost, ShouldBeReadyToDefrostIfCompressorOnTimeAccumulatedGreaterT
    GivenFreezerDoorIs(Closed);
    GivenWaitingToDefrostIs(true);
    GivenCompressorOnTimeInSecondsIs(shorterTimeBetweenDefrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
-   GivenLeftSideFreshFoodDoorAccelerationInSecondsIs((shorterTimeBetweenDefrostData.idleData.maxTimeBetweenDefrostsInMinutes - shorterTimeBetweenDefrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes) * SECONDS_PER_MINUTE - 1);
+   GivenFreshFoodDoorAccelerationInSecondsIs((shorterTimeBetweenDefrostData.idleData.maxTimeBetweenDefrostsInMinutes - shorterTimeBetweenDefrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes) * SECONDS_PER_MINUTE - 1);
    GivenFreezerDoorAccelerationInSecondsIs(1);
    GivenSystemConditionsAreSuchThatTimeBetweenDefrostsIsMaximum();
    GivenReadyToDefrostIsInitializedWithLesserTimeBetweenDefrostsInParametric();
@@ -2919,7 +2944,7 @@ TEST(ReadyToDefrost, ShouldBeReadyToDefrostWhenDoorAccelerationIsPurposefullyInc
    GivenReadyToDefrostIsInitialized();
 
    WhenLeftSideFreshFoodDoorIs(Open);
-   WhenLeftSideFreshFoodDoorAccelerationInSecondsIs(
+   WhenFreshFoodDoorAccelerationInSecondsIs(
       defrostData.idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE -
       defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
 

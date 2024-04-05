@@ -123,7 +123,22 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_DeliDamperPosition_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_DeliDamperPosition_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_ConvertibleCompartmentDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -398,22 +413,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
+         "name": "Erd_FreshFoodScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
+         "name": "Erd_Eeprom_FreshFoodScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {

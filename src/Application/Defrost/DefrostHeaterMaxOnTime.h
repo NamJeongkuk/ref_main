@@ -29,7 +29,7 @@ typedef struct
    {
       EventSubscription_t onDataModelChange;
       I_DataModel_t *dataModel;
-      const DefrostData_t *defrostParametricData;
+      const DefrostHeaterOnData_t *heaterOnData;
       const DefrostHeaterMaxOnTimeConfiguration_t *config;
    } _private;
 } DefrostHeaterMaxOnTime_t;
@@ -43,6 +43,7 @@ typedef struct
 void DefrostHeaterMaxOnTime_Init(
    DefrostHeaterMaxOnTime_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostHeaterMaxOnTimeConfiguration_t *config);
+   const DefrostHeaterMaxOnTimeConfiguration_t *config,
+   const DefrostHeaterOnData_t *heaterOnData);
 
 #endif

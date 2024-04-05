@@ -8,24 +8,24 @@
 #ifndef FOURDOORDOORPLUGIN_H
 #define FOURDOORDOORPLUGIN_H
 
-#include "AllFreshFoodDoorStatus.h"
 #include "I_DataModel.h"
 #include "SabbathInhibitDoors.h"
 #include "OverrideArbiter.h"
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "ConvertibleCompartmentDoorStateResolver.h"
+#include "ErdLogicService.h"
 
 typedef struct
 {
    struct
    {
-      AllFreshFoodDoorStatus_t allFreshFoodDoorStatus;
       SabbathInhibitDoors_t sabbathInhibitDoors;
       OverrideArbiter_t leftSideFreshFoodDoorOverrideArbiter;
       OverrideArbiter_t rightSideFreshFoodDoorOverrideArbiter;
       OverrideArbiter_t convertibleCompartmentDoorOverrideArbiter;
       OverrideArbiter_t bottomFreezerDrawerOverrideArbiter;
       ConvertibleCompartmentDoorStateResolver_t convertibleCompartmentDoorStateResolver;
+      ErdLogicService_t freshFoodDoorsErdLogicService;
    } _private;
 } FourDoorDoorPlugin_t;
 
