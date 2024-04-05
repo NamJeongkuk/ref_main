@@ -2461,6 +2461,20 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Fresh Food Coldest Setpoint Winning Vote Erd",
+               "name": "Erd_FreshFoodSetpoint_ColdestSetpointWinningVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Coldest Setpoint Winning Vote Erd",
+               "name": "Erd_FreezerSetpoint_ColdestSetpointWinningVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Freezer Defrost Heater Winning Vote Erd",
                "name": "Erd_FreezerDefrostHeater_WinningVoteErd",
                "read": true,
