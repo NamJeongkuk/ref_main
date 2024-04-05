@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef ALLFREEZERSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
-#define ALLFREEZERSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
+#ifndef SINGLEDOORFREEZERSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
+#define SINGLEDOORFREEZERSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
 
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "CompressorPlugin.h"
@@ -16,7 +16,7 @@
 #include "SingleDoorFreezerSetpointPlugin.h"
 #include "SingleDoorFreezerCoolingSystemSensorFilteringPlugin.h"
 #include "SingleDoorFreezerFanPlugin.h"
-#include "AllFreezerDefrostPlugin.h"
+#include "SingleDoorFreezerDefrostPlugin.h"
 #include "AllFreezerDamperPlugin.h"
 #include "FreshFoodAndFreezerGridPlugin.h"
 
@@ -31,14 +31,14 @@ typedef struct
       CompressorPlugin_t compressorPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
-      AllFreezerDefrostPlugin_t allFreezerDefrostPlugin;
+      SingleDoorFreezerDefrostPlugin_t singleDoorFreezerDefrostPlugin;
       AllFreezerDamperPlugin_t allFreezerDamperPlugin;
       FreshFoodAndFreezerGridPlugin_t freshFoodAndFreezerGridPlugin;
    } _private;
-} AllFreezerSingleEvaporatorCoolingSystemPlugin_t;
+} SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_t;
 
-void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
-   AllFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
+void SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_Init(
+   SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel);
 
 #endif

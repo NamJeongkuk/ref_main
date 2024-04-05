@@ -137,6 +137,7 @@
 #include "RecessLightOnRequest.h"
 #include "IceMakerStateMachineState.h"
 #include "SealedSystemValvePosition.h"
+#include "SealedSystemValveRequestManager.h"
 #include "FeaturePanMode.h"
 
 // clang-format off

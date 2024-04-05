@@ -18,6 +18,7 @@
 #include "FourDoorBooleanRequestStatusUpdaterPlugin.h"
 #include "FourDoorStaggeredHeater.h"
 #include "FourDoorDoorPlugin.h"
+#include "FourDoorFactoryPlugin.h"
 #include "FeaturePanPlugin.h"
 
 typedef struct
@@ -33,6 +34,7 @@ typedef struct
       FourDoorBooleanRequestStatusUpdaterPlugin_t booleanRequestStatusUpdaterPlugin;
       FourDoorStaggeredHeater_t staggeredHeaterPlugin;
       FourDoorDoorPlugin_t fourDoorDoorPlugin;
+      FourDoorFactoryPlugin_t factoryPlugin;
       FeaturePanPlugin_t FeaturePanPlugin;
    } _private;
 } FourDoorConfigurationPlugin_t;

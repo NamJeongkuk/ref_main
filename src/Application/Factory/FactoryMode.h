@@ -14,22 +14,23 @@
 
 typedef struct
 {
-   Erd_t factoryVoteErd;
+   Erd_t erd;
    uint32_t offValue;
-} FactoryVotePair_t;
+} ErdOffValuePair_t;
 
 typedef struct
 {
-   const FactoryVotePair_t *pairs;
+   const ErdOffValuePair_t *pairs;
    uint16_t numberOfPairs;
-} FactoryVoteList_t;
+} FactoryModeList_t;
 
 typedef struct
 {
    Erd_t factoryModeTimeErd; // uint8_t
    Erd_t broadcastResetRequestErd; // Signal_t
-   const FactoryVoteList_t factoryVoteList;
+   const FactoryModeList_t factoryVoteList;
    const ErdList_t *lightVoteErdList;
+   const FactoryModeList_t *erdValuePairList;
 } FactoryModeConfiguration_t;
 
 typedef struct

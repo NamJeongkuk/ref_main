@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef ALLFREEZERDEFROSTPLUGIN_H
-#define ALLFREEZERDEFROSTPLUGIN_H
+#ifndef SINGLEDOORFREEZERDEFROSTPLUGIN_H
+#define SINGLEDOORFREEZERDEFROSTPLUGIN_H
 
 #include "I_DataModel.h"
 #include "Defrost.h"
@@ -34,13 +34,13 @@ typedef struct
       DefrostTestRequestHandler_t defrostTestRequestHandler;
       SabbathReadyToDefrost_t sabbathReadyToDefrost;
    } _private;
-} AllFreezerDefrostPlugin_t;
+} SingleDoorFreezerDefrostPlugin_t;
 
 /*!
  *
  * @param instance
  * @param dataModel
  */
-void AllFreezerDefrostPlugin_Init(AllFreezerDefrostPlugin_t *instance, I_DataModel_t *dataModel);
+void SingleDoorFreezerDefrostPlugin_Init(SingleDoorFreezerDefrostPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

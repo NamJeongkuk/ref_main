@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "AllFreezerDefrostPlugin.h"
+#include "SingleDoorFreezerDefrostPlugin.h"
 #include "DefrostConfiguration.h"
 #include "SystemErds.h"
 #include "uassert.h"
@@ -91,7 +91,7 @@ static void UpdateDefrostStateBasedOnDefrostHsmState(I_DataModel_t *dataModel)
       &initialDefrostState);
 }
 
-void AllFreezerDefrostPlugin_Init(AllFreezerDefrostPlugin_t *instance, I_DataModel_t *dataModel)
+void SingleDoorFreezerDefrostPlugin_Init(SingleDoorFreezerDefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
    DataModel_Read(

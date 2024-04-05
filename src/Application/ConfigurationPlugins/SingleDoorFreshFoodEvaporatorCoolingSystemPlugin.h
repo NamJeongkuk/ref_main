@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef ALLFRESHFOODSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
-#define ALLFRESHFOODSINGLEEVAPORATORCOOLINGSYSTEMPLUGIN_H
+#ifndef SINGLDOORFRESHFOODEVAPORATORCOOLINGSYSTEMPLUGIN_H
+#define SINGLDOORFRESHFOODEVAPORATORCOOLINGSYSTEMPLUGIN_H
 
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "CompressorPlugin.h"
@@ -36,10 +36,10 @@ typedef struct
       FreshFoodAndFreezerGridPlugin_t freshFoodAndFreezerGridPlugin;
       FreshFoodNonHeatedCycleDefrostPlugin_t freshFoodNonHeatedCycleDefrostPlugin;
    } _private;
-} AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t;
+} SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_t;
 
-void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(
-   AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t *instance,
+void SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_Init(
+   SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel);
 
 #endif

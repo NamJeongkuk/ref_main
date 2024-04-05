@@ -15,11 +15,13 @@ extern "C"
 }
 
 #include "CppUTest/TestHarness.h"
+#include "CppUTestExt/MockSupport.h"
 #include "DataModel_TestDouble.h"
 #include "TimerModule_TestDouble.h"
 #include "Signal.h"
 #include "Constants_Time.h"
 #include "uassert_test.h"
+#include "DataModel_Mock.h"
 
 #define Given
 #define When
@@ -49,7 +51,10 @@ enum
    Erd_FreshFoodBackWallLightFactoryVote,
    Erd_FreshFoodTopLightFactoryVote,
    Erd_FreezerBackWallLightFactoryVote,
-   Erd_FreezerTopLightFactoryVote
+   Erd_FreezerTopLightFactoryVote,
+   Erd_SealedSystemValveHomingRequest,
+   Erd_U16_NonVotingStruct,
+   Erd_U32_NonVotingStruct
 };
 
 static bool booleanOnValue = true;
@@ -91,10 +96,13 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_FreshFoodBackWallLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
    { Erd_FreshFoodTopLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
    { Erd_FreezerBackWallLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
-   { Erd_FreezerTopLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) }
+   { Erd_FreezerTopLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
+   { Erd_SealedSystemValveHomingRequest, sizeof(bool) },
+   { Erd_U16_NonVotingStruct, sizeof(uint16_t) },
+   { Erd_U32_NonVotingStruct, sizeof(uint32_t) }
 };
 
-static const FactoryVotePair_t factoryVotePairs[] = {
+static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_Boolean_FactoryVoteStruct, booleanOffValue },
    { Erd_U8_FactoryVoteStruct, U8OffValue },
    { Erd_U16_FactoryVoteStruct, U16OffValue },
@@ -104,17 +112,28 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_U32_AnotherFactoryVoteStruct, U32AnotherOffValue }
 };
 
-static const FactoryVotePair_t factoryVotePairsWithU64Vote[] = {
+static const ErdOffValuePair_t factoryVotePairsWithU64Vote[] = {
    { Erd_U64_FactoryVoteStruct, 0 },
    { Erd_U64_AnotherFactoryVoteStruct, 0 }
 };
 
-static const FactoryVoteList_t factoryVoteList = {
+static const FactoryModeList_t factoryVoteList = {
    .pairs = factoryVotePairs,
    .numberOfPairs = NUM_ELEMENTS(factoryVotePairs)
 };
 
-static const FactoryVoteList_t factoryVoteListWithU64Vote = {
+static const ErdOffValuePair_t nonVotingPairs[] = {
+   { Erd_SealedSystemValveHomingRequest, true },
+   { Erd_U16_NonVotingStruct, U16AnotherOffValue },
+   { Erd_U32_NonVotingStruct, U32AnotherOffValue }
+};
+
+static const FactoryModeList_t nonVotingPairsList = {
+   .pairs = nonVotingPairs,
+   .numberOfPairs = NUM_ELEMENTS(nonVotingPairs)
+};
+
+static const FactoryModeList_t factoryVoteListWithU64Vote = {
    .pairs = factoryVotePairsWithU64Vote,
    .numberOfPairs = NUM_ELEMENTS(factoryVotePairsWithU64Vote)
 };
@@ -135,15 +154,61 @@ static const FactoryModeConfiguration_t config = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .factoryVoteList = factoryVoteList,
-   .lightVoteErdList = &lightVoteErdList
+   .lightVoteErdList = &lightVoteErdList,
+   .erdValuePairList = &nonVotingPairsList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .factoryVoteList = factoryVoteListWithU64Vote,
-   .lightVoteErdList = &lightVoteErdList
+   .lightVoteErdList = &lightVoteErdList,
+   .erdValuePairList = NULL
 };
+
+static const FactoryModeConfiguration_t configU64NonVote = {
+   .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
+   .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
+   .factoryVoteList = factoryVoteList,
+   .lightVoteErdList = &lightVoteErdList,
+   .erdValuePairList = &factoryVoteListWithU64Vote
+};
+
+static const FactoryModeConfiguration_t votingOnlyErdConfig = {
+   .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
+   .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
+   .factoryVoteList = factoryVoteList,
+   .lightVoteErdList = &lightVoteErdList,
+   .erdValuePairList = NULL
+};
+
+static void OnDataModelChange(void *context, const void *_args)
+{
+   REINTERPRET(dataModel, context, I_DataModel_t *);
+   REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
+
+   if(args->erd == nonVotingPairs[0].erd)
+   {
+      REINTERPRET(data, args->data, const bool *);
+
+      mock()
+         .actualCall("Non Voting Pairs Write")
+         .onObject(dataModel)
+         .withParameter("Erd", args->erd)
+         .withParameter("Data", *data);
+   }
+   else if(args->erd == factoryVotePairs[0].erd)
+   {
+      REINTERPRET(data, args->data, const BooleanVotedState_t *);
+
+      mock()
+         .actualCall("Voting Pairs Write")
+         .onObject(dataModel)
+         .withParameter("Erd", args->erd)
+         .withParameter("Care", data->care)
+         .withParameter("State", data->state);
+   }
+}
 
 TEST_GROUP(FactoryMode)
 {
@@ -151,6 +216,7 @@ TEST_GROUP(FactoryMode)
    I_DataModel_t *dataModel;
    FactoryMode_t instance;
    TimerModule_TestDouble_t timerModuleDouble;
+   EventSubscription_t dataModelTestDoubleOnChangeEventSubscription;
 
    void setup()
    {
@@ -164,9 +230,34 @@ TEST_GROUP(FactoryMode)
       FactoryMode_Init(&instance, dataModel, &config, &timerModuleDouble.timerModule);
    }
 
+   void ModuleIsInitializedWithDataModelMock()
+   {
+      EventSubscription_Init(
+         &dataModelTestDoubleOnChangeEventSubscription,
+         dataModel,
+         OnDataModelChange);
+      Event_Subscribe(
+         dataModel->OnDataChange,
+         &dataModelTestDoubleOnChangeEventSubscription);
+
+      ModuleIsInitialized();
+
+      mock().strictOrder();
+   }
+
    void ModuleIsInitializedWithU64Vote()
    {
       FactoryMode_Init(&instance, dataModel, &configU64Vote, &timerModuleDouble.timerModule);
+   }
+
+   void ModuleIsInitializedWithU64NonVote()
+   {
+      FactoryMode_Init(&instance, dataModel, &configU64NonVote, &timerModuleDouble.timerModule);
+   }
+
+   void ModuleIsInitializedWithVotingOnlyConfig()
+   {
+      FactoryMode_Init(&instance, dataModel, &votingOnlyErdConfig, &timerModuleDouble.timerModule);
    }
 
    void FactoryModeEnableRequestInMinutesIs(uint8_t value)
@@ -310,6 +401,65 @@ TEST_GROUP(FactoryMode)
    {
       DataModel_Read(dataModel, Erd_BroadcastResetRequestSignal, currentValue);
    }
+
+   void SealedSystemHomeRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValveHomingRequest, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenSealedSystemHomeRequestTo(bool request)
+   {
+      DataModel_Write(dataModel, Erd_SealedSystemValveHomingRequest, &request);
+   }
+
+   void DoNothingWithErdValuePairs()
+   {
+   }
+
+   void GivenU16StructSetTo(uint16_t value)
+   {
+      DataModel_Write(dataModel, Erd_U16_NonVotingStruct, &value);
+   }
+
+   void GivenU16StructShouldBe(uint16_t value)
+   {
+      uint16_t actual;
+      DataModel_Read(dataModel, Erd_U16_NonVotingStruct, &actual);
+      CHECK_EQUAL(value, actual);
+   }
+
+   void GivenU32StructSetTo(uint32_t value)
+   {
+      DataModel_Write(dataModel, Erd_U32_NonVotingStruct, &value);
+   }
+
+   void GivenU32StructShouldBe(uint32_t value)
+   {
+      uint32_t actual;
+      DataModel_Read(dataModel, Erd_U32_NonVotingStruct, &actual);
+      CHECK_EQUAL(value, actual);
+   }
+
+   void ErdValuePairsShouldBeWrittenTo()
+   {
+      mock()
+         .expectOneCall("Non Voting Pairs Write")
+         .onObject(dataModel)
+         .withParameter("Erd", nonVotingPairs[0].erd)
+         .withParameter("Data", true);
+   }
+
+   void VotingErdsShouldBeWrittenTo()
+   {
+      mock()
+         .expectOneCall("Voting Pairs Write")
+         .onObject(dataModel)
+         .withParameter("Erd", factoryVotePairs[0].erd)
+         .withParameter("Care", Vote_Care)
+         .withParameter("State", booleanOffValue);
+   }
 };
 
 TEST(FactoryMode, ShouldInitialize)
@@ -426,4 +576,55 @@ TEST(FactoryMode, ShouldDecreaseFactoryModeEnableRequestInMinutesByOneEveryMinut
 
    After(1);
    FactoryModeEnableRequestInMinutesShouldBe(ZeroMinutes);
+}
+
+TEST(FactoryMode, ShouldWriteToErdValuePairsWhenFactoryModeChanges)
+{
+   GivenSealedSystemHomeRequestTo(false);
+   Given ModuleIsInitialized();
+
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
+   SealedSystemHomeRequestShouldBe(true);
+}
+
+TEST(FactoryMode, ShouldHandleNullErdValuePairsWhenFactoryModeChanges)
+{
+   Given ModuleIsInitializedWithVotingOnlyConfig();
+
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
+   DoNothingWithErdValuePairs();
+}
+
+TEST(FactoryMode, ShouldHandleUint16InerdValuePairList)
+{
+   GivenU16StructSetTo(U16ChangeValue);
+
+   Given ModuleIsInitialized();
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
+   GivenU16StructShouldBe(U16AnotherOffValue);
+}
+
+TEST(FactoryMode, ShouldHandleUint32InerdValuePairList)
+{
+   GivenU32StructSetTo(U32ChangeValue);
+   Given ModuleIsInitialized();
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
+   GivenU32StructShouldBe(U32AnotherOffValue);
+}
+
+TEST(FactoryMode, ShouldAssertWhenOversizedNonVoteErdIsIncludedInConfig)
+{
+   Given FactoryModeEnableRequestInMinutesIs(ZeroMinutes);
+   Given ModuleIsInitializedWithU64NonVote();
+
+   ShouldFailAssertionWhen(FactoryModeEnableRequestInMinutesIs(OneMinute));
+}
+
+TEST(FactoryMode, ShouldWriteErdValuePairsBeforeWritingVotingErds)
+{
+   ModuleIsInitializedWithDataModelMock();
+
+   ErdValuePairsShouldBeWrittenTo();
+   VotingErdsShouldBeWrittenTo();
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
 }

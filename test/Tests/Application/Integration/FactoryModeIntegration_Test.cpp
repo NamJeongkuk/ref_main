@@ -14,10 +14,14 @@ extern "C"
 #include "DataModelErdPointerAccess.h"
 #include "VoteType.h"
 #include "Constants_Time.h"
+#include "EventQueueInterruptSafePlugin.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "ReferDataModel_TestDouble.h"
+#include "TddPersonality.h"
+#include "Interrupt_TestDouble.h"
+#include <stdio.h>
 
 enum
 {
@@ -69,7 +73,7 @@ static const Erd_t uint8BspErdList[] = {
    Erd_TwistIceMakerMotorDriveEnable
 };
 
-static const FactoryVotePair_t factoryVotePairs[] = {
+static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_CompressorSpeed_FactoryVote, CompressorSpeed_Off },
    { Erd_CondenserFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_FreezerEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
@@ -105,6 +109,7 @@ TEST_GROUP(FactoryModeIntegration)
    ResetReason_t resetReason;
    ReferDataModel_TestDouble_t dataModelDouble;
    TimerModule_TestDouble_t *timerModuleDouble;
+   Interrupt_TestDouble_t *interruptTestDouble;
 
    void setup()
    {
@@ -112,6 +117,7 @@ TEST_GROUP(FactoryModeIntegration)
       dataModel = dataModelDouble.dataModel;
       timerModuleDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleDouble->timerModule);
+      interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
    }
 
    void GivenTheApplicationIsInitialized()
@@ -152,7 +158,7 @@ TEST_GROUP(FactoryModeIntegration)
       {
          uint8_t erdSize = DataModel_SizeOf(
             dataModel,
-            factoryVotePairs[i].factoryVoteErd);
+            factoryVotePairs[i].erd);
 
          switch(erdSize)
          {
@@ -160,7 +166,7 @@ TEST_GROUP(FactoryModeIntegration)
                U8Vote_t u8VoteErd;
                DataModel_Read(
                   dataModel,
-                  factoryVotePairs[i].factoryVoteErd,
+                  factoryVotePairs[i].erd,
                   &u8VoteErd);
 
                CHECK_EQUAL(Vote_Care, u8VoteErd.vote);
@@ -172,7 +178,7 @@ TEST_GROUP(FactoryModeIntegration)
                U16Vote_t u16VoteErd;
                DataModel_Read(
                   dataModel,
-                  factoryVotePairs[i].factoryVoteErd,
+                  factoryVotePairs[i].erd,
                   &u16VoteErd);
 
                CHECK_EQUAL(Vote_Care, u16VoteErd.vote);
@@ -184,7 +190,7 @@ TEST_GROUP(FactoryModeIntegration)
                U32Vote_t u32VoteErd;
                DataModel_Read(
                   dataModel,
-                  factoryVotePairs[i].factoryVoteErd,
+                  factoryVotePairs[i].erd,
                   &u32VoteErd);
 
                CHECK_EQUAL(Vote_Care, u32VoteErd.vote);
@@ -533,6 +539,14 @@ TEST_GROUP(FactoryModeIntegration)
    {
       DataModel_Write(dataModel, Erd_IceMaker0_TwistMotorControlRequest, &request);
    }
+
+   void AfterNInterrupts(int numberOfInterrupts)
+   {
+      for(int i = 0; i < numberOfInterrupts; i++)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(interruptTestDouble);
+      }
+   }
 };
 
 TEST(FactoryModeIntegration, ShouldTurnAllLoadsOffWhenEnteringFactoryMode)
@@ -772,4 +786,97 @@ TEST(FactoryModeIntegration, ShouldSetBspTwistMotorWhenIceMaker0FactoryVoteTrigg
 
    After(OneMinute * MSEC_PER_MIN);
    TheTwistIceMakerMotorDriveEnableShouldBe(ENABLED);
+}
+
+TEST_GROUP(FactoryModeIntegration_FourDoor)
+{
+   Application_t instance;
+   I_DataModel_t *dataModel;
+   ResetReason_t resetReason;
+   ReferDataModel_TestDouble_t dataModelDouble;
+   TimerModule_TestDouble_t *timerModuleDouble;
+   Interrupt_TestDouble_t *interruptTestDouble;
+   const SealedSystemValveData_t *valveData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapFourDoor);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleDouble->timerModule);
+      interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
+      valveData = PersonalityParametricData_Get(dataModel)->sealedSystemValveData;
+   }
+
+   void GivenTheApplicationIsInitialized()
+   {
+      Application_Init(
+         &instance,
+         dataModel,
+         resetReason);
+   }
+
+   void GivenTheFactoryModeEnableRequestIs(uint8_t requestInMinutes)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FactoryModeEnableRequestInMinutes,
+         &requestInMinutes);
+   }
+
+   void AfterNInterrupts(int numberOfInterrupts)
+   {
+      for(int i = 0; i < numberOfInterrupts; i++)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(interruptTestDouble);
+      }
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleDouble, ticks);
+      AfterNInterrupts(ticks);
+      EventQueue_InterruptSafe_Run(EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue());
+   }
+
+   void SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_t expected)
+   {
+      SealedSystemValvePosition_t actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValveCurrentPosition, &actual);
+      CHECK_EQUAL(expected, actual);
+   };
+
+   void GivenResolvedPositionIs(SealedSystemValvePosition_t position)
+   {
+      SealedSystemValveVotedPosition_t votePosition = {
+         .position = position,
+         .care = Vote_Care
+      };
+      DataModel_Write(dataModel, Erd_SealedSystemValvePosition_ResolvedVote, &votePosition);
+   }
+
+   void GivenTheApplicationIsInitializedAndSealedSystemIsInStateC()
+   {
+      GivenTheApplicationIsInitialized();
+      After((valveData->refrigerantValvePowerUpTimeInSeconds + 1) * MSEC_PER_SEC);
+      SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_Home);
+
+      After((2 * valveData->excitationDelayInMilliseconds) + (valveData->positionDStep * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
+      SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_D);
+
+      GivenResolvedPositionIs(SealedSystemValvePosition_C);
+      After((2 * valveData->excitationDelayInMilliseconds) + ((valveData->positionCStep - valveData->positionDStep) * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
+      SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_C);
+   }
+};
+
+TEST(FactoryModeIntegration_FourDoor, ShouldSetSealedSystemToHomeBeforeSettingToPositionDWhenFactoryModeEnabled)
+{
+   GivenTheApplicationIsInitializedAndSealedSystemIsInStateC();
+   GivenTheFactoryModeEnableRequestIs(1);
+   After((2 * valveData->excitationDelayInMilliseconds) + ((valveData->numberOfStepsToHome) * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
+   SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_Home);
+
+   After((2 * valveData->excitationDelayInMilliseconds) + ((valveData->positionDStep) * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
+   SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_D);
 }

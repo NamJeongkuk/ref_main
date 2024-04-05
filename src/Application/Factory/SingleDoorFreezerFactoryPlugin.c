@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "SideBySideFactoryPlugin.h"
+#include "SingleDoorFreezerFactoryPlugin.h"
 #include "FactoryMode.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
@@ -16,9 +16,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_CompressorSpeed_FactoryVote, CompressorSpeed_Off },
    { Erd_CondenserFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_FreezerEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
-   { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
-   { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
-   { Erd_DamperHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker0_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker1_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker2_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
@@ -35,17 +32,13 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IceMaker0_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
-   { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
-   { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
+   { Erd_DisableMinimumCompressorTimes_FactoryVote, true }
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds
 };
 
 static const Erd_t lightVoteErds[] = {
-   Erd_FreshFoodBackWallLight_FactoryVote,
-   Erd_FreshFoodTopLight_FactoryVote,
    Erd_FreezerBackWallLight_FactoryVote,
    Erd_FreezerTopLight_FactoryVote
 };
@@ -63,10 +56,10 @@ static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryVoteList = {
       .pairs = factoryVotePairs,
       .numberOfPairs = NUM_ELEMENTS(factoryVotePairs),
-   },
+   }
 };
 
-void SideBySideFactoryPlugin_Init(SideBySideFactoryPlugin_t *instance, I_DataModel_t *dataModel)
+void SingleDoorFreezerFactoryPlugin_Init(SingleDoorFreezerFactoryPlugin_t *instance, I_DataModel_t *dataModel)
 {
    FactoryMode_Init(
       &instance->_private.factoryMode,

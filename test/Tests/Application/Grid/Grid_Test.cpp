@@ -299,7 +299,7 @@ TEST(Grid_DualEvap, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenD
    After(1);
 }
 
-TEST_GROUP(Grid_SingleDoorSingleEvapAllFreezer)
+TEST_GROUP(Grid_SingleDoorSingleEvapSingleDoorFreezer)
 {
    Grid_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -350,13 +350,13 @@ TEST_GROUP(Grid_SingleDoorSingleEvapAllFreezer)
    }
 };
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldNotRunCallbackOnInit)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldNotRunCallbackOnInit)
 {
    WhenTheModuleIsInitialized();
    NothingShouldHappen();
 }
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldRunGridFunctionAfterGivenPeriod)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldRunGridFunctionAfterGivenPeriod)
 {
    WhenTheModuleIsInitialized();
 
@@ -367,7 +367,7 @@ TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldRunGridFunctionAfterGivenPeriod)
    After(1);
 }
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldNotRunGridFunctionAfterOverrideIsEnabled)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldNotRunGridFunctionAfterOverrideIsEnabled)
 {
    WhenTheModuleIsInitialized();
    WhenTheGridOverrideEnableIs(true);
@@ -379,7 +379,7 @@ TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldNotRunGridFunctionAfterOverrideI
    After(1);
 }
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsEnabled)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsEnabled)
 {
    WhenTheModuleIsInitialized();
    WhenTheGridOverrideEnableIs(true);
@@ -388,7 +388,7 @@ TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldRunGridFunctionWhenOverrideSigna
    WhenTheGridOverrideSignalChanges();
 }
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldNotRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsDisabled)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldNotRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsDisabled)
 {
    WhenTheModuleIsInitialized();
    WhenTheGridOverrideEnableIs(false);
@@ -397,7 +397,7 @@ TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldNotRunGridFunctionWhenOverrideSi
    WhenTheGridOverrideSignalChanges();
 }
 
-TEST(Grid_SingleDoorSingleEvapAllFreezer, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenDisabled)
+TEST(Grid_SingleDoorSingleEvapSingleDoorFreezer, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenDisabled)
 {
    WhenTheModuleIsInitialized();
    WhenTheGridOverrideEnableIs(true);

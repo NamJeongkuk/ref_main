@@ -7,5 +7,5 @@ return sealed_system_valve({
   coil_excitation_delay_in_ms = 500,
   delay_between_steps_in_ms = 33,
   power_up_service_position = 'position_A',
-  power_up_time_in_seconds = 5
+  power_up_time_in_seconds = 120
 })

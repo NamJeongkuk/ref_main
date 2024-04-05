@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "SideBySideFactoryPlugin.h"
+#include "FourDoorFactoryPlugin.h"
 #include "FactoryMode.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
@@ -17,8 +17,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_CondenserFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_FreezerEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
-   { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
-   { Erd_DamperHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker0_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker1_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker2_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
@@ -36,17 +34,28 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
+   { Erd_FreshFoodEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
+   { Erd_ConvertibleCompartmentDamperPosition_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_ConvertibleCompartmentHeater_FactoryVote, HeaterState_Off },
+   { Erd_SealedSystemValvePosition_FactoryVote, SealedSystemValvePosition_D }
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds
+};
+
+static const ErdOffValuePair_t ErdValuePair[] = {
+   { Erd_SealedSystemValveHomingRequest, true }
+};
+
+static const FactoryModeList_t nonVotingPairsList = {
+   .pairs = ErdValuePair,
+   .numberOfPairs = NUM_ELEMENTS(ErdValuePair)
 };
 
 static const Erd_t lightVoteErds[] = {
    Erd_FreshFoodBackWallLight_FactoryVote,
    Erd_FreshFoodTopLight_FactoryVote,
-   Erd_FreezerBackWallLight_FactoryVote,
    Erd_FreezerTopLight_FactoryVote
 };
 
@@ -59,14 +68,14 @@ static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .lightVoteErdList = &lightVoteErdList,
-   .erdValuePairList = NULL,
+   .erdValuePairList = &nonVotingPairsList,
    .factoryVoteList = {
       .pairs = factoryVotePairs,
       .numberOfPairs = NUM_ELEMENTS(factoryVotePairs),
-   },
+   }
 };
 
-void SideBySideFactoryPlugin_Init(SideBySideFactoryPlugin_t *instance, I_DataModel_t *dataModel)
+void FourDoorFactoryPlugin_Init(FourDoorFactoryPlugin_t *instance, I_DataModel_t *dataModel)
 {
    FactoryMode_Init(
       &instance->_private.factoryMode,

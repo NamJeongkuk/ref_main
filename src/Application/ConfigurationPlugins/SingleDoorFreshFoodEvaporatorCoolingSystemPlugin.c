@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "AllFreshFoodSingleEvaporatorCoolingSystemPlugin.h"
+#include "SingleDoorFreshFoodEvaporatorCoolingSystemPlugin.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
@@ -28,8 +28,8 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    }
 };
 
-void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(
-   AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t *instance,
+void SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_Init(
+   SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);

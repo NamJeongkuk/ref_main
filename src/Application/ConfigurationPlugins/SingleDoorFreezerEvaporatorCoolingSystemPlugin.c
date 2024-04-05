@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "AllFreezerSingleEvaporatorCoolingSystemPlugin.h"
+#include "SingleDoorFreezerEvaporatorCoolingSystemPlugin.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
@@ -26,12 +26,12 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
    .coolingSystemRequestVoteList = {
       .pairs = votingPairs,
-      .numberOfPairs = NUM_ELEMENTS(votingPairs),
+      .numberOfPairs = NUM_ELEMENTS(votingPairs)
    }
 };
 
-void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
-   AllFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
+void SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_Init(
+   SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
@@ -51,7 +51,6 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 
-   AllFreezerDefrostPlugin_Init(&instance->_private.allFreezerDefrostPlugin, dataModel);
-
+   SingleDoorFreezerDefrostPlugin_Init(&instance->_private.singleDoorFreezerDefrostPlugin, dataModel);
    AllFreezerDamperPlugin_Init(&instance->_private.allFreezerDamperPlugin, dataModel);
 }

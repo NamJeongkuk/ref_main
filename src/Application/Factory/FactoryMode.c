@@ -62,8 +62,44 @@ static void FillOffValueInFactoryVote(void *context, void *factoryVoteData)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->factoryVoteList.pairs[factoryVoteErdCallbackContext->index].factoryVoteErd,
+      instance->_private.config->factoryVoteList.pairs[factoryVoteErdCallbackContext->index].erd,
       factoryVoteData);
+}
+
+static void FillOffValueInErdValuePairs(void *context, void *data)
+{
+   FactoryVoteErdCallbackContext_t *factoryVoteErdCallbackContext = context;
+   FactoryMode_t *instance = factoryVoteErdCallbackContext->instance;
+
+   switch(factoryVoteErdCallbackContext->erdSize)
+   {
+      case sizeof(uint8_t): {
+         uint8_t *value = data;
+         *value = instance->_private.config->erdValuePairList->pairs[factoryVoteErdCallbackContext->index].offValue;
+      }
+      break;
+
+      case sizeof(uint16_t): {
+         uint16_t *value = data;
+         *value = instance->_private.config->erdValuePairList->pairs[factoryVoteErdCallbackContext->index].offValue;
+      }
+      break;
+
+      case sizeof(uint32_t): {
+         uint32_t *value = data;
+         *value = instance->_private.config->erdValuePairList->pairs[factoryVoteErdCallbackContext->index].offValue;
+      }
+      break;
+
+      default:
+         uassert(!"Erd size not supported");
+         break;
+   }
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->erdValuePairList->pairs[factoryVoteErdCallbackContext->index].erd,
+      data);
 }
 
 static void FactoryModeOneMinuteTimerExpired(void *context)
@@ -105,7 +141,7 @@ static void VoteOffForAllTheLoads(void *context)
    {
       uint8_t erdSize = DataModel_SizeOf(
          instance->_private.dataModel,
-         instance->_private.config->factoryVoteList.pairs[erdIndex].factoryVoteErd);
+         instance->_private.config->factoryVoteList.pairs[erdIndex].erd);
 
       FactoryVoteErdCallbackContext_t factoryVoteErdCallbackContext = {
          instance,
@@ -119,6 +155,26 @@ static void VoteOffForAllTheLoads(void *context)
    VoteOffForAllLights(instance);
 }
 
+static void WriteOffToErdValuePairs(void *context)
+{
+   FactoryMode_t *instance = context;
+
+   for(uint8_t erdIndex = 0; erdIndex < instance->_private.config->erdValuePairList->numberOfPairs; erdIndex++)
+   {
+      uint8_t erdSize = DataModel_SizeOf(
+         instance->_private.dataModel,
+         instance->_private.config->erdValuePairList->pairs[erdIndex].erd);
+
+      FactoryVoteErdCallbackContext_t factoryVoteErdCallbackContext = {
+         instance,
+         erdIndex,
+         erdSize
+      };
+
+      StackAllocator_Allocate(erdSize, FillOffValueInErdValuePairs, &factoryVoteErdCallbackContext);
+   }
+}
+
 static void FactoryModeTimeChanged(void *context, const void *args)
 {
    FactoryMode_t *instance = context;
@@ -128,6 +184,11 @@ static void FactoryModeTimeChanged(void *context, const void *args)
    {
       if(instance->_private.factoryModeEntered == false)
       {
+         if(instance->_private.config->erdValuePairList != NULL)
+         {
+            WriteOffToErdValuePairs(instance);
+         }
+
          VoteOffForAllTheLoads(instance);
          instance->_private.factoryModeEntered = true;
       }
