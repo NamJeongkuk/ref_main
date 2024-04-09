@@ -160,11 +160,7 @@ PARAMETRIC_HASH:=$(shell cd Parametric && git rev-parse --short HEAD)
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/doc', to = 'doc' })
-$(call add_to_package,{ from = 'doc/lighthouse_data_collection.json', to = 'doc' })
-$(call add_to_package,{ from = 'doc/lighthouse_erd_gui.json', to = 'doc' })
-$(call add_to_package,{ from = 'doc/lighthouse_laboratorio_gui.json', to = 'doc' })
-$(call add_to_package,{ from = 'doc/wifi-erd-definitions.json', to = 'doc' })
-$(call add_to_package,{ from = 'doc/hardware_gui_for_lighthouse.json', to = 'doc' })
+$(call add_to_package,{ from = 'doc/*.json', to = 'doc' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).apl', to = 'binaries/$(TARGET).apl', version = true })
