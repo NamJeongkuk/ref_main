@@ -12,7 +12,7 @@ describe('FeaturePan', function()
     return require 'lua-common'.table.merge({
       feature_pan_warmup_slope_lower_limit_in_degfx100_per_minute = 100,
       feature_pan_warmup_slope_upper_limit_in_degfx100_per_minute = 200,
-      feature_pan_heater_high_ambient_temperature_limit = 8000,
+      feature_pan_heater_high_ambient_temperature_limit_degFx100 = 8000,
       fresh_food_fan_deli_cooling_speed = 'low_speed'
     }, overrides or {})
   end
@@ -37,10 +37,10 @@ describe('FeaturePan', function()
     end)
   end)
 
-  it('should assert if feature_pan_heater_high_ambient_temperature_limit is not in range', function()
-    should_fail_with('feature_pan_heater_high_ambient_temperature_limit=32768 must be in [-32768, 32767]', function()
+  it('should assert if feature_pan_heater_high_ambient_temperature_limit_degFx100 is not in range', function()
+    should_fail_with('feature_pan_heater_high_ambient_temperature_limit_degFx100=32768 must be in [-32768, 32767]', function()
       feature_pan(generate_config({
-        feature_pan_heater_high_ambient_temperature_limit = 32768
+        feature_pan_heater_high_ambient_temperature_limit_degFx100 = 32768
       }))
     end)
   end)
@@ -66,7 +66,7 @@ describe('FeaturePan', function()
     local actual = feature_pan({
       feature_pan_warmup_slope_lower_limit_in_degfx100_per_minute = 100,
       feature_pan_warmup_slope_upper_limit_in_degfx100_per_minute = 200,
-      feature_pan_heater_high_ambient_temperature_limit = 8000,
+      feature_pan_heater_high_ambient_temperature_limit_degFx100 = 8000,
       fresh_food_fan_deli_cooling_speed = 'low_speed'
     })
 
