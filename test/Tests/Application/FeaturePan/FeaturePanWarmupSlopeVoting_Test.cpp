@@ -27,7 +27,7 @@ enum
 static const FeaturePanData_t featurePanData = {
    .featurePanWarmupSlopeLowerLimitInDegFx100PerMinute = 100,
    .featurePanWarmupSlopeUpperLimitInDegFx100PerMinute = 200,
-   .featurePanHeaterHighAmbientTemperatureLimit = 8000,
+   .featurePanHeaterHighAmbientTemperatureLimitInDegFx100 = 8000,
    .freshFoodFanDeliCoolingSpeed = FanSpeed_Low,
 };
 

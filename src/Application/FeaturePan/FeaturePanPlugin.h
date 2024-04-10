@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "FeaturePanAsConvertibleCompartmentDualEvapFanVoting.h"
+#include "FeaturePanHeaterDisablingVoting.h"
 #include "FeaturePanWarmupSlopeVoting.h"
 
 typedef struct
@@ -18,6 +19,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t featurePanAsConvertibleCompartmentDualEvapFanVoting;
+      FeaturePanHeaterDisablingVoting_t featurePanHeaterDisablingVoting;
       FeaturePanWarmupSlopeVoting_t featurePanWarmupSlopeVoting;
    } _private;
 } FeaturePanPlugin_t;

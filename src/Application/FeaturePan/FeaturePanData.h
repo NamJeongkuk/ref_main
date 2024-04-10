@@ -15,7 +15,7 @@ typedef struct
 {
    int16_t featurePanWarmupSlopeLowerLimitInDegFx100PerMinute;
    int16_t featurePanWarmupSlopeUpperLimitInDegFx100PerMinute;
-   TemperatureDegFx100_t featurePanHeaterHighAmbientTemperatureLimit;
+   TemperatureDegFx100_t featurePanHeaterHighAmbientTemperatureLimitInDegFx100;
    FanSpeed_t freshFoodFanDeliCoolingSpeed;
 } FeaturePanData_t;
 

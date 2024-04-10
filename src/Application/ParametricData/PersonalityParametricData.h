@@ -38,6 +38,7 @@
 #include "CabinetTemperatureExceededData.h"
 #include "SealedSystemValveData.h"
 #include "FreshFoodNonHeatedCycleDefrostData.h"
+#include "FeaturePanData.h"
 
 enum
 {

@@ -27,6 +27,18 @@ static const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t dualEva
    .evapFanVote = Erd_FreezerEvapFanSpeed_ResolvedVote
 };
 
+static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingConvertibleCompartmentConfig = {
+   .featurePanModeErd = Erd_FeaturePanMode,
+   .heaterVotedErd = Erd_ConvertibleCompartmentHeater_DisableForAmbientTemperatureVote,
+   .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
+};
+
+static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingDeliPanConfig = {
+   .featurePanModeErd = Erd_FeaturePanMode,
+   .heaterVotedErd = Erd_DeliPanHeater_DisableForAmbientTemperatureVote,
+   .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
+};
+
 void FeaturePanPlugin_Init(
    FeaturePanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -41,6 +53,12 @@ void FeaturePanPlugin_Init(
          DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
          &featurePanWarmupSlopeVotingConvertibleCompartmentConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
+
+      FeaturePanHeaterDisablingVoting_Init(
+         &instance->_private.featurePanHeaterDisablingVoting,
+         dataModel,
+         &heaterDisablingVotingConvertibleCompartmentConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
    }
    else if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_DeliPan))
    {
@@ -49,6 +67,12 @@ void FeaturePanPlugin_Init(
          dataModel,
          DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
          &featurePanWarmupSlopeVotingDeliPanConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
+
+      FeaturePanHeaterDisablingVoting_Init(
+         &instance->_private.featurePanHeaterDisablingVoting,
+         dataModel,
+         &heaterDisablingVotingDeliPanConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
    }
 
