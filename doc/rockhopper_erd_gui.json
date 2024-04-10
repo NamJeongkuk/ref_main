@@ -3830,6 +3830,34 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Cross Ambient Window Average Temperature",
+          "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Fresh Food Cross Ambient Offset",
+          "name": "Erd_ConvertibleCompartmentAsFreshFood_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Freezer Cross Ambient Offset",
+          "name": "Erd_ConvertibleCompartmentAsFreezer_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Convertible Compartment Cross Ambient Offset",
           "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
           "read": true,

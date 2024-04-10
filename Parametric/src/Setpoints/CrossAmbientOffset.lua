@@ -26,6 +26,11 @@ return function(core)
         maximum_cross_ambient_offset_in_degfx100 = { constraint.i16 }
       }
     )
+
+    if (config.minimum_cross_ambient_offset_in_degfx100 > config.maximum_cross_ambient_offset_in_degfx100) then
+      error('minimum cross ambient offset should be less than maximum cross ambient offset', 2)
+    end
+
     return generate(config)
   end
 end

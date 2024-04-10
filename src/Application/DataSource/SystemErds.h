@@ -897,10 +897,12 @@ enum
    \
    ENTRY(Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,   0xF116, TemperatureDegFx100_t,                        Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100, 0xF117, TemperatureDegFx100_t,                        Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_ThermalShiftInDegFx100,       0xF118, TemperatureDegFx100_t,                        Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentAsFreshFood_CrossAmbientOffsetInDegFx100, 0xF118, TemperatureDegFx100_t,             Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentAsFreezer_CrossAmbientOffsetInDegFx100, 0xF119, TemperatureDegFx100_t,               Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_ThermalShiftInDegFx100,       0xF11A, TemperatureDegFx100_t,                        Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_IceCabinet_IceFormationOffsetInDegFx100,       0xF119, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceCabinet_IceFormationIsActive,               0xF11A, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceCabinet_IceFormationOffsetInDegFx100,       0xF11B, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceCabinet_IceFormationIsActive,               0xF11C, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_FreezerSetpointZone,                           0xF120, SetpointZone_t,                                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF121, SetpointZone_t,                                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \

@@ -11,6 +11,8 @@
 #include "ConvertibleCompartmentShiftOffsetCalculatorPlugin.h"
 #include "I16ErdAdder.h"
 #include "ResolvedSetpointWriter.h"
+#include "CrossAmbientOffsetCalculator.h"
+#include "OverrideArbiter.h"
 
 typedef struct
 {
@@ -19,6 +21,9 @@ typedef struct
       I16ErdAdder_t convertibleCompartmentErdAdderConfig;
       ResolvedSetpointWriter_t convertibleCompartmentResolvedSetpointWriter;
       ConvertibleCompartmentShiftOffsetCalculatorPlugin_t convertibleCompartmentShiftOffsetCalculatorPlugin;
+      CrossAmbientOffsetCalculator_t convertibleCompartmentAsFreshFoodOffsetCalculator;
+      CrossAmbientOffsetCalculator_t convertibleCompartmentAsFreezerOffsetCalculator;
+      OverrideArbiter_t convertibleCompartmentOffsetOverrideArbiter;
    } _private;
 } ConvertibleCompartmentAdjustedSetpointPlugin_t;
 

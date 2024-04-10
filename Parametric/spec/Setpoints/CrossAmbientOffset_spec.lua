@@ -44,6 +44,15 @@ describe('CrossAmbientOffset', function()
     end)
   end)
 
+  it('should assert if config.minimum_cross_ambient_offset_in_degfx100 is greater than config.maximum_cross_ambient_offset_in_degfx100', function()
+    should_fail_with('minimum cross ambient offset should be less than maximum cross ambient offset', function()
+      cross_ambient_offset(generate_config({
+        minimum_cross_ambient_offset_in_degfx100 = 1000,
+        maximum_cross_ambient_offset_in_degfx100 = -1000
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type for cross ambient offset', function()
     local expected = remove_whitespace([[
       structure(
