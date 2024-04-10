@@ -518,12 +518,47 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_DefrostState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_CurrentDefrostType",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_NextDefrostTypeOverride",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_NumberOfSecondaryOnlyDefrosts",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreezerDefrostHeater_ResolvedVote",
          "interval": 60000
       },
       {
          "namespace": "mb",
+         "name": "Erd_FreezerDefrostHeaterOnTimeInMinutes",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFoodDefrostHeater_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreshFoodDefrostHeaterOnTimeInMinutes",
          "interval": 60000
       },
       {
