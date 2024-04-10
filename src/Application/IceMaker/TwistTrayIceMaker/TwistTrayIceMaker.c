@@ -392,16 +392,10 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateFsmState(instance, IceMakerStateMachineState_Freeze);
          RequestHarvestCountCalculation(instance);
 
-         if(instance->_private.firstFreezeTransition)
+         if((!instance->_private.firstFreezeTransition) &&
+            SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
          {
-            instance->_private.firstFreezeTransition = false;
-         }
-         else
-         {
-            if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
-            {
-               SendFreezerIceRateSignal(instance);
-            }
+            SendFreezerIceRateSignal(instance);
          }
          break;
 
@@ -429,7 +423,8 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             {
                Fsm_Transition(fsm, State_Harvesting);
             }
-            else if(!FreezerIceRateIsActive(instance))
+            else if(!FreezerIceRateIsActive(instance) &&
+               !instance->_private.firstFreezeTransition)
             {
                SendFreezerIceRateSignal(instance);
             }
@@ -457,6 +452,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Fsm_Exit:
+         instance->_private.firstFreezeTransition = false;
          StopHarvestCountCalculation(instance);
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.doorHarvestDelayTimer);
          instance->_private.doorHarvestDelayHasElapsed = true;
