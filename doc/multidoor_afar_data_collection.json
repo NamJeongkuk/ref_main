@@ -108,7 +108,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_DamperPosition_ResolvedVote",
+         "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
          "interval": 60000
       },
       {
