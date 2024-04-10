@@ -1529,9 +1529,9 @@ enum
    ENTRY(Erd_IceCabinetThermistor_IsValidOverrideValue,     0xF489, bool,                                               Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceCabinetThermistor_IsValidResolved,          0xF48A, bool,                                               Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideRequest,         0xF489, bool,                                          Swap_No,      Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideValueInDegFx100, 0xF48A, TemperatureDegFx100_t,                         Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,      0xF48B, TemperatureDegFx100_t,                         Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideRequest,         0xF48B, bool,                                          Swap_No,      Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideValueInDegFx100, 0xF48C, TemperatureDegFx100_t,                         Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,      0xF48D, TemperatureDegFx100_t,                         Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_GpioGroupInterface,                            0xF49F, I_GpioGroup_t *,                                    Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                                       NotNv,         NotFault) \
    \
