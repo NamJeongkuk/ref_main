@@ -867,7 +867,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Number of Full Defrosts",
+               "displayName": "Number of Freezer Defrosts",
                "name": "Erd_NumberOfFreezerDefrosts",
                "read": true,
                "interval": 1000000000
@@ -930,11 +930,25 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Freezer Defrost Heater On Time In Minutes",
+               "name": "Erd_FreezerDefrostHeaterOnTimeInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Fresh Food Defrost Heater Defrost Vote",
                "name": "Erd_FreshFoodDefrostHeater_DefrostVote",
                "read": true,
                "interval": 1000000000
-            }
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Defrost Heater On Time In Minutes",
+               "name": "Erd_FreshFoodDefrostHeaterOnTimeInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
          ]
       },
       {
