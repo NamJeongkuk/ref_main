@@ -8,6 +8,7 @@ return personality({
   feature_pan_grid = import("../Grid/feature_pan_grid.lua"),
   sabbath = import("../Sabbath/sabbath.lua"),
   convertible_compartment = import("../ConvertibleCompartment/convertible_compartment.lua"),
+  feature_pan = import("../FeaturePan/feature_pan.lua"),
   sensors = import("../Sensor/sensors_enable_external_sensor_check_is_false.lua"),
   system_monitor = import("../SystemMonitor/system_monitor.lua"),
   compressor = import("../Compressor/variable_speed_cooling_mode_dependent_compressor.lua"),

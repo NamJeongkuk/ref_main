@@ -10,7 +10,7 @@ describe('Platform', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      compartments = { 'fresh_food', 'freezer', 'convertible' },
+      compartments = { 'fresh_food', 'freezer', 'convertible', 'deli_pan' },
       number_of_evaporators = 2
     }, overrides or {})
   end
@@ -28,19 +28,19 @@ describe('Platform', function()
   end)
 
   it('should require that compartments are in compartment_enum', function()
-    should_fail_with("compartments[1]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible' }", function()
+    should_fail_with("compartments[1]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible', 'deli_pan' }", function()
       platform(generate_config({
         compartments = { 'not a compartment' }
       }))
     end)
 
-    should_fail_with("compartments[2]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible' }", function()
+    should_fail_with("compartments[2]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible', 'deli_pan' }", function()
       platform(generate_config({
         compartments = { 'fresh_food', 'not a compartment' }
       }))
     end)
 
-    should_fail_with("compartments[2]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible' }", function()
+    should_fail_with("compartments[2]='not a compartment' must be in the set { 'fresh_food', 'freezer', 'convertible', 'deli_pan' }", function()
       platform(generate_config({
         compartments = { 'fresh_food', 'not a compartment', 'definitely not a compartment' }
       }))
@@ -50,7 +50,7 @@ describe('Platform', function()
   it('should generate a typed string with the correct data and type platform', function()
     local expected = remove_whitespace([[
       structure(
-        u8(7),
+        u8(15),
         u8(2)
       )
     ]])

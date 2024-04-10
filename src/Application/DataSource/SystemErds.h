@@ -842,7 +842,8 @@ enum
    ENTRY(Erd_FreshFoodEvap_FilteredTemperatureInDegFx100,                    0xF0D8, TemperatureDegFx100_t,             Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100,0xF0D9, TemperatureDegFx100_t,             Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100,  0xF0DA, TemperatureDegFx100_t,             Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceCabinet_FilteredTemperatureInDegFx100,                       0xF0DB, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceCabinet_FilteredTemperatureInDegFx100,                       0xF0DB, TemperatureDegFx100_t,             Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureInDegFx100,                          0xF0DC, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_Ambient_WindowAveragedTemperatureInDegFx100,      0xF0E0, TemperatureDegFx100_t,                           Swap_Range_S, Io_None, Sub_Y, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFood_LongTermAverageInDegFx100,              0xF0E1, TemperatureDegFx100_t,                           Swap_Range,   Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
@@ -1271,6 +1272,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentHeater_ResolvedVote,     0xF2F0, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartmentHeater_WinningVoteErd,   0xF2F1, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ConvertibleCompartmentHeater_FactoryVote,      0xF2F2, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,  0xF2F3, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_FreshFoodDefrostHeater_ResolvedVote,           0xF2FA, HeaterVotedState_t,                                 Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodDefrostHeater_WinningVoteErd,         0xF2FB, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1296,6 +1298,11 @@ enum
    ENTRY(Erd_DamperHeater_CoolingSystemOffVote,             0xF30D, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_DamperHeater_DamperFreezePreventionVote,       0xF30E, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_DamperHeater_DefrostHeaterSyncVote,            0xF30F, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_DeliPanHeater_ResolvedVote,                    0xF310, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPanHeater_WinningVoteErd,                  0xF311, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPanHeater_FactoryVote,                     0xF312, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPanHeater_WarmupSlopeVote,                 0xF313, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,                   0xF31A, DamperVotedPosition_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,                 0xF31B, WinningVoteErd_t,                          Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1521,6 +1528,10 @@ enum
    ENTRY(Erd_IceCabinetThermistor_IsValidOverrideRequest,   0xF488, bool,                                               Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceCabinetThermistor_IsValidOverrideValue,     0xF489, bool,                                               Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceCabinetThermistor_IsValidResolved,          0xF48A, bool,                                               Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideRequest,         0xF489, bool,                                          Swap_No,      Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureOverrideValueInDegFx100, 0xF48A, TemperatureDegFx100_t,                         Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,      0xF48B, TemperatureDegFx100_t,                         Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_GpioGroupInterface,                            0xF49F, I_GpioGroup_t *,                                    Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                                       NotNv,         NotFault) \
    \

@@ -8,6 +8,7 @@ return function(directory)
   import('Compressor/CoolingModeDependentCompressorSpeeds')
   import('Compressor/CoolingModeIndependentCompressorSpeeds')
   import('ConvertibleCompartment/ConvertibleCompartment')
+  import('FeaturePan/FeaturePan')
   import('Defrost/Defrost')
   import('Dispenser/Dispenser')
   import('Dispenser/DoorInhibitDispenseTable')
@@ -124,6 +125,7 @@ return function(directory)
   coolingModeDependentCompressorSpeeds = CoolingModeDependentCompressorSpeeds(core)
   compressorTimes = CompressorTimes(core)
   convertible_compartment = ConvertibleCompartment(core)
+  feature_pan = FeaturePan(core)
   cross_ambient_hysteresis_adjustment = CrossAmbientHysteresisAdjustment(core)
   defrost = Defrost(core)
   duty_cycle = DutyCycle(core)
@@ -231,6 +233,7 @@ return function(directory)
     cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds,
     cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds,
     convertible_compartment = convertible_compartment,
+    feature_pan = feature_pan,
     cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment,
     defrost = defrost,
     duty_cycle = duty_cycle,

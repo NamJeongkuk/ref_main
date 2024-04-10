@@ -2256,6 +2256,46 @@
       ]
     },
     {
+      "title": "Deli Pan",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Deli Pan Heater Resolved Vote",
+          "name": "Erd_DeliPanHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Deli Pan Heater Winning Vote ERD",
+          "name": "Erd_DeliPanHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Deli Pan Heater Factory Vote",
+          "name": "Erd_DeliPanHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Deli Pan Heater Warmup Slope Vote",
+          "name": "Erd_DeliPanHeater_WarmupSlopeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode",
+          "name": "Erd_FeaturePanMode",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Faults",
       "erds": [
         {

@@ -6,9 +6,23 @@
  */
 
 #include "FeaturePanPlugin.h"
+#include "PersonalityParametricData.h"
+#include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
-const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t dualEvapVotingConfig = {
+static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingConvertibleCompartmentConfig = {
+   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanTemperatureDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .heaterVotedErd = Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,
+};
+
+static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingDeliPanConfig = {
+   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanTemperatureDegFx100Erd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
+   .heaterVotedErd = Erd_DeliPanHeater_WarmupSlopeVote,
+};
+
+static const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t dualEvapVotingConfig = {
    .featurePanModeErd = Erd_FeaturePanMode,
    .evapFanVote = Erd_FreezerEvapFanSpeed_ResolvedVote
 };
@@ -17,6 +31,27 @@ void FeaturePanPlugin_Init(
    FeaturePanPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   const PlatformData_t *platformData = PersonalityParametricData_Get(dataModel)->platformData;
+
+   if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_Convertible))
+   {
+      FeaturePanWarmupSlopeVoting_Init(
+         &instance->_private.featurePanWarmupSlopeVoting,
+         dataModel,
+         DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
+         &featurePanWarmupSlopeVotingConvertibleCompartmentConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
+   }
+   else if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_DeliPan))
+   {
+      FeaturePanWarmupSlopeVoting_Init(
+         &instance->_private.featurePanWarmupSlopeVoting,
+         dataModel,
+         DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
+         &featurePanWarmupSlopeVotingDeliPanConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
+   }
+
    FeaturePanAsConvertibleCompartmentDualEvapFanVoting_Init(
       &instance->_private.featurePanAsConvertibleCompartmentDualEvapFanVoting,
       dataModel,

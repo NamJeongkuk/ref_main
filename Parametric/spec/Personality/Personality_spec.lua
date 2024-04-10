@@ -19,6 +19,7 @@ describe("Personality", function()
       feature_pan_grid = TypedString('feature_pan_grid', 'feature_pan_grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
+      feature_pan = TypedString('feature_pan', 'feature_pan'),
       sensors = TypedString('sensors', 'sensors'),
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
@@ -115,6 +116,14 @@ describe("Personality", function()
     should_fail_with('convertible_compartment must be a typed string with type convertible_compartment, but is a number', function()
       personality(generate_config({
         convertible_compartment = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('feature_pan must be a typed string with type feature_pan, but is a number', function()
+      personality(generate_config({
+        feature_pan = -1
       }))
     end)
   end)
@@ -299,6 +308,7 @@ describe("Personality", function()
         pointer(feature_pan_grid),
         pointer(sabbath),
         pointer(convertible_compartment),
+        pointer(feature_pan),
         pointer(sensors),
         pointer(system_monitor),
         pointer(compressor),
