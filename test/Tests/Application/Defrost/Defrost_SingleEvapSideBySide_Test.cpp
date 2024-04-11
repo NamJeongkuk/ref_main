@@ -3507,42 +3507,18 @@ TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleHsmStateWhenEepromCle
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteWithPrechillFreshFoodDamperPositionParameterWhenPrechillConditionsAreMet)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
-   DamperPosition_t someOtherDamperPosition = defrostData.prechillData.prechillFreshFoodDamperPosition + 1;
-   WhenFreshFoodDamperPositionGridVote(CaresAbout, someOtherDamperPosition);
-   WhenPrechillConditionsAreMet();
-   FreshFoodDamperPositionVoteShouldBe(someOtherDamperPosition);
-}
-
-TEST(Defrost_SingleEvapSideBySide, ShouldPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridCares)
-{
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   SealedSystemValvePosition_t someOtherValvePosition = defrostData.prechillData.prechillSealedSystemValvePosition + 1;
-   WhenSealedSystemValvePositionGridVote(CaresAbout, someOtherValvePosition);
-   WhenPrechillConditionsAreMet();
-   SealedSystemValvePositionVoteShouldBe(someOtherValvePosition);
-}
-
-TEST(Defrost_SingleEvapSideBySide, ShouldNotPreserveDamperPositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
-{
-   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   DamperPosition_t someOtherDamperPosition = defrostData.prechillData.prechillFreshFoodDamperPosition + 1;
-   WhenFreshFoodDamperPositionGridVote(DoesNotCareAbout, someOtherDamperPosition);
    WhenPrechillConditionsAreMet();
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillData.prechillFreshFoodDamperPosition);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldNotPreserveSealedSystemValvePositionGridVoteWhenPrechillConditionsAreMetIfGridDoesNotCare)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteWithSealedSystemValvePositionParameterWhenPrechillConditionsAreMet)
 {
    GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
-   SealedSystemValvePosition_t someOtherValvePosition = defrostData.prechillData.prechillSealedSystemValvePosition + 1;
-   WhenSealedSystemValvePositionGridVote(DoesNotCareAbout, someOtherValvePosition);
    WhenPrechillConditionsAreMet();
    SealedSystemValvePositionVoteShouldBe(defrostData.prechillData.prechillSealedSystemValvePosition);
 }
