@@ -12,7 +12,6 @@
 
 typedef struct
 {
-   bool hasConvertibleCompartment;
    TemperatureDegFx100_t convertibleCompartmentThresholdDegFx100;
 } ConvertibleCompartmentData_t;
 
