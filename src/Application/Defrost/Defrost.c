@@ -923,38 +923,6 @@ static void VoteForSealedSystemValvePosition(Defrost_t *instance, SealedSystemVa
       &valvePositionVote);
 }
 
-static SealedSystemValvePosition_t GridOrParametricSealedSystemValvePosition(Defrost_t *instance)
-{
-   SealedSystemValveVotedPosition_t vote;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionGridVoteErd,
-      &vote);
-
-   if(vote.care == Vote_Care)
-   {
-      return vote.position;
-   }
-
-   return instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition;
-}
-
-static DamperPosition_t GridOrParametricFreshFoodDamperPosition(Defrost_t *instance)
-{
-   DamperVotedPosition_t vote;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodDamperPositionGridVoteErd,
-      &vote);
-
-   if(vote.care == Vote_Care)
-   {
-      return vote.position;
-   }
-
-   return instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition;
-}
-
 static void VoteForConvertibleCompartmentDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
 {
    DamperVotedPosition_t vote = {
@@ -975,10 +943,10 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
    VoteForConvertibleCompartmentEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentEvapFanSpeed, care);
    VoteForIceCabinetFanSpeed(instance, instance->_private.defrostData->prechillData.prechillIceCabinetFanSpeed, care);
    VoteForDeliFanSpeed(instance, instance->_private.defrostData->prechillData.prechillDeliFanSpeed, care);
-   VoteForFreshFoodDamperPosition(instance, GridOrParametricFreshFoodDamperPosition(instance), care);
+   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition, care);
    VoteForConvertibleCompartmentDamperPosition(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentDamperPosition, care);
    VoteForDeliDamperPosition(instance, instance->_private.defrostData->prechillData.prechillDeliDamperPosition, care);
-   VoteForSealedSystemValvePosition(instance, GridOrParametricSealedSystemValvePosition(instance), care);
+   VoteForSealedSystemValvePosition(instance, instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
