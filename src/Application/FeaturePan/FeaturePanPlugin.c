@@ -39,6 +39,20 @@ static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingDeliPa
    .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
 };
 
+static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingConvertibleCompartmentConfig = {
+   .featurePanTemperatureErd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .featurePanDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_PulldownVote,
+   .featurePanFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_PulldownVote,
+   .featurePanHeaterVoteErd = Erd_ConvertibleCompartmentHeater_PulldownVote
+};
+
+static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingDeliPanConfig = {
+   .featurePanTemperatureErd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
+   .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_FeaturePanVote,
+   .featurePanFanVoteErd = Erd_DeliFanSpeed_FeaturePanVote,
+   .featurePanHeaterVoteErd = Erd_DeliPanHeater_PulldownVote
+};
+
 void FeaturePanPlugin_Init(
    FeaturePanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -59,6 +73,12 @@ void FeaturePanPlugin_Init(
          dataModel,
          &heaterDisablingVotingConvertibleCompartmentConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
+
+      FeaturePanPulldownVoting_Init(
+         &instance->_private.featurePanPulldownVoting,
+         dataModel,
+         &featurePanPulldownVotingConvertibleCompartmentConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
    }
    else if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_DeliPan))
    {
@@ -73,6 +93,12 @@ void FeaturePanPlugin_Init(
          &instance->_private.featurePanHeaterDisablingVoting,
          dataModel,
          &heaterDisablingVotingDeliPanConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
+         
+      FeaturePanPulldownVoting_Init(
+         &instance->_private.featurePanPulldownVoting,
+         dataModel,
+         &featurePanPulldownVotingDeliPanConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
    }
 
