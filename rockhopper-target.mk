@@ -158,7 +158,6 @@ include lib_refercommon.mk
 
 PARAMETRIC_HASH:=$(shell cd Parametric && git rev-parse --short HEAD)
 
-PACKAGE_CONTENTS:=
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/doc', to = 'doc' })
 $(call add_to_package,{ from = 'doc/lighthouse_data_collection.json', to = 'doc' })
 $(call add_to_package,{ from = 'doc/lighthouse_erd_gui.json', to = 'doc' })

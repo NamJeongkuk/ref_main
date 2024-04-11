@@ -1,43 +1,47 @@
-MAKEFLAGS:=--no-print-directory -j16 $(MAKEFLAGS)
+export RELEASE?=N
+export DEBUG?=N
 
-.PHONY: *
+MAKEFLAGS:=--no-print-directory -j16 $(MAKEFLAGS)
+NVM_DIR?=$$NVM_DIR
+
+.PHONY: %
+.ONESHELL:
+
+MAKE_TARGET=$(MAKE) -f rockhopper-target.mk
+MAKE_TDD=$(MAKE) -f tdd.mk
 
 target:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N
-
-release:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=Y DEBUG=N package
-
-upload:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N upload
-
-upload_release:
-	@$(MAKE) RELEASE=Y DEBUG=N upload
-
-json:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N erd_definitions
-
-tdd:
-	@$(MAKE) -f tdd.mk
-
-verbose:
-	@$(MAKE) -f tdd.mk verbose
+	$(MAKE_TARGET)
 
 debug:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y
+	$(MAKE_TARGET) DEBUG=Y
 
-gdb_server:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y gdb_server
+release:
+	$(MAKE_TARGET) RELEASE=Y package
+
+upload_release:
+	$(MAKE_TARGET) RELEASE=Y upload
+
+erd_definitions upload erase:
+	$(MAKE_TARGET) $@
 
 clean:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N clean
-	@$(MAKE) -f tdd.mk RELEASE=N DEBUG=N clean
+	$(MAKE_TARGET) clean
+	$(MAKE_TDD) clean
 
-erase:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N erase
+tdd:
+	$(MAKE_TDD)
 
-parametric:
-	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y build_parametric
+verbose:
+	$(MAKE_TDD) verbose
 
 integration:
-	@$(MAKE) tdd INTEGRATION=Y
+	$(MAKE_TDD) INTEGRATION=Y
+
+node:
+	@. $(NVM_DIR)/nvm.sh
+	@nvm install
+	@npm install
+
+bench_test: erd_definitions node
+	@npm run bench_test

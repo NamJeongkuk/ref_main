@@ -1,22 +1,50 @@
-local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.rockhopper.GeneratedTypes'
-local rockhopper_post_processing = require 'post_processing.rockhopper_modify_winning_vote_erds'
+local tools = require('tools/lua-erd-documentation-tools/lua-erd-documentation-tools')
+local Types = require('build/rockhopper/GeneratedTypes')
+local jkjson = require('tools/jkjson/jkjson')
+
+local json_path = './build/rockhopper/doc/erd-definitions.json'
 
 tools.build_json({
   namespace = 'mb',
   address = 0xC0,
   parsers = {
-    tools.parser.standard
+    tools.parser.standard,
   },
   erd_files = {
-    'src/Application/DataSource/SystemErds.h'
+    'src/Application/DataSource/SystemErds.h',
   },
   types_factory = Types,
-  output = 'build/rockhopper/doc/temp-erd-definitions.json'
+  output = json_path,
 })
 
-local file = io.open('build/rockhopper/doc/temp-erd-definitions.json', 'r')
-local json_string = file:read("*all")
-file:close()
+local function compact_vote_erds(erds)
+  local function is_a_vote_erd(erd)
+    for _, value in ipairs(erd.data) do
+      if (value.values or {})['1'] == 'Vote_Care' and not erd.name:match('.*ResolvedVote$') then
+        return true
+      end
+    end
+  end
 
-rockhopper_post_processing.rockhopper_modify_winning_vote_erds(json_string, 'build/rockhopper/doc/erd-definitions.json')
+  for i = 1, #erds do
+    local erd = erds[i]
+    if erd.name:match('.*WinningVote.*') then
+      local vote_erds = {}
+      while is_a_vote_erd(erds[i + 1]) do
+        i = i + 1
+        local name = 'WinningVoteErd_' .. erds[i].name
+        vote_erds[name] = name
+      end
+      for j, value in pairs(erd.data[1].values) do
+        erd.data[1].values[j] = vote_erds[value]
+      end
+    end
+  end
+end
+
+local definitions = jkjson.load(json_path)
+compact_vote_erds(definitions.erds)
+jkjson.dump(json_path, definitions, {
+  indent = 2,
+  sort_keys = true,
+})
