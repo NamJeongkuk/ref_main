@@ -4,7 +4,7 @@ export DEBUG?=N
 MAKEFLAGS:=--no-print-directory -j16 $(MAKEFLAGS)
 NVM_DIR?=$$NVM_DIR
 
-.PHONY: %
+.PHONY: % $(MAKECMDGOALS)
 .ONESHELL:
 
 MAKE_TARGET=$(MAKE) -f rockhopper-target.mk
