@@ -50,7 +50,19 @@ void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize);
  * @param data
  * @param dataSize
  */
+void NonVolatileDataSourceDefaultData_UInt8Max(void *data, size_t dataSize);
+
+/*!
+ * @param data
+ * @param dataSize
+ */
 void NonVolatileDataSourceDefaultData_Int8Max(void *data, size_t dataSize);
+
+/*!
+ * @param data
+ * @param dataSize
+ */
+void NonVolatileDataSourceDefaultData_Int16Max(void *data, size_t dataSize);
 
 /*!
  * @param data

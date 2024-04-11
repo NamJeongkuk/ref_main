@@ -5,36 +5,63 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "FeaturePanMode.h"
 #include "FeaturePanPlugin.h"
 #include "PersonalityParametricData.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
+static const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t entries[] = {
+   { .setpointRequestErd = Erd_FeaturePanMode1_Request,
+      .setpointStatusErd = Erd_FeaturePanMode1_Status,
+      .setpointRangeErd = Erd_FeaturePanMode1_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode2_Request,
+      .setpointStatusErd = Erd_FeaturePanMode2_Status,
+      .setpointRangeErd = Erd_FeaturePanMode2_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode3_Request,
+      .setpointStatusErd = Erd_FeaturePanMode3_Status,
+      .setpointRangeErd = Erd_FeaturePanMode3_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode4_Request,
+      .setpointStatusErd = Erd_FeaturePanMode4_Status,
+      .setpointRangeErd = Erd_FeaturePanMode4_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode5_Request,
+      .setpointStatusErd = Erd_FeaturePanMode5_Status,
+      .setpointRangeErd = Erd_FeaturePanMode5_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode6_Request,
+      .setpointStatusErd = Erd_FeaturePanMode6_Status,
+      .setpointRangeErd = Erd_FeaturePanMode6_SetpointRangeData },
+   { .setpointRequestErd = Erd_FeaturePanMode7_Request,
+      .setpointStatusErd = Erd_FeaturePanMode7_Status,
+      .setpointRangeErd = Erd_FeaturePanMode7_SetpointRangeData },
+};
+
+STATIC_ASSERT(FeaturePanMode_NumberOfFeaturePanModes == NUM_ELEMENTS(entries));
+
 static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingConvertibleCompartmentConfig = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .featurePanTemperatureDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,
 };
 
 static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingDeliPanConfig = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .featurePanTemperatureDegFx100Erd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
    .heaterVotedErd = Erd_DeliPanHeater_WarmupSlopeVote,
 };
 
 static const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t dualEvapVotingConfig = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .evapFanVote = Erd_FreezerEvapFanSpeed_ResolvedVote
 };
 
 static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingConvertibleCompartmentConfig = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_DisableForAmbientTemperatureVote,
    .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
 };
 
 static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingDeliPanConfig = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .heaterVotedErd = Erd_DeliPanHeater_DisableForAmbientTemperatureVote,
    .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
 };
@@ -53,10 +80,46 @@ static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingDeliPanCon
    .featurePanHeaterVoteErd = Erd_DeliPanHeater_PulldownVote
 };
 
+static void WriteCurrentModeErdIfUninitialized(I_DataModel_t *dataModel)
+{
+   const PersonalityParametricData_t *personalityData = PersonalityParametricData_Get(dataModel);
+
+   FeaturePanCurrentMode_t currentMode;
+
+   DataModel_Read(
+      dataModel,
+      Erd_FeaturePanCurrentMode,
+      &currentMode);
+
+   if(UINT8_MAX == currentMode)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeaturePanCurrentMode,
+         &personalityData->featurePanData->featurePanDefaultMode);
+   }
+}
+
+static void WriteSetpointRangeDataToErds(I_DataModel_t *dataModel)
+{
+   const PersonalityParametricData_t *personalityData = PersonalityParametricData_Get(dataModel);
+
+   for(uint8_t i = 0; i < NUM_ELEMENTS(entries); i++)
+   {
+      DataModel_Write(
+         dataModel,
+         entries[i].setpointRangeErd,
+         &personalityData->setpointData->userSetpointData->featurePanUserSetpointData->featurePanModeUserSetpointData[i]);
+   }
+}
+
 void FeaturePanPlugin_Init(
    FeaturePanPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   WriteCurrentModeErdIfUninitialized(dataModel);
+   WriteSetpointRangeDataToErds(dataModel);
+
    const PlatformData_t *platformData = PersonalityParametricData_Get(dataModel)->platformData;
 
    if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_Convertible))
@@ -94,7 +157,7 @@ void FeaturePanPlugin_Init(
          dataModel,
          &heaterDisablingVotingDeliPanConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
-         
+
       FeaturePanPulldownVoting_Init(
          &instance->_private.featurePanPulldownVoting,
          dataModel,

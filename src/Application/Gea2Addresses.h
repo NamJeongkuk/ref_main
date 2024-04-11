@@ -15,7 +15,7 @@ enum
    Gea2Address_DoorBoard = 0x03,
    Gea2Address_DeliPanBoard = 0x04,
    Gea2Address_RfidBoard = 0x0A,
-   Gea2Address_ConvertibleDrawerBoard = 0x0D,
+   Gea2Address_ConvertibleCompartmentBoard = 0x0D,
    Gea2Address_PcToolAddress = 0xE4,
    Gea2Address_EmbeddedWiFi = 0xBF,
    Gea2Address_ConnectPlusWiFi = 0xBE,

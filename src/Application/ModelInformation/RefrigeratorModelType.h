@@ -18,8 +18,8 @@ enum
    RefrigeratorModelType_SingleCabinetFreshFood,
    RefrigeratorModelType_SingleCabinetFreezer,
    RefrigeratorModelType_TopFreezer,
-   RefrigeratorModelType_ConvertibleDrawerDoubleDrawerBottomFreezer,
-   RefrigeratorModelType_ConvertibleDrawerQuadDoor,
+   RefrigeratorModelType_ConvertibleCompartmentDoubleDrawerBottomFreezer,
+   RefrigeratorModelType_ConvertibleCompartmentQuadDoor,
    RefrigeratorModelType_FAndPWineColumn,
    RefrigeratorModelType_FAndPColumnsB,
    RefrigeratorModelType_DualZoneWineChiller,
@@ -32,7 +32,7 @@ enum
    RefrigeratorModelType_FAndPActiveSmartFreestanding,
    RefrigeratorModelType_FAndPActiveSmartBuiltIn,
    RefrigeratorModelType_HaierCounterDepthPlatform,
-   RefrigeratorModelType_ConvertibleDrawerSingleFreshFoodDoorWithDoubleDrawerBottomFreezer,
+   RefrigeratorModelType_ConvertibleCompartmentSingleFreshFoodDoorWithDoubleDrawerBottomFreezer,
 };
 typedef uint8_t RefrigeratorModelType_t;
 

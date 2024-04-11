@@ -17,7 +17,7 @@
 
 typedef struct
 {
-   Erd_t featurePanModeErd; // FeaturePanMode_t
+   Erd_t featurePanCoolingModeErd; // FeaturePanCoolingMode_t
    Erd_t heaterVotedErd; // PercentageDutyCycleVote_t
    Erd_t featurePanTemperatureDegFx100Erd; // TemperatureDegFx100_t
 } FeaturePanWarmupSlopeVotingConfig_t;
@@ -33,7 +33,7 @@ typedef struct
       Timer_t slopeCalculatorTimer;
       TemperatureDegFx100_t oldTemperature;
       int16_t slopeOfFeaturePanTemperature;
-      FeaturePanMode_t currentFeaturePanMode;
+      FeaturePanCoolingMode_t currentFeaturePanMode;
       bool slopeHasBeenCalculated;
    } _private;
 } FeaturePanWarmupSlopeVoting_t;

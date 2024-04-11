@@ -1,5 +1,5 @@
 return personality({
-  refrigerator_model = import("../RefrigeratorModel/refrigerator_model_convertible_drawer_double_drawer_bottom_freezer.lua"),
+  refrigerator_model = import("../RefrigeratorModel/refrigerator_model_convertible_compartment_double_drawer_bottom_freezer.lua"),
   platform = import("../Platform/four_door_dual_evap_platform.lua"),
   defrost = import("../Defrost/dual_evaporator_defrost_qa.lua"),
   enhanced_sabbath = import("../EnhancedSabbath/enhanced_sabbath_qa.lua"),

@@ -111,6 +111,10 @@ return function(directory)
   import('Cooling/CabinetTemperatureExceeded')
   import('SealedSystemValve/SealedSystemValve')
   import('NonHeatedCycleDefrost/FreshFoodNonHeatedCycleDefrost')
+  import('Setpoints/FeaturePanUserSetpoint')
+  import('Setpoints/FeaturePanUserSetpoints')
+  import('FeaturePan/FeaturePanMode')
+  import('FeaturePan/FeaturePanModeLabel')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -223,6 +227,10 @@ return function(directory)
   cabinet_temperature_exceeded = CabinetTemperatureExceeded(core)
   sealed_system_valve = SealedSystemValve(core)
   fresh_food_non_heated_cycle_defrost = FreshFoodNonHeatedCycleDefrost(core)
+  feature_pan_user_setpoint = FeaturePanUserSetpoint(core)
+  feature_pan_user_setpoints = FeaturePanUserSetpoints(core)
+  feature_pan_mode = FeaturePanMode
+  feature_pan_mode_label = FeaturePanModeLabel
 
   return {
     core = core,
@@ -338,6 +346,10 @@ return function(directory)
     cabinet_temperature_exceeded = cabinet_temperature_exceeded,
     sealed_system_valve = sealed_system_valve,
     fresh_food_non_heated_cycle_defrost = fresh_food_non_heated_cycle_defrost,
+    feature_pan_user_setpoint = feature_pan_user_setpoint,
+    feature_pan_user_setpoints = feature_pan_user_setpoints,
+    feature_pan_mode = feature_pan_mode,
+    feature_pan_mode_label = feature_pan_mode_label,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

@@ -9,6 +9,7 @@
 #define FEATUREPANDATA_H
 
 #include "FanSpeed.h"
+#include "FeaturePanMode.h"
 #include "TemperatureDegFx100.h"
 
 typedef struct
@@ -18,6 +19,7 @@ typedef struct
    TemperatureDegFx100_t featurePanHeaterHighAmbientTemperatureLimitInDegFx100;
    TemperatureDegFx100_t featurePanPulldownTemperatureLimitInDegFx100;
    FanSpeed_t freshFoodFanDeliCoolingSpeed;
+   FeaturePanCurrentMode_t featurePanDefaultMode;
 } FeaturePanData_t;
 
 #endif

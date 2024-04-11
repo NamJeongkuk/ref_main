@@ -21,7 +21,7 @@ enum
 };
 
 const FeaturePanHeaterDisablingVotingConfig_t config = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_DisableForAmbientTemperatureVote,
    .ambientTemperatureDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100
 };
@@ -69,14 +69,14 @@ TEST_GROUP(FeaturePanHeaterDisablingVoting)
       GivenAmbientTemperatureIs(temperature);
    }
 
-   void GivenFeaturePanModeIs(FeaturePanMode_t featurePanMode)
+   void GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_t featurePanCoolingMode)
    {
-      DataModel_Write(dataModel, Erd_FeaturePanMode, &featurePanMode);
+      DataModel_Write(dataModel, Erd_FeaturePanCoolingMode, &featurePanCoolingMode);
    }
 
-   void WhenFeaturePanModeIs(FeaturePanMode_t featurePanMode)
+   void WhenFeaturePanCoolingModeIs(FeaturePanCoolingMode_t featurePanCoolingMode)
    {
-      GivenFeaturePanModeIs(featurePanMode);
+      GivenFeaturePanCoolingModeIs(featurePanCoolingMode);
    }
 
    void HeaterVoteShouldBe(PercentageDutyCycleVote_t expected)
@@ -90,7 +90,7 @@ TEST_GROUP(FeaturePanHeaterDisablingVoting)
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTemperatureIsGreaterThanParametricValueAndFeaturePanStateIsActiveHeatingOnInit)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit + 1);
    GivenModuleIsInitialized();
 
@@ -99,7 +99,7 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTem
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureIsLessThanParametricValueAndFeaturePanStateIsActiveHeatingOnInit)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit - 1);
    GivenModuleIsInitialized();
 
@@ -108,7 +108,7 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureIs
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTemperatureIsEqualToParametricValueOnInit)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit);
    GivenModuleIsInitialized();
 
@@ -117,7 +117,7 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTem
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureIsGreaterThanParametricValueAndFeaturePanStateIsNotActiveHeatingOnInit)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_Neutral);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_Neutral);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit + 1);
    GivenModuleIsInitialized();
 
@@ -126,7 +126,7 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureIs
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTemperatureChangesToBeGreaterThanOrEqualToParametricValueAndFeaturePanStateIsActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit - 1);
    GivenModuleIsInitialized();
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_DontCare });
@@ -138,20 +138,20 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenAmbientTem
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_Care });
 }
 
-TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenFeaturePanModeChangesToActiveHeatingAndAmbientTemperatureIsGreaterThanParametricValue)
+TEST(FeaturePanHeaterDisablingVoting, ShouldVoteHeaterDutyCycleMinWhenFeaturePanCoolingModeChangesToActiveHeatingAndAmbientTemperatureIsGreaterThanParametricValue)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_Neutral);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_Neutral);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit + 1);
    GivenModuleIsInitialized();
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_DontCare });
 
-   WhenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   WhenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_Care });
 }
 
 TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureChangesToBeLessThanParametricValueAndFeaturePanStateIsActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit + 1);
    GivenModuleIsInitialized();
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_Care });
@@ -160,13 +160,13 @@ TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenAmbientTemperatureCh
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_DontCare });
 }
 
-TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenFeaturePanModeChangesToNotActiveHeatingAndAmbientTemperatureIsGreaterThanParametricValue)
+TEST(FeaturePanHeaterDisablingVoting, ShouldVoteDontCareWhenFeaturePanCoolingModeChangesToNotActiveHeatingAndAmbientTemperatureIsGreaterThanParametricValue)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenAmbientTemperatureIs(FeaturePanHeaterHighAmbientTemperatureParametricLimit + 1);
    GivenModuleIsInitialized();
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_Care });
 
-   WhenFeaturePanModeIs(FeaturePanMode_Neutral);
+   WhenFeaturePanCoolingModeIs(FeaturePanCoolingMode_Neutral);
    HeaterVoteShouldBe({ PercentageDutyCycle_Min, Vote_DontCare });
 }

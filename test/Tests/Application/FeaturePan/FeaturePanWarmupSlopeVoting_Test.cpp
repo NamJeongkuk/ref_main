@@ -32,7 +32,7 @@ static const FeaturePanData_t featurePanData = {
 };
 
 static const FeaturePanWarmupSlopeVotingConfig_t config = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,
    .featurePanTemperatureDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
 };
@@ -75,17 +75,17 @@ TEST_GROUP(FeaturePanWarmupSlopeVoting)
          &heaterVote);
    }
 
-   void GivenFeaturePanModeIs(FeaturePanMode_t mode)
+   void GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_t mode)
    {
       DataModel_Write(
          dataModel,
-         config.featurePanModeErd,
+         config.featurePanCoolingModeErd,
          &mode);
    }
 
-   void WhenFeaturePanModeChangesTo(FeaturePanMode_t mode)
+   void WhenFeaturePanCoolingModeChangesTo(FeaturePanCoolingMode_t mode)
    {
-      GivenFeaturePanModeIs(mode);
+      GivenFeaturePanCoolingModeIs(mode);
    }
 
    void GivenTheFeaturePanTemperatureIs(TemperatureDegFx100_t temp)
@@ -115,18 +115,18 @@ TEST_GROUP(FeaturePanWarmupSlopeVoting)
    }
 };
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffOnInitWhenFeaturePanModeIsActiveHeating)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffOnInitWhenFeaturePanCoolingModeIsActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenHeaterVoteIs(PercentageDutyCycle_Max);
    WhenTheModuleIsInitialized();
 
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
 }
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterDontCareOnInitWhenFeaturePanModeIsNotActiveHeating)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterDontCareOnInitWhenFeaturePanCoolingModeIsNotActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenHeaterVoteIs(PercentageDutyCycle_Max);
    WhenTheModuleIsInitialized();
 
@@ -135,7 +135,7 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterDontCareOnInitWhenFeaturePanMo
 
 TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOnWhenFeaturePanTemperatureSlopeBecomesLessThanParametricConfigSlope)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
@@ -149,7 +149,7 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOnWhenFeaturePanTemperatureSlo
 
 TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanTemperatureSlopeBecomesGreaterThanParametricConfigSlope)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
@@ -163,9 +163,9 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanTemperatureSl
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
 }
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOnWhenFeaturePanTemperatureSlopeIsLessThanParametricConfigSlopeAndFeaturePanModeChangesToActiveHeating)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOnWhenFeaturePanTemperatureSlopeIsLessThanParametricConfigSlopeAndFeaturePanCoolingModeChangesToActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldNotCare();
@@ -174,13 +174,13 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOnWhenFeaturePanTemperatureSlo
    After(SlopeCalculationTimeInMsec);
    HeaterVoteShouldNotCare();
 
-   WhenFeaturePanModeChangesTo(FeaturePanMode_ActiveHeating);
+   WhenFeaturePanCoolingModeChangesTo(FeaturePanCoolingMode_ActiveHeating);
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Max);
 }
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanTemperatureSlopeIsGreaterThanParametricConfigSlopeAndFeaturePanModeChangesToActiveHeating)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanTemperatureSlopeIsGreaterThanParametricConfigSlopeAndFeaturePanCoolingModeChangesToActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldNotCare();
@@ -189,13 +189,13 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanTemperatureSl
    After(SlopeCalculationTimeInMsec);
    HeaterVoteShouldNotCare();
 
-   WhenFeaturePanModeChangesTo(FeaturePanMode_ActiveHeating);
+   WhenFeaturePanCoolingModeChangesTo(FeaturePanCoolingMode_ActiveHeating);
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
 }
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanModeChangesToNonActiveHeating)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanCoolingModeChangesToNonActiveHeating)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveHeating);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveHeating);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Min);
@@ -204,18 +204,18 @@ TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanModeChangesTo
    After(SlopeCalculationTimeInMsec);
    HeaterVoteShouldCareForDutyCycle(PercentageDutyCycle_Max);
 
-   WhenFeaturePanModeChangesTo(FeaturePanMode_ActiveCooling);
+   WhenFeaturePanCoolingModeChangesTo(FeaturePanCoolingMode_ActiveCooling);
    HeaterVoteShouldNotCare();
 }
 
-TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanModeChangesToActiveHeatingAndSlopeHasNotYetBeenCalculated)
+TEST(FeaturePanWarmupSlopeVoting, ShouldVoteHeaterOffWhenFeaturePanCoolingModeChangesToActiveHeatingAndSlopeHasNotYetBeenCalculated)
 {
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenTheFeaturePanTemperatureIs(SomeTemperature);
    GivenTheModuleIsInitialized();
    HeaterVoteShouldNotCare();
 
-   WhenFeaturePanModeChangesTo(FeaturePanMode_ActiveHeating);
+   WhenFeaturePanCoolingModeChangesTo(FeaturePanCoolingMode_ActiveHeating);
    HeaterVoteShouldNotCare();
 
    GivenTheFeaturePanTemperatureIs(SomeTemperature + featurePanData.featurePanWarmupSlopeLowerLimitInDegFx100PerMinute - 1);

@@ -8,6 +8,7 @@
 #ifndef FEATUREPANPLUGIN_H
 #define FEATUREPANPLUGIN_H
 
+#include "ConvertibleCompartmentModeSetpointResolver.h"
 #include "I_DataModel.h"
 #include "FeaturePanAsConvertibleCompartmentDualEvapFanVoting.h"
 #include "FeaturePanHeaterDisablingVoting.h"
@@ -18,7 +19,7 @@ typedef struct
 {
    struct
    {
-      I_DataModel_t *dataModel;
+      ConvertibleCompartmentModeSetpointResolver_t convertibleCompartmentModeSetpointResolver;
       FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t featurePanAsConvertibleCompartmentDualEvapFanVoting;
       FeaturePanHeaterDisablingVoting_t featurePanHeaterDisablingVoting;
       FeaturePanPulldownVoting_t featurePanPulldownVoting;

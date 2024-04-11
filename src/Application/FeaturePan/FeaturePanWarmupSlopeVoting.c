@@ -31,7 +31,7 @@ static void Vote(FeaturePanWarmupSlopeVoting_t *instance, Vote_t vote, Percentag
 
 static void PerformSlopeVote(FeaturePanWarmupSlopeVoting_t *instance)
 {
-   if(instance->_private.currentFeaturePanMode == FeaturePanMode_ActiveHeating)
+   if(instance->_private.currentFeaturePanMode == FeaturePanCoolingMode_ActiveHeating)
    {
       if(instance->_private.slopeOfFeaturePanTemperature < instance->_private.featurePanData->featurePanWarmupSlopeLowerLimitInDegFx100PerMinute)
       {
@@ -68,7 +68,7 @@ static void CalculateSlope(void *context)
 static void OnDataFeaturePanModeChange(void *context, const void *_args)
 {
    FeaturePanWarmupSlopeVoting_t *instance = context;
-   const FeaturePanMode_t *featurePanMode = _args;
+   const FeaturePanCoolingMode_t *featurePanMode = _args;
 
    instance->_private.currentFeaturePanMode = *featurePanMode;
 
@@ -91,7 +91,7 @@ void FeaturePanWarmupSlopeVoting_Init(
 
    DataModel_Read(
       dataModel,
-      instance->_private.config->featurePanModeErd,
+      instance->_private.config->featurePanCoolingModeErd,
       &instance->_private.currentFeaturePanMode);
 
    DataModel_Read(
@@ -99,7 +99,7 @@ void FeaturePanWarmupSlopeVoting_Init(
       instance->_private.config->featurePanTemperatureDegFx100Erd,
       &instance->_private.oldTemperature);
 
-   if(instance->_private.currentFeaturePanMode == FeaturePanMode_ActiveHeating)
+   if(instance->_private.currentFeaturePanMode == FeaturePanCoolingMode_ActiveHeating)
    {
       Vote(instance, Vote_Care, PercentageDutyCycle_Min);
    }
@@ -116,7 +116,7 @@ void FeaturePanWarmupSlopeVoting_Init(
       OnDataFeaturePanModeChange);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->featurePanModeErd,
+      instance->_private.config->featurePanCoolingModeErd,
       &instance->_private.onDataModelChangeSubscription);
 
    TimerModule_StartPeriodic(

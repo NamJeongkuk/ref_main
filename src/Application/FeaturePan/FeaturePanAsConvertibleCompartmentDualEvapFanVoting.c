@@ -19,23 +19,23 @@ static void Vote(FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t *instance
       &freezerFanVote);
 };
 
-static FeaturePanMode_t FeaturePanMode(FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t *instance)
+static FeaturePanCoolingMode_t FeaturePanCoolingMode(FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t *instance)
 {
-   FeaturePanMode_t featurePanMode;
+   FeaturePanCoolingMode_t featurePanCoolingMode;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->featurePanModeErd,
-      &featurePanMode);
+      instance->_private.config->featurePanCoolingModeErd,
+      &featurePanCoolingMode);
 
-   return featurePanMode;
+   return featurePanCoolingMode;
 }
 
-static void OnFeaturePanModeChange(void *context, const void *_args)
+static void OnFeaturePanCoolingModeChange(void *context, const void *_args)
 {
    FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t *instance = context;
 
-   const FeaturePanMode_t *featurePanMode = _args;
-   if(*featurePanMode == FeaturePanMode_ActiveCooling)
+   const FeaturePanCoolingMode_t *featurePanCoolingMode = _args;
+   if(*featurePanCoolingMode == FeaturePanCoolingMode_ActiveCooling)
    {
       Vote(instance, Vote_Care);
    }
@@ -53,7 +53,7 @@ void FeaturePanAsConvertibleCompartmentDualEvapFanVoting_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
 
-   if(FeaturePanMode(instance) == FeaturePanMode_ActiveCooling)
+   if(FeaturePanCoolingMode(instance) == FeaturePanCoolingMode_ActiveCooling)
    {
       Vote(instance, Vote_Care);
    }
@@ -65,9 +65,9 @@ void FeaturePanAsConvertibleCompartmentDualEvapFanVoting_Init(
    EventSubscription_Init(
       &instance->_private.onDataModelChangeSubscription,
       instance,
-      OnFeaturePanModeChange);
+      OnFeaturePanCoolingModeChange);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->featurePanModeErd,
+      instance->_private.config->featurePanCoolingModeErd,
       &instance->_private.onDataModelChangeSubscription);
 }
