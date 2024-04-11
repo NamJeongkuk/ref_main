@@ -835,7 +835,7 @@
         {
           "namespace": "mb",
           "displayName": "Door In Door Is Open",
-          "name": "Erd_DoorInDoorIsOpen",
+          "name": "Erd_DoorInDoorStatus",
           "read": true,
           "write": false
         },
@@ -4370,7 +4370,7 @@
         {
           "namespace": "mb",
           "displayName": "Door in Door Is Open",
-          "name": "Erd_DoorInDoorIsOpen",
+          "name": "Erd_DoorInDoorStatus",
           "read": true,
           "write": true
         },

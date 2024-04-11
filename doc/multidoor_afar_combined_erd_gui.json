@@ -272,7 +272,7 @@
             {
                "namespace": "mb",
                "displayName": "Door-in-Door Door Open?",
-               "name": "Erd_DoorInDoorIsOpen",
+               "name": "Erd_DoorInDoorStatus",
                "read": true,
                "interval": 1000000000
             },
@@ -985,7 +985,7 @@
             {
                "namespace": "mb",
                "displayName": "Door-in-Door Door Open?",
-               "name": "Erd_DoorInDoorIsOpen",
+               "name": "Erd_DoorInDoorStatus",
                "read": true,
                "interval": 1000000000
             }
