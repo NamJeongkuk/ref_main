@@ -22,8 +22,8 @@ enum
 
 const FeaturePanPulldownVotingConfig_t config = {
    .featurePanTemperatureErd = Erd_DeliPan_FilteredTemperatureInDegFx100,
-   .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_FeaturePanVote,
-   .featurePanFanVoteErd = Erd_DeliFanSpeed_FeaturePanVote,
+   .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_PulldownVote,
+   .featurePanFanVoteErd = Erd_DeliFanSpeed_PulldownVote,
    .featurePanHeaterVoteErd = Erd_ConvertibleCompartmentHeater_PulldownVote
 };
 
@@ -73,7 +73,7 @@ TEST_GROUP(FeaturePanPulldownVoting)
    void DamperPositionVoteShouldBe(DamperVotedPosition_t expected)
    {
       DamperVotedPosition_t actual;
-      DataModel_Read(dataModel, Erd_DeliDamperPosition_FeaturePanVote, &actual);
+      DataModel_Read(dataModel, Erd_DeliDamperPosition_PulldownVote, &actual);
 
       CHECK_EQUAL(expected.position, actual.position);
       CHECK_EQUAL(expected.care, actual.care);
@@ -82,7 +82,7 @@ TEST_GROUP(FeaturePanPulldownVoting)
    void EvapFanSpeedVoteShouldBe(FanVotedSpeed_t expected)
    {
       FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_DeliFanSpeed_FeaturePanVote, &actual);
+      DataModel_Read(dataModel, Erd_DeliFanSpeed_PulldownVote, &actual);
 
       CHECK_EQUAL(expected.speed, actual.speed);
       CHECK_EQUAL(expected.care, actual.care);

@@ -75,9 +75,15 @@ static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingConvertibl
 
 static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingDeliPanConfig = {
    .featurePanTemperatureErd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
-   .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_FeaturePanVote,
-   .featurePanFanVoteErd = Erd_DeliFanSpeed_FeaturePanVote,
+   .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_PulldownVote,
+   .featurePanFanVoteErd = Erd_DeliFanSpeed_PulldownVote,
    .featurePanHeaterVoteErd = Erd_DeliPanHeater_PulldownVote
+};
+
+static const FeaturePanDeliDependencyVotingConfiguration_t featurePanDeliDependencyVotingConfig = {
+   .evapFanResolvedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
+   .fanVoteErd = Erd_DeliFanSpeed_FreshFoodFanDependencyVote,
+   .damperVoteErd = Erd_DeliDamperPosition_FreshFoodFanDependencyVote
 };
 
 static void WriteCurrentModeErdIfUninitialized(I_DataModel_t *dataModel)
@@ -142,6 +148,11 @@ void FeaturePanPlugin_Init(
          dataModel,
          &featurePanPulldownVotingConvertibleCompartmentConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
+
+      FeaturePanAsConvertibleCompartmentDualEvapFanVoting_Init(
+         &instance->_private.featurePanAsConvertibleCompartmentDualEvapFanVoting,
+         dataModel,
+         &dualEvapVotingConfig);
    }
    else if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_DeliPan))
    {
@@ -163,10 +174,10 @@ void FeaturePanPlugin_Init(
          dataModel,
          &featurePanPulldownVotingDeliPanConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
-   }
 
-   FeaturePanAsConvertibleCompartmentDualEvapFanVoting_Init(
-      &instance->_private.featurePanAsConvertibleCompartmentDualEvapFanVoting,
-      dataModel,
-      &dualEvapVotingConfig);
+      FeaturePanDeliDependencyVoting_Init(
+         &instance->_private.featurePanDeliDependencyVoting,
+         dataModel,
+         &featurePanDeliDependencyVotingConfig);
+   }
 }
