@@ -104,7 +104,7 @@
             {
                "namespace": "mb",
                "displayName": "FF Damper",
-               "name": "Erd_DamperPosition_ResolvedVote",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
                "read": true,
                "interval": 1000000000
             },

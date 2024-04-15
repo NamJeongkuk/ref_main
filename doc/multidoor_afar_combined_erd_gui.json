@@ -1236,14 +1236,14 @@
             {
                "namespace": "mb",
                "displayName": "Convertible Compartment Damper Heater - Resolved Vote",
-               "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+               "name": "Erd_DamperHeater_ResolvedVote",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
                "displayName": "Convertible Compartment Damper Heater - Factory Vote",
-               "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+               "name": "Erd_DamperHeater_FactoryVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -2470,6 +2470,20 @@
                "namespace": "mb",
                "displayName": "Freezer Setpoint Winning Vote Erd",
                "name": "Erd_FreezerSetpoint_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Coldest Setpoint Winning Vote Erd",
+               "name": "Erd_FreshFoodSetpoint_ColdestSetpointWinningVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Coldest Setpoint Winning Vote Erd",
+               "name": "Erd_FreezerSetpoint_ColdestSetpointWinningVote",
                "read": true,
                "interval": 1000000000
             },
