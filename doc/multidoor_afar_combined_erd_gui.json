@@ -948,7 +948,7 @@
                "name": "Erd_FreshFoodDefrostHeaterOnTimeInMinutes",
                "read": true,
                "interval": 1000000000
-            },
+            }
          ]
       },
       {
