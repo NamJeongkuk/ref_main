@@ -86,6 +86,12 @@ static const FeaturePanDeliDependencyVotingConfiguration_t featurePanDeliDepende
    .damperVoteErd = Erd_DeliDamperPosition_FreshFoodFanDependencyVote
 };
 
+static const FeaturePanAsDeliPanEvapFanVotingConfig_t featurePanAsDeliPanEvapFanVotingConfig = {
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
+   .fanEvapVoteErd = Erd_FreshFoodEvapFanSpeed_DeliPanSpeedVote,
+   .fanEvapGridVoteErd = Erd_FreshFoodEvapFanSpeed_GridVote
+};
+
 static void WriteCurrentModeErdIfUninitialized(I_DataModel_t *dataModel)
 {
    const PersonalityParametricData_t *personalityData = PersonalityParametricData_Get(dataModel);
@@ -179,5 +185,11 @@ void FeaturePanPlugin_Init(
          &instance->_private.featurePanDeliDependencyVoting,
          dataModel,
          &featurePanDeliDependencyVotingConfig);
+
+      FeaturePanAsDeliPanEvapFanVoting_Init(
+         &instance->_private.featurePanAsDeliPanEvapFanVoting,
+         dataModel,
+         &featurePanAsDeliPanEvapFanVotingConfig,
+         PersonalityParametricData_Get(dataModel)->featurePanData);
    }
 }
