@@ -24,7 +24,7 @@ static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
    .freezerSetpointFreezerIceRateVoteErd = Erd_FreezerSetpoint_FreezerIceRateVote,
    .freezerEvapFanSpeedFreezerIceRateVoteErd = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
    .freezerEvapFanSpeedResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
-   .iceRateIsActiveErd = Erd_Freezer_IceRateIsActive
+   .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive
 };
 
 TEST_GROUP(FreezerIceRateHandler)

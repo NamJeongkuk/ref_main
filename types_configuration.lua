@@ -71,7 +71,6 @@ return {
     PwmDutyCycle_t = 'uint16_t',
     PercentageDutyCycle_t = 'uint8_t',
     PwmFrequency_t = 'uint16_t',
-    RakePosition_t = 'uint8_t',
     GitHash_t = 'raw[20]',
     ShortGitHash_t = 'raw[4]',
     IceMakerEnableRequest_t = 'bool',
