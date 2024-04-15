@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "DataModelErdPointerAccess.h"
 #include "FreezerShiftOffsetCalculatorPlugin.h"
 #include "SystemErds.h"
 
@@ -13,11 +14,9 @@ static const ShiftOffsetCalculatorConfig_t freezerShiftOffsetCalculatorConfig = 
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
-   .timerModuleErd = Erd_TimerModule,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,
    .resetThermalShiftOffsetSignalErd = Erd_Freezer_ResetThermalShiftOffsetSignal,
    .longTermAverageErd = Erd_Freezer_LongTermAverageInDegFx100,
-   .adjustedSetpointPluginReadyErd = Erd_AdjustedSetpointPluginReady
 };
 
 void FreezerShiftOffsetCalculatorPlugin_Init(
@@ -34,6 +33,7 @@ void FreezerShiftOffsetCalculatorPlugin_Init(
       &instance->_private.freezerShiftOffsetCalculator,
       dataModel,
       &instance->_private.freezerLongTermAverageFilter.interface,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &freezerShiftOffsetCalculatorConfig,
       adjustedSetpointData->freezerAdjustedSetpointData->shiftOffsetData);
 }

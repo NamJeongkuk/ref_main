@@ -6,6 +6,7 @@
  */
 
 #include "ConvertibleCompartmentShiftOffsetCalculatorPlugin.h"
+#include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
 static const ShiftOffsetCalculatorConfig_t convertibleCompartmentShiftOffsetCalculatorConfig = {
@@ -13,11 +14,9 @@ static const ShiftOffsetCalculatorConfig_t convertibleCompartmentShiftOffsetCalc
    .adjustedSetpointErd = Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
-   .timerModuleErd = Erd_TimerModule,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,
    .resetThermalShiftOffsetSignalErd = Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal,
    .longTermAverageErd = Erd_ConvertibleCompartment_LongTermAverageInDegFx100,
-   .adjustedSetpointPluginReadyErd = Erd_AdjustedSetpointPluginReady
 };
 
 void ConvertibleCompartmentShiftOffsetCalculatorPlugin_Init(
@@ -34,6 +33,7 @@ void ConvertibleCompartmentShiftOffsetCalculatorPlugin_Init(
       &instance->_private.convertibleCompartmentShiftOffsetCalculator,
       dataModel,
       &instance->_private.convertibleCompartmentLongTermAverageFilter.interface,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &convertibleCompartmentShiftOffsetCalculatorConfig,
       adjustedSetpointData->convertibleCompartmentAdjustedSetpointData->shiftOffsetData);
 }

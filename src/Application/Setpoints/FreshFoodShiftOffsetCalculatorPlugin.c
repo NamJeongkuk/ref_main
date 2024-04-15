@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "DataModelErdPointerAccess.h"
 #include "FreshFoodShiftOffsetCalculatorPlugin.h"
 #include "SystemErds.h"
 
@@ -13,11 +14,9 @@ static const ShiftOffsetCalculatorConfig_t freshFoodShiftOffsetCalculatorConfig 
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
-   .timerModuleErd = Erd_TimerModule,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,
    .resetThermalShiftOffsetSignalErd = Erd_FreshFood_ResetThermalShiftOffsetSignal,
    .longTermAverageErd = Erd_FreshFood_LongTermAverageInDegFx100,
-   .adjustedSetpointPluginReadyErd = Erd_AdjustedSetpointPluginReady
 };
 
 void FreshFoodShiftOffsetCalculatorPlugin_Init(
@@ -34,6 +33,7 @@ void FreshFoodShiftOffsetCalculatorPlugin_Init(
       &instance->_private.freshFoodShiftOffsetCalculator,
       dataModel,
       &instance->_private.freshFoodLongTermAverageFilter.interface,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &freshFoodShiftOffsetCalculatorConfig,
       adjustedSetpointData->freshFoodAdjustedSetpointData->shiftOffsetData);
 }
