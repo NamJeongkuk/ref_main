@@ -8,13 +8,25 @@
 #include "ConvertibleCompartmentAdjustedSetpointPlugin.h"
 #include "SystemErds.h"
 
-static const Erd_t convertibleCompartmentAdjustedSetpointErds[] = {
+static const Erd_t convertibleCompartmentAdjustedSetpointWithoutShiftErds[] = {
    Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,
    Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
-   Erd_ConvertibleCompartment_ThermalShiftInDegFx100
 };
 
-static const I16ErdAdderConfiguration_t convertibleCompartmentErdAdderConfig = {
+static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointWithoutShiftConfig = {
+   .resultErd = Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
+   .i16ErdsToBeAdded = {
+      convertibleCompartmentAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(convertibleCompartmentAdjustedSetpointWithoutShiftErds),
+   },
+};
+
+static const Erd_t convertibleCompartmentAdjustedSetpointErds[] = {
+   Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
+};
+
+static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointConfig = {
    .resultErd = Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       convertibleCompartmentAdjustedSetpointErds,
@@ -59,9 +71,14 @@ void ConvertibleCompartmentAdjustedSetpointPlugin_Init(
    I_DataModel_t *dataModel)
 {
    I16ErdAdder_Init(
-      &instance->_private.convertibleCompartmentErdAdderConfig,
+      &instance->_private.convertibleCompartmentAdjustedSetpointWithoutShiftErdAdder,
       dataModel,
-      &convertibleCompartmentErdAdderConfig);
+      &convertibleCompartmentAdjustedSetpointWithoutShiftConfig);
+
+   I16ErdAdder_Init(
+      &instance->_private.convertibleCompartmentAdjustedSetpointErdAdder,
+      dataModel,
+      &convertibleCompartmentAdjustedSetpointConfig);
 
    ResolvedSetpointWriter_Init(
       &instance->_private.convertibleCompartmentResolvedSetpointWriter,

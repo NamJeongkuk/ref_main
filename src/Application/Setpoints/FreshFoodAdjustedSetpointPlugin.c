@@ -18,17 +18,29 @@ static TemperatureDegFx100_t coldSetpointOffsetInDegFx100;
 static TemperatureDegFx100_t middleSetpointOffsetInDegFx100 = 0;
 static TemperatureDegFx100_t warmSetpointOffsetInDegFx100;
 
-static const Erd_t freshFoodAdjustedSetpointErds[] = {
+static const Erd_t freshFoodAdjustedSetpointWithoutShiftErds[] = {
    Erd_FreshFood_ResolvedSetpointInDegFx100,
    Erd_FreshFood_CabinetOffsetInDegFx100,
    Erd_FreshFood_SetpointOffsetInDegFx100,
    Erd_FreshFood_CrossAmbientOffsetInDegFx100,
    Erd_FreshFood_HighAmbientOffsetInDegFx100,
    Erd_FreshFood_PulldownOffsetInDegFx100,
-   Erd_FreshFood_ThermalShiftInDegFx100
 };
 
-static const I16ErdAdderConfiguration_t freshFoodErdAdderConfig = {
+static const I16ErdAdderConfiguration_t freshFoodAdjustedSetpointWithoutShiftConfig = {
+   .resultErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+   .i16ErdsToBeAdded = {
+      freshFoodAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(freshFoodAdjustedSetpointWithoutShiftErds),
+   },
+};
+
+static const Erd_t freshFoodAdjustedSetpointErds[] = {
+   Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_FreshFood_ThermalShiftInDegFx100,
+};
+
+static const I16ErdAdderConfiguration_t freshFoodAdjustedSetpointConfig = {
    .resultErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       freshFoodAdjustedSetpointErds,
@@ -138,7 +150,8 @@ void FreshFoodAdjustedSetpointPlugin_Init(
       &instance->_private.freshFoodResolvedSetpointWriter,
       dataModel,
       &freshFoodResolvedSetpointWriterConfiguration);
-   I16ErdAdder_Init(&instance->_private.freshFoodErdAdder, dataModel, &freshFoodErdAdderConfig);
+   I16ErdAdder_Init(&instance->_private.freshFoodAdjustedSetpointWithoutShiftErdAdder, dataModel, &freshFoodAdjustedSetpointWithoutShiftConfig);
+   I16ErdAdder_Init(&instance->_private.freshFoodAdjustedSetpointErdAdder, dataModel, &freshFoodAdjustedSetpointConfig);
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.freshFoodCrossAmbientOffsetCalculator,
       dataModel,

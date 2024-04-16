@@ -11,15 +11,27 @@
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 
-static const Erd_t freezerAdjustedSetpointErds[] = {
+static const Erd_t freezerAdjustedSetpointWithoutShiftErds[] = {
    Erd_Freezer_ResolvedSetpointInDegFx100,
    Erd_Freezer_CabinetOffsetInDegFx100,
    Erd_Freezer_CrossAmbientOffsetInDegFx100,
    Erd_Freezer_HighAmbientOffsetInDegFx100,
-   Erd_Freezer_ThermalShiftInDegFx100
 };
 
-static const I16ErdAdderConfiguration_t freezerErdAdderConfig = {
+static const I16ErdAdderConfiguration_t freezerAdjustedSetpointWithoutShiftConfig = {
+   .resultErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
+   .i16ErdsToBeAdded = {
+      freezerAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(freezerAdjustedSetpointWithoutShiftErds),
+   },
+};
+
+static const Erd_t freezerAdjustedSetpointErds[] = {
+   Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_Freezer_ThermalShiftInDegFx100,
+};
+
+static const I16ErdAdderConfiguration_t freezerAdjustedSetpointConfig = {
    .resultErd = Erd_Freezer_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       freezerAdjustedSetpointErds,
@@ -58,7 +70,8 @@ void FreezerAdjustedSetpointPlugin_Init(
    I_DataModel_t *dataModel)
 {
    InitializeFreezerCabinetOffsetErd(dataModel);
-   I16ErdAdder_Init(&instance->_private.freezerErdAdder, dataModel, &freezerErdAdderConfig);
+   I16ErdAdder_Init(&instance->_private.freezerAdjustedSetpointWithoutShiftErdAdder, dataModel, &freezerAdjustedSetpointWithoutShiftConfig);
+   I16ErdAdder_Init(&instance->_private.freezerAdjustedSetpointErdAdder, dataModel, &freezerAdjustedSetpointConfig);
    ResolvedSetpointWriter_Init(
       &instance->_private.freezerResolvedSetpointWriter,
       dataModel,

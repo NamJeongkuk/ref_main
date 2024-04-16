@@ -18,7 +18,8 @@ typedef struct
 {
    struct
    {
-      I16ErdAdder_t convertibleCompartmentErdAdderConfig;
+      I16ErdAdder_t convertibleCompartmentAdjustedSetpointWithoutShiftErdAdder;
+      I16ErdAdder_t convertibleCompartmentAdjustedSetpointErdAdder;
       ResolvedSetpointWriter_t convertibleCompartmentResolvedSetpointWriter;
       ConvertibleCompartmentShiftOffsetCalculatorPlugin_t convertibleCompartmentShiftOffsetCalculatorPlugin;
       CrossAmbientOffsetCalculator_t convertibleCompartmentAsFreshFoodOffsetCalculator;

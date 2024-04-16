@@ -11,7 +11,6 @@
 
 static const ShiftOffsetCalculatorConfig_t freezerShiftOffsetCalculatorConfig = {
    .filteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,

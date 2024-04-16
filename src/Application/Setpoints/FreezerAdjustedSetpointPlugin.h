@@ -24,7 +24,8 @@ typedef struct
       FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
       CrossAmbientOffsetCalculator_t freezerCrossAmbientOffsetCalculator;
       HighAmbientOffsetCalculator_t freezerHighAmbientOffsetCalculator;
-      I16ErdAdder_t freezerErdAdder;
+      I16ErdAdder_t freezerAdjustedSetpointWithoutShiftErdAdder;
+      I16ErdAdder_t freezerAdjustedSetpointErdAdder;
       ResolvedSetpointWriter_t freezerResolvedSetpointWriter;
    } _private;
 } FreezerAdjustedSetpointPlugin_t;

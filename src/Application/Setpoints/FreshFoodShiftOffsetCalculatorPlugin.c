@@ -11,7 +11,6 @@
 
 static const ShiftOffsetCalculatorConfig_t freshFoodShiftOffsetCalculatorConfig = {
    .filteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,

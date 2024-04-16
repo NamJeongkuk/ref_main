@@ -25,7 +25,8 @@ typedef struct
       CrossAmbientOffsetCalculator_t freshFoodCrossAmbientOffsetCalculator;
       HighAmbientOffsetCalculator_t freshFoodHighAmbientOffsetCalculator;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
-      I16ErdAdder_t freshFoodErdAdder;
+      I16ErdAdder_t freshFoodAdjustedSetpointWithoutShiftErdAdder;
+      I16ErdAdder_t freshFoodAdjustedSetpointErdAdder;
       ResolvedSetpointWriter_t freshFoodResolvedSetpointWriter;
    } _private;
 } FreshFoodAdjustedSetpointPlugin_t;
