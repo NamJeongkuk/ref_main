@@ -12,6 +12,7 @@
 #include "FanControl.h"
 #include "RelativeHumidityPercentx100.h"
 #include "TemperatureDegFx100.h"
+#include <stdbool.h>
 
 typedef struct
 {
@@ -62,7 +63,6 @@ typedef struct
 
 typedef struct
 {
-   bool careAboutHighAmbientTemperature;
    uint8_t fanId;
    uint8_t pulsesPerRevolution;
    bool careAboutCoolingMode;
@@ -80,8 +80,10 @@ typedef struct
       const FanCareAboutCoolingModeSpeedData_t *careAboutCoolingModeSpeedData;
    };
 
-   FanControl_t superLowAtHighAmbientHumidityAndHighTemperature;
-   FanControl_t superLowAtHighAmbientHumidityAndLowTemperature;
+   FanControl_t highAmbientHumidityAndHighTemperature;
+   FanControl_t highAmbientHumidityAndLowTemperature;
+   FanControl_t highAmbientHumidityAndHighTemperatureFreshFoodCoolingMode;
+   FanControl_t highAmbientHumidityAndLowTemperatureFreshFoodCoolingMode;
    TemperatureDegFx100_t highAmbientTriggerTemperatureInDegFx100;
    RelativeHumidityPercentx100_t highAmbientTriggerHumidityInPercentx100;
 } FanData_t;

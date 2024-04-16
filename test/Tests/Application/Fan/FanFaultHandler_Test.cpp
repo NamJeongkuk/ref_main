@@ -46,7 +46,6 @@ static PidControllerGains_t gains = {
 };
 
 static const FanData_t fanData = {
-   .careAboutHighAmbientTemperature = false,
    .fanId = FanId_Condenser,
    .pulsesPerRevolution = 2,
    .careAboutCoolingMode = false,
@@ -58,8 +57,10 @@ static const FanData_t fanData = {
    .missingFeedbackWhenOnFaultTimeoutInMinutes = 6,
    .feedbackPresentWhenFanOffTimeoutInMinutes = 7,
    .speedData = &speedData,
-   .superLowAtHighAmbientHumidityAndHighTemperature = fanControl,
-   .superLowAtHighAmbientHumidityAndLowTemperature = fanControl,
+   .highAmbientHumidityAndHighTemperature = fanControl,
+   .highAmbientHumidityAndLowTemperature = fanControl,
+   .highAmbientHumidityAndHighTemperatureFreshFoodCoolingMode = fanControl,
+   .highAmbientHumidityAndLowTemperatureFreshFoodCoolingMode = fanControl,
    .highAmbientTriggerTemperatureInDegFx100 = 75,
    .highAmbientTriggerHumidityInPercentx100 = 82
 };

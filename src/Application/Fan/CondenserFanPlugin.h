@@ -13,6 +13,7 @@
 #include "FanSpeedResolver.h"
 #include "FanController.h"
 #include "FanFaultHandler.h"
+#include "CondenserFanAntiSweatBehavior.h"
 
 typedef struct
 {
@@ -22,6 +23,7 @@ typedef struct
       FanSpeedResolver_t fanSpeedResolver;
       FanController_t fanController;
       FanFaultHandler_t fanFaultHandler;
+      CondenserFanAntiSweatBehavior_t condenserFanAntiSweatBehavior;
    } _private;
 } CondenserFanPlugin_t;
 

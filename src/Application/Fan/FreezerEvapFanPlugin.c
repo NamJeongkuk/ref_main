@@ -36,12 +36,7 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
-   .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanControl,
-   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
-   .ambientThermistorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
-   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
-   .fanAntiSweatBehaviorEnabledErd = Erd_FreezerEvapFanAntiSweatBehaviorEnabledByGrid
+   .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanControl
 };
 
 static const FanControllerConfig_t freezerEvapFanControllerConfig = {

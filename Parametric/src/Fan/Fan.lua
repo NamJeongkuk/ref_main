@@ -15,7 +15,6 @@ return function(core)
     return TypedString(
       { 'fan' },
       structure(
-        bool(false),
         u8(config.fan_id),
         u8(config.pulses_per_revolution),
         bool(config.care_about_cooling_mode),
@@ -23,6 +22,8 @@ return function(core)
         config.pid,
         config.fault,
         pointer(config.speed_table),
+        rpm({ rpm = 0 }),
+        rpm({ rpm = 0 }),
         rpm({ rpm = 0 }),
         rpm({ rpm = 0 }),
         i16(0),

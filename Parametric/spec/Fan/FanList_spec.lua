@@ -66,8 +66,10 @@ describe('FanList', function()
     pid = some_pid,
     fault = some_fault,
     speed_table = TypedString('fan_speed_table', 'some_speed_table'),
-    super_low_at_high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
-    super_low_at_high_ambient_humidity_and_low_temperature = rpm({rpm = 1025}),
+    high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
+    high_ambient_humidity_and_low_temperature = rpm({rpm = 1025}),
+    high_ambient_humidity_and_high_temperature_ff_cooling_mode = rpm({rpm = 900}),
+    high_ambient_humidity_and_low_temperature_ff_cooling_mode = rpm({rpm = 925}),
     high_ambient_trigger_temperature_in_degfx100 = 8200,
     high_ambient_trigger_humidity_in_percentx100 = 7500
   })
@@ -119,7 +121,6 @@ describe('FanList', function()
     local expected = remove_whitespace([[
       structure(
         structure(
-          bool(true),
           u8(0),
           u8(2),
           bool(false),
@@ -154,11 +155,18 @@ describe('FanList', function()
             u8(1),
             u16(1025)
           ),
+          structure(
+            u8(1),
+            u16(900)
+          ),
+          structure(
+            u8(1),
+            u16(925)
+          ),
           i16(8200),
           u16(7500)
         ),
         structure(
-          bool(false),
           u8(4),
           u8(4),
           bool(false),
@@ -185,6 +193,14 @@ describe('FanList', function()
             u8(22)
           ),
           pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
           structure(
             u8(1),
             u16(0)
@@ -197,7 +213,6 @@ describe('FanList', function()
           u16(0)
         ),
         structure(
-          bool(false),
           u8(4),
           u8(4),
           bool(false),
@@ -224,6 +239,14 @@ describe('FanList', function()
             u8(22)
           ),
           pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
           structure(
             u8(1),
             u16(0)
@@ -236,7 +259,6 @@ describe('FanList', function()
           u16(0)
         ),
         structure(
-          bool(false),
           u8(4),
           u8(4),
           bool(false),
@@ -263,6 +285,14 @@ describe('FanList', function()
             u8(22)
           ),
           pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
           structure(
             u8(1),
             u16(0)
@@ -275,7 +305,6 @@ describe('FanList', function()
           u16(0)
         ),
         structure(
-          bool(false),
           u8(4),
           u8(4),
           bool(false),
@@ -302,6 +331,14 @@ describe('FanList', function()
             u8(22)
           ),
           pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
           structure(
             u8(1),
             u16(0)
@@ -314,7 +351,6 @@ describe('FanList', function()
           u16(0)
         ),
         structure(
-          bool(false),
           u8(4),
           u8(4),
           bool(false),
@@ -341,6 +377,14 @@ describe('FanList', function()
             u8(22)
           ),
           pointer(some_speed_table),
+          structure(
+            u8(1),
+            u16(0)
+          ),
+          structure(
+            u8(1),
+            u16(0)
+          ),
           structure(
             u8(1),
             u16(0)

@@ -36,12 +36,7 @@ static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
-   .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanControl,
-   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
-   .ambientThermistorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
-   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
-   .fanAntiSweatBehaviorEnabledErd = Erd_FreshFoodEvapFanAntiSweatBehaviorEnabledByGrid
+   .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanControl
 };
 
 static const FanControllerConfig_t freshFoodEvapFanControllerConfig = {

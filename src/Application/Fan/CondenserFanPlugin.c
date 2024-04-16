@@ -36,12 +36,7 @@ static const FanSpeedResolverConfig_t condenserConfig = {
    .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
-   .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanControl,
-   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
-   .ambientThermistorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
-   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
-   .fanAntiSweatBehaviorEnabledErd = Erd_CondenserFanAntiSweatBehaviorEnabledByGrid
+   .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanControl
 };
 
 static const FanControllerConfig_t condenserFanControllerConfig = {
@@ -61,6 +56,16 @@ static const FanFaultHandlerConfiguration_t condenserFanFaultHandlerConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const CondenserFanAntiSweatBehaviorConfig_t condenserFanAntiSweatBehaviorConfig = {
+   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
+   .condenserFanAntiSweatBehaviorVoteErd = Erd_CondenserFanSpeed_AntiSweatBehaviorVote,
+   .ambientTemperatureSensorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
+   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
+   .condenserFanAntiSweatBehaviorEnabledByGridErd = Erd_CondenserFanAntiSweatBehaviorEnabledByGrid,
+   .coolingModeErd = Erd_CoolingMode
+};
+
 void CondenserFanPlugin_Init(
    CondenserFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -72,6 +77,12 @@ void CondenserFanPlugin_Init(
       &instance->_private.fanSpeedVoteResolver,
       DataModel_AsDataSource(dataModel),
       &condenserFanSpeedResolverConfiguration);
+
+   CondenserFanAntiSweatBehavior_Init(
+      &instance->_private.condenserFanAntiSweatBehavior,
+      dataModel,
+      &condenserFanAntiSweatBehaviorConfig,
+      &fanData->condenserFan);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver,
