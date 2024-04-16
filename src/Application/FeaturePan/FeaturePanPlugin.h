@@ -15,6 +15,7 @@
 #include "FeaturePanPulldownVoting.h"
 #include "FeaturePanWarmupSlopeVoting.h"
 #include "FeaturePanAsDeliPanEvapFanVoting.h"
+#include "FeaturePanConvertibleFreezerEvapFanDependencyVoting.h"
 #include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
 #include "FeaturePanDeliDeliFanDependencyVoting.h"
 
@@ -28,6 +29,7 @@ typedef struct
       FeaturePanPulldownVoting_t featurePanPulldownVoting;
       FeaturePanWarmupSlopeVoting_t featurePanWarmupSlopeVoting;
       FeaturePanAsDeliPanEvapFanVoting_t featurePanAsDeliPanEvapFanVoting;
+      FeaturePanConvertibleFreezerEvapFanDependencyVoting_t featurePanConvertibleFreezerEvapFanDependencyVoting;
       FeaturePanDeliFreshFoodEvapFanDependencyVoting_t featurePanDeliFreshFoodEvapFanDependencyVoting;
       FeaturePanDeliDeliFanDependencyVoting_t featurePanDeliDeliFanDependencyVoting;
    } _private;

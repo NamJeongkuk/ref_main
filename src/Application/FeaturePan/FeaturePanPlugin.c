@@ -92,6 +92,11 @@ static const FeaturePanAsDeliPanEvapFanVotingConfig_t featurePanAsDeliPanEvapFan
    .fanEvapGridVoteErd = Erd_FreshFoodEvapFanSpeed_GridVote
 };
 
+static const FeaturePanConvertibleFreezerEvapFanDependencyVotingConfiguration_t featurePanConvertibleFreezerEvapFanDependencyVotingConfig = {
+   .freezerEvapFanResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .convertibleCompartmentDamperVoteErd = Erd_ConvertibleCompartmentDamperPosition_FreezerEvapFanDependencyVote
+};
+
 static const FeaturePanDeliDeliFanDependencyVotingConfig_t featurePanDeliDeliFanDepenencyVotingConfig = {
    .deliFanActualRpmErd = Erd_DeliFan_ActualRpm,
    .deliHeaterVotedErd = Erd_DeliPanHeater_DeliFanDependencyVote
@@ -164,6 +169,11 @@ void FeaturePanPlugin_Init(
          &instance->_private.featurePanAsConvertibleCompartmentDualEvapFanVoting,
          dataModel,
          &dualEvapVotingConfig);
+
+      FeaturePanConvertibleFreezerEvapFanDependencyVoting_Init(
+         &instance->_private.featurePanConvertibleFreezerEvapFanDependencyVoting,
+         dataModel,
+         &featurePanConvertibleFreezerEvapFanDependencyVotingConfig);
    }
    else if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_DeliPan))
    {
