@@ -180,7 +180,7 @@ build_all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
-target: erd_definitions nv_usage_report
+target: erd_definitions nv_usage_report erd_lock
 
 .PHONY: package
 package: build_all artifacts erd_lock
@@ -200,7 +200,7 @@ $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
 
 .PHONY: upload
-upload: $(call upload_deps,all jlink_tools)
+upload: $(call upload_deps,all jlink_tools) erd_lock
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot)
 
 .PHONY: clean
