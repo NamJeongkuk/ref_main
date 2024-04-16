@@ -80,7 +80,7 @@ static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingDeliPanCon
    .featurePanHeaterVoteErd = Erd_DeliPanHeater_PulldownVote
 };
 
-static const FeaturePanDeliDependencyVotingConfiguration_t featurePanDeliDependencyVotingConfig = {
+static const FeaturePanDeliFreshFoodEvapFanDependencyVotingConfig_t featurePanDeliFreshFoodEvapFanDependencyVotingConfig = {
    .evapFanResolvedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
    .fanVoteErd = Erd_DeliFanSpeed_FreshFoodFanDependencyVote,
    .damperVoteErd = Erd_DeliDamperPosition_FreshFoodFanDependencyVote
@@ -90,6 +90,11 @@ static const FeaturePanAsDeliPanEvapFanVotingConfig_t featurePanAsDeliPanEvapFan
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .fanEvapVoteErd = Erd_FreshFoodEvapFanSpeed_DeliPanSpeedVote,
    .fanEvapGridVoteErd = Erd_FreshFoodEvapFanSpeed_GridVote
+};
+
+static const FeaturePanDeliDeliFanDependencyVotingConfig_t featurePanDeliDeliFanDepenencyVotingConfig = {
+   .deliFanActualRpmErd = Erd_DeliFan_ActualRpm,
+   .deliHeaterVotedErd = Erd_DeliPanHeater_DeliFanDependencyVote
 };
 
 static void WriteCurrentModeErdIfUninitialized(I_DataModel_t *dataModel)
@@ -181,15 +186,20 @@ void FeaturePanPlugin_Init(
          &featurePanPulldownVotingDeliPanConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
 
-      FeaturePanDeliDependencyVoting_Init(
-         &instance->_private.featurePanDeliDependencyVoting,
-         dataModel,
-         &featurePanDeliDependencyVotingConfig);
-
       FeaturePanAsDeliPanEvapFanVoting_Init(
          &instance->_private.featurePanAsDeliPanEvapFanVoting,
          dataModel,
          &featurePanAsDeliPanEvapFanVotingConfig,
          PersonalityParametricData_Get(dataModel)->featurePanData);
+
+      FeaturePanDeliFreshFoodEvapFanDependencyVoting_Init(
+         &instance->_private.featurePanDeliFreshFoodEvapFanDependencyVoting,
+         dataModel,
+         &featurePanDeliFreshFoodEvapFanDependencyVotingConfig);
+
+      FeaturePanDeliDeliFanDependencyVoting_Init(
+         &instance->_private.featurePanDeliDeliFanDependencyVoting,
+         dataModel,
+         &featurePanDeliDeliFanDepenencyVotingConfig);
    }
 }

@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "FeaturePanDeliDependencyVoting.h"
+#include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -15,15 +15,15 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
 
-const FeaturePanDeliDependencyVotingConfiguration_t config = {
+const FeaturePanDeliFreshFoodEvapFanDependencyVotingConfig_t config = {
    .evapFanResolvedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
    .fanVoteErd = Erd_DeliFanSpeed_FreshFoodFanDependencyVote,
    .damperVoteErd = Erd_DeliDamperPosition_FreshFoodFanDependencyVote
 };
 
-TEST_GROUP(FeaturePanDeliDependencyVoting)
+TEST_GROUP(FeaturePanDeliFreshFoodEvapFanDependencyVoting)
 {
-   FeaturePanDeliDependencyVoting_t instance;
+   FeaturePanDeliFreshFoodEvapFanDependencyVoting_t instance;
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
@@ -43,7 +43,7 @@ TEST_GROUP(FeaturePanDeliDependencyVoting)
 
    void GivenModuleIsInitialized()
    {
-      FeaturePanDeliDependencyVoting_Init(
+      FeaturePanDeliFreshFoodEvapFanDependencyVoting_Init(
          &instance,
          dataModel,
          &config);
@@ -78,7 +78,7 @@ TEST_GROUP(FeaturePanDeliDependencyVoting)
    }
 };
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanIsOffOnInit)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanIsOffOnInit)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_Care });
    GivenModuleIsInitialized();
@@ -86,7 +86,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanIsOff
    FanVoteShouldBe({ FanSpeed_Off, Vote_Care });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFanIsNotOffOnInit)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFanIsNotOffOnInit)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_High, Vote_Care });
    GivenModuleIsInitialized();
@@ -94,7 +94,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFan
    FanVoteShouldBe({ FanSpeed_Off, Vote_DontCare });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFanIsOffOnInit)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFanIsOffOnInit)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_Care });
    GivenModuleIsInitialized();
@@ -102,7 +102,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFa
    DamperPositionShouldBe({ DamperPosition_Closed, Vote_Care });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolvedFanIsNotOffOnInit)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolvedFanIsNotOffOnInit)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_High, Vote_Care });
    GivenModuleIsInitialized();
@@ -110,7 +110,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolved
    DamperPositionShouldBe({ DamperPosition_Closed, Vote_DontCare });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanChangesToOff)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanChangesToOff)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_High, Vote_Care });
    GivenModuleIsInitialized();
@@ -120,7 +120,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteOffForFanWhenEvapResolvedFanChang
    FanVoteShouldBe({ FanSpeed_Off, Vote_Care });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFanChangesToNotOff)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFanChangesToNotOff)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_Care });
    GivenModuleIsInitialized();
@@ -130,7 +130,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanWhenEvapResolvedFan
    FanVoteShouldBe({ FanSpeed_Off, Vote_DontCare });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFanChangesToOff)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFanChangesToOff)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_High, Vote_Care });
    GivenModuleIsInitialized();
@@ -140,7 +140,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteClosedForDamperWhenEvapResolvedFa
    DamperPositionShouldBe({ DamperPosition_Closed, Vote_Care });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolvedFanChangesToNotOff)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolvedFanChangesToNotOff)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_Care });
    GivenModuleIsInitialized();
@@ -150,7 +150,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForDamperWhenEvapResolved
    DamperPositionShouldBe({ DamperPosition_Closed, Vote_DontCare });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanAndDamperWhenEvapResolvedFanIsDontCareOnInit)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForFanAndDamperWhenEvapResolvedFanIsDontCareOnInit)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_DontCare });
    GivenModuleIsInitialized();
@@ -159,7 +159,7 @@ TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanAndDamperWhenEvapRe
    DamperPositionShouldBe({ DamperPosition_Closed, Vote_DontCare });
 }
 
-TEST(FeaturePanDeliDependencyVoting, ShouldVoteDontCareForFanAndDamperWhenEvapResolvedFanChangesToDontCare)
+TEST(FeaturePanDeliFreshFoodEvapFanDependencyVoting, ShouldVoteDontCareForFanAndDamperWhenEvapResolvedFanChangesToDontCare)
 {
    GivenEvapFanResolvedVoteIs({ FanSpeed_Off, Vote_Care });
    GivenModuleIsInitialized();

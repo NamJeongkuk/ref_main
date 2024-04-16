@@ -5,28 +5,28 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "FeaturePanDeliDependencyVoting.h"
+#include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
 #include "FanSpeed.h"
 #include "DamperVotedPosition.h"
 #include "Vote.h"
 
-static void Vote(FeaturePanDeliDependencyVoting_t *instance, Vote_t vote)
+static void Vote(FeaturePanDeliFreshFoodEvapFanDependencyVoting_t *instance, Vote_t vote)
 {
    DamperVotedPosition_t damperVote = { .position = DamperPosition_Closed, .care = vote };
-   FanVotedSpeed_t deliFanVote = { . speed = FanSpeed_Off, .care = vote };
+   FanVotedSpeed_t deliFanVote = { .speed = FanSpeed_Off, .care = vote };
 
    DataModel_Write(
-      instance->_private.dataModel, 
-      instance->_private.config->fanVoteErd, 
+      instance->_private.dataModel,
+      instance->_private.config->fanVoteErd,
       &deliFanVote);
 
    DataModel_Write(
-      instance->_private.dataModel, 
-      instance->_private.config->damperVoteErd, 
+      instance->_private.dataModel,
+      instance->_private.config->damperVoteErd,
       &damperVote);
 };
 
-static FanVotedSpeed_t EvapFanVotedSpeed(FeaturePanDeliDependencyVoting_t *instance)
+static FanVotedSpeed_t EvapFanVotedSpeed(FeaturePanDeliFreshFoodEvapFanDependencyVoting_t *instance)
 {
    FanVotedSpeed_t fanVotedSpeed;
    DataModel_Read(
@@ -37,7 +37,7 @@ static FanVotedSpeed_t EvapFanVotedSpeed(FeaturePanDeliDependencyVoting_t *insta
    return fanVotedSpeed;
 }
 
-static void VoteForDamperAndDeliFan(FeaturePanDeliDependencyVoting_t *instance, FanVotedSpeed_t fanVotedSpeed)
+static void VoteForDamperAndDeliFan(FeaturePanDeliFreshFoodEvapFanDependencyVoting_t *instance, FanVotedSpeed_t fanVotedSpeed)
 {
    if(fanVotedSpeed.speed == FanSpeed_Off && fanVotedSpeed.care == Vote_Care)
    {
@@ -51,16 +51,16 @@ static void VoteForDamperAndDeliFan(FeaturePanDeliDependencyVoting_t *instance, 
 
 static void OnEvapFanResolvedVoteChange(void *context, const void *_args)
 {
-   FeaturePanDeliDependencyVoting_t *instance = context;
+   FeaturePanDeliFreshFoodEvapFanDependencyVoting_t *instance = context;
    const FanVotedSpeed_t *fanVotedSpeed = _args;
 
    VoteForDamperAndDeliFan(instance, *fanVotedSpeed);
 }
 
-void FeaturePanDeliDependencyVoting_Init(
-   FeaturePanDeliDependencyVoting_t *instance,
+void FeaturePanDeliFreshFoodEvapFanDependencyVoting_Init(
+   FeaturePanDeliFreshFoodEvapFanDependencyVoting_t *instance,
    I_DataModel_t *dataModel,
-   const FeaturePanDeliDependencyVotingConfiguration_t *config)
+   const FeaturePanDeliFreshFoodEvapFanDependencyVotingConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
