@@ -8,7 +8,7 @@
 #ifndef COMPRESSORSPEEDS_H
 #define COMPRESSORSPEEDS_H
 
-#include <stdint.h>
+#include <stdbool.h>
 #include "CoolingModeDependentCompressorSpeeds.h"
 #include "CoolingModeIndependentCompressorSpeeds.h"
 #include "CompressorSpeedFrequencyInHz.h"
