@@ -937,16 +937,17 @@ static void VoteForConvertibleCompartmentDamperPosition(Defrost_t *instance, Dam
 
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
+   VoteForSealedSystemValvePosition(instance, instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition, care);
+   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition, care);
    VoteForCompressorSpeed(instance, instance->_private.defrostData->prechillData.prechillCompressorSpeed, care);
+   VoteForCondenserFanSpeed(instance, instance->_private.defrostData->prechillData.prechillCondenserFanSpeed, care);
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillFreezerEvaporatorFanSpeed, care);
    VoteForFreshFoodEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillFreshFoodEvaporatorFanSpeed, care);
-   VoteForConvertibleCompartmentEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentEvapFanSpeed, care);
    VoteForIceCabinetFanSpeed(instance, instance->_private.defrostData->prechillData.prechillIceCabinetFanSpeed, care);
    VoteForDeliFanSpeed(instance, instance->_private.defrostData->prechillData.prechillDeliFanSpeed, care);
-   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition, care);
-   VoteForConvertibleCompartmentDamperPosition(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentDamperPosition, care);
    VoteForDeliDamperPosition(instance, instance->_private.defrostData->prechillData.prechillDeliDamperPosition, care);
-   VoteForSealedSystemValvePosition(instance, instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition, care);
+   VoteForConvertibleCompartmentDamperPosition(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentDamperPosition, care);
+   VoteForConvertibleCompartmentEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentEvapFanSpeed, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)

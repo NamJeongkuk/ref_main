@@ -40,6 +40,7 @@ describe('Defrost', function()
         prechill_deli_damper_position = 'open',
         prechill_convertible_compartment_evap_fan_speed = 'super_low_speed',
         prechill_fresh_food_damper_position = 'closed',
+        prechill_condenser_fan_speed = 'super_low_speed',
         prechill_freezer_min_temp_in_degfx100 = -600,
         prechill_fresh_food_min_temp_in_degfx100 = 3200,
         prechill_fresh_food_max_temp_in_degfx100 = 4600,
@@ -280,6 +281,14 @@ describe('Defrost', function()
     should_fail_with("prechill.prechill_fresh_food_damper_position='not a valid damper position' must be in the set { 'closed', 'open' }", function()
       local config = generate_config()
       config.prechill['prechill_fresh_food_damper_position'] = 'not a valid damper position'
+      defrost(config)
+    end)
+  end)
+
+  it('should require condenser fan speed argument of prechill to be valid fan speed', function()
+    should_fail_with("prechill.prechill_condenser_fan_speed='not a valid fan speed' must be in the set { 'off_speed', 'super_low_speed', 'low_speed', 'medium_speed', 'high_speed', 'super_high_speed' }", function()
+      local config = generate_config()
+      config.prechill['prechill_condenser_fan_speed'] = 'not a valid fan speed'
       defrost(config)
     end)
   end)
@@ -941,6 +950,7 @@ describe('Defrost', function()
           u8(]] .. damper_position_type.open .. [[),
           u16(]] .. fan_speed_type.super_low_speed .. [[),
           u8(]] .. damper_position_type.closed .. [[),
+          u8(]] .. fan_speed_type.super_low_speed .. [[),
           i16(-600),
           i16(3200),
           i16(4600),
@@ -1027,6 +1037,7 @@ describe('Defrost', function()
         prechill_deli_damper_position = 'open',
         prechill_convertible_compartment_evap_fan_speed = 'super_low_speed',
         prechill_fresh_food_damper_position = 'closed',
+        prechill_condenser_fan_speed = 'super_low_speed',
         prechill_freezer_min_temp_in_degfx100 = -600,
         prechill_fresh_food_min_temp_in_degfx100 = 3200,
         prechill_fresh_food_max_temp_in_degfx100 = 4600,

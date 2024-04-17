@@ -2406,6 +2406,7 @@ TEST(Defrost_SingleEvapSideBySide, ShouldVoteForLoadsOnEntryToPrechill)
    ConvertibleCompartmentDamperPositionVoteShouldBe(defrostData.prechillData.prechillConvertibleCompartmentDamperPosition);
    DeliDamperPositionVoteShouldBe(defrostData.prechillData.prechillDeliDamperPosition);
    SealedSystemValvePositionVoteShouldBe(defrostData.prechillData.prechillSealedSystemValvePosition);
+   CondenserFanSpeedVoteShouldBe(defrostData.prechillData.prechillCondenserFanSpeed);
 }
 
 TEST(Defrost_SingleEvapSideBySide, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)
@@ -3100,14 +3101,26 @@ TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDef
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInPrechillState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndVoteDontCareForPrechillLoadsWhenIdleTestIsRequestedInPrechillState)
 {
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    DefrostTestStateRequestShouldBeNone();
+   SealedSystemValvePositionVoteShouldBeDontCare();
+   FreshFoodDamperPositionVoteShouldBeDontCare();
+   CompressorSpeedVoteShouldBeDontCare();
+   CondenserFanSpeedVoteShouldBeDontCare();
+   FreezerEvapFanSpeedVoteShouldBeDontCare();
+   FreshFoodEvapFanSpeedVoteShouldBeDontCare();
+   IceCabinetFanSpeedVoteShouldBeDontCare();
+   ConvertibleCompartmentDamperPositionVoteShouldBeDontCare();
+   ConvertibleCompartmentEvapFanSpeedVoteShouldBeDontCare();
+   DeliDamperPositionVoteShouldBeDontCare();
+   DeliFanSpeedVoteShouldBeDontCare();
 }
 
 TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInPrechillState)
