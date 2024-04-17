@@ -297,7 +297,7 @@ TEST(Grid_SingleDoorSingleEvap, ShouldOutputCorrectValuesForBlocks22And46IfGiven
 
       CoolingSpeedShouldBe(CoolingSpeed_Low);
       TheIceMakerEnableShouldBe(ENABLED);
-      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       GridAreaShouldBe(GridArea_2);
       GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low);
    }
@@ -310,7 +310,7 @@ TEST(Grid_SingleDoorSingleEvap, ShouldOutputCorrectValuesForBlocks22And46IfGiven
    {
       GivenGridBlockIs(gridBlockNumbers[i]);
       GivenTheIceMakerEnableIs(DISABLED);
-      GivenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
       BothThermistorsAreValid();
       GivenCoolingSpeedIs(CoolingSpeed_High);
       GivenGridAreaIs(GridArea_1);

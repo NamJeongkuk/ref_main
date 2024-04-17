@@ -139,7 +139,6 @@ void Grid_SingleDoorSingleEvap(void *context)
                ? CoolingSpeed_Low
                : coolingSpeed);
          SetIceMakerEnable(dataModel, ENABLED);
-         SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          SetGridArea(dataModel, GridArea_2);
          break;
 
