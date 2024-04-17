@@ -1,4 +1,4 @@
-return fixed_setpoint_offset({
+return feature_pan_setpoint_offset({
   mode1_offset_in_degfx100 = -30,
   mode2_offset_in_degfx100 = -20,
   mode3_offset_in_degfx100 = -10,

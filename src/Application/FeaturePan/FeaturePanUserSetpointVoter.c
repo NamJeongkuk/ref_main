@@ -11,16 +11,34 @@
 #include "TemperatureDegFx100.h"
 #include "utils.h"
 
-static void Vote(FeaturePanUserSetpointVoter_t *instance, const FeaturePanCurrentMode_t mode)
+static FeaturePanCurrentMode_t FeaturePanCurrentMode(FeaturePanUserSetpointVoter_t *instance)
 {
-   TemperatureDegFx100_t currentModeUserSetpoint;
+   FeaturePanCurrentMode_t currentMode;
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->resolvedModeSetpointErds[mode - 1],
-      &currentModeUserSetpoint);
+      instance->_private.config->featurePanCurrentModeErd,
+      &currentMode);
 
-   SetpointVotedTemperature_t vote = { .temperatureInDegFx100 = currentModeUserSetpoint, .care = Vote_Care };
+   return currentMode;
+}
+
+static void Vote(FeaturePanUserSetpointVoter_t *instance)
+{
+   FeaturePanCurrentMode_t currentMode = FeaturePanCurrentMode(instance);
+   SetpointVotedTemperature_t vote = { .temperatureInDegFx100 = INT16_MAX, .care = Vote_DontCare };
+
+   if(IN_RANGE(FeaturePanCurrentMode_Mode1, currentMode, FeaturePanCurrentMode_Mode7))
+   {
+      TemperatureDegFx100_t currentModeUserSetpoint;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->resolvedModeSetpointErds[currentMode - 1],
+         &currentModeUserSetpoint);
+
+      vote.temperatureInDegFx100 = currentModeUserSetpoint;
+      vote.care = Vote_Care;
+   }
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -34,11 +52,10 @@ static void OnDataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    const Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->featurePanCurrentModeErd)
+   if(erd == instance->_private.config->featurePanCurrentModeErd ||
+      erd == instance->_private.config->resolvedModeSetpointErds[CLAMP(FeaturePanCurrentMode(instance), FeaturePanCurrentMode_Mode1, FeaturePanCurrentMode_Mode7) - 1])
    {
-      const FeaturePanCurrentMode_t *currentMode = onChangeData->data;
-
-      Vote(instance, CLAMP(*currentMode, FeaturePanCurrentMode_Mode1, FeaturePanCurrentMode_Mode7));
+      Vote(instance);
    }
 }
 
@@ -50,13 +67,7 @@ void FeaturePanUserSetpointVoter_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
 
-   FeaturePanCurrentMode_t currentMode;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->featurePanCurrentModeErd,
-      &currentMode);
-
-   Vote(instance, CLAMP(currentMode, FeaturePanCurrentMode_Mode1, FeaturePanCurrentMode_Mode7));
+   Vote(instance);
 
    EventSubscription_Init(
       &instance->_private.subscription,

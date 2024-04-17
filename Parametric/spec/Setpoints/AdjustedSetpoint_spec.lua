@@ -13,10 +13,9 @@ describe('AdjustedSetpoint', function()
     return require 'lua-common'.table.merge({
       fresh_food_adjusted_setpoint = TypedString('fresh_food_adjusted_setpoint', 'fresh_food_adjusted_setpoint'),
       freezer_adjusted_setpoint = TypedString('freezer_adjusted_setpoint', 'freezer_adjusted_setpoint'),
-      convertible_compartment_adjusted_setpoint = TypedString('convertible_compartment_adjusted_setpoint', 'convertible_compartment_adjusted_setpoint'),
-      deli_pan_adjusted_setpoint = TypedString('deli_pan_adjusted_setpoint', 'deli_pan_adjusted_setpoint'),
       ice_cabinet_adjusted_setpoint = TypedString('ice_cabinet_adjusted_setpoint', 'ice_cabinet_adjusted_setpoint'),
-      shift_offset_calculator = TypedString('shift_offset_calculator', 'shift_offset_calculator')
+      shift_offset_calculator = TypedString('shift_offset_calculator', 'shift_offset_calculator'),
+      feature_pan_adjusted_setpoint = TypedString('feature_pan_adjusted_setpoint', 'feature_pan_adjusted_setpoint')
     }, overrides or {})
   end
 
@@ -37,18 +36,6 @@ describe('AdjustedSetpoint', function()
       }))
     end)
 
-    should_fail_with('convertible_compartment_adjusted_setpoint must be a typed string with type convertible_compartment_adjusted_setpoint, but is a number', function()
-      adjusted_setpoint(generate_config({
-        convertible_compartment_adjusted_setpoint = -1
-      }))
-    end)
-
-    should_fail_with('deli_pan_adjusted_setpoint must be a typed string with type deli_pan_adjusted_setpoint, but is a number', function()
-      adjusted_setpoint(generate_config({
-        deli_pan_adjusted_setpoint = -1
-      }))
-    end)
-
     should_fail_with('ice_cabinet_adjusted_setpoint must be a typed string with type ice_cabinet_adjusted_setpoint, but is a number', function()
       adjusted_setpoint(generate_config({
         ice_cabinet_adjusted_setpoint = -1
@@ -60,6 +47,12 @@ describe('AdjustedSetpoint', function()
         shift_offset_calculator = -1
       }))
     end)
+
+    should_fail_with('feature_pan_adjusted_setpoint must be a typed string with type feature_pan_adjusted_setpoint, but is a number', function()
+      adjusted_setpoint(generate_config({
+        feature_pan_adjusted_setpoint = -1
+      }))
+    end)
   end)
 
   it('should generate a typed string with the correct data and type adjusted_setpoint', function()
@@ -67,10 +60,9 @@ describe('AdjustedSetpoint', function()
       structure(
         pointer(fresh_food_adjusted_setpoint),
         pointer(freezer_adjusted_setpoint),
-        pointer(convertible_compartment_adjusted_setpoint),
-        pointer(deli_pan_adjusted_setpoint),
         pointer(ice_cabinet_adjusted_setpoint),
-        pointer(shift_offset_calculator)
+        pointer(shift_offset_calculator),
+        pointer(feature_pan_adjusted_setpoint)
       )
     ]])
 

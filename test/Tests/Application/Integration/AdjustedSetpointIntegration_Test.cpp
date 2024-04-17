@@ -68,13 +68,13 @@ TEST_GROUP(AdjustedSetpointIntegration)
    void TheConvertibleCompartmentAdjustedSetpointShouldBeCorrectlyShifted()
    {
       TemperatureDegFx100_t setpoint;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100, &setpoint);
+      DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100, &setpoint);
 
       TemperatureDegFx100_t shift;
       DataModel_Read(dataModel, Erd_ConvertibleCompartment_ThermalShiftInDegFx100, &shift);
 
       TemperatureDegFx100_t adjustedSetpoint;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100, &adjustedSetpoint);
+      DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointInDegFx100, &adjustedSetpoint);
 
       CHECK_EQUAL(setpoint + shift, adjustedSetpoint);
    }
@@ -82,7 +82,7 @@ TEST_GROUP(AdjustedSetpointIntegration)
    void TheConvertibleCompartmentAdjustedSetpointShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100, &actual);
+      DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointInDegFx100, &actual);
       CHECK_EQUAL(expected, actual);
    }
 

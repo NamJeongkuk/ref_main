@@ -8,35 +8,38 @@
 #ifndef FEATUREPANPLUGIN_H
 #define FEATUREPANPLUGIN_H
 
-#include "ConvertibleCompartmentModeSetpointResolver.h"
-#include "I_DataModel.h"
+#include "ConvertibleCompartmentAdjustedSetpointPlugin.h"
 #include "FeaturePanAsConvertibleCompartmentDualEvapFanVoting.h"
-#include "FeaturePanHeaterDisablingVoting.h"
-#include "FeaturePanPulldownVoting.h"
-#include "FeaturePanWarmupSlopeVoting.h"
 #include "FeaturePanAsDeliPanEvapFanVoting.h"
 #include "FeaturePanConvertibleFreezerEvapFanDependencyVoting.h"
-#include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
 #include "FeaturePanDeliDeliFanDependencyVoting.h"
+#include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
+#include "FeaturePanHeaterDisablingVoting.h"
+#include "FeaturePanModeSetpointResolver.h"
+#include "FeaturePanPulldownVoting.h"
+#include "FeaturePanSetpointOffsetUpdater.h"
+#include "FeaturePanUserSetpointVoter.h"
+#include "FeaturePanWarmupSlopeVoting.h"
 
 typedef struct
 {
    struct
    {
-      ConvertibleCompartmentModeSetpointResolver_t convertibleCompartmentModeSetpointResolver;
+      ConvertibleCompartmentAdjustedSetpointPlugin_t convertibleCompartmentAdjustedSetpointPlugin;
       FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t featurePanAsConvertibleCompartmentDualEvapFanVoting;
-      FeaturePanHeaterDisablingVoting_t featurePanHeaterDisablingVoting;
-      FeaturePanPulldownVoting_t featurePanPulldownVoting;
-      FeaturePanWarmupSlopeVoting_t featurePanWarmupSlopeVoting;
       FeaturePanAsDeliPanEvapFanVoting_t featurePanAsDeliPanEvapFanVoting;
       FeaturePanConvertibleFreezerEvapFanDependencyVoting_t featurePanConvertibleFreezerEvapFanDependencyVoting;
-      FeaturePanDeliFreshFoodEvapFanDependencyVoting_t featurePanDeliFreshFoodEvapFanDependencyVoting;
       FeaturePanDeliDeliFanDependencyVoting_t featurePanDeliDeliFanDependencyVoting;
+      FeaturePanDeliFreshFoodEvapFanDependencyVoting_t featurePanDeliFreshFoodEvapFanDependencyVoting;
+      FeaturePanHeaterDisablingVoting_t featurePanHeaterDisablingVoting;
+      FeaturePanModeSetpointResolver_t convertibleCompartmentModeSetpointResolver;
+      FeaturePanPulldownVoting_t featurePanPulldownVoting;
+      FeaturePanSetpointOffsetUpdater_t featurePanSetpointOffsetUpdater;
+      FeaturePanUserSetpointVoter_t featurePanUserSetpointVoter;
+      FeaturePanWarmupSlopeVoting_t featurePanWarmupSlopeVoting;
    } _private;
 } FeaturePanPlugin_t;
 
-void FeaturePanPlugin_Init(
-   FeaturePanPlugin_t *instance,
-   I_DataModel_t *dataModel);
+void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

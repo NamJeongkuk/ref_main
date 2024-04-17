@@ -40,7 +40,7 @@ typedef struct
    TemperatureDegFx100_t mode5OffsetInDegFx100;
    TemperatureDegFx100_t mode6OffsetInDegFx100;
    TemperatureDegFx100_t mode7OffsetInDegFx100;
-} FixedSetpointOffsetData_t;
+} FeaturePanSetpointOffsetData_t;
 
 typedef struct
 {
@@ -69,17 +69,11 @@ typedef struct
 
 typedef struct
 {
+   const FeaturePanSetpointOffsetData_t *setpointOffsetData;
+   const ShiftOffsetData_t *shiftOffsetData;
    const CrossAmbientOffsetData_t *crossAmbientAsFreshFoodOffsetData;
    const CrossAmbientOffsetData_t *crossAmbientAsFreezerOffsetData;
-   const FixedSetpointOffsetData_t *fixedSetpointOffsetData;
-   const ShiftOffsetData_t *shiftOffsetData;
-} ConvertibleCompartmentAdjustedSetpointData_t;
-
-typedef struct
-{
-   const FixedSetpointOffsetData_t *fixedSetpointOffsetData;
-   const ShiftOffsetData_t *shiftOffsetData;
-} DeliPanAdjustedSetpointData_t;
+} FeaturePanAdjustedSetpointData_t;
 
 typedef struct
 {
@@ -98,10 +92,9 @@ typedef struct
 {
    const FreshFoodAdjustedSetpointData_t *freshFoodAdjustedSetpointData;
    const FreezerAdjustedSetpointData_t *freezerAdjustedSetpointData;
-   const ConvertibleCompartmentAdjustedSetpointData_t *convertibleCompartmentAdjustedSetpointData;
-   const DeliPanAdjustedSetpointData_t *deliPanAdjustedSetpointData;
    const IceCabinetAdjustedSetpointData_t *iceCabinetAdjustedSetpointData;
    const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
+   const FeaturePanAdjustedSetpointData_t *featurePanAdjustedSetpointData;
 } AdjustedSetpointData_t;
 
 #endif

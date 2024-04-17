@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "ConvertibleCompartmentModeSetpointResolver.h"
+#include "FeaturePanModeSetpointResolver.h"
 #include "FeaturePanMode.h"
 #include "utils.h"
 
@@ -15,8 +15,8 @@ enum
 };
 
 static void ResolveSetpointToDefaultTemperatureForEntry(
-   ConvertibleCompartmentModeSetpointResolver_t *instance,
-   const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t *entry)
+   FeaturePanModeSetpointResolver_t *instance,
+   const FeaturePanModeSetpointResolverConfigurationEntry_t *entry)
 {
    FeaturePanModeRange_t range;
    DataModel_Read(
@@ -40,8 +40,8 @@ static void ResolveSetpointToDefaultTemperatureForEntry(
 };
 
 static void ResolveSetpointForEntry(
-   ConvertibleCompartmentModeSetpointResolver_t *instance,
-   const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t *entry)
+   FeaturePanModeSetpointResolver_t *instance,
+   const FeaturePanModeSetpointResolverConfigurationEntry_t *entry)
 {
    FeaturePanModeRange_t rangeData;
    TemperatureDegFx100_t requestedSetpoint;
@@ -69,7 +69,7 @@ static void ResolveSetpointForEntry(
 
 static void OnDataModelChanged(void *context, const void *args)
 {
-   ConvertibleCompartmentModeSetpointResolver_t *instance = context;
+   FeaturePanModeSetpointResolver_t *instance = context;
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    const Erd_t erd = onChangeData->erd;
 
@@ -83,10 +83,10 @@ static void OnDataModelChanged(void *context, const void *args)
    }
 }
 
-void ConvertibleCompartmentModeSetpointResolver_Init(
-   ConvertibleCompartmentModeSetpointResolver_t *instance,
+void FeaturePanModeSetpointResolver_Init(
+   FeaturePanModeSetpointResolver_t *instance,
    I_DataModel_t *dataModel,
-   const ConvertibleCompartmentModeSetpointResolverConfiguration_t *config)
+   const FeaturePanModeSetpointResolverConfiguration_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;

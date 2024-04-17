@@ -61,14 +61,19 @@ TEST_GROUP(FeaturePanUserSetpointVoter)
       }
    }
 
-   void WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_t mode)
+   void WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_t mode)
    {
       DataModel_Write(dataModel, Erd_FeaturePanCurrentMode, &mode);
    }
 
-   void TheUserSetpointVoteErdShouldBe(TemperatureDegFx100_t temperature)
+   void WhenTheSetpointErdChangesTo(Erd_t erd, TemperatureDegFx100_t temperature)
    {
-      SetpointVotedTemperature_t expected = { .temperatureInDegFx100 = temperature, .care = Vote_Care };
+      DataModel_Write(dataModel, erd, &temperature);
+   }
+
+   void TheUserSetpointVoteErdShouldBe(TemperatureDegFx100_t temperature, Vote_t care)
+   {
+      SetpointVotedTemperature_t expected = { .temperatureInDegFx100 = temperature, .care = care };
       SetpointVotedTemperature_t actual;
 
       DataModel_Read(
@@ -84,34 +89,71 @@ TEST_GROUP(FeaturePanUserSetpointVoter)
 TEST(FeaturePanUserSetpointVoter, ShouldVoteForTheCurrentModeUserSetpointWhenModeChangesToValidMode)
 {
    GivenAllFeaturePanModeSetpointStatusErdsAreWrittenWithSomeData();
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode5);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
    TheModuleIsInitialized();
-   TheUserSetpointVoteErdShouldBe(4);
+   TheUserSetpointVoteErdShouldBe(4, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode1);
-   TheUserSetpointVoteErdShouldBe(0);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode1);
+   TheUserSetpointVoteErdShouldBe(0, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode2);
-   TheUserSetpointVoteErdShouldBe(1);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode2);
+   TheUserSetpointVoteErdShouldBe(1, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode3);
-   TheUserSetpointVoteErdShouldBe(2);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode3);
+   TheUserSetpointVoteErdShouldBe(2, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode4);
-   TheUserSetpointVoteErdShouldBe(3);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode4);
+   TheUserSetpointVoteErdShouldBe(3, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode5);
-   TheUserSetpointVoteErdShouldBe(4);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
+   TheUserSetpointVoteErdShouldBe(4, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode6);
-   TheUserSetpointVoteErdShouldBe(5);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode6);
+   TheUserSetpointVoteErdShouldBe(5, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode7);
-   TheUserSetpointVoteErdShouldBe(6);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode7);
+   TheUserSetpointVoteErdShouldBe(6, Vote_Care);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode1 - 1);
-   TheUserSetpointVoteErdShouldBe(0);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Off);
+   TheUserSetpointVoteErdShouldBe(INT16_MAX, Vote_DontCare);
 
-   WhenTheFeaturePanModeErdChangesTo(FeaturePanCurrentMode_Mode7 + 1);
-   TheUserSetpointVoteErdShouldBe(6);
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode7 + 1);
+   TheUserSetpointVoteErdShouldBe(INT16_MAX, Vote_DontCare);
+
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_NotControllable);
+   TheUserSetpointVoteErdShouldBe(INT16_MAX, Vote_DontCare);
+}
+
+TEST(FeaturePanUserSetpointVoter, ShouldVoteForTheCurrentModeUserSetpointWhenCurrentModeSetpointChanges)
+{
+   GivenAllFeaturePanModeSetpointStatusErdsAreWrittenWithSomeData();
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode1);
+   TheModuleIsInitialized();
+   TheUserSetpointVoteErdShouldBe(0, Vote_Care);
+
+   WhenTheSetpointErdChangesTo(Erd_FeaturePanMode1_Status, 1);
+   TheUserSetpointVoteErdShouldBe(1, Vote_Care);
+
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode7);
+   TheUserSetpointVoteErdShouldBe(6, Vote_Care);
+
+   WhenTheSetpointErdChangesTo(Erd_FeaturePanMode7_Status, 7);
+   TheUserSetpointVoteErdShouldBe(7, Vote_Care);
+}
+
+TEST(FeaturePanUserSetpointVoter, ShouldOnlyVoteForTheCurrentModeUserSetpointWhenAnotherModesSetpointChanges)
+{
+   GivenAllFeaturePanModeSetpointStatusErdsAreWrittenWithSomeData();
+   WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
+   TheModuleIsInitialized();
+   TheUserSetpointVoteErdShouldBe(4, Vote_Care);
+
+   WhenTheSetpointErdChangesTo(Erd_FeaturePanMode4_Status, 1);
+   TheUserSetpointVoteErdShouldBe(4, Vote_Care);
+
+   WhenTheSetpointErdChangesTo(Erd_FeaturePanMode6_Status, 1);
+   TheUserSetpointVoteErdShouldBe(4, Vote_Care);
+
+   WhenTheSetpointErdChangesTo(Erd_FeaturePanMode5_Status, 1);
+   TheUserSetpointVoteErdShouldBe(1, Vote_Care);
 }

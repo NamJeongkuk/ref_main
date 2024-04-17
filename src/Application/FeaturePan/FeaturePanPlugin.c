@@ -11,7 +11,7 @@
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
-static const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t entries[] = {
+static const FeaturePanModeSetpointResolverConfigurationEntry_t entries[] = {
    { .setpointRequestErd = Erd_FeaturePanMode1_Request,
       .setpointStatusErd = Erd_FeaturePanMode1_Status,
       .setpointRangeErd = Erd_FeaturePanMode1_SetpointRangeData },
@@ -36,6 +36,33 @@ static const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t entr
 };
 
 STATIC_ASSERT(FeaturePanMode_NumberOfFeaturePanModes == NUM_ELEMENTS(entries));
+
+static const FeaturePanModeSetpointResolverConfiguration_t convertibleCompartmentModeSetpointResolverConfig = {
+   .entries = entries,
+   .numberOfEntries = NUM_ELEMENTS(entries)
+};
+
+static const Erd_t resolvedModeSetpointErds[] = {
+   Erd_FeaturePanMode1_Status,
+   Erd_FeaturePanMode2_Status,
+   Erd_FeaturePanMode3_Status,
+   Erd_FeaturePanMode4_Status,
+   Erd_FeaturePanMode5_Status,
+   Erd_FeaturePanMode6_Status,
+   Erd_FeaturePanMode7_Status
+};
+
+static const FeaturePanUserSetpointVoterConfiguration_t featurePanUserSetpointVoterConfig = {
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .userSetpointVoteErd = Erd_FeaturePanSetpoint_UserVote,
+   .resolvedModeSetpointErds = resolvedModeSetpointErds,
+   .numberOfErds = NUM_ELEMENTS(resolvedModeSetpointErds)
+};
+
+static const FeaturePanSetpointOffsetUpdaterConfiguration_t featurePanSetpointOffsetUpdaterConfig = {
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .setpointOffsetErd = Erd_FeaturePan_SetpointOffsetInDegFx100
+};
 
 static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingConvertibleCompartmentConfig = {
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
@@ -135,17 +162,34 @@ static void WriteSetpointRangeDataToErds(I_DataModel_t *dataModel)
    }
 }
 
-void FeaturePanPlugin_Init(
-   FeaturePanPlugin_t *instance,
-   I_DataModel_t *dataModel)
+void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataModel)
 {
    WriteCurrentModeErdIfUninitialized(dataModel);
    WriteSetpointRangeDataToErds(dataModel);
+
+   FeaturePanModeSetpointResolver_Init(
+      &instance->_private.convertibleCompartmentModeSetpointResolver,
+      dataModel,
+      &convertibleCompartmentModeSetpointResolverConfig);
+
+   FeaturePanUserSetpointVoter_Init(
+      &instance->_private.featurePanUserSetpointVoter,
+      dataModel,
+      &featurePanUserSetpointVoterConfig);
+
+   FeaturePanSetpointOffsetUpdater_Init(
+      &instance->_private.featurePanSetpointOffsetUpdater,
+      dataModel,
+      &featurePanSetpointOffsetUpdaterConfig);
 
    const PlatformData_t *platformData = PersonalityParametricData_Get(dataModel)->platformData;
 
    if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_Convertible))
    {
+      ConvertibleCompartmentAdjustedSetpointPlugin_Init(
+         &instance->_private.convertibleCompartmentAdjustedSetpointPlugin,
+         dataModel);
+
       FeaturePanWarmupSlopeVoting_Init(
          &instance->_private.featurePanWarmupSlopeVoting,
          dataModel,

@@ -1,12 +1,12 @@
-local FixedSetpointOffset = require 'Setpoints/FixedSetpointOffset'
+local FeaturePanSetpointOffset = require 'Setpoints/FeaturePanSetpointOffset'
 local core_mock = require 'lua-parametric-tools-test'.mock.common.core
 local should_memoize_calls = require 'lua-common'.util.should_memoize_calls
 local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 
-describe('FixedSetpointOffset', function()
-  local fixed_setpoint_offset = FixedSetpointOffset(core_mock)
+describe('FeaturePanSetpointOffset', function()
+  local feature_pan_setpoint_offset = FeaturePanSetpointOffset(core_mock)
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
@@ -21,12 +21,12 @@ describe('FixedSetpointOffset', function()
   end
 
   it('should require all arguments', function()
-    should_require_args(fixed_setpoint_offset, generate_config())
+    should_require_args(feature_pan_setpoint_offset, generate_config())
   end)
 
   it('should assert if mode1_offset_in_degfx100 is not in range', function()
     should_fail_with('mode1_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode1_offset_in_degfx100 = 32768
       }))
     end)
@@ -34,7 +34,7 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode2_offset_in_degfx100 is not in range', function()
     should_fail_with('mode2_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode2_offset_in_degfx100 = 32768
       }))
     end)
@@ -42,7 +42,7 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode3_offset_in_degfx100 is not in range', function()
     should_fail_with('mode3_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode3_offset_in_degfx100 = 32768
       }))
     end)
@@ -50,7 +50,7 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode4_offset_in_degfx100 is not in range', function()
     should_fail_with('mode4_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode4_offset_in_degfx100 = 32768
       }))
     end)
@@ -58,7 +58,7 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode5_offset_in_degfx100 is not in range', function()
     should_fail_with('mode5_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode5_offset_in_degfx100 = 32768
       }))
     end)
@@ -66,7 +66,7 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode6_offset_in_degfx100 is not in range', function()
     should_fail_with('mode6_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode6_offset_in_degfx100 = 32768
       }))
     end)
@@ -74,13 +74,13 @@ describe('FixedSetpointOffset', function()
 
   it('should assert if mode7_offset_in_degfx100 is not in range', function()
     should_fail_with('mode7_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fixed_setpoint_offset(generate_config({
+      feature_pan_setpoint_offset(generate_config({
         mode7_offset_in_degfx100 = 32768
       }))
     end)
   end)
 
-  it('should generate a typed string with the correct data and type for fixed setpoint offset', function()
+  it('should generate a typed string with the correct data and type for feature pan setpoint offset', function()
     local expected = remove_whitespace([[
       structure(
         i16(-30),
@@ -93,7 +93,7 @@ describe('FixedSetpointOffset', function()
     )
     ]])
 
-    local actual = fixed_setpoint_offset({
+    local actual = feature_pan_setpoint_offset({
       mode1_offset_in_degfx100 = -30,
       mode2_offset_in_degfx100 = -20,
       mode3_offset_in_degfx100 = -10,
@@ -104,10 +104,10 @@ describe('FixedSetpointOffset', function()
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
-    assert(actual.is_of_type('fixed_setpoint_offset'))
+    assert(actual.is_of_type('feature_pan_setpoint_offset'))
   end)
 
   it('should memoize', function()
-    should_memoize_calls(fixed_setpoint_offset, generate_config())
+    should_memoize_calls(feature_pan_setpoint_offset, generate_config())
   end)
 end)

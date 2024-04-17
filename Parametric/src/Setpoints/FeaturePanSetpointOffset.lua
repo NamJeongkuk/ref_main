@@ -7,18 +7,18 @@ local memoize = require 'lua-common'.util.memoize
 return function(core)
   import(core)
   local generate = memoize(function(config)
-      return TypedString(
-        { 'fixed_setpoint_offset' },
-        structure(
-          i16(config.mode1_offset_in_degfx100),
-          i16(config.mode2_offset_in_degfx100),
-          i16(config.mode3_offset_in_degfx100),
-          i16(config.mode4_offset_in_degfx100),
-          i16(config.mode5_offset_in_degfx100),
-          i16(config.mode6_offset_in_degfx100),
-          i16(config.mode7_offset_in_degfx100)
-        )
+    return TypedString(
+      { 'feature_pan_setpoint_offset' },
+      structure(
+        i16(config.mode1_offset_in_degfx100),
+        i16(config.mode2_offset_in_degfx100),
+        i16(config.mode3_offset_in_degfx100),
+        i16(config.mode4_offset_in_degfx100),
+        i16(config.mode5_offset_in_degfx100),
+        i16(config.mode6_offset_in_degfx100),
+        i16(config.mode7_offset_in_degfx100)
       )
+    )
   end)
 
   return function(config)

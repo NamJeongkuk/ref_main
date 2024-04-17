@@ -10,11 +10,12 @@
 
 static const Erd_t convertibleCompartmentAdjustedSetpointWithoutShiftErds[] = {
    Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,
+   Erd_FeaturePan_SetpointOffsetInDegFx100,
    Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
 };
 
 static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointWithoutShiftConfig = {
-   .resultErd = Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
+   .resultErd = Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100,
    .i16ErdsToBeAdded = {
       convertibleCompartmentAdjustedSetpointWithoutShiftErds,
       NUM_ELEMENTS(convertibleCompartmentAdjustedSetpointWithoutShiftErds),
@@ -22,12 +23,12 @@ static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointWi
 };
 
 static const Erd_t convertibleCompartmentAdjustedSetpointErds[] = {
-   Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100,
    Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
 };
 
 static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointConfig = {
-   .resultErd = Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100,
+   .resultErd = Erd_FeaturePan_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       convertibleCompartmentAdjustedSetpointErds,
       NUM_ELEMENTS(convertibleCompartmentAdjustedSetpointErds),
@@ -92,13 +93,13 @@ void ConvertibleCompartmentAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.convertibleCompartmentAsFreshFoodOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->convertibleCompartmentAdjustedSetpointData->crossAmbientAsFreshFoodOffsetData,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->crossAmbientAsFreshFoodOffsetData,
       &convertibleCompartmentAsFreshFoodOffsetCalculatorConfig);
 
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.convertibleCompartmentAsFreezerOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->convertibleCompartmentAdjustedSetpointData->crossAmbientAsFreezerOffsetData,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->crossAmbientAsFreezerOffsetData,
       &convertibleCompartmentAsFreezerOffsetCalculatorConfig);
 
    OverrideArbiter_Init(

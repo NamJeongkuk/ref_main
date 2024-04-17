@@ -1094,8 +1094,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Long Term Avg Temperature (DegF x100)",
-               "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
+               "displayName": "Feature Pan Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_FeaturePan_LongTermAverageInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -1344,8 +1344,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Adjusted Setpoint (DegF x100)",
-               "name": "Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100",
+               "displayName": "Feature Pan Adjusted Setpoint (DegF x100)",
+               "name": "Erd_FeaturePan_AdjustedSetpointInDegFx100",
                "read": true,
                "interval": 1000000000
             },

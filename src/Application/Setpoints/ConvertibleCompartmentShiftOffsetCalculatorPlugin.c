@@ -12,10 +12,10 @@
 static const ShiftOffsetCalculatorConfig_t convertibleCompartmentShiftOffsetCalculatorConfig = {
    .filteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
    .shiftOffsetErd = Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
-   .adjustedSetpointWithoutShiftErd = Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100,
+   .adjustedSetpointWithoutShiftErd = Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,
    .resetThermalShiftOffsetSignalErd = Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal,
-   .longTermAverageErd = Erd_ConvertibleCompartment_LongTermAverageInDegFx100,
+   .longTermAverageErd = Erd_FeaturePan_LongTermAverageInDegFx100
 };
 
 void ConvertibleCompartmentShiftOffsetCalculatorPlugin_Init(
@@ -34,5 +34,5 @@ void ConvertibleCompartmentShiftOffsetCalculatorPlugin_Init(
       &instance->_private.convertibleCompartmentLongTermAverageFilter.interface,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &convertibleCompartmentShiftOffsetCalculatorConfig,
-      adjustedSetpointData->convertibleCompartmentAdjustedSetpointData->shiftOffsetData);
+      adjustedSetpointData->featurePanAdjustedSetpointData->shiftOffsetData);
 }

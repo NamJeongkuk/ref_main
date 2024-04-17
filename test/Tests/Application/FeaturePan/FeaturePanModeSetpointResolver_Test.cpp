@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "ConvertibleCompartmentModeSetpointResolver.h"
+#include "FeaturePanModeSetpointResolver.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -27,7 +27,7 @@ enum
    SomeOtherMaximumTemperature = 40,
 };
 
-static const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t entries[] = {
+static const FeaturePanModeSetpointResolverConfigurationEntry_t entries[] = {
    { .setpointRequestErd = Erd_FeaturePanMode1_Request,
       .setpointStatusErd = Erd_FeaturePanMode1_Status,
       .setpointRangeErd = Erd_FeaturePanMode1_SetpointRangeData },
@@ -51,7 +51,7 @@ static const ConvertibleCompartmentModeSetpointResolverConfigurationEntry_t entr
       .setpointRangeErd = Erd_FeaturePanMode7_SetpointRangeData },
 };
 
-static const ConvertibleCompartmentModeSetpointResolverConfiguration_t config = {
+static const FeaturePanModeSetpointResolverConfiguration_t config = {
    .entries = entries,
    .numberOfEntries = NUM_ELEMENTS(entries)
 };
@@ -63,12 +63,12 @@ static const FeaturePanModeRange_t someSetpointRangeData = {
    .mode = FeaturePanModeLabel_Freezer
 };
 
-TEST_GROUP(ConvertibleCompartmentModeSetpointResolver)
+TEST_GROUP(FeaturePanModeSetpointResolver)
 {
    ReferDataModel_TestDouble_t referDataModelTestDouble;
    I_DataModel_t *dataModel;
 
-   ConvertibleCompartmentModeSetpointResolver_t instance;
+   FeaturePanModeSetpointResolver_t instance;
 
    void setup()
    {
@@ -78,7 +78,7 @@ TEST_GROUP(ConvertibleCompartmentModeSetpointResolver)
 
    void GivenTheModuleIsInitialized()
    {
-      ConvertibleCompartmentModeSetpointResolver_Init(&instance, dataModel, &config);
+      FeaturePanModeSetpointResolver_Init(&instance, dataModel, &config);
    }
 
    void WhenTheErdIsWrittenWithTemperature(Erd_t erd, TemperatureDegFx100_t temperature)
@@ -137,7 +137,7 @@ TEST_GROUP(ConvertibleCompartmentModeSetpointResolver)
    }
 };
 
-TEST(ConvertibleCompartmentModeSetpointResolver, ShouldResolveAllSetpointsToDefaultTemperatureWhenInitializedWithoutDataSavedInEeprom)
+TEST(FeaturePanModeSetpointResolver, ShouldResolveAllSetpointsToDefaultTemperatureWhenInitializedWithoutDataSavedInEeprom)
 {
    GivenAllSetpointStatusErdsAreWrittenWith(ResetValue);
    GivenAllSetpointRangeErdsAreWrittenWith(&someSetpointRangeData);
@@ -146,7 +146,7 @@ TEST(ConvertibleCompartmentModeSetpointResolver, ShouldResolveAllSetpointsToDefa
    AllSetpointStatusErdsShouldBe(SomeDefaultTemperature);
 }
 
-TEST(ConvertibleCompartmentModeSetpointResolver, ShouldNotResolveAllSetpointsToDefaultTemperatureWhenInitializedWithDataSavedInEeprom)
+TEST(FeaturePanModeSetpointResolver, ShouldNotResolveAllSetpointsToDefaultTemperatureWhenInitializedWithDataSavedInEeprom)
 {
    GivenTheSetpointStatusErdIsWrittenWith(Erd_FeaturePanMode1_Status, 0x1111);
    GivenTheSetpointStatusErdIsWrittenWith(Erd_FeaturePanMode2_Status, ResetValue);
@@ -168,7 +168,7 @@ TEST(ConvertibleCompartmentModeSetpointResolver, ShouldNotResolveAllSetpointsToD
    TheSetpointStatusErdShouldBe(Erd_FeaturePanMode7_Status, 0x7777);
 }
 
-TEST(ConvertibleCompartmentModeSetpointResolver, ShouldResolveSetpointWhenRequestChanges)
+TEST(FeaturePanModeSetpointResolver, ShouldResolveSetpointWhenRequestChanges)
 {
    GivenAllSetpointStatusErdsAreWrittenWith(ResetValue);
    GivenAllSetpointRangeErdsAreWrittenWith(&someSetpointRangeData);
@@ -180,7 +180,7 @@ TEST(ConvertibleCompartmentModeSetpointResolver, ShouldResolveSetpointWhenReques
    TheSetpointStatusErdShouldBe(Erd_FeaturePanMode1_Status, SomeDefaultTemperature - 1);
 }
 
-TEST(ConvertibleCompartmentModeSetpointResolver, ShouldClampSetpointToMinOrMaxWhenRequestChangesOutsideOfRange)
+TEST(FeaturePanModeSetpointResolver, ShouldClampSetpointToMinOrMaxWhenRequestChangesOutsideOfRange)
 {
    GivenAllSetpointStatusErdsAreWrittenWith(ResetValue);
    GivenAllSetpointRangeErdsAreWrittenWith(&someSetpointRangeData);

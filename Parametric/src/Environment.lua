@@ -50,12 +50,11 @@ return function(directory)
   import('Setpoints/AdjustedSetpoint')
   import('Setpoints/FreshFoodAdjustedSetpoint')
   import('Setpoints/FreezerAdjustedSetpoint')
-  import('Setpoints/ConvertibleCompartmentAdjustedSetpoint')
-  import('Setpoints/DeliPanAdjustedSetpoint')
+  import('Setpoints/FeaturePanAdjustedSetpoint')
   import('Setpoints/IceCabinetAdjustedSetpoint')
   import('Setpoints/CrossAmbientOffsetCalculator')
   import('Setpoints/ShiftOffsetCalculator')
-  import('Setpoints/FixedSetpointOffset')
+  import('Setpoints/FeaturePanSetpointOffset')
   import('Setpoints/SetpointOffset')
   import('Setpoints/ShiftOffset')
   import('Setpoints/CrossAmbientOffset')
@@ -162,12 +161,11 @@ return function(directory)
   adjusted_setpoint = AdjustedSetpoint(core)
   fresh_food_adjusted_setpoint = FreshFoodAdjustedSetpoint(core)
   freezer_adjusted_setpoint = FreezerAdjustedSetpoint(core)
-  convertible_compartment_adjusted_setpoint = ConvertibleCompartmentAdjustedSetpoint(core)
-  deli_pan_adjusted_setpoint = DeliPanAdjustedSetpoint(core)
+  feature_pan_adjusted_setpoint = FeaturePanAdjustedSetpoint(core)
   ice_cabinet_adjusted_setpoint = IceCabinetAdjustedSetpoint(core)
   cross_ambient_offset_calculator = CrossAmbientOffsetCalculator(core)
   shift_offset_calculator = ShiftOffsetCalculator(core)
-  fixed_setpoint_offset = FixedSetpointOffset(core)
+  feature_pan_setpoint_offset = FeaturePanSetpointOffset(core)
   setpoint_offset = SetpointOffset(core)
   shift_offset = ShiftOffset(core)
   cross_ambient_offset = CrossAmbientOffset(core)
@@ -280,12 +278,11 @@ return function(directory)
     adjusted_setpoint = adjusted_setpoint,
     fresh_food_adjusted_setpoint = fresh_food_adjusted_setpoint,
     freezer_adjusted_setpoint = freezer_adjusted_setpoint,
-    convertible_compartment_adjusted_setpoint = convertible_compartment_adjusted_setpoint,
-    deli_pan_adjusted_setpoint = deli_pan_adjusted_setpoint,
+    feature_pan_adjusted_setpoint = feature_pan_adjusted_setpoint,
     ice_cabinet_adjusted_setpoint = ice_cabinet_adjusted_setpoint,
     cross_ambient_offset_calculator = cross_ambient_offset_calculator,
     shift_offset_calculator = shift_offset_calculator,
-    fixed_setpoint_offset = fixed_setpoint_offset,
+    feature_pan_setpoint_offset = feature_pan_setpoint_offset,
     setpoint_offset = setpoint_offset,
     shift_offset = shift_offset,
     cross_ambient_offset = cross_ambient_offset,

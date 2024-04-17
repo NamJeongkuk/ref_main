@@ -2146,6 +2146,193 @@
       ]
     },
     {
+      "title": "Feature Pan",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 1 Request",
+          "name": "Erd_FeaturePanMode1_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 1 Status",
+          "name": "Erd_FeaturePanMode1_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 1 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode1_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 2 Request",
+          "name": "Erd_FeaturePanMode2_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 2 Status",
+          "name": "Erd_FeaturePanMode2_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 2 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode2_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 3 Request",
+          "name": "Erd_FeaturePanMode3_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 3 Status",
+          "name": "Erd_FeaturePanMode3_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 3 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode3_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 4 Request",
+          "name": "Erd_FeaturePanMode4_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 4 Status",
+          "name": "Erd_FeaturePanMode4_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 4 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode4_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 5 Request",
+          "name": "Erd_FeaturePanMode5_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 5 Status",
+          "name": "Erd_FeaturePanMode5_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 5 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode5_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 6 Request",
+          "name": "Erd_FeaturePanMode6_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 6 Status",
+          "name": "Erd_FeaturePanMode6_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 6 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode6_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 7 Request",
+          "name": "Erd_FeaturePanMode7_Request",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 7 Status",
+          "name": "Erd_FeaturePanMode7_Status",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Mode 7 Setpoint Range Data",
+          "name": "Erd_FeaturePanMode7_SetpointRangeData",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Current Mode",
+          "name": "Erd_FeaturePanCurrentMode",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Cooling Mode",
+          "name": "Erd_FeaturePanCoolingMode",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Setpoint Offset In Deg Fx100",
+          "name": "Erd_FeaturePan_SetpointOffsetInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan User Setpoint Vote",
+          "name": "Erd_FeaturePanSetpoint_UserVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Adjusted Setpoint In Deg Fx100",
+          "name": "Erd_FeaturePan_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Convertible Compartment",
       "erds": [
         {
@@ -4165,22 +4352,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Long Term Average",
-          "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
+          "displayName": "Feature Pan Long Term Average",
+          "name": "Erd_FeaturePan_LongTermAverageInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Adjusted Setpoint",
-          "name": "Erd_ConvertibleCompartment_AdjustedSetpointInDegFx100",
+          "displayName": "Feature Pan Adjusted Setpoint",
+          "name": "Erd_FeaturePan_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Adjusted Setpoint Without Shift",
-          "name": "Erd_ConvertibleCompartment_AdjustedSetpointWithoutShiftInDegFx100",
+          "displayName": "Feature Pan Adjusted Setpoint Without Shift",
+          "name": "Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100",
           "read": true,
           "write": true
         },
