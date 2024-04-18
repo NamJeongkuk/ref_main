@@ -282,7 +282,7 @@ static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t 
       case 42:
       case 43:
       case 44:
-         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber < 4))
+         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber <= 4))
          {
             votes->freezerEvapFanSpeed = FanSpeed_High;
             votes->freshFoodEvapFanSpeed = FanSpeed_Off;
@@ -290,7 +290,7 @@ static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t 
          break;
 
       case 45:
-         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber < 4))
+         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber <= 4))
          {
             votes->freezerEvapFanSpeed = FanSpeed_High;
             votes->freshFoodEvapFanSpeed = FanSpeed_Off;
@@ -628,10 +628,10 @@ void Grid_DualEvap(void *context)
          break;
 
       case 38:
-         SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingSpeed_Low : currentCoolingSpeed);
+         SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingSpeed_Low : CoolingSpeed_Off);
          if(coolConvertibleCompartmentBeforeOff)
          {
-            if(featurePanGridBlockNumber >= 4)
+            if(featurePanGridBlockNumber > 4)
             {
                CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
                UseDelayedConvertibleCompartmentCoolingSpeed(dataModel, CLEAR);
@@ -694,12 +694,16 @@ void Grid_DualEvap(void *context)
       case 42:
       case 43:
       case 44:
-         if((coolConvertibleCompartmentBeforeOff || (delayConvertibleCompartmentCooling && (featurePanGridBlockNumber < 2))) &&
-            (featurePanGridBlockNumber < 4))
+         if(delayConvertibleCompartmentCooling && (featurePanGridBlockNumber <= 2))
+         {
+            coolConvertibleCompartmentBeforeOff = true;
+            CoolConvertibleCompartmentBeforeOff(dataModel, SET);
+         }
+
+         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber <= 4))
          {
             SetCoolingMode(dataModel, CoolingMode_Freezer);
             SetCoolingSpeed(dataModel, CoolingSpeed_Low);
-            CoolConvertibleCompartmentBeforeOff(dataModel, SET);
             UseDelayedConvertibleCompartmentCoolingSpeed(dataModel, SET);
          }
          else
@@ -722,19 +726,22 @@ void Grid_DualEvap(void *context)
          break;
 
       case 45:
-         if((coolConvertibleCompartmentBeforeOff || (delayConvertibleCompartmentCooling && (featurePanGridBlockNumber < 2))) &&
-            (featurePanGridBlockNumber < 4))
+         if(delayConvertibleCompartmentCooling && (featurePanGridBlockNumber <= 2))
+         {
+            coolConvertibleCompartmentBeforeOff = true;
+            CoolConvertibleCompartmentBeforeOff(dataModel, SET);
+         }
+
+         if(coolConvertibleCompartmentBeforeOff && (featurePanGridBlockNumber <= 4))
          {
             SetCoolingMode(dataModel, CoolingMode_Freezer);
             SetCoolingSpeed(dataModel, CoolingSpeed_Low);
-            CoolConvertibleCompartmentBeforeOff(dataModel, SET);
             UseDelayedConvertibleCompartmentCoolingSpeed(dataModel, SET);
          }
          else
          {
             if(currentCoolingMode == CoolingMode_FreshFood)
             {
-               SetCoolingMode(dataModel, CoolingMode_FreshFood);
                SetCoolingSpeed(dataModel, CoolingSpeed_Low);
             }
             else
