@@ -9,20 +9,11 @@
       }
     },
     {
-      "name": "Target Production",
-      "makefile": "rockhopper-target.mk",
-      "defines": {
-        "RELEASE": "N",
-        "DEBUG": "Y",
-        "PRODUCTION": "Y"
-      }
-    },
-    {
       "name": "Test",
       "makefile": "tdd.mk"
     },
     {
-      "name": "Integration Test",
+      "name": "Integration",
       "makefile": "tdd.mk",
       "defines": {
         "INTEGRATION": "Y"
