@@ -40,7 +40,7 @@ return function(core)
           u8(damper_position_type[config.prechill.prechill_deli_damper_position]),
           u16(fan_speed_type[config.prechill.prechill_convertible_compartment_evap_fan_speed]),
           u8(damper_position_type[config.prechill.prechill_fresh_food_damper_position]),
-          u8(fan_speed_type[config.prechill.prechill_condenser_fan_speed]),
+          u16(fan_speed_type[config.prechill.prechill_condenser_fan_speed]),
           i16(config.prechill.prechill_freezer_min_temp_in_degfx100),
           i16(config.prechill.prechill_fresh_food_min_temp_in_degfx100),
           i16(config.prechill.prechill_fresh_food_max_temp_in_degfx100),
