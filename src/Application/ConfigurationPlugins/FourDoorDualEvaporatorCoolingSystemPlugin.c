@@ -36,7 +36,7 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
 void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolingSystemPlugin_t *instance, I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_FourDoorDualEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
-   DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
+   DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
 
    FourDoorSetpointPlugin_Init(&instance->_private.fourDoorSetpointPlugin, dataModel);
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(

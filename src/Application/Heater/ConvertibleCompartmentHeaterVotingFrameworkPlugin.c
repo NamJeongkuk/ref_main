@@ -24,7 +24,7 @@ static const ErdResolverConfiguration_t erdResolverConfiguration = {
    .defaultData = &defaultData,
    .winningVoterErd = Erd_ConvertibleCompartmentHeater_WinningVoteErd,
    .resolvedStateErd = Erd_ConvertibleCompartmentHeater_ResolvedVote,
-   .numberOfVotingErds = Erd_ConvertibleCompartmentHeater_FactoryVote - Erd_ConvertibleCompartmentHeater_WinningVoteErd
+   .numberOfVotingErds = Erd_ConvertibleCompartmentHeater_GridVote - Erd_ConvertibleCompartmentHeater_WinningVoteErd
 };
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {

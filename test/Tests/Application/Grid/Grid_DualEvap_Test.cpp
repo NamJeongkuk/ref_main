@@ -49,7 +49,7 @@ TEST_GROUP(Grid_DualEvap_Test)
       freshFoodAdjustedSetpointData = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData;
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
+      DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
    }
 
    static void DataModelChanged(void *context, const void *_args)

@@ -322,7 +322,7 @@ static void SearchFourDoorDualEvapTableAndPublishGridVotes(I_DataModel_t *dataMo
    DataModel_Read(dataModel, Erd_CoolingSpeed, &coolingKey.speed);
 
    uint16_t searchIndex;
-   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface);
+   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface);
    ConstArrayMap_Find(coolingStateMap, &coolingKey, &searchIndex, &foundTableEntry);
 
    ApplyGridBlockOverrides(dataModel, blockNumber, &foundTableEntry.votes);
