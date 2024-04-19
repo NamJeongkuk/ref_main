@@ -13,12 +13,12 @@
 #include "EventSubscription.h"
 #include "Erd.h"
 #include "Timer.h"
+#include "CompressorVotedSpeed.h"
 
 typedef struct
 {
-   Erd_t resolvedVoteErd;
-   Erd_t minimumOnOffTimeVoteErd;
-   Erd_t compressorIsOn;
+   Erd_t resolvedVoteErd; // CompressorVotedSpeed_t
+   Erd_t minimumOnOffTimeVoteErd; // CompressorVotedSpeed_t
 } CompressorMinimumOnOffTimeConfiguration_t;
 
 typedef struct
@@ -30,6 +30,7 @@ typedef struct
       I_DataModel_t *dataModel;
       const CompressorTimes_t *timesData;
       const CompressorMinimumOnOffTimeConfiguration_t *config;
+      CompressorSpeed_t previousCompressorSpeed;
    } _private;
 } CompressorMinimumOnOffTime_t;
 

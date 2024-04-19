@@ -24,8 +24,7 @@ static const CompressorTimes_t timesData = {
 
 static const CompressorMinimumOnOffTimeConfiguration_t config = {
    .resolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
-   .minimumOnOffTimeVoteErd = Erd_CompressorSpeed_MinimumOnOffTimeVote,
-   .compressorIsOn = Erd_CompressorIsOn
+   .minimumOnOffTimeVoteErd = Erd_CompressorSpeed_MinimumOnOffTimeVote
 };
 
 TEST_GROUP(CompressorMinimumOnOffTime)
@@ -92,14 +91,6 @@ TEST_GROUP(CompressorMinimumOnOffTime)
          &votedSpeed);
    }
 
-   void GivenCompressorIsCurrently(bool state)
-   {
-      DataModel_Write(
-         dataModel,
-         config.compressorIsOn,
-         &state);
-   }
-
    void TheMinimumOnOffVoteShouldBe(CompressorSpeed_t expectedSpeed, Vote_t expectedCare)
    {
       CompressorVotedSpeed_t actual;
@@ -132,7 +123,6 @@ TEST(CompressorMinimumOnOffTime, ShouldVoteOnWhenResolvedVoteChangesToOnAndCompr
 {
    GivenResolvedVoteIs(CompressorSpeed_Off);
    GivenMinimumOnOffTimeIs(CompressorSpeed_Off, Vote_DontCare);
-   GivenCompressorIsCurrently(OFF);
    GivenTheModuleIsInitialized();
 
    WhenTheResolvedVoteBecomes(CompressorSpeed_Low);
@@ -141,12 +131,11 @@ TEST(CompressorMinimumOnOffTime, ShouldVoteOnWhenResolvedVoteChangesToOnAndCompr
 
 TEST(CompressorMinimumOnOffTime, ShouldNotVoteOnWhenResolvedVoteChangesToOnAndCompressorWasPreviouslyOn)
 {
-   GivenResolvedVoteIs(CompressorSpeed_Off);
+   GivenResolvedVoteIs(CompressorSpeed_Low);
    GivenMinimumOnOffTimeIs(CompressorSpeed_Off, Vote_DontCare);
-   GivenCompressorIsCurrently(ON);
    GivenTheModuleIsInitialized();
 
-   WhenTheResolvedVoteBecomes(CompressorSpeed_Off);
+   WhenTheResolvedVoteBecomes(CompressorSpeed_High);
    TheMinimumOnOffVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
 }
 
@@ -168,7 +157,6 @@ TEST(CompressorMinimumOnOffTime, ShouldVoteOffWhenResolvedVoteChangesToOffForTim
 TEST(CompressorMinimumOnOffTime, ShouldVoteOnWhenResolvedVoteChangesToOnForTimeout)
 {
    GivenResolvedVoteIs(CompressorSpeed_Off);
-   GivenCompressorIsCurrently(OFF);
    GivenTheModuleIsInitialized();
 
    WhenTheResolvedVoteBecomes(CompressorSpeed_High);
@@ -185,7 +173,6 @@ TEST(CompressorMinimumOnOffTime, ShouldChangeVotesIfResolvedVoteChangesBeforeTim
 {
    GivenResolvedVoteIs(CompressorSpeed_Off);
    GivenMinimumOnOffTimeIs(CompressorSpeed_Off, Vote_DontCare);
-   GivenCompressorIsCurrently(OFF);
    GivenTheModuleIsInitialized();
 
    WhenTheResolvedVoteBecomes(CompressorSpeed_High);

@@ -6,7 +6,6 @@
  */
 
 #include "CompressorMinimumOnOffTime.h"
-#include "CompressorVotedSpeed.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
@@ -33,13 +32,7 @@ static void VoteDontCare(void *context)
 
 static bool CompressorIsSwitchingToOn(CompressorMinimumOnOffTime_t *instance, CompressorSpeed_t newSpeed)
 {
-   bool compressorIsOn;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->compressorIsOn,
-      &compressorIsOn);
-
-   return !compressorIsOn && (newSpeed != CompressorSpeed_Off);
+   return ((instance->_private.previousCompressorSpeed == CompressorSpeed_Off) && (newSpeed != CompressorSpeed_Off));
 }
 
 static void ResolvedVoteChanged(void *context, const void *args)
@@ -69,6 +62,8 @@ static void ResolvedVoteChanged(void *context, const void *args)
          VoteDontCare,
          instance);
    }
+
+   instance->_private.previousCompressorSpeed = resolvedVote->speed;
 }
 
 void CompressorMinimumOnOffTime_Init(
@@ -80,6 +75,11 @@ void CompressorMinimumOnOffTime_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.timesData = timesData;
    instance->_private.config = config;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->resolvedVoteErd,
+      &instance->_private.previousCompressorSpeed);
 
    EventSubscription_Init(
       &instance->_private.resolvedVoteSubscription,
