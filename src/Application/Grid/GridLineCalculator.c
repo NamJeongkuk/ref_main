@@ -152,7 +152,7 @@ void GridLineCalculator_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.gridData = gridData;
 
-   uassert(instance->_private.gridData->deltaGridLines->dimensions <= TwoDimensions);
+   uassert(IN_RANGE(OneDimension, instance->_private.gridData->deltaGridLines->dimensions, TwoDimensions));
 
    if(OneDimension == instance->_private.gridData->deltaGridLines->dimensions)
    {

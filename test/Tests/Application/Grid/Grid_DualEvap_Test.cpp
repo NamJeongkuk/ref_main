@@ -49,7 +49,7 @@ TEST_GROUP(Grid_DualEvap_Test)
       freshFoodAdjustedSetpointData = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData;
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
+      DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
    }
 
    static void DataModelChanged(void *context, const void *_args)
@@ -298,6 +298,31 @@ TEST_GROUP(Grid_DualEvap_Test)
    void FeaturePanGridBlockNumberIs(GridBlockNumber_t gridBlockNumber)
    {
       DataModel_Write(dataModel, Erd_FeaturePanGrid_BlockNumber, &gridBlockNumber);
+   }
+
+   void FreshFoodPulldownOffsetIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodPulldownOffsetFromGrid, &temperature);
+   }
+
+   void PulldownFanBehaviorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_PulldownFanBehaviorEnabledByGrid, &state);
+   }
+
+   void PulldownValveBehaviorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_PulldownValveBehaviorEnabledByGrid, &state);
+   }
+
+   void IceCabinetHighSpeedOverrideIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_IceCabinetHighSpeedOverrideEnabledByGrid, &state);
+   }
+
+   void MaxTimeInValveAIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_MaxValveTimeInPosAEnabled, &state);
    }
 
    void GridVotesShouldBe(
@@ -1466,14 +1491,47 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks35And36And37WithCooli
    }
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsNotOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WhileCoolingModeIsFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffAndUseDelayedConvertibleCompartmentCoolingSpeedAreSetAndFeaturePanGridBlockNumberIsEqualTo4AndFreezerEvapFanSpeedIsNotOff)
 {
+   Given PulldownFanBehaviorIs(ENABLED);
+   Given PulldownValveBehaviorIs(ENABLED);
+   Given IceCabinetHighSpeedOverrideIs(ENABLED);
    Given CoolingModeIs(CoolingMode_FreshFood);
    Given CoolingSpeedIs(CoolingSpeed_High);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
-   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(SET);
    Given FeaturePanGridBlockNumberIs(4);
+   Given FreezerEvapFanSpeedIs(FanSpeed_High);
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(38);
+   And The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   LowAmbientValveBehaviorShouldBe(ENABLED);
+   PulldownFanBehaviorShouldBe(DISABLED);
+   PulldownValveBehaviorShouldBe(DISABLED);
+   IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+   MaxTimeInValvePositionAShouldBe(ENABLED);
+   DelayConvertibleCompartmentCoolingShouldBe(SET);
+   CoolConvertibleCompartmentBeforeOffShouldBe(SET);
+   UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(SET);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, FanSpeed_Low, SealedSystemValvePosition_A);
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WhileCoolingModeIsFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffAndUseDelayedConvertibleCompartmentCoolingSpeedAreSetAndFeaturePanGridBlockNumberIsGreaterThan4AndFreezerEvapFanSpeedIsNotOff)
+{
+   Given PulldownFanBehaviorIs(ENABLED);
+   Given PulldownValveBehaviorIs(ENABLED);
+   Given IceCabinetHighSpeedOverrideIs(ENABLED);
+   Given CoolingModeIs(CoolingMode_FreshFood);
+   Given CoolingSpeedIs(CoolingSpeed_High);
+   Given CoolConvertibleCompartmentBeforeOffIs(SET);
+   Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(SET);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_High);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -1493,14 +1551,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowW
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, FanSpeed_Low, SealedSystemValvePosition_A);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffWhileCoolingModeIsFreezerAndCoolingSpeedIsOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsNotOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffWhileCoolingModeIsFreezerAndCoolingSpeedIsOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4AndFreezerEvapFanSpeedIsNotOff)
 {
    Given CoolingModeIs(CoolingMode_Freezer);
    Given CoolingSpeedIs(CoolingSpeed_Off);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_High);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -1520,14 +1578,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffW
    GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, FanSpeed_Off, SealedSystemValvePosition_B);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffWhileCoolingModeIsFreshFoodAndCoolingSpeedIsOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsNotOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffWhileCoolingModeIsFreshFoodAndCoolingSpeedIsOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanAndFreezerEvapFanSpeedIsNotOff)
 {
    Given CoolingModeIs(CoolingMode_FreshFood);
    Given CoolingSpeedIs(CoolingSpeed_Off);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_High);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -1547,14 +1605,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedOffW
    GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Low, FanSpeed_Off, SealedSystemValvePosition_A);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsNotFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsNotOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsNotFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4AndFreezerEvapFanSpeedIsNotOff)
 {
    Given CoolingModeIs(CoolingMode_Freezer);
    Given CoolingSpeedIs(CoolingSpeed_High);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_High);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -1574,14 +1632,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowW
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, FanSpeed_Off, SealedSystemValvePosition_B);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4AndFreezerEvapFanSpeedIsOff)
 {
    Given CoolingModeIs(CoolingMode_FreshFood);
    Given CoolingSpeedIs(CoolingSpeed_High);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_Off);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -1601,14 +1659,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowW
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Off, FanSpeed_Low, SealedSystemValvePosition_A);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsNotFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4AndFreezerEvapFanSpeedIsOff)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38WithCoolingSpeedLowWhileCoolingModeIsNotFreshFoodAndCoolingSpeedIsNotOffAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4AndFreezerEvapFanSpeedIsOff)
 {
    Given CoolingModeIs(CoolingMode_Freezer);
    Given CoolingSpeedIs(CoolingSpeed_High);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given FreezerEvapFanSpeedIs(FanSpeed_Off);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(38);
@@ -2040,6 +2098,41 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock41WhileFreezerEvapFanS
    GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_Low, FanSpeed_High, SealedSystemValvePosition_A);
 }
 
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDelayConvertibleCompartmentCoolingIsClearAndFeaturePanGridBlockNumberIsSmallerThan2)
+{
+   for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
+   {
+      Given FreshFoodPulldownOffsetIs(1200);
+      Given PulldownFanBehaviorIs(ENABLED);
+      Given PulldownValveBehaviorIs(ENABLED);
+      Given IceCabinetHighSpeedOverrideIs(ENABLED);
+      Given MaxTimeInValveAIs(ENABLED);
+      Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+      Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+      Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+      Given FeaturePanGridBlockNumberIs(1);
+      Given BothThermistorsAreValid();
+      When GridBlockBecomes(gridBlockNumber);
+      And The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Off);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
+      LowAmbientValveBehaviorShouldBe(ENABLED);
+      FreshFoodPulldownOffsetShouldBe(0);
+      PulldownFanBehaviorShouldBe(DISABLED);
+      PulldownValveBehaviorShouldBe(DISABLED);
+      CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+      FreshFoodAndFreezerIceMakersShouldBe(ENABLED);
+      IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+      MaxTimeInValvePositionAShouldBe(DISABLED);
+      DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+      CoolConvertibleCompartmentBeforeOffShouldBe(CLEAR);
+      UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(CLEAR);
+
+      GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, FanSpeed_Off, SealedSystemValvePosition_D);
+   }
+}
+
 TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsSmallerThan2)
 {
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
@@ -2070,7 +2163,37 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDela
    }
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsSmallerThan4AndGreaterThanOrEqualTo2)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileUseDelayedConvertibleCompartmentCoolingSpeedIsSetAndFeaturePanGridBlockNumberIsEqualTo4)
+{
+   for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
+   {
+      Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+      Given DelayConvertibleCompartmentCoolingIs(SET);
+      Given UseDelayedConvertibleCompartmentCoolingSpeedIs(SET);
+      Given FeaturePanGridBlockNumberIs(4);
+      Given BothThermistorsAreValid();
+      When GridBlockBecomes(gridBlockNumber);
+      And The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Off);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
+      LowAmbientValveBehaviorShouldBe(ENABLED);
+      FreshFoodPulldownOffsetShouldBe(0);
+      PulldownFanBehaviorShouldBe(DISABLED);
+      PulldownValveBehaviorShouldBe(DISABLED);
+      CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+      FreshFoodAndFreezerIceMakersShouldBe(ENABLED);
+      IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+      MaxTimeInValvePositionAShouldBe(DISABLED);
+      DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+      CoolConvertibleCompartmentBeforeOffShouldBe(CLEAR);
+      UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(CLEAR);
+
+      GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, FanSpeed_Off, SealedSystemValvePosition_D);
+   }
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsEqualTo2)
 {
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
    {
@@ -2078,6 +2201,36 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDela
       Given DelayConvertibleCompartmentCoolingIs(SET);
       Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
       Given FeaturePanGridBlockNumberIs(2);
+      Given BothThermistorsAreValid();
+      When GridBlockBecomes(gridBlockNumber);
+      And The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
+      LowAmbientValveBehaviorShouldBe(ENABLED);
+      FreshFoodPulldownOffsetShouldBe(0);
+      PulldownFanBehaviorShouldBe(DISABLED);
+      PulldownValveBehaviorShouldBe(DISABLED);
+      CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+      FreshFoodAndFreezerIceMakersShouldBe(ENABLED);
+      IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+      MaxTimeInValvePositionAShouldBe(DISABLED);
+      DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+      CoolConvertibleCompartmentBeforeOffShouldBe(SET);
+      UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(SET);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
+   }
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsGreaterThan2AndLessThan4)
+{
+   for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
+   {
+      Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+      Given DelayConvertibleCompartmentCoolingIs(SET);
+      Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+      Given FeaturePanGridBlockNumberIs(3);
       Given BothThermistorsAreValid();
       When GridBlockBecomes(gridBlockNumber);
       And The GridIsRun();
@@ -2130,14 +2283,48 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileCool
    }
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterOrEqualThan4)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsEqualTo4)
 {
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
    {
+      Given CoolingModeIs(CoolingMode_Freezer);
+      Given CoolingSpeedIs(CoolingSpeed_Mid);
       Given CoolConvertibleCompartmentBeforeOffIs(SET);
       Given DelayConvertibleCompartmentCoolingIs(CLEAR);
       Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
       Given FeaturePanGridBlockNumberIs(4);
+      Given BothThermistorsAreValid();
+      When GridBlockBecomes(gridBlockNumber);
+      And The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
+      LowAmbientValveBehaviorShouldBe(ENABLED);
+      FreshFoodPulldownOffsetShouldBe(0);
+      PulldownFanBehaviorShouldBe(DISABLED);
+      PulldownValveBehaviorShouldBe(DISABLED);
+      CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+      FreshFoodAndFreezerIceMakersShouldBe(ENABLED);
+      IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+      MaxTimeInValvePositionAShouldBe(DISABLED);
+      DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+      CoolConvertibleCompartmentBeforeOffShouldBe(SET);
+      UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(SET);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
+   }
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreater4)
+{
+   for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 44; gridBlockNumber++)
+   {
+      Given CoolingModeIs(CoolingMode_Freezer);
+      Given CoolingSpeedIs(CoolingSpeed_Mid);
+      Given CoolConvertibleCompartmentBeforeOffIs(SET);
+      Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+      Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+      Given FeaturePanGridBlockNumberIs(5);
       Given BothThermistorsAreValid();
       When GridBlockBecomes(gridBlockNumber);
       And The GridIsRun();
@@ -2190,6 +2377,63 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44WhileCool
    }
 }
 
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileUseDelayedConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsSmallerThan2)
+{
+   Given CoolingModeIs(CoolingMode_FreshFood);
+   Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+   Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+   Given FeaturePanGridBlockNumberIs(1);
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(45);
+   And The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   LowAmbientValveBehaviorShouldBe(ENABLED);
+   PulldownFanBehaviorShouldBe(DISABLED);
+   PulldownValveBehaviorShouldBe(DISABLED);
+   CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+   IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+   MaxTimeInValvePositionAShouldBe(DISABLED);
+   DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+   CoolConvertibleCompartmentBeforeOffShouldBe(CLEAR);
+   UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(CLEAR);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Off, FanSpeed_Low, SealedSystemValvePosition_A);
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileUseDelayedConvertibleCompartmentCoolingSpeedIsSetAndFeaturePanGridBlockNumberIs4AndCoolingModeIsNotFreshFoodAndCoolingSpeedIsNotOff)
+{
+   Given PulldownFanBehaviorIs(ENABLED);
+   Given PulldownValveBehaviorIs(ENABLED);
+   Given IceCabinetHighSpeedOverrideIs(ENABLED);
+   Given MaxTimeInValveAIs(ENABLED);
+   Given CoolingModeIs(CoolingMode_Freezer);
+   Given CoolingSpeedIs(CoolingSpeed_Mid);
+   Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+   Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(SET);
+   Given FeaturePanGridBlockNumberIs(4);
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(45);
+   And The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Off);
+   CoolingSpeedShouldBe(CoolingSpeed_Off);
+   LowAmbientValveBehaviorShouldBe(ENABLED);
+   PulldownFanBehaviorShouldBe(DISABLED);
+   PulldownValveBehaviorShouldBe(DISABLED);
+   CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+   IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+   MaxTimeInValvePositionAShouldBe(DISABLED);
+   DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+   CoolConvertibleCompartmentBeforeOffShouldBe(CLEAR);
+   UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(CLEAR);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, FanSpeed_Off, SealedSystemValvePosition_D);
+}
+
 TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsSmallerThan4)
 {
    Given CoolingModeIs(CoolingMode_FreshFood);
@@ -2216,13 +2460,39 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolConvertible
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsEqualTo4)
 {
    Given CoolingModeIs(CoolingMode_FreshFood);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
    Given FeaturePanGridBlockNumberIs(4);
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(45);
+   And The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   LowAmbientValveBehaviorShouldBe(ENABLED);
+   PulldownFanBehaviorShouldBe(DISABLED);
+   PulldownValveBehaviorShouldBe(DISABLED);
+   CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+   IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+   MaxTimeInValvePositionAShouldBe(DISABLED);
+   DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+   CoolConvertibleCompartmentBeforeOffShouldBe(SET);
+   UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(SET);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4)
+{
+   Given CoolingModeIs(CoolingMode_FreshFood);
+   Given CoolConvertibleCompartmentBeforeOffIs(SET);
+   Given DelayConvertibleCompartmentCoolingIs(CLEAR);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+   Given FeaturePanGridBlockNumberIs(5);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(45);
    And The GridIsRun();
@@ -2242,13 +2512,13 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFr
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Off, FanSpeed_Low, SealedSystemValvePosition_A);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsNotFreshFoodAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo4)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsNotFreshFoodAndCoolConvertibleCompartmentBeforeOffIsSetAndFeaturePanGridBlockNumberIsGreaterThan4)
 {
    Given CoolingModeIs(CoolingMode_Freezer);
    Given CoolConvertibleCompartmentBeforeOffIs(SET);
    Given DelayConvertibleCompartmentCoolingIs(CLEAR);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(4);
+   Given FeaturePanGridBlockNumberIs(5);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(45);
    And The GridIsRun();
@@ -2294,13 +2564,39 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileDelayConvertibl
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo2)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsEqualTo2)
 {
    Given CoolingModeIs(CoolingMode_FreshFood);
    Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
    Given DelayConvertibleCompartmentCoolingIs(SET);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
    Given FeaturePanGridBlockNumberIs(2);
+   Given BothThermistorsAreValid();
+   When GridBlockBecomes(45);
+   And The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   LowAmbientValveBehaviorShouldBe(ENABLED);
+   PulldownFanBehaviorShouldBe(DISABLED);
+   PulldownValveBehaviorShouldBe(DISABLED);
+   CondenserFanAntiSweatBehaviorShouldBe(ENABLED);
+   IceCabinetHighSpeedOverrideShouldBe(DISABLED);
+   MaxTimeInValvePositionAShouldBe(DISABLED);
+   DelayConvertibleCompartmentCoolingShouldBe(CLEAR);
+   CoolConvertibleCompartmentBeforeOffShouldBe(SET);
+   UseDelayedConvertibleCompartmentCoolingSpeedShouldBe(SET);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_High, FanSpeed_Off, SealedSystemValvePosition_B);
+}
+
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFreshFoodAndDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsGreaterThan2)
+{
+   Given CoolingModeIs(CoolingMode_FreshFood);
+   Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
+   Given DelayConvertibleCompartmentCoolingIs(SET);
+   Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
+   Given FeaturePanGridBlockNumberIs(3);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(45);
    And The GridIsRun();
@@ -2320,13 +2616,13 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsFr
    GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Off, FanSpeed_Low, SealedSystemValvePosition_A);
 }
 
-TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsNotFreshFoodAndDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsGreaterThanOrEqualTo2)
+TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock45WhileCoolingModeIsNotFreshFoodAndDelayConvertibleCompartmentCoolingIsSetAndFeaturePanGridBlockNumberIsGreaterThan2)
 {
    Given CoolingModeIs(CoolingMode_Freezer);
    Given CoolConvertibleCompartmentBeforeOffIs(CLEAR);
    Given DelayConvertibleCompartmentCoolingIs(SET);
    Given UseDelayedConvertibleCompartmentCoolingSpeedIs(CLEAR);
-   Given FeaturePanGridBlockNumberIs(2);
+   Given FeaturePanGridBlockNumberIs(3);
    Given BothThermistorsAreValid();
    When GridBlockBecomes(45);
    And The GridIsRun();

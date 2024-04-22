@@ -33,7 +33,7 @@ void SingleDoorFreshFoodEvaporatorCoolingSystemPlugin_Init(
    I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
-   DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
+   DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
 
    SingleDoorFreshFoodSetpointPlugin_Init(&instance->_private.singleDoorFreshFoodSetpointPlugin, dataModel);
    SingleDoorFreshFoodCoolingSystemSensorFilteringPlugin_Init(

@@ -256,4 +256,8 @@ void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataMode
          dataModel,
          &featurePanDeliDeliFanDepenencyVotingConfig);
    }
+
+   FeaturePanGridPlugin_Init(
+      &instance->_private.featurePanGridPlugin,
+      dataModel);
 }

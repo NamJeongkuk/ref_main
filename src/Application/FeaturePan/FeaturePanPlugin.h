@@ -14,6 +14,7 @@
 #include "FeaturePanConvertibleFreezerEvapFanDependencyVoting.h"
 #include "FeaturePanDeliDeliFanDependencyVoting.h"
 #include "FeaturePanDeliFreshFoodEvapFanDependencyVoting.h"
+#include "FeaturePanGridPlugin.h"
 #include "FeaturePanHeaterDisablingVoting.h"
 #include "FeaturePanModeSetpointResolver.h"
 #include "FeaturePanPulldownVoting.h"
@@ -31,6 +32,7 @@ typedef struct
       FeaturePanConvertibleFreezerEvapFanDependencyVoting_t featurePanConvertibleFreezerEvapFanDependencyVoting;
       FeaturePanDeliDeliFanDependencyVoting_t featurePanDeliDeliFanDependencyVoting;
       FeaturePanDeliFreshFoodEvapFanDependencyVoting_t featurePanDeliFreshFoodEvapFanDependencyVoting;
+      FeaturePanGridPlugin_t featurePanGridPlugin;
       FeaturePanHeaterDisablingVoting_t featurePanHeaterDisablingVoting;
       FeaturePanModeSetpointResolver_t convertibleCompartmentModeSetpointResolver;
       FeaturePanPulldownVoting_t featurePanPulldownVoting;

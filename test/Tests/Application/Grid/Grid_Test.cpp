@@ -50,23 +50,10 @@ void Grid_SingleDoorSingleEvap(void *context)
    mock().actualCall("Grid_SingleDoorSingleEvap");
 }
 
-static const GridFunction_t grids[] = {
-   Grid_SingleEvap,
-   Grid_DualEvap,
-   Grid_TripleEvap,
-   Grid_SingleDoorSingleEvap
-};
-
-static const GridFunctionArray_t functionArray = {
-   grids,
-   NUM_ELEMENTS(grids)
-};
-
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
    .gridOverrideSignalErd = Erd_GridOverrideSignal,
    .gridOverrideEnableErd = Erd_GridOverrideEnable,
-   .gridFunctions = &functionArray
 };
 
 TEST_GROUP(Grid_SingleEvap)
@@ -87,8 +74,10 @@ TEST_GROUP(Grid_SingleEvap)
    {
       Grid_Init(
          &instance,
+         dataModel,
          &gridConfig,
-         dataModel);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         Grid_SingleEvap);
    }
 
    void NothingShouldHappen()
@@ -202,8 +191,10 @@ TEST_GROUP(Grid_DualEvap)
    {
       Grid_Init(
          &instance,
+         dataModel,
          &gridConfig,
-         dataModel);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         Grid_DualEvap);
    }
 
    void NothingShouldHappen()
@@ -317,8 +308,10 @@ TEST_GROUP(Grid_SingleDoorSingleEvapSingleDoorFreezer)
    {
       Grid_Init(
          &instance,
+         dataModel,
          &gridConfig,
-         dataModel);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         Grid_SingleDoorSingleEvap);
    }
 
    void NothingShouldHappen()
@@ -432,8 +425,10 @@ TEST_GROUP(Grid_SingleDoorSingleEvapAllFreshFood)
    {
       Grid_Init(
          &instance,
+         dataModel,
          &gridConfig,
-         dataModel);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         Grid_SingleDoorSingleEvap);
    }
 
    void NothingShouldHappen()
@@ -526,5 +521,122 @@ TEST(Grid_SingleDoorSingleEvapAllFreshFood, ShouldReenablePeriodicGridFunctionWh
    After(OneSecondInMs - 1);
 
    GridFunctionShouldBeCalled("Grid_SingleDoorSingleEvap");
+   After(1);
+}
+
+TEST_GROUP(Grid_TripleEvap)
+{
+   Grid_t instance;
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentTripleEvaporator);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+   }
+
+   void WhenTheModuleIsInitialized()
+   {
+      Grid_Init(
+         &instance,
+         dataModel,
+         &gridConfig,
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         Grid_TripleEvap);
+   }
+
+   void NothingShouldHappen()
+   {
+   }
+
+   void WhenTheGridOverrideEnableIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_GridOverrideEnable, &state);
+   }
+
+   void WhenTheGridOverrideSignalChanges()
+   {
+      Signal_t overrideSignal;
+      DataModel_Read(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+
+      overrideSignal++;
+      DataModel_Write(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+   }
+
+   void GridFunctionShouldBeCalled(SimpleString functionName)
+   {
+      mock().expectOneCall(functionName);
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+   }
+};
+
+TEST(Grid_TripleEvap, ShouldNotRunCallbackOnInit)
+{
+   WhenTheModuleIsInitialized();
+   NothingShouldHappen();
+}
+
+TEST(Grid_TripleEvap, ShouldRunGridFunctionAfterGivenPeriod)
+{
+   WhenTheModuleIsInitialized();
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   GridFunctionShouldBeCalled("Grid_TripleEvap");
+   After(1);
+}
+
+TEST(Grid_TripleEvap, ShouldNotRunGridFunctionAfterOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   NothingShouldHappen();
+   After(1);
+}
+
+TEST(Grid_TripleEvap, ShouldRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_TripleEvap");
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_TripleEvap, ShouldNotRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(false);
+
+   NothingShouldHappen();
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_TripleEvap, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_TripleEvap");
+   WhenTheGridOverrideSignalChanges();
+
+   WhenTheGridOverrideEnableIs(false);
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   GridFunctionShouldBeCalled("Grid_TripleEvap");
    After(1);
 }

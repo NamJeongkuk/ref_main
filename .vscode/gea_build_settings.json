@@ -22,7 +22,7 @@
       "makefile": "tdd.mk"
     },
     {
-      "name": "Integration Test",
+      "name": "Integration",
       "makefile": "tdd.mk",
       "defines": {
         "INTEGRATION": "Y"

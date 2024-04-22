@@ -49,7 +49,7 @@ TEST_GROUP(Grid_SingleEvap_Test)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SideBySideSingleEvap_Init(&sideBySideConstArrayMap));
+      DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SideBySideSingleEvap_Init(&sideBySideConstArrayMap));
    }
 
    void GridBlockIs(GridBlockNumber_t actual)

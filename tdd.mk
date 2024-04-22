@@ -7,7 +7,7 @@ TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 
 include lib/applcommon/defaults.mk
 
-CPPFLAGS+=-Og
+CPPFLAGS+=-O2 -Wno-macro-redefined
 CXXFLAGS+=-Wno-unneeded-internal-declaration -Wno-overloaded-virtual
 
 DEFINES+=TDD_BUILD

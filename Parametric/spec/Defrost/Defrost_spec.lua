@@ -950,7 +950,7 @@ describe('Defrost', function()
           u8(]] .. damper_position_type.open .. [[),
           u16(]] .. fan_speed_type.super_low_speed .. [[),
           u8(]] .. damper_position_type.closed .. [[),
-          u8(]] .. fan_speed_type.super_low_speed .. [[),
+          u16(]] .. fan_speed_type.super_low_speed .. [[),
           i16(-600),
           i16(3200),
           i16(4600),

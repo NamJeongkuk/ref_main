@@ -27,6 +27,14 @@ typedef uint8_t FeaturePanCoolingMode_t;
 
 enum
 {
+   FeaturePanForcedHeatingMode_Inactive,
+   FeaturePanForcedHeatingMode_Active,
+   FeaturePanForcedHeatingMode_Max
+};
+typedef uint8_t FeaturePanForcedHeatingMode_t;
+
+enum
+{
    FeaturePanCurrentMode_Off,
    FeaturePanCurrentMode_Mode1,
    FeaturePanCurrentMode_Mode2,
