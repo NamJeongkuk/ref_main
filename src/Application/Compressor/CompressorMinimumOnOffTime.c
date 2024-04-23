@@ -76,10 +76,12 @@ void CompressorMinimumOnOffTime_Init(
    instance->_private.timesData = timesData;
    instance->_private.config = config;
 
+   CompressorVotedSpeed_t vote;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->resolvedVoteErd,
-      &instance->_private.previousCompressorSpeed);
+      &vote);
+   instance->_private.previousCompressorSpeed = vote.speed;
 
    EventSubscription_Init(
       &instance->_private.resolvedVoteSubscription,
