@@ -212,6 +212,11 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
       Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData, &platformData, &enhancedSabbathData);
    }
 
+   void GivenDefrostIsInitialized()
+   {
+      DefrostIsInitialized();
+   }
+
    void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
    {
       Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData, &platformData, &enhancedSabbathData);
@@ -1228,7 +1233,24 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
    {
       DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorDiscovered, set);
    }
+
+   void DefrostStateShouldBe(DefrostState_t expected)
+   {
+      DefrostState_t actual;
+      DataModel_Read(dataModel, Erd_DefrostState, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
 };
+
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleWhenDefrostStateWasPostDwellAndUpdateDefrostStateToIdle)
+{
+   GivenDefrostStateIs(DefrostState_PostDwell);
+   GivenDefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DefrostStateShouldBe(DefrostState_Idle);
+}
 
 TEST(Defrost_SingleEvapSideBySide, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
 {
@@ -1358,6 +1380,14 @@ TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnHsmStateWhenCabin
    GivenCabinetIsNotTooWarmOnPowerUp();
    And DefrostStateIs(DefrostState_Prechill);
    And DefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnEntryHsmStateOnInitWhenPreviousDefrostStateWasPrechillPrep)
+{
+   GivenDefrostStateIs(DefrostState_PrechillPrep);
+   GivenDefrostIsInitialized();
 
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }

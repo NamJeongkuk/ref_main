@@ -1299,7 +1299,9 @@ static HsmState_t InitialState(Defrost_t *instance)
       {
          initialState = State_Dwell;
       }
-      else if(defrostState == DefrostState_Prechill || defrostState == DefrostState_HeaterOn)
+      else if(defrostState == DefrostState_PrechillPrep ||
+         defrostState == DefrostState_Prechill ||
+         defrostState == DefrostState_HeaterOn)
       {
          initialState = State_HeaterOnEntry;
       }
@@ -2567,6 +2569,28 @@ static void OverrideNextDefrostTypeIfEepromClearedOnPowerUpOrPreviouslyDisabledO
    }
 }
 
+static void UpdateDefrostStateOnlyWhenDefrostHsmStateIsIdle(Defrost_t *instance)
+{
+   DefrostHsmState_t initialHsmState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostHsmStateErd,
+      &initialHsmState);
+
+   // DefrostStateOnCompareMatch doesn't cover the case.
+   // Because on change event doesn't occur when the initial HSM state is idle.
+   if(initialHsmState == DefrostHsmState_Idle)
+   {
+      DefrostState_t initialDefrostState;
+
+      initialDefrostState = DefrostState_Idle;
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->defrostStateErd,
+         &initialDefrostState);
+   }
+}
+
 void Defrost_Init(
    Defrost_t *instance,
    I_DataModel_t *dataModel,
@@ -2612,4 +2636,6 @@ void Defrost_Init(
    DataModel_SubscribeAll(
       dataModel,
       &instance->_private.dataModelSubscription);
+
+   UpdateDefrostStateOnlyWhenDefrostHsmStateIsIdle(instance);
 }
