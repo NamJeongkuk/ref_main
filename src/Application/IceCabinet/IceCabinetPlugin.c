@@ -14,6 +14,11 @@ static const FreezerSetpointToIceCabinetSetpointMapperConfig_t freezerSetpointTo
    .iceCabinetSetpoint = Erd_IceCabinetSetpoint
 };
 
+static const IceCabinetFreezerEvapFanDependencyVotingConfiguration_t iceCabinetFreezerEvapFanDependencyVotingConfig = {
+   .freezerEvapFanSpeedResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .iceCabinetDependencyOnFreezerFanVoteErd = Erd_IceCabinetFanSpeed_FreezerFanDependencyVote
+};
+
 static const IceCabinetGammaCalculatorConfig_t gammaCalculatorConfig = {
    .freezerFilteredTemperatureResolvedInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .iceCabinetTemperatureResolvedInDegFx100Erd = Erd_IceCabinet_FilteredTemperatureResolvedInDegFx100,
@@ -27,19 +32,24 @@ void IceCabinetPlugin_Init(
    I_DataModel_t *dataModel)
 {
    FreezerSetpointToIceCabinetSetpointMapper_Init(
-      &instance->freezerSetpointToIceCabinetSetpointMapper,
+      &instance->_private.freezerSetpointToIceCabinetSetpointMapper,
       dataModel,
       &freezerSetpointToIceCabinetSetpointMapperConfig,
       PersonalityParametricData_Get(dataModel)->iceCabinetData->freezerSetpointToIceCabinetSetpointTable);
 
+   IceCabinetFreezerEvapFanDependencyVoting_Init(
+      &instance->_private.iceCabinetFreezerEvapFanDependencyVoting,
+      dataModel,
+      &iceCabinetFreezerEvapFanDependencyVotingConfig);
+
    IceCabinetGammaCalculator_Init(
-      &instance->gammaCalculator,
+      &instance->_private.gammaCalculator,
       dataModel,
       &gammaCalculatorConfig,
       &PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData->deltaGridLines->gridLines[GridDelta_SecondDimension],
       &PersonalityParametricData_Get(dataModel)->iceCabinetGridData->deltaGridLines->gridLines[GridDelta_FirstDimension]);
 
    IceCabinetGridPlugin_Init(
-      &instance->iceCabinetGridPlugin,
+      &instance->_private.iceCabinetGridPlugin,
       dataModel);
 }
