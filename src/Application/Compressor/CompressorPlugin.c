@@ -78,11 +78,12 @@ static const ErdResolverConfiguration_t disableMinimumCompressorTimesVoteResolve
    .numberOfVotingErds = (Erd_DisableMinimumCompressorTimes_DefrostVote - Erd_DisableMinimumCompressorTimes_WinningVoteErd)
 };
 
-static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig = {
-   .compressorStateErd = Erd_CompressorState,
-   .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_CompressorStartUpVote,
-   .freezerEvaporatorFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_CompressorStartUpVote,
-   .freshFoodEvaporatorFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote,
+static const CompressorStartupConfiguration_t compressorStartupConfig = {
+   .compressorResolvedVotedSpeedErd = Erd_CompressorSpeed_ResolvedVote,
+   .condenserFanSpeedStartupVoteErd = Erd_CondenserFanSpeed_CompressorStartUpVote,
+   .freezerEvaporatorFanSpeedStartupVoteErd = Erd_FreezerEvapFanSpeed_CompressorStartUpVote,
+   .freshFoodEvaporatorFanSpeedStartupVoteErd = Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote,
+   .compressorSpeedStartupVoteErd = Erd_CompressorSpeed_StartupVote,
    .coolingModeErd = Erd_CoolingMode
 };
 
@@ -106,10 +107,12 @@ void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataMode
       DataModel_AsDataSource(dataModel),
       &disableMinimumCompressorTimesVoteResolverConfig);
 
-   CompressorStartupFanVotes_Init(
-      &instance->_private.compressorStartupFanVotes,
+   CompressorStartup_Init(
+      &instance->_private.compressorStartup,
       dataModel,
-      &compressorStartupFanVotesConfig);
+      PersonalityParametricData_Get(dataModel)->compressorData,
+      PersonalityParametricData_Get(dataModel)->platformData->numberOfEvaporators,
+      &compressorStartupConfig);
 
    CompressorIsOn_Init(dataModel);
 

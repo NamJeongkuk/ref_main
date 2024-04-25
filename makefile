@@ -7,8 +7,8 @@ NVM_DIR?=$$NVM_DIR
 .PHONY: % $(MAKECMDGOALS)
 .ONESHELL:
 
-MAKE_TARGET=$(MAKE) -f rockhopper-target.mk
-MAKE_TDD=$(MAKE) -f tdd.mk
+MAKE_TARGET=+ $(MAKE) -f rockhopper-target.mk
+MAKE_TDD=+ $(MAKE) -f tdd.mk
 
 target:
 	$(MAKE_TARGET)

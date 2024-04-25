@@ -12,7 +12,7 @@
 #include "CompressorSpeedController.h"
 #include "CompressorSpeedDriver.h"
 #include "ErdResolver.h"
-#include "CompressorStartupFanVotes.h"
+#include "CompressorStartup.h"
 #include "SabbathFanDelayHandler.h"
 #include "CompressorFaultHandler.h"
 
@@ -22,7 +22,7 @@ typedef struct
    {
       CompressorSpeedDriver_t compressorSpeedDriver;
       CompressorSpeedController_t compressorSpeedController;
-      CompressorStartupFanVotes_t compressorStartupFanVotes;
+      CompressorStartup_t compressorStartup;
       SabbathFanDelayHandler_t sabbathFanDelayHandler;
       ErdResolver_t compressorSpeedErdResolver;
       ErdResolver_t disableMinimumCompressorTimesErdResolver;
