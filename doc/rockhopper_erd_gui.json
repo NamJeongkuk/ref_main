@@ -2410,6 +2410,102 @@
       ]
     },
     {
+      "title": "Ice Cabinet",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cooling Mode",
+          "name": "Erd_IceCabinetCoolingMode",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Translated Setpoint In Deg Fx100",
+          "name": "Erd_IceCabinet_SetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Adjusted Setpoint In Deg Fx100",
+          "name": "Erd_IceCabinet_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cabinet Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_CabinetOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cross Ambient Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermal Shift In Deg Fx100",
+          "name": "Erd_IceCabinet_ThermalShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Ice Formation Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_IceFormationOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Formation Offset Is Active",
+          "name": "Erd_IceCabinet_IceFormationIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Gamma",
+          "name": "Erd_IceCabinetGamma",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Calculated Grid Block",
+          "name": "Erd_IceCabinetGrid_BlockNumber",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Grid Block Override Request",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Grid Block Override Value",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Resolved Grid Block",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideResolved",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Convertible Compartment",
       "erds": [
         {
@@ -5437,7 +5533,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Eeprom Unit Lifetime Dispsensed Water In Ounces x100",
+          "displayName": "Eeprom Unit Lifetime Dispensed Water In Ounces x100",
           "name": "Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100",
           "read": true,
           "write": true,

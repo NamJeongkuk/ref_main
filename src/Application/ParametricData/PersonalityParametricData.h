@@ -14,6 +14,7 @@
 #include "FanData.h"
 #include "GridData.h"
 #include "ConvertibleCompartmentData.h"
+#include "IceCabinetData.h"
 #include "FeaturePanData.h"
 #include "SensorData.h"
 #include "PlatformData.h"
@@ -54,9 +55,11 @@ typedef struct
    const CombinedFanData_t *fanData;
    const GridData_t *freshFoodAndFreezerGridData;
    const GridData_t *featurePanGridData;
+   const GridData_t *iceCabinetGridData;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;
    const FeaturePanData_t *featurePanData;
+   const IceCabinetData_t *iceCabinetData;
    const SensorData_t *sensorData;
    const SystemMonitorData_t *systemMonitorData;
    const CompressorData_t *compressorData;

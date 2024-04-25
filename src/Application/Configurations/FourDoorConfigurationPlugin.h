@@ -20,6 +20,7 @@
 #include "FourDoorDoorPlugin.h"
 #include "FourDoorFactoryPlugin.h"
 #include "FeaturePanPlugin.h"
+#include "IceCabinetPlugin.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
       FourDoorDoorPlugin_t fourDoorDoorPlugin;
       FourDoorFactoryPlugin_t factoryPlugin;
       FeaturePanPlugin_t FeaturePanPlugin;
+      IceCabinetPlugin_t IceCabinetPlugin;
    } _private;
 } FourDoorConfigurationPlugin_t;
 

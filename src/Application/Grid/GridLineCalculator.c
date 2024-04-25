@@ -76,12 +76,12 @@ static void CalculateAxisGridLines(
       }
       else if(DeltaGridLinesCorrection_Offset == PARAMETRIC_GRID_LINE_CORRECTION(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line)))
       {
-         TemperatureDegFx100_t offset;
+         TemperatureDegFx100_t offset = 0;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(dimension).offsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
 
-      TemperatureDegFx100_t crossAmbientHysteresisAdjustment;
+      TemperatureDegFx100_t crossAmbientHysteresisAdjustment = 0;
       DataModel_Read(
          instance->_private.dataModel,
          instance->_private.config->crossAmbientHysteresisAdjustmentErd,

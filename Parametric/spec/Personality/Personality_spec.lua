@@ -17,9 +17,11 @@ describe("Personality", function()
       fans = TypedString('fan_list', 'fan_list'),
       fresh_food_and_freezer_grid = TypedString('fresh_food_and_freezer_grid', 'fresh_food_and_freezer_grid'),
       feature_pan_grid = TypedString('feature_pan_grid', 'feature_pan_grid'),
+      ice_cabinet_grid = TypedString('ice_cabinet_grid', 'ice_cabinet_grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
       feature_pan = TypedString('feature_pan', 'feature_pan'),
+      ice_cabinet = TypedString('ice_cabinet', 'ice_cabinet'),
       sensors = TypedString('sensors', 'sensors'),
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
@@ -105,6 +107,14 @@ describe("Personality", function()
   end)
 
   it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet_grid must be a typed string with type ice_cabinet_grid, but is a number', function()
+      personality(generate_config({
+        ice_cabinet_grid = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
     should_fail_with('sabbath must be a typed string with type sabbath, but is a number', function()
       personality(generate_config({
         sabbath = -1
@@ -124,6 +134,14 @@ describe("Personality", function()
     should_fail_with('feature_pan must be a typed string with type feature_pan, but is a number', function()
       personality(generate_config({
         feature_pan = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet must be a typed string with type ice_cabinet, but is a number', function()
+      personality(generate_config({
+        ice_cabinet = -1
       }))
     end)
   end)
@@ -306,9 +324,11 @@ describe("Personality", function()
         pointer(fan_list),
         pointer(fresh_food_and_freezer_grid),
         pointer(feature_pan_grid),
+        pointer(ice_cabinet_grid),
         pointer(sabbath),
         pointer(convertible_compartment),
         pointer(feature_pan),
+        pointer(ice_cabinet),
         pointer(sensors),
         pointer(system_monitor),
         pointer(compressor),

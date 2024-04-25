@@ -12,6 +12,7 @@ return function(core)
       { 'ice_cabinet_adjusted_setpoint' },
       structure(
         i16(config.ice_formation_offset_in_degfx100),
+        pointer(config.cross_ambient_offset),
         pointer(config.shift_offset)
       )
     )
@@ -22,6 +23,7 @@ return function(core)
       config,
       {
         ice_formation_offset_in_degfx100 = { constraint.i16 },
+        cross_ambient_offset = { constraint.typed_string('cross_ambient_offset') },
         shift_offset = { constraint.typed_string('shift_offset') }
       })
     return generate(config)

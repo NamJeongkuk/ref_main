@@ -133,6 +133,30 @@ TEST_GROUP(AdjustedSetpointIntegration)
 
       CHECK_EQUAL(setpoint + shift, adjustedSetpoint);
    }
+
+   void TheIceCabinetResolvedSetpointIs(TemperatureDegFx100_t setpoint)
+   {
+      DataModel_Write(dataModel, Erd_IceCabinet_SetpointInDegFx100, &setpoint);
+   }
+
+   void TheIceCabinetThermalShiftIs(TemperatureDegFx100_t shift)
+   {
+      DataModel_Write(dataModel, Erd_IceCabinet_ThermalShiftInDegFx100, &shift);
+   }
+
+   void TheIceCabinetAdjustedSetpointShouldBeCorrectlyShifted()
+   {
+      TemperatureDegFx100_t setpoint;
+      DataModel_Read(dataModel, Erd_IceCabinet_AdjustedSetpointWithoutShiftInDegFx100, &setpoint);
+
+      TemperatureDegFx100_t shift;
+      DataModel_Read(dataModel, Erd_IceCabinet_ThermalShiftInDegFx100, &shift);
+
+      TemperatureDegFx100_t adjustedSetpoint;
+      DataModel_Read(dataModel, Erd_IceCabinet_AdjustedSetpointInDegFx100, &adjustedSetpoint);
+
+      CHECK_EQUAL(setpoint + shift, adjustedSetpoint);
+   }
 };
 
 TEST(AdjustedSetpointIntegration, ShouldCalculateTheAdjustedSetpointForFourDoorPersonality)
@@ -153,6 +177,10 @@ TEST(AdjustedSetpointIntegration, ShouldCalculateTheAdjustedSetpointForFourDoorP
    When TheFreshFoodResolvedSetpointIs(SomeSetpoint);
    And TheFreshFoodThermalShiftIs(SomeShift);
    TheFreshFoodAdjustedSetpointShouldBeCorrectlyShifted();
+
+   When TheIceCabinetResolvedSetpointIs(SomeSetpoint);
+   And TheIceCabinetThermalShiftIs(SomeShift);
+   TheIceCabinetAdjustedSetpointShouldBeCorrectlyShifted();
 }
 
 TEST(AdjustedSetpointIntegration, ShouldCalculateTheAdjustedSetpointForFreezer)
