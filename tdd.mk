@@ -117,6 +117,7 @@ SRC_DIRS:=\
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
   test/Tests/Application/Grid \
+  test/Tests/Application/IceCabinet \
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \
   test/Tests/Application/IceMaker/TwistTrayIceMaker \

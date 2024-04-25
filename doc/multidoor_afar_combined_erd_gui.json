@@ -515,6 +515,13 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Ice Cabinet Gamma",
+               "name": "Erd_IceCabinetGamma",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Condenser Fan - Factory/Service Vote",
                "name": "Erd_CondenserFanSpeed_FactoryServiceVote",
                "read": true,

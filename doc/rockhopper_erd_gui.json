@@ -1854,6 +1854,13 @@
           "name": "Erd_IceCabinetThermistorDiscovered",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Gamma",
+          "name": "Erd_IceCabinetGamma",
+          "read": true,
+          "write": true
         }
       ]
     },

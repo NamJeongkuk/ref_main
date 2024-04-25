@@ -10,9 +10,11 @@
 
 #include "I_DataModel.h"
 #include "IceCabinetGridPlugin.h"
+#include "IceCabinetGammaCalculator.h"
 
 typedef struct
 {
+   IceCabinetGammaCalculator_t gammaCalculator;
    IceCabinetGridPlugin_t iceCabinetGridPlugin;
 } IceCabinetPlugin_t;
 
