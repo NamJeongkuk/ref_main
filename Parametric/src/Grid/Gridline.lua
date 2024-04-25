@@ -13,7 +13,7 @@ return function(core)
       { 'gridline' },
       structure(
         i16(config.delta_in_degfx100),
-        u8(grid_line_correction[config.correction]),
+        u8(config.correction),
         pointer(config.cross_ambient_hysteresis_adjustment)
       )
     )
@@ -24,7 +24,7 @@ return function(core)
       config,
       {
         delta_in_degfx100 = { constraint.i16 },
-        correction = { constraint.in_set(enum.keys(grid_line_correction)) },
+        correction = { constraint.in_enumeration(grid_line_correction) },
         cross_ambient_hysteresis_adjustment = { constraint.typed_string('cross_ambient_hysteresis_adjustment') }
       })
 

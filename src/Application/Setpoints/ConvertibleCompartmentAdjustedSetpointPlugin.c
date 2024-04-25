@@ -36,7 +36,7 @@ static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointCo
 };
 
 static const ResolvedSetpointWriterConfiguration_t convertibleCompartmentResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
+   .setpointVoteErd = Erd_FeaturePanSetpoint_UserVote,
    .resolvedSetpointErd = Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };

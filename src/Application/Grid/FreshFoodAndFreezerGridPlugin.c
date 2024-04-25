@@ -55,6 +55,7 @@ static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridDeltaOffsetErd = Erd_U8Zero,
    .gridLineAdjustmentErds = {
       {
          .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,

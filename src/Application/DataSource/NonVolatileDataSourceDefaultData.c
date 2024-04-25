@@ -56,7 +56,8 @@ void NonVolatileDataSourceDefaultData_Int8Max(void *data, size_t dataSize)
 
 void NonVolatileDataSourceDefaultData_Int16Max(void *data, size_t dataSize)
 {
-   memset(data, INT16_MAX, dataSize);
+   int16_t temp = INT16_MAX;
+   memcpy(data, &temp, dataSize);
 }
 
 void NonVolatileDataSourceDefaultData_DispenseSelection(void *data, size_t dataSize)

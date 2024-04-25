@@ -11,13 +11,12 @@ return function(core)
 
   local grid_key_index = 1
   local config_is_one_dimension = true
+  local max_supported_grid_lines_per_delta = 7
 
   local function get_grid_keys()
     if config_is_one_dimension then
       if grid_key_index == 1 then
         return grid_keys.one_dimensional_grid_deltas
-      else
-        return grid_keys.one_dimensional_grid
       end
     else
       if grid_key_index == 1 then
@@ -34,6 +33,11 @@ return function(core)
     local length = 0
 
     for k in pairs(t) do length = length + 1 end
+
+    if config_is_one_dimension and length > max_supported_grid_lines_per_delta then
+      length = max_supported_grid_lines_per_delta
+    end
+
     return length
   end
 
@@ -54,18 +58,40 @@ return function(core)
     return ret_table
   end
 
+  local get_all_nested_gridlines = function(data)
+    local gridlines = {}
+    local modes_per_grid = map(kv_unpack(data, grid_keys.one_dimensional_grid_delta_modes), unpack_gridline)
+    local number_of_gridlines_per_mode = 0
+
+    for _, modes in ipairs(modes_per_grid) do
+      local gridlines_per_mode = map(kv_unpack(modes, grid_keys.one_dimensional_mode_grid), unpack_gridline)
+      for _, gridline in ipairs(gridlines_per_mode) do
+        number_of_gridlines_per_mode = #gridlines_per_mode
+        table.insert(gridlines, gridline)
+      end
+    end
+
+    return number_of_gridlines_per_mode, gridlines
+  end
+
   local unpack_table = function(data)
-    return structure(u8(length_of_table(data)), pointer(structure(table.unpack(map(kv_unpack(data, get_grid_keys()), unpack_gridline)))));
+    if config_is_one_dimension then
+      local number_of_gridlines, all_gridlines = get_all_nested_gridlines(data)
+      return structure(u8(number_of_gridlines), pointer(structure(table.unpack(all_gridlines))))
+    else
+      return structure(u8(length_of_table(data)), pointer(structure(table.unpack(map(kv_unpack(data, get_grid_keys()), unpack_gridline)))));
+    end
   end
 
   local generate = memoize(function(config)
     grid_key_index = 1 -- resets to 1
-    config_is_one_dimension = (config.deltas.grid_deltas ~= nil)
+    local dimensions = length_of_table(config.deltas)
+    config_is_one_dimension = (dimensions == 1)
 
     return TypedString(
       { 'grid_deltas' },
       structure(
-        u8(length_of_table(config.deltas)),
+        u8(dimensions),
         pointer(
           structure(table.unpack(map(kv_unpack(config.deltas, get_grid_keys()), unpack_table)))
         )
@@ -79,13 +105,71 @@ return function(core)
         constraint.ored({
           constraint.table_keys({
             grid_deltas = { constraint.table_keys({
-              gridline_1 = { constraint.typed_string('gridline') },
-              gridline_2 = { constraint.typed_string('gridline') },
-              gridline_3 = { constraint.typed_string('gridline') },
-              gridline_4 = { constraint.typed_string('gridline') },
-              gridline_5 = { constraint.typed_string('gridline') },
-              gridline_6 = { constraint.typed_string('gridline') },
-              gridline_7 = { constraint.typed_string('gridline') }
+              mode_1 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })}
+            },
+            {
+              mode_2 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
+              mode_3 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
+              mode_4 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
+              mode_5 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
+              mode_6 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
+              mode_7 = { constraint.table_keys({
+                gridline_1 = { constraint.typed_string('gridline') },
+                gridline_2 = { constraint.typed_string('gridline') },
+                gridline_3 = { constraint.typed_string('gridline') },
+                gridline_4 = { constraint.typed_string('gridline') },
+                gridline_5 = { constraint.typed_string('gridline') },
+                gridline_6 = { constraint.typed_string('gridline') },
+                gridline_7 = { constraint.typed_string('gridline') },
+              })},
             })},
           }),
           constraint.table_keys({

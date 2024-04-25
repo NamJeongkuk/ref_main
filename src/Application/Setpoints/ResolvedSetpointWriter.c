@@ -43,7 +43,7 @@ void ResolvedSetpointWriter_Init(
    SetpointVotedTemperature_t setpointVotedTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->resolvedSetpointVoteErd,
+      instance->_private.config->setpointVoteErd,
       &setpointVotedTemperature);
    WriteResolvedSetpoint(instance, &setpointVotedTemperature);
 
@@ -53,6 +53,6 @@ void ResolvedSetpointWriter_Init(
       WriteResolvedSetpoint);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->resolvedSetpointVoteErd,
+      instance->_private.config->setpointVoteErd,
       &instance->_private.resolvedSetpointVoteChangedSubscription);
 }

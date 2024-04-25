@@ -40,7 +40,7 @@ static const I16ErdAdderConfiguration_t freezerAdjustedSetpointConfig = {
 };
 
 static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_FreezerSetpoint_ResolvedVote,
+   .setpointVoteErd = Erd_FreezerSetpoint_ResolvedVote,
    .resolvedSetpointErd = Erd_Freezer_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };

@@ -1451,7 +1451,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Resolved",
+          "displayName": "Convertible Compartment FilteredTemp Resolved In Deg Fx100",
           "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
@@ -2297,6 +2297,34 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Feature Pan Calculated Grid Lines",
+          "name": "Erd_FeaturePanGrid_CalculatedGridLines",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Cooling Mode",
+          "name": "Erd_FeaturePanCoolingMode",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Grid Block Number",
+          "name": "Erd_FeaturePanGrid_BlockNumber",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Previous Grid Blocks",
+          "name": "Erd_FeaturePanGrid_PreviousBlocks",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Feature Pan Current Mode",
           "name": "Erd_FeaturePanCurrentMode",
           "read": true,
@@ -2304,8 +2332,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feature Pan Cooling Mode",
-          "name": "Erd_FeaturePanCoolingMode",
+          "displayName": "Convertible Compartment FilteredTemp Resolved In Deg Fx100",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan User Setpoint Vote In Deg Fx100",
+          "name": "Erd_FeaturePanSetpoint_UserVote",
           "read": true,
           "write": false
         },
@@ -2318,8 +2353,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feature Pan User Setpoint Vote",
-          "name": "Erd_FeaturePanSetpoint_UserVote",
+          "displayName": "Convertible Compartment Cross Ambient Offset In Deg Fx100",
+          "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Thermal Shift",
+          "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Adjusted Setpoint Without Shift",
+          "name": "Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Filtered Temperature",
+          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": false
         },
@@ -2328,7 +2384,28 @@
           "displayName": "Feature Pan Adjusted Setpoint In Deg Fx100",
           "name": "Erd_FeaturePan_AdjustedSetpointInDegFx100",
           "read": true,
-          "write": true
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Damper Position Grid Vote",
+          "name": "Erd_ConvertibleCompartmentDamperPosition_GridVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Evap Fan Grid Vote",
+          "name": "Erd_ConvertibleCompartmentEvapFanSpeed_GridVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Heater Grid Vote",
+          "name": "Erd_ConvertibleCompartmentHeater_GridVote",
+          "read": true,
+          "write": false
         }
       ]
     },
