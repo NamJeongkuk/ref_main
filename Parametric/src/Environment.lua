@@ -114,6 +114,7 @@ return function(directory)
   import('Setpoints/FeaturePanUserSetpoints')
   import('FeaturePan/FeaturePanMode')
   import('FeaturePan/FeaturePanModeLabel')
+  import('IceCabinet/FreezerSetpointToIceCabinetSetpointTable')
   import('IceCabinet/IceCabinet')
   import('IceCabinet/GammaTable')
   import('constants')
@@ -231,6 +232,7 @@ return function(directory)
   feature_pan_user_setpoints = FeaturePanUserSetpoints(core)
   feature_pan_mode = FeaturePanMode
   feature_pan_mode_label = FeaturePanModeLabel
+  freezer_setpoint_to_ice_cabinet_setpoint_table = FreezerSetpointToIceCabinetSetpointTable(core)
   ice_cabinet = IceCabinet(core)
   gamma_table = GammaTable(core)
 
@@ -351,6 +353,7 @@ return function(directory)
     feature_pan_user_setpoints = feature_pan_user_setpoints,
     feature_pan_mode = feature_pan_mode,
     feature_pan_mode_label = feature_pan_mode_label,
+    freezer_setpoint_to_ice_cabinet_setpoint_table = freezer_setpoint_to_ice_cabinet_setpoint_table,
     ice_cabinet = ice_cabinet,
     gamma_table = gamma_table,
     constants = constants,

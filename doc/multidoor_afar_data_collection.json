@@ -228,6 +228,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_IceCabinetSetpoint",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
          "interval": 60000
       },

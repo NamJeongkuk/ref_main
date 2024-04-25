@@ -1065,6 +1065,13 @@
           "name": "Erd_FreezerSetpointStatus",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Setpoint",
+          "name": "Erd_iceCabinetSetpoint",
+          "read": true,
+          "write": true
         }
       ]
     },

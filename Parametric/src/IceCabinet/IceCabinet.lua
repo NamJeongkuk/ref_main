@@ -10,7 +10,8 @@ return function(core)
     return TypedString(
       { 'ice_cabinet' },
       structure(
-        pointer(config.gamma_table)
+        pointer(config.gamma_table),
+        pointer(config.freezer_setpoint_to_ice_cabinet_setpoint_table)
       )
     )
   end)
@@ -20,7 +21,9 @@ return function(core)
       config,
       {
         gamma_table = { constraint.typed_string('gamma_table') },
-      })
+        freezer_setpoint_to_ice_cabinet_setpoint_table = { constraint.typed_string('freezer_setpoint_to_ice_cabinet_setpoint_table') }
+      }
+    )
     return generate(config)
   end
 end

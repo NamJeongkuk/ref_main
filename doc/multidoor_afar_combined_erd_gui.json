@@ -665,7 +665,7 @@
          ]
       },
       {
-         "title": "FF/FZ Setpoints",
+         "title": "FF/FZ/IC Setpoints",
          "erds": [
             {
                "namespace": "mb",
@@ -808,6 +808,13 @@
                "namespace": "mb",
                "displayName": "Fresh Food Pulldown Offset (DegF x100)",
                "name": "Erd_FreshFood_PulldownOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Cabinet Setpoint",
+               "name": "Erd_IceCabinetSetpoint",
                "read": true,
                "interval": 1000000000
             }

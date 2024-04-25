@@ -9,6 +9,11 @@
 #include "ParametricData.h"
 #include "SystemErds.h"
 
+static const FreezerSetpointToIceCabinetSetpointMapperConfig_t freezerSetpointToIceCabinetSetpointMapperConfig = {
+   .freezerResolvedSetpoint = Erd_Freezer_ResolvedSetpointInDegFx100,
+   .iceCabinetSetpoint = Erd_IceCabinetSetpoint
+};
+
 static const IceCabinetGammaCalculatorConfig_t gammaCalculatorConfig = {
    .freezerFilteredTemperatureResolvedInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .iceCabinetTemperatureResolvedInDegFx100Erd = Erd_IceCabinet_FilteredTemperatureResolvedInDegFx100,
@@ -21,6 +26,12 @@ void IceCabinetPlugin_Init(
    IceCabinetPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   FreezerSetpointToIceCabinetSetpointMapper_Init(
+      &instance->freezerSetpointToIceCabinetSetpointMapper,
+      dataModel,
+      &freezerSetpointToIceCabinetSetpointMapperConfig,
+      PersonalityParametricData_Get(dataModel)->iceCabinetData->freezerSetpointToIceCabinetSetpointTable);
+
    IceCabinetGammaCalculator_Init(
       &instance->gammaCalculator,
       dataModel,

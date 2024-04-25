@@ -9,6 +9,7 @@
 #define ICECABINETDATA_H
 
 #include <stdint.h>
+#include "FreezerSetpointToIceCabinetSetpointTable.h"
 
 typedef uint8_t Gamma_t;
 
@@ -22,6 +23,7 @@ typedef struct
 typedef struct
 {
    const GammaTable_t *gammaTable;
+   const FreezerSetpointToIceCabinetSetpointTable_t *freezerSetpointToIceCabinetSetpointTable;
 } IceCabinetData_t;
 
 #endif

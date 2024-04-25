@@ -11,9 +11,11 @@
 #include "I_DataModel.h"
 #include "IceCabinetGridPlugin.h"
 #include "IceCabinetGammaCalculator.h"
+#include "FreezerSetpointToIceCabinetSetpointMapper.h"
 
 typedef struct
 {
+   FreezerSetpointToIceCabinetSetpointMapper_t freezerSetpointToIceCabinetSetpointMapper;
    IceCabinetGammaCalculator_t gammaCalculator;
    IceCabinetGridPlugin_t iceCabinetGridPlugin;
 } IceCabinetPlugin_t;
