@@ -124,6 +124,7 @@ SRC_DIRS:=\
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \
   test/Tests/Application/IceMaker/TwistTrayIceMaker \
+  test/Tests/Application/IceCabinet \
   test/Tests/Application/Lighting \
   test/Tests/Application/Mapper \
   test/Tests/Application/Motor \

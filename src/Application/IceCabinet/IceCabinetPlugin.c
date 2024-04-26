@@ -9,6 +9,12 @@
 #include "ParametricData.h"
 #include "SystemErds.h"
 
+static const IceCabinetForcedCoolingFreezerEvaporatorFanVoterConfig_t iceCabinetForcedCoolingFreezerEvaporatorFanVoterConfig = {
+   .freezerEvapFanSpeedIceCabinetVoteErd = Erd_FreezerEvapFanSpeed_IceCabinetVote,
+   .freezerEvapFanSpeedGridVoteErd = Erd_FreezerEvapFanSpeed_GridVote,
+   .iceCabinetCoolingModeErd = Erd_IceCabinetCoolingMode
+};
+
 static const FreezerSetpointToIceCabinetSetpointMapperConfig_t freezerSetpointToIceCabinetSetpointMapperConfig = {
    .freezerResolvedSetpoint = Erd_Freezer_ResolvedSetpointInDegFx100,
    .iceCabinetSetpoint = Erd_IceCabinetSetpoint
@@ -31,6 +37,11 @@ void IceCabinetPlugin_Init(
    IceCabinetPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   IceCabinetForcedCoolingFreezerEvaporatorFanVoter_Init(
+      &instance->_private.iceCabinetForcedCoolingFreezerEvaporatorFanVoter,
+      dataModel,
+      &iceCabinetForcedCoolingFreezerEvaporatorFanVoterConfig);
+
    FreezerSetpointToIceCabinetSetpointMapper_Init(
       &instance->_private.freezerSetpointToIceCabinetSetpointMapper,
       dataModel,

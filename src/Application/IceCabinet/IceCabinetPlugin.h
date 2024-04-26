@@ -9,6 +9,7 @@
 #define ICECABINETPLUGIN_H
 
 #include "I_DataModel.h"
+#include "IceCabinetForcedCoolingFreezerEvaporatorFanVoter.h"
 #include "IceCabinetFreezerEvapFanDependencyVoting.h"
 #include "IceCabinetGridPlugin.h"
 #include "IceCabinetGammaCalculator.h"
@@ -18,6 +19,7 @@ typedef struct
 {
    struct
    {
+      IceCabinetForcedCoolingFreezerEvaporatorFanVoter_t iceCabinetForcedCoolingFreezerEvaporatorFanVoter;
       FreezerSetpointToIceCabinetSetpointMapper_t freezerSetpointToIceCabinetSetpointMapper;
       IceCabinetFreezerEvapFanDependencyVoting_t iceCabinetFreezerEvapFanDependencyVoting;
       IceCabinetGammaCalculator_t gammaCalculator;

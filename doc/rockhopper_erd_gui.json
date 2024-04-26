@@ -425,6 +425,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Ice Cabinet Vote",
+          "name": "Erd_FreezerEvapFanSpeed_IceCabinetVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Evap Fan Speed Freezer Ice Rate Vote",
           "name": "Erd_FreezerEvapFanSpeed_FreezerIceRateVote",
           "read": true,
