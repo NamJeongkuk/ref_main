@@ -59,9 +59,9 @@ static const DamperFreezePreventionConfiguration_t damperFreezePreventionConfig 
    .damperHeaterVoteErd = Erd_DamperHeater_DamperFreezePreventionVote,
    .damperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DamperFreezePreventionVote,
    .sourceThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
-   .targetThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   .targetThermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
    .sourceFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .targetFilteredTemperatureErd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .targetFilteredTemperatureErd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
    .timerModuleErd = Erd_TimerModule,
    .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState

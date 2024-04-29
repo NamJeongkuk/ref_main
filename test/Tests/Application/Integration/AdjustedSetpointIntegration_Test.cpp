@@ -57,21 +57,21 @@ TEST_GROUP(AdjustedSetpointIntegration)
 
    void TheConvertibleCompartmentResolvedSetpointIs(TemperatureDegFx100_t setpoint)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100, &setpoint);
+      DataModel_Write(dataModel, Erd_FeaturePan_ResolvedSetpointInDegFx100, &setpoint);
    }
 
    void TheConvertibleCompartmentThermalShiftIs(TemperatureDegFx100_t shift)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartment_ThermalShiftInDegFx100, &shift);
+      DataModel_Write(dataModel, Erd_FeaturePan_ThermalShiftInDegFx100, &shift);
    }
 
-   void TheConvertibleCompartmentAdjustedSetpointShouldBeCorrectlyShifted()
+   void TheFeaturePanAdjustedSetpointShouldBeCorrectlyShifted()
    {
       TemperatureDegFx100_t setpoint;
       DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100, &setpoint);
 
       TemperatureDegFx100_t shift;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartment_ThermalShiftInDegFx100, &shift);
+      DataModel_Read(dataModel, Erd_FeaturePan_ThermalShiftInDegFx100, &shift);
 
       TemperatureDegFx100_t adjustedSetpoint;
       DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointInDegFx100, &adjustedSetpoint);
@@ -79,7 +79,7 @@ TEST_GROUP(AdjustedSetpointIntegration)
       CHECK_EQUAL(setpoint + shift, adjustedSetpoint);
    }
 
-   void TheConvertibleCompartmentAdjustedSetpointShouldBe(TemperatureDegFx100_t expected)
+   void TheFeaturePanAdjustedSetpointShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
       DataModel_Read(dataModel, Erd_FeaturePan_AdjustedSetpointInDegFx100, &actual);
@@ -162,13 +162,13 @@ TEST_GROUP(AdjustedSetpointIntegration)
 TEST(AdjustedSetpointIntegration, ShouldCalculateTheAdjustedSetpointForFourDoorPersonality)
 {
    GivenApplicationHasBeenInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
-   TheConvertibleCompartmentAdjustedSetpointShouldBeCorrectlyShifted();
+   TheFeaturePanAdjustedSetpointShouldBeCorrectlyShifted();
    TheFreezerAdjustedSetpointShouldBeCorrectlyShifted();
    TheFreshFoodAdjustedSetpointShouldBeCorrectlyShifted();
 
    When TheConvertibleCompartmentResolvedSetpointIs(SomeSetpoint);
    And TheConvertibleCompartmentThermalShiftIs(SomeShift);
-   TheConvertibleCompartmentAdjustedSetpointShouldBeCorrectlyShifted();
+   TheFeaturePanAdjustedSetpointShouldBeCorrectlyShifted();
 
    When TheFreezerResolvedSetpointIs(SomeSetpoint);
    And TheFreezerThermalShiftIs(SomeShift);

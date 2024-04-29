@@ -34,7 +34,7 @@ static const FeaturePanData_t featurePanData = {
 static const FeaturePanWarmupSlopeVotingConfig_t config = {
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,
-   .featurePanTemperatureDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .featurePanTemperatureDegFx100Erd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
 };
 
 TEST_GROUP(FeaturePanWarmupSlopeVoting)

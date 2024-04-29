@@ -57,7 +57,7 @@ static const GridLineAdjustmentErds_t freshFoodAndFreezerSecondDimensionGridLine
 };
 
 static const GridLineAdjustmentErds_t featurePanFirstDimensionGridLinesAdjustmentErds = {
-   .offsetInDegFx100Erd = Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FeaturePan_AdjustedSetpointInDegFx100
 };
 
@@ -173,7 +173,7 @@ TEST_GROUP(GridLineCalculator)
    void WhenTheFeaturePanCrossAmbientOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
+         Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
          &offset);
    }
 

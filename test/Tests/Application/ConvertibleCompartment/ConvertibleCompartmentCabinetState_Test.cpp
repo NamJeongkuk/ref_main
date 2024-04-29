@@ -32,7 +32,7 @@ enum
 };
 
 static const ConvertibleCompartmentStateConfig_t config = {
-   .convertibleCompartmentResolvedSetpointErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
+   .featurePanResolvedSetpointErd = Erd_FeaturePanSetpoint_UserVote,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
@@ -65,7 +65,7 @@ TEST_GROUP(ConvertibleCompartmentState)
       SetpointVotedTemperature_t convertibleCompartmentVotedTemp;
       convertibleCompartmentVotedTemp.care = true;
       convertibleCompartmentVotedTemp.temperatureInDegFx100 = temperature;
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentSetpoint_ResolvedVote, &convertibleCompartmentVotedTemp);
+      DataModel_Write(dataModel, Erd_FeaturePanSetpoint_UserVote, &convertibleCompartmentVotedTemp);
    }
 };
 

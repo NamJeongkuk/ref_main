@@ -96,8 +96,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Filtered Temperature (DegF x100)",
-               "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+               "displayName": "Feature Pan Filtered Temperature (DegF x100)",
+               "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -1080,8 +1080,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Filtered Temperature (DegF x100)",
-               "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+               "displayName": "Feature Pan Filtered Temperature (DegF x100)",
+               "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -1094,8 +1094,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Unfiltered Temperature (DegF x100)",
-               "name": "Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100",
+               "displayName": "Feature Pan Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FeaturePan_UnfilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -1329,8 +1329,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment User Setpoint Request (DegF)",
-               "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
+               "displayName": "Feature Pan User Setpoint Request (DegF)",
+               "name": "Erd_FeaturePanSetpoint_UserVote",
                "read": true,
                "write": true
             },
@@ -1340,13 +1340,6 @@
                "name": "Erd_ConvertibleCompartmentGridBlockNumber",
                "read": true,
                "write": false,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Convertible Compartment Resolved Setpoint Vote (DegF x100)",
-               "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-               "read": true,
                "interval": 1000000000
             },
             {
@@ -1372,8 +1365,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Thermal Shift (DegF x100)",
-               "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+               "displayName": "Feature Pan Thermal Shift (DegF x100)",
+               "name": "Erd_FeaturePan_ThermalShiftInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -1400,8 +1393,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Cross Ambient Offset (DegF x100)",
-               "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+               "displayName": "Feature Pan Cross Ambient Offset (DegF x100)",
+               "name": "Erd_FeaturePan_CrossAmbientOffsetInDegFx100",
                "read": true,
                "interval": 1000000000
             },

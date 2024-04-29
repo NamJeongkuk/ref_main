@@ -862,20 +862,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Factory Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
           "read": true,
@@ -927,20 +913,6 @@
           "namespace": "mb",
           "displayName": "Convertible Compartment Door Status Testing Override Value",
           "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideValue",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Factory Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
@@ -1402,15 +1374,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor AdcCount",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
+          "displayName": "Feature Pan Thermistor AdcCount",
+          "name": "Erd_FeaturePanCabinetThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100",
+          "displayName": "Feature Pan Thermistor Unfiltered Temperature",
+          "name": "Erd_FeaturePan_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -1430,15 +1402,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment IsValid Override Request",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest",
+          "displayName": "Feature Pan Thermistor IsValid Override Request",
+          "name": "Erd_FeaturePanCabinetThermistor_IsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment IsValid Override Value",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue",
+          "displayName": "Feature Pan Thermistor IsValid Override Value",
+          "name": "Erd_FeaturePanCabinetThermistor_IsValidOverrideValue",
           "read": true,
           "write": true
         },
@@ -1451,36 +1423,36 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Override Request",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest",
+          "displayName": "Feature Pan FilteredTemp Override Request",
+          "name": "Erd_FeaturePan_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Override Value",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100",
+          "displayName": "Feature Pan FilteredTemp Override Value",
+          "name": "Erd_FeaturePan_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Resolved In Deg Fx100",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan FilteredTemp Resolved In Deg Fx100",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "F007 Convertible Compartment Thermistor Is Invalid",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault",
+          "displayName": "F007 Feature Pan Thermistor Is Invalid",
+          "name": "Erd_FeaturePanCabinetThermistorIsInvalidFault",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor Has Been Discovered",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistorDiscovered",
+          "displayName": "Feature Pan Thermistor Has Been Discovered",
+          "name": "Erd_FeaturePanCabinetThermistorDiscovered",
           "read": true,
           "write": true
         },
@@ -2353,8 +2325,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Resolved In Deg Fx100",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan FilteredTemp Resolved In Deg Fx100",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
@@ -2374,15 +2346,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Cross Ambient Offset In Deg Fx100",
-          "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+          "displayName": "Feature Pan Cross Ambient Offset In Deg Fx100",
+          "name": "Erd_FeaturePan_CrossAmbientOffsetInDegFx100",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermal Shift",
-          "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+          "displayName": "Feature Pan Thermal Shift",
+          "name": "Erd_FeaturePan_ThermalShiftInDegFx100",
           "read": true,
           "write": false
         },
@@ -2395,8 +2367,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan Filtered Temperature",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": false
         },
@@ -2531,20 +2503,6 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Resolved Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Winning Vote ERD",
-          "name": "Erd_ConvertibleCompartmentSetpoint_WinningVoteErd",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
           "read": true,
@@ -2552,15 +2510,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Factory Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment User Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
+          "displayName": "Feature Pan User Vote for Setpoint",
+          "name": "Erd_FeaturePanSetpoint_UserVote",
           "read": true,
           "write": true
         },
@@ -3238,8 +3189,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
-          "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
+          "displayName": "Feature Pan Reset Thermal Shift Offset Signal",
+          "name": "Erd_FeaturePan_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         }
@@ -4279,8 +4230,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Cross Ambient Offset",
-          "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+          "displayName": "Feature Pan Cross Ambient Offset",
+          "name": "Erd_FeaturePan_CrossAmbientOffsetInDegFx100",
           "read": true,
           "write": true
         }
@@ -4539,8 +4490,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermal Shift",
-          "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+          "displayName": "Feature Pan Thermal Shift",
+          "name": "Erd_FeaturePan_ThermalShiftInDegFx100",
           "read": true,
           "write": true
         },
@@ -4567,8 +4518,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan Filtered Temperature",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         }

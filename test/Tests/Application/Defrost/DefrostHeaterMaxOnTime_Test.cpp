@@ -33,7 +33,7 @@ static const DefrostHeaterMaxOnTimeConfiguration_t config = {
    .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodEvaporatorThermistorIsValidResolvedErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
-   .convertibleCompartmentEvaporatorThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   .convertibleCompartmentEvaporatorThermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
@@ -107,7 +107,7 @@ TEST_GROUP(DefrostHeaterMaxOnTime)
 
    void ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(bool valid)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &valid);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &valid);
    }
 
    void ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t type)

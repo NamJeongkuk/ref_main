@@ -12,9 +12,9 @@ const states = {
     await board.write('Erd_FreshFoodThermistor_IsValidOverrideValue', true);
     await board.write('Erd_FreshFoodThermistor_IsValidResolved', true);
 
-    await board.write('Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest', true);
-    await board.write('Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue', true);
-    await board.write('Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved', true);
+    await board.write('Erd_FeaturePanCabinetThermistor_IsValidOverrideRequest', true);
+    await board.write('Erd_FeaturePanCabinetThermistor_IsValidOverrideValue', true);
+    await board.write('Erd_FeaturePanCabinetThermistor_IsValidResolved', true);
 
     await board.write('Erd_FreezerEvapThermistor_IsValidOverrideRequest', true);
     await board.write('Erd_FreezerEvapThermistor_IsValidOverrideValue', true);
@@ -36,13 +36,13 @@ const states = {
     await board.write('Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100', -600 + 1);
     await board.write('Erd_Freezer_FilteredTemperatureResolvedInDegFx100', -600 + 1);
 
-    await board.write('Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest', true);
+    await board.write('Erd_FeaturePan_FilteredTemperatureOverrideRequest', true);
     await board.write(
-      'Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100',
+      'Erd_FeaturePan_FilteredTemperatureOverrideValueInDegFx100',
       3201
     );
     await board.write(
-      'Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100',
+      'Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100',
       3201
     );
 
