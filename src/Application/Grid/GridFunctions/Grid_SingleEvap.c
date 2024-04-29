@@ -341,7 +341,7 @@ void Grid_SingleEvap(void *context)
          break;
 
       case 38:
-         SetCoolingMode(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingMode_FreshFood : CoolingMode_Freezer);
+         SetCoolingMode(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingMode_FreshFood : currentCoolingMode);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingSpeed_Low : CoolingSpeed_Off);
          SetPulldownActive(dataModel, CLEAR);
          break;
