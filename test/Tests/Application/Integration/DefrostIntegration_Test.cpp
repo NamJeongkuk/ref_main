@@ -1196,6 +1196,14 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       CHECK_EQUAL(expected, actual);
    }
+
+   void HeaterOnTimeInMinutesShouldBe(uint8_t expected)
+   {
+      uint8_t actual;
+      DataModel_Read(dataModel, Erd_FreezerDefrostHeaterOnTimeInMinutes, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
 };
 
 TEST(DefrostIntegration_SingleEvap, ShouldInitialize)
@@ -2638,4 +2646,43 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenSabbathIsE
 
    WhenSabbathModeIs(ENABLED);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldNotClearAbnormalFlagWhenFreezerDefrostHeaterReachesTerminationTemperatureAfterAbnormalTimeButBeforeMaxDefrostHeaterOnTimeAndShouldClearHeaterOnTimeAfterBothHeaterIsOffAndDefrostHasLeftHeaterOn)
+{
+   GivenThatTheApplicationHasStartedAndDefrostIsInHeaterOnEntry();
+   GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
+
+   DefrostExitsHeaterOnEntryAndIsInHeaterAfterHeaterOnDelayAfterCompressorOffTime();
+
+   After(defrostData->heaterOnData.freezerHeater.heaterOnTimeToSetAbnormalDefrostInMinutes * MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(defrostData->heaterOnData.freezerHeater.heaterOnTimeToSetAbnormalDefrostInMinutes);
+   FreezerDefrostWasAbnormalShouldBe(true);
+
+   After(1 * MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(defrostData->heaterOnData.freezerHeater.heaterOnTimeToSetAbnormalDefrostInMinutes + 1);
+
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Dwell);
+   WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerHeater.defrostTerminationTemperatureInDegFx100);
+   FreezerDefrostWasAbnormalShouldBe(true);
+   HeaterOnTimeInMinutesShouldBe(0);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldClearAbnormalFlagDuringTheNextDefrostWhenFreezerDefrostHeaterReachesTerminationTemperature)
+{
+   GivenThatTheApplicationHasStartedAndDefrostIsInHeaterOnEntry();
+   GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
+   GivenFreezerDefrostWasAbnormal();
+
+   DefrostExitsHeaterOnEntryAndIsInHeaterAfterHeaterOnDelayAfterCompressorOffTime();
+   FreezerDefrostWasAbnormalShouldBe(true);
+
+   After(defrostData->heaterOnData.freezerHeater.heaterOnTimeToSetAbnormalDefrostInMinutes * MSEC_PER_MIN - MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(defrostData->heaterOnData.freezerHeater.heaterOnTimeToSetAbnormalDefrostInMinutes - 1);
+   FreezerDefrostWasAbnormalShouldBe(true);
+
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Dwell);
+   WhenFilteredFreezerEvapTemperatureChangesTo(defrostData->heaterOnData.freezerHeater.defrostTerminationTemperatureInDegFx100);
+   FreezerDefrostWasAbnormalShouldBe(false);
+   HeaterOnTimeInMinutesShouldBe(0);
 }

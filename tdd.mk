@@ -1,7 +1,11 @@
 include lib/applcommon/setup.mk
 
 TARGET:=rockhopper
+ifeq ($(INTEGRATION),Y)
+OUTPUT_DIR:=build/integration-test
+else
 OUTPUT_DIR:=build/test
+endif
 DISPLAY_ASCII_ART_RESULTS?=Y
 TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 

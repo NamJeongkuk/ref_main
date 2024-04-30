@@ -25,7 +25,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Timer_t periodicTimer;
-      EventSubscription_t subscription;
+      EventSubscription_t dataModelSubscription;
       const DefrostHeaterOnTimeCounterConfig_t *config;
    } _private;
 } DefrostHeaterOnTimeCounter_t;
