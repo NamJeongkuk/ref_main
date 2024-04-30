@@ -212,6 +212,11 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
       Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData, &platformData, &enhancedSabbathData);
    }
 
+   void GivenDefrostIsInitialized()
+   {
+      DefrostIsInitialized();
+   }
+
    void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
    {
       Defrost_Init(&instance, dataModel, &defrostConfiguration, &defrostData, &platformData, &enhancedSabbathData);
@@ -1092,7 +1097,7 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
 
    void GivenConvertibleCompartmentCabinetThermistorValidityIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
    }
 
    void WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_t state)
@@ -1102,7 +1107,7 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
 
    void GivenConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void CalculatedGridLinesAre(TwoDimensionalCalculatedGridLines_t gridLines)
@@ -1177,7 +1182,7 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
    {
       DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved, &state);
@@ -1228,7 +1233,24 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
    {
       DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorDiscovered, set);
    }
+
+   void DefrostStateShouldBe(DefrostState_t expected)
+   {
+      DefrostState_t actual;
+      DataModel_Read(dataModel, Erd_DefrostState, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
 };
+
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoIdleWhenDefrostStateWasPostDwellAndUpdateDefrostStateToIdle)
+{
+   GivenDefrostStateIs(DefrostState_PostDwell);
+   GivenDefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DefrostStateShouldBe(DefrostState_Idle);
+}
 
 TEST(Defrost_SingleEvapSideBySide, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
 {
@@ -1358,6 +1380,14 @@ TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnHsmStateWhenCabin
    GivenCabinetIsNotTooWarmOnPowerUp();
    And DefrostStateIs(DefrostState_Prechill);
    And DefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvapSideBySide, ShouldInitializeIntoHeaterOnEntryHsmStateOnInitWhenPreviousDefrostStateWasPrechillPrep)
+{
+   GivenDefrostStateIs(DefrostState_PrechillPrep);
+   GivenDefrostIsInitialized();
 
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }

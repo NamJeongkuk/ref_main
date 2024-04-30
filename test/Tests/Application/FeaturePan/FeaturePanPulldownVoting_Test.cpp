@@ -21,7 +21,7 @@ enum
 };
 
 const FeaturePanPulldownVotingConfig_t config = {
-   .featurePanTemperatureErd = Erd_DeliPan_FilteredTemperatureInDegFx100,
+   .featurePanTemperatureErd = Erd_FeaturePan_FilteredTemperatureInDegFx100,
    .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_PulldownVote,
    .featurePanFanVoteErd = Erd_DeliFanSpeed_PulldownVote,
    .featurePanHeaterVoteErd = Erd_ConvertibleCompartmentHeater_PulldownVote
@@ -62,7 +62,7 @@ TEST_GROUP(FeaturePanPulldownVoting)
 
    void GivenFeaturePanTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_DeliPan_FilteredTemperatureInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureInDegFx100, &temperature);
    }
 
    void WhenFeaturePanTemperatureIs(TemperatureDegFx100_t temperature)

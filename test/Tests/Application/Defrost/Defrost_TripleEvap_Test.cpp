@@ -323,7 +323,7 @@ TEST_GROUP(Defrost_TripleEvap)
 
    void GivenFilteredConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void FreezerEvaporatorThermistorValidityIs(bool state)
@@ -848,7 +848,7 @@ TEST_GROUP(Defrost_TripleEvap)
    {
       DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved, &state);
@@ -930,12 +930,12 @@ TEST_GROUP(Defrost_TripleEvap)
 
    void ConvertibleCompartmentThermistorValidityIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
    }
 
    void GivenConvertibleCompartmentCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void WhenPrechillConditionsAreMetForTripleEvapAsConvertibleCompartment()
@@ -976,12 +976,12 @@ TEST_GROUP(Defrost_TripleEvap)
 
    void GivenConvertibleCompartmentThermistorHasBeenDiscovered()
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistorDiscovered, set);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistorDiscovered, set);
    }
 
    void GivenConvertibleCompartmentThermistorValidityIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
    }
 
    void GivenAllThermistorsAreValidAndHaveBeenDiscovered()

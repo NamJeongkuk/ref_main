@@ -75,7 +75,7 @@ static const ErdWriterOnCompareMatchConfiguration_t erdWriteOnCompareMatchConfig
 };
 
 static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
+   .setpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .resolvedSetpointErd = Erd_FreshFood_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };

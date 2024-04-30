@@ -1188,11 +1188,36 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       After(1);
       EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    }
+
+   void DefrostStateShouldBe(DefrostState_t expected)
+   {
+      DefrostState_t actual;
+      DataModel_Read(dataModel, Erd_DefrostState, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
 };
 
 TEST(DefrostIntegration_SingleEvap, ShouldInitialize)
 {
    GivenApplicationHasBeenInitialized();
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldStartsInDefrostIdleWhenDefrostStateWasPostDwellAndUpdateDefrostStateToIdle)
+{
+   GivenDefrostStateWas(DefrostState_PostDwell);
+   GivenApplicationHasBeenInitialized();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DefrostStateShouldBe(DefrostState_Idle);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldStartsInDefrostHeaterOnEntryWhenDefrostStateWasPrechillPrepAndUpdateDefrostStateToHeaterOn)
+{
+   GivenEepromWasNotClearedAtStartup();
+   GivenDefrostStateWas(DefrostState_PrechillPrep);
+   GivenApplicationHasBeenInitialized();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   DefrostStateShouldBe(DefrostState_HeaterOn);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldStartInDefrostHsmStateIdle)

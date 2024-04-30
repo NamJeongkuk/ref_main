@@ -1,64 +1,19 @@
-local grid_line_temps = import("../Grid/feature_pan_grid_line_temperatures.lua")
+local feature_pan_grid_deltas_mode_1 = import("../Grid/feature_pan_grid_deltas_mode_1.lua")
+local feature_pan_grid_deltas_mode_2 = import("../Grid/feature_pan_grid_deltas_mode_2.lua")
+local feature_pan_grid_deltas_mode_3 = import("../Grid/feature_pan_grid_deltas_mode_3.lua")
+local feature_pan_grid_deltas_mode_4 = import("../Grid/feature_pan_grid_deltas_mode_4.lua")
+local feature_pan_grid_deltas_mode_5 = import("../Grid/feature_pan_grid_deltas_mode_5.lua")
 
 return grid_deltas({
   deltas = {
     grid_deltas = {
-      gridline_1 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_super_low_deadband_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = 1,
-          divider = 1
-        })
-      }),
-      gridline_2 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_low_deadband_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = 1,
-          divider = 1
-        })
-      }),
-      gridline_3 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_low_hyst_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = 1,
-          divider = 1
-        })
-      }),
-      gridline_4 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_high_hyst_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = -1,
-          divider = 1
-        })
-      }),
-      gridline_5 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_high_deadband_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = -1,
-          divider = 1
-        })
-      }),
-      gridline_6 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_setpoint_offset_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = -1,
-          divider = 1
-        })
-      }),
-      gridline_7 = gridline({
-        delta_in_degfx100 = grid_line_temps.feature_pan_super_high_deadband_in_degfx100,
-        correction = 'adjusted_setpoint',
-        cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment({
-          multiplier = -1,
-          divider = 1
-        })
-      })
+      mode_1 = feature_pan_grid_deltas_mode_1,
+      mode_2 = feature_pan_grid_deltas_mode_2,
+      mode_3 = feature_pan_grid_deltas_mode_3,
+      mode_4 = feature_pan_grid_deltas_mode_4,
+      mode_5 = feature_pan_grid_deltas_mode_5,
+      mode_6 = feature_pan_grid_deltas_mode_1,
+      mode_7 = feature_pan_grid_deltas_mode_1
     }
   }
 })

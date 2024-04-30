@@ -19,12 +19,16 @@
     },
     {
       "name": "Test",
-      "makefile": "tdd.mk"
+      "makefile": "tdd.mk",
+      "defines": {
+        "DEBUG": "Y"
+      }
     },
     {
       "name": "Integration",
       "makefile": "tdd.mk",
       "defines": {
+        "DEBUG": "Y",
         "INTEGRATION": "Y"
       }
     }

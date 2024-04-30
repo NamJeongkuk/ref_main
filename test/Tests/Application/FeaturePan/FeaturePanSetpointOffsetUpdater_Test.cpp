@@ -8,6 +8,7 @@
 extern "C"
 {
 #include "FeaturePanSetpointOffsetUpdater.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -57,30 +58,32 @@ TEST_GROUP(FeaturePanSetpointOffsetUpdater)
 
 TEST(FeaturePanSetpointOffsetUpdater, ShouldUpdateTheSetpointOffsetBasedOnTheCurrentFeaturePanModeWhenCurrentModeChanges)
 {
+   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->setpointOffsetData;
+
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
    TheModuleIsInitialized();
-   TheSetpointOffsetErdShouldBe(10);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode5OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode1);
-   TheSetpointOffsetErdShouldBe(-30);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode1OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode2);
-   TheSetpointOffsetErdShouldBe(-20);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode2OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode3);
-   TheSetpointOffsetErdShouldBe(-10);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode3OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode4);
-   TheSetpointOffsetErdShouldBe(0);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode4OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
-   TheSetpointOffsetErdShouldBe(10);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode5OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode6);
-   TheSetpointOffsetErdShouldBe(20);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode6OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode7);
-   TheSetpointOffsetErdShouldBe(30);
+   TheSetpointOffsetErdShouldBe(setpointOffsetData->mode7OffsetInDegFx100);
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Off);
    TheSetpointOffsetErdShouldBe(0);

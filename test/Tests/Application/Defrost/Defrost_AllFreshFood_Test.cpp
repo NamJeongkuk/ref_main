@@ -501,7 +501,7 @@ TEST_GROUP(Defrost_SingleEvapAllFreshFood)
    {
       DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved, &state);
+      DataModel_Write(dataModel, Erd_FeaturePanCabinetThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_FreshFoodEvapThermistor_IsValidResolved, &state);
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved, &state);

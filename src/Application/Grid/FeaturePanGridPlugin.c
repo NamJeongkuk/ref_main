@@ -23,9 +23,10 @@ static const GridConfiguration_t gridConfig = {
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_FeaturePanGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridDeltaOffsetErd = Erd_FeaturePanCurrentMode,
    .gridLineAdjustmentErds = {
       {
-         .offsetInDegFx100Erd = Erd_FeaturePan_CabinetPlusCrossAmbientOffsetInDegFx100,
+         .offsetInDegFx100Erd = Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
          .adjustedSetpointInDegFx100Erd = Erd_FeaturePan_AdjustedSetpointInDegFx100,
       },
    }
@@ -37,8 +38,8 @@ static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
    .previousGridBlockNumbersErd = Erd_FeaturePanGrid_PreviousBlocks,
    .gridBlockAdjustmentErds = {
       {
-         .filteredResolvedTemperatureInDegFx100 = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
-         .thermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved
+          .filteredResolvedTemperatureInDegFx100 = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
+          .thermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
       },
    }
 };

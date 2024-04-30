@@ -53,25 +53,35 @@ static void CalculateAxisGridLines(
    CalculatedAxisGridLines_t *axisToCalculate,
    uint8_t dimension)
 {
+   uint8_t gridDeltaOffset = 0;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->gridDeltaOffsetErd,
+      &gridDeltaOffset);
+
+   // Have to do this because "Mode 1" starts at index 0 in parametric. Since "Mode 1" is enumerated as "1" in application,
+   // we need to subtract 1 and truncate (in case it changes to "Off," or 0) so that we access the correct index.
+   gridDeltaOffset = TRUNCATE_UNSIGNED_SUBTRACTION(gridDeltaOffset, 1);
+
    for(uint8_t line = 0; line < instance->_private.gridData->deltaGridLines->gridLines->numberOfLines; line++)
    {
       axisToCalculate->gridLinesDegFx100[line] =
-         GRID_LINE_TEMP(dimension, line);
+         GRID_LINE_TEMP(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line));
 
-      if(PARAMETRIC_GRID_LINE_CORRECTION(dimension, line) == DeltaGridLinesCorrection_AdjustedSetpoint)
+      if(DeltaGridLinesCorrection_AdjustedSetpoint == PARAMETRIC_GRID_LINE_CORRECTION(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line)))
       {
          SetpointVotedTemperature_t adjustedSetPoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(dimension).adjustedSetpointInDegFx100Erd, &adjustedSetPoint);
          axisToCalculate->gridLinesDegFx100[line] += adjustedSetPoint.temperatureInDegFx100;
       }
-      else if(PARAMETRIC_GRID_LINE_CORRECTION(dimension, line) == DeltaGridLinesCorrection_Offset)
+      else if(DeltaGridLinesCorrection_Offset == PARAMETRIC_GRID_LINE_CORRECTION(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line)))
       {
-         TemperatureDegFx100_t offset;
+         TemperatureDegFx100_t offset = 0;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(dimension).offsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
 
-      TemperatureDegFx100_t crossAmbientHysteresisAdjustment;
+      TemperatureDegFx100_t crossAmbientHysteresisAdjustment = 0;
       DataModel_Read(
          instance->_private.dataModel,
          instance->_private.config->crossAmbientHysteresisAdjustmentErd,
@@ -79,8 +89,8 @@ static void CalculateAxisGridLines(
 
       crossAmbientHysteresisAdjustment =
          ((int32_t)crossAmbientHysteresisAdjustment *
-            CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(dimension, line)) /
-         CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(dimension, line);
+            CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line))) /
+         CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line));
 
       axisToCalculate->gridLinesDegFx100[line] += crossAmbientHysteresisAdjustment;
    }
@@ -124,7 +134,8 @@ static void OnDataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    const Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->crossAmbientHysteresisAdjustmentErd)
+   if(erd == instance->_private.config->crossAmbientHysteresisAdjustmentErd ||
+      erd == instance->_private.config->gridDeltaOffsetErd)
    {
       ConfigureGridLines(instance);
    }

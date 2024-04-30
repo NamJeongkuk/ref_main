@@ -37,7 +37,7 @@ static void ConvertibleCompartmentSetpointChangedCallback(void *context, const v
 static void InitConvertibleCompartmentState(ConvertibleCompartmentState_t *instance)
 {
    SetpointVotedTemperature_t convertibleCompartmentSetpoint;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->convertibleCompartmentResolvedSetpointErd, &convertibleCompartmentSetpoint);
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->featurePanResolvedSetpointErd, &convertibleCompartmentSetpoint);
    ChangeConvertibleCompartmentStateUsingSetpoint(instance, convertibleCompartmentSetpoint.temperatureInDegFx100);
 }
 
@@ -53,5 +53,5 @@ void ConvertibleCompartmentState_Init(
    InitConvertibleCompartmentState(instance);
 
    EventSubscription_Init(&instance->_private.onSetpointChanged, instance, ConvertibleCompartmentSetpointChangedCallback);
-   DataModel_Subscribe(instance->_private.dataModel, instance->_private.config->convertibleCompartmentResolvedSetpointErd, &instance->_private.onSetpointChanged);
+   DataModel_Subscribe(instance->_private.dataModel, instance->_private.config->featurePanResolvedSetpointErd, &instance->_private.onSetpointChanged);
 }

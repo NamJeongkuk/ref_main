@@ -12,9 +12,9 @@ describe('Gridline', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-        delta_in_degfx100 = 450,
-        correction = 'offset',
-        cross_ambient_hysteresis_adjustment = TypedString('cross_ambient_hysteresis_adjustment', 'cross_ambient_hysteresis_adjustment')
+      delta_in_degfx100 = 450,
+      correction = grid_line_correction.offset,
+      cross_ambient_hysteresis_adjustment = TypedString('cross_ambient_hysteresis_adjustment', 'cross_ambient_hysteresis_adjustment')
     }, overrides or {})
   end
 
@@ -24,16 +24,16 @@ describe('Gridline', function()
 
   it('should assert if delta_in_degfx100 is not in range', function()
     should_fail_with('delta_in_degfx100=100000 must be in [-32768, 32767]', function()
-        gridline(generate_config({
-            delta_in_degfx100 = 100000
+      gridline(generate_config({
+        delta_in_degfx100 = 100000
       }))
     end)
   end)
 
   it('should assert if correction is not in range', function()
-    should_fail_with("correction=-1 must be in the set { 'offset', 'adjusted_setpoint' }", function()
-        gridline(generate_config({
-          correction = -1
+    should_fail_with("correction=-1 is not in the grid_line_correction enumeration, allowable values: adjusted_setpoint, offset", function()
+      gridline(generate_config({
+        correction = -1
       }))
     end)
   end)

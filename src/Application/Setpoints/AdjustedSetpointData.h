@@ -78,6 +78,7 @@ typedef struct
 typedef struct
 {
    TemperatureDegFx100_t iceFormationOffsetInDegFx100;
+   const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
 } IceCabinetAdjustedSetpointData_t;
 

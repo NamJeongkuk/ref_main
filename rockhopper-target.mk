@@ -92,10 +92,12 @@ SRC_DIRS:=\
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \
   src/Application/Heater \
+  src/Application/IceCabinet \
   src/Application/IceMaker \
   src/Application/IceMaker/IceMakerSlots \
   src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/IceMaker/TwistTrayIceMaker \
+  src/Application/IceCabinet \
   src/Application/IsolationWaterValve \
   src/Application/Lighting \
   src/Application/Notifications \

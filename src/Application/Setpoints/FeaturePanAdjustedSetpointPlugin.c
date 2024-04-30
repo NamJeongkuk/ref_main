@@ -5,39 +5,39 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "ConvertibleCompartmentAdjustedSetpointPlugin.h"
+#include "FeaturePanAdjustedSetpointPlugin.h"
 #include "SystemErds.h"
 
-static const Erd_t convertibleCompartmentAdjustedSetpointWithoutShiftErds[] = {
-   Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,
+static const Erd_t featurePanAdjustedSetpointWithoutShiftErds[] = {
+   Erd_FeaturePan_ResolvedSetpointInDegFx100,
    Erd_FeaturePan_SetpointOffsetInDegFx100,
-   Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
+   Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
 };
 
-static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointWithoutShiftConfig = {
+static const I16ErdAdderConfiguration_t featurePanAdjustedSetpointWithoutShiftConfig = {
    .resultErd = Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100,
    .i16ErdsToBeAdded = {
-      convertibleCompartmentAdjustedSetpointWithoutShiftErds,
-      NUM_ELEMENTS(convertibleCompartmentAdjustedSetpointWithoutShiftErds),
+      featurePanAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(featurePanAdjustedSetpointWithoutShiftErds),
    },
 };
 
-static const Erd_t convertibleCompartmentAdjustedSetpointErds[] = {
+static const Erd_t featurePanAdjustedSetpointErds[] = {
    Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100,
-   Erd_ConvertibleCompartment_ThermalShiftInDegFx100,
+   Erd_FeaturePan_ThermalShiftInDegFx100,
 };
 
-static const I16ErdAdderConfiguration_t convertibleCompartmentAdjustedSetpointConfig = {
+static const I16ErdAdderConfiguration_t featurePanAdjustedSetpointConfig = {
    .resultErd = Erd_FeaturePan_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
-      convertibleCompartmentAdjustedSetpointErds,
-      NUM_ELEMENTS(convertibleCompartmentAdjustedSetpointErds),
+      featurePanAdjustedSetpointErds,
+      NUM_ELEMENTS(featurePanAdjustedSetpointErds),
    },
 };
 
-static const ResolvedSetpointWriterConfiguration_t convertibleCompartmentResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
-   .resolvedSetpointErd = Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,
+static const ResolvedSetpointWriterConfiguration_t featurePanResolvedSetpointWriterConfiguration = {
+   .setpointVoteErd = Erd_FeaturePanSetpoint_UserVote,
+   .resolvedSetpointErd = Erd_FeaturePan_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
@@ -53,7 +53,7 @@ static const Erd_t convertibleCompartmentCrossAmbientOffsetValueErdList[] = {
 static const OverrideArbiterConfiguration_t convertibleCompartmentCrossAmbientOffsetArbiterConfiguration = {
    convertibleCompartmentCrossAmbientOffsetOverrideRequestErdList,
    convertibleCompartmentCrossAmbientOffsetValueErdList,
-   Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,
+   Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
    NUM_ELEMENTS(convertibleCompartmentCrossAmbientOffsetOverrideRequestErdList)
 };
 
@@ -67,27 +67,27 @@ static const CrossAmbientOffsetCalculatorConfig_t convertibleCompartmentAsFreeze
    .crossAmbientOffsetInDegFx100Erd = Erd_ConvertibleCompartmentAsFreezer_CrossAmbientOffsetInDegFx100
 };
 
-void ConvertibleCompartmentAdjustedSetpointPlugin_Init(
-   ConvertibleCompartmentAdjustedSetpointPlugin_t *instance,
+void FeaturePanAdjustedSetpointPlugin_Init(
+   FeaturePanAdjustedSetpointPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    I16ErdAdder_Init(
-      &instance->_private.convertibleCompartmentAdjustedSetpointWithoutShiftErdAdder,
+      &instance->_private.featurePanAdjustedSetpointWithoutShiftErdAdder,
       dataModel,
-      &convertibleCompartmentAdjustedSetpointWithoutShiftConfig);
+      &featurePanAdjustedSetpointWithoutShiftConfig);
 
    I16ErdAdder_Init(
-      &instance->_private.convertibleCompartmentAdjustedSetpointErdAdder,
+      &instance->_private.featurePanAdjustedSetpointErdAdder,
       dataModel,
-      &convertibleCompartmentAdjustedSetpointConfig);
+      &featurePanAdjustedSetpointConfig);
 
    ResolvedSetpointWriter_Init(
-      &instance->_private.convertibleCompartmentResolvedSetpointWriter,
+      &instance->_private.featurePanResolvedSetpointWriter,
       dataModel,
-      &convertibleCompartmentResolvedSetpointWriterConfiguration);
+      &featurePanResolvedSetpointWriterConfiguration);
 
-   ConvertibleCompartmentShiftOffsetCalculatorPlugin_Init(
-      &instance->_private.convertibleCompartmentShiftOffsetCalculatorPlugin,
+   FeaturePanShiftOffsetCalculatorPlugin_Init(
+      &instance->_private.featurePanShiftOffsetCalculatorPlugin,
       dataModel);
 
    CrossAmbientOffsetCalculator_Init(

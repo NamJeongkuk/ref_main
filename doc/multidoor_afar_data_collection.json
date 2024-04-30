@@ -108,6 +108,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_IceCabinetGamma",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
          "interval": 60000
       },
@@ -178,7 +183,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+         "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
          "interval": 60000
       },
       {
@@ -218,7 +223,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
+         "name": "Erd_FeaturePanSetpoint_UserVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceCabinetSetpoint",
          "interval": 60000
       },
       {

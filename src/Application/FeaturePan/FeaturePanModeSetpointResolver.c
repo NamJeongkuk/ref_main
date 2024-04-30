@@ -18,12 +18,6 @@ static void ResolveSetpointToDefaultTemperatureForEntry(
    FeaturePanModeSetpointResolver_t *instance,
    const FeaturePanModeSetpointResolverConfigurationEntry_t *entry)
 {
-   FeaturePanModeRange_t range;
-   DataModel_Read(
-      instance->_private.dataModel,
-      entry->setpointRangeErd,
-      &range);
-
    TemperatureDegFx100_t currentStatus;
    DataModel_Read(
       instance->_private.dataModel,
@@ -32,6 +26,12 @@ static void ResolveSetpointToDefaultTemperatureForEntry(
 
    if(currentStatus == ResetValue)
    {
+      FeaturePanModeRange_t range;
+      DataModel_Read(
+         instance->_private.dataModel,
+         entry->setpointRangeErd,
+         &range);
+
       DataModel_Write(
          instance->_private.dataModel,
          entry->setpointStatusErd,

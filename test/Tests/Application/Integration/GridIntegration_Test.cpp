@@ -58,6 +58,11 @@ static const FanControl_t fanSpeedOff = {
    .dutyCycle = 0
 };
 
+static const FanControl_t fanSpeedLow = {
+   .type = FanControlType_DutyCycle,
+   .dutyCycle = 1500
+};
+
 TEST_GROUP(GridIntegration)
 {
    Application_t instance;
@@ -2060,14 +2065,14 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38)
 
       After(gridData->gridPeriodicRunRateInMSec);
       TheGridBlockNumberShouldBe(38);
-      TheCoolingModeShouldBe(CoolingMode_Freezer);
+      TheCoolingModeShouldBe(CoolingMode_FreshFood);
       TheCoolingSpeedShouldBe(CoolingSpeed_Off);
       TheGridAreaShouldBe(GridArea_1);
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheCompressorRelayShouldBe(OFF);
       TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
-      TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+      TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedLow);
    }
 }
 

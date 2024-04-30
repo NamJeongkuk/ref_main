@@ -39,6 +39,14 @@ enum
    GridLine_FeaturePanHigh = GridLine_6,
    GridLine_FeaturePanSuperHigh = GridLine_7,
 
+   GridLine_IceCabinetSuperLow = GridLine_1,
+   GridLine_IceCabinetLow = GridLine_2,
+   GridLine_IceCabinetLowHyst = GridLine_3,
+   GridLine_IceCabinetSetpointDelta = GridLine_4,
+   GridLine_IceCabinetHighHyst = GridLine_5,
+   GridLine_IceCabinetHigh = GridLine_6,
+   GridLine_IceCabinetSuperHigh = GridLine_7,
+
    GridLine_Nfl = GridLine_1,
    GridLine_FreshFoodLowHyst = GridLine_2,
    GridLine_FreshFoodSetpointDelta = GridLine_3,

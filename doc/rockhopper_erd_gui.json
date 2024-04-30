@@ -425,6 +425,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Ice Cabinet Vote",
+          "name": "Erd_FreezerEvapFanSpeed_IceCabinetVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Evap Fan Speed Freezer Ice Rate Vote",
           "name": "Erd_FreezerEvapFanSpeed_FreezerIceRateVote",
           "read": true,
@@ -855,20 +862,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Factory Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
           "read": true,
@@ -920,20 +913,6 @@
           "namespace": "mb",
           "displayName": "Convertible Compartment Door Status Testing Override Value",
           "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideValue",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Factory Vote",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
@@ -1063,6 +1042,13 @@
           "namespace": "mb",
           "displayName": "Freezer Setpoint Status",
           "name": "Erd_FreezerSetpointStatus",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Setpoint",
+          "name": "Erd_iceCabinetSetpoint",
           "read": true,
           "write": true
         }
@@ -1388,15 +1374,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor AdcCount",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
+          "displayName": "Feature Pan Thermistor AdcCount",
+          "name": "Erd_FeaturePanCabinetThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100",
+          "displayName": "Feature Pan Thermistor Unfiltered Temperature",
+          "name": "Erd_FeaturePan_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -1416,15 +1402,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment IsValid Override Request",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest",
+          "displayName": "Feature Pan Thermistor IsValid Override Request",
+          "name": "Erd_FeaturePanCabinetThermistor_IsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment IsValid Override Value",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue",
+          "displayName": "Feature Pan Thermistor IsValid Override Value",
+          "name": "Erd_FeaturePanCabinetThermistor_IsValidOverrideValue",
           "read": true,
           "write": true
         },
@@ -1437,36 +1423,36 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Override Request",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest",
+          "displayName": "Feature Pan FilteredTemp Override Request",
+          "name": "Erd_FeaturePan_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Override Value",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100",
+          "displayName": "Feature Pan FilteredTemp Override Value",
+          "name": "Erd_FeaturePan_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment FilteredTemp Resolved",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan FilteredTemp Resolved In Deg Fx100",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "F007 Convertible Compartment Thermistor Is Invalid",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault",
+          "displayName": "F007 Feature Pan Thermistor Is Invalid",
+          "name": "Erd_FeaturePanCabinetThermistorIsInvalidFault",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermistor Has Been Discovered",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistorDiscovered",
+          "displayName": "Feature Pan Thermistor Has Been Discovered",
+          "name": "Erd_FeaturePanCabinetThermistorDiscovered",
           "read": true,
           "write": true
         },
@@ -1852,6 +1838,13 @@
           "namespace": "mb",
           "displayName": "Ice Cabinet Thermistor Has Been Discovered",
           "name": "Erd_IceCabinetThermistorDiscovered",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Gamma",
+          "name": "Erd_IceCabinetGamma",
           "read": true,
           "write": true
         }
@@ -2297,6 +2290,34 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Feature Pan Calculated Grid Lines",
+          "name": "Erd_FeaturePanGrid_CalculatedGridLines",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Cooling Mode",
+          "name": "Erd_FeaturePanCoolingMode",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Grid Block Number",
+          "name": "Erd_FeaturePanGrid_BlockNumber",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Previous Grid Blocks",
+          "name": "Erd_FeaturePanGrid_PreviousBlocks",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Feature Pan Current Mode",
           "name": "Erd_FeaturePanCurrentMode",
           "read": true,
@@ -2304,8 +2325,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feature Pan Cooling Mode",
-          "name": "Erd_FeaturePanCoolingMode",
+          "displayName": "Feature Pan FilteredTemp Resolved In Deg Fx100",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan User Setpoint Vote In Deg Fx100",
+          "name": "Erd_FeaturePanSetpoint_UserVote",
           "read": true,
           "write": false
         },
@@ -2318,8 +2346,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feature Pan User Setpoint Vote",
-          "name": "Erd_FeaturePanSetpoint_UserVote",
+          "displayName": "Feature Pan Cross Ambient Offset In Deg Fx100",
+          "name": "Erd_FeaturePan_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Thermal Shift",
+          "name": "Erd_FeaturePan_ThermalShiftInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Adjusted Setpoint Without Shift",
+          "name": "Erd_FeaturePan_AdjustedSetpointWithoutShiftInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Filtered Temperature",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": false
         },
@@ -2327,6 +2376,123 @@
           "namespace": "mb",
           "displayName": "Feature Pan Adjusted Setpoint In Deg Fx100",
           "name": "Erd_FeaturePan_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Damper Position Grid Vote",
+          "name": "Erd_ConvertibleCompartmentDamperPosition_GridVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Evap Fan Grid Vote",
+          "name": "Erd_ConvertibleCompartmentEvapFanSpeed_GridVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CC Heater Grid Vote",
+          "name": "Erd_ConvertibleCompartmentHeater_GridVote",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "Ice Cabinet",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cooling Mode",
+          "name": "Erd_IceCabinetCoolingMode",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Translated Setpoint In Deg Fx100",
+          "name": "Erd_IceCabinet_SetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Adjusted Setpoint In Deg Fx100",
+          "name": "Erd_IceCabinet_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cabinet Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_CabinetOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Cross Ambient Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Thermal Shift In Deg Fx100",
+          "name": "Erd_IceCabinet_ThermalShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Ice Formation Offset In Deg Fx100",
+          "name": "Erd_IceCabinet_IceFormationOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Formation Offset Is Active",
+          "name": "Erd_IceCabinet_IceFormationIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Gamma",
+          "name": "Erd_IceCabinetGamma",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Calculated Grid Block",
+          "name": "Erd_IceCabinetGrid_BlockNumber",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Grid Block Override Request",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Grid Block Override Value",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Cabinet Resolved Grid Block",
+          "name": "Erd_IceCabinetGridBlockNumberOverrideResolved",
           "read": true,
           "write": true
         }
@@ -2337,20 +2503,6 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Resolved Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Setpoint Winning Vote ERD",
-          "name": "Erd_ConvertibleCompartmentSetpoint_WinningVoteErd",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
           "read": true,
@@ -2358,15 +2510,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Factory Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment User Vote for Setpoint",
-          "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
+          "displayName": "Feature Pan User Vote for Setpoint",
+          "name": "Erd_FeaturePanSetpoint_UserVote",
           "read": true,
           "write": true
         },
@@ -3044,8 +3189,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
-          "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
+          "displayName": "Feature Pan Reset Thermal Shift Offset Signal",
+          "name": "Erd_FeaturePan_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         }
@@ -4085,8 +4230,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Cross Ambient Offset",
-          "name": "Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100",
+          "displayName": "Feature Pan Cross Ambient Offset",
+          "name": "Erd_FeaturePan_CrossAmbientOffsetInDegFx100",
           "read": true,
           "write": true
         }
@@ -4345,8 +4490,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Thermal Shift",
-          "name": "Erd_ConvertibleCompartment_ThermalShiftInDegFx100",
+          "displayName": "Feature Pan Thermal Shift",
+          "name": "Erd_FeaturePan_ThermalShiftInDegFx100",
           "read": true,
           "write": true
         },
@@ -4373,8 +4518,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "Feature Pan Filtered Temperature",
+          "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         }
@@ -5360,7 +5505,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Eeprom Unit Lifetime Dispsensed Water In Ounces x100",
+          "displayName": "Eeprom Unit Lifetime Dispensed Water In Ounces x100",
           "name": "Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100",
           "read": true,
           "write": true,

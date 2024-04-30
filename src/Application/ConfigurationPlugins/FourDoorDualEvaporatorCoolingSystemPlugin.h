@@ -22,6 +22,7 @@
 #include "ConvertibleCompartmentDamperPlugin.h"
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FreshFoodNonHeatedCycleDefrostPlugin.h"
+#include "IceCabinetGridPlugin.h"
 
 typedef struct
 {
@@ -40,6 +41,7 @@ typedef struct
       ConvertibleCompartmentDamperPlugin_t convertibleCompartmentDamperPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
       FreshFoodNonHeatedCycleDefrostPlugin_t freshFoodNonHeatedCycleDefrostPlugin;
+      IceCabinetGridPlugin_t iceCabinetGridPlugin;
    } _private;
 } FourDoorDualEvaporatorCoolingSystemPlugin_t;
 

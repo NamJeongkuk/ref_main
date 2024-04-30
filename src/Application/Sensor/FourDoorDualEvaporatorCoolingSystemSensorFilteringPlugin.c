@@ -126,18 +126,18 @@ static const OverrideArbiterConfiguration_t freezerEvapThermistorValidArbiterCon
 };
 
 static const Erd_t convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest
+   Erd_FeaturePanCabinetThermistor_IsValidOverrideRequest
 };
 
 static const Erd_t convertibleCompartmentCabinetThermistorValidValueErdList[] = {
-   Erd_ConvertibleCompartmentCabinetThermistorIsValid,
-   Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue
+   Erd_FeaturePanCabinetThermistorIsValid,
+   Erd_FeaturePanCabinetThermistor_IsValidOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetThermistorValidArbiterConfiguration = {
    convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList,
    convertibleCompartmentCabinetThermistorValidValueErdList,
-   Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   Erd_FeaturePanCabinetThermistor_IsValidResolved,
    NUM_ELEMENTS(convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList)
 };
 
@@ -175,19 +175,19 @@ static const OverrideArbiterConfiguration_t freshFoodEvaporatorFilteredTemperatu
 
 static const Erd_t convertibleCompartmentCabinetFilteredTemperatureOverrideRequestErdList[] = {
    Erd_ConvertibleCompartmentState,
-   Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest
+   Erd_FeaturePan_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t convertibleCompartmentCabinetFilteredTemperatureValueErdList[] = {
    Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100,
    Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100,
-   Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100
+   Erd_FeaturePan_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetFilteredTemperatureArbiterConfiguration = {
    convertibleCompartmentCabinetFilteredTemperatureOverrideRequestErdList,
    convertibleCompartmentCabinetFilteredTemperatureValueErdList,
-   Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(convertibleCompartmentCabinetFilteredTemperatureOverrideRequestErdList)
 };
 
@@ -228,22 +228,22 @@ static const SensorFilteringConfig_t freshFoodCabinetThermistorConfig = {
 };
 
 static const SensorFilteringConfig_t convertibleCompartmentCabinetAsFreezerThermistorConfig = {
-   .sensorAdcCountErd = Erd_ConvertibleCompartmentCabinetThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100,
+   .sensorAdcCountErd = Erd_FeaturePanCabinetThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FeaturePan_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentAsFreezer_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_ConvertibleCompartmentCabinetThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_ConvertibleCompartmentCabinetThermistorDiscovered,
+   .sensorIsValidErd = Erd_FeaturePanCabinetThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FeaturePanCabinetThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FeaturePanCabinetThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
 static const SensorFilteringConfig_t convertibleCompartmentCabinetAsFreshFoodThermistorConfig = {
-   .sensorAdcCountErd = Erd_ConvertibleCompartmentCabinetThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100,
+   .sensorAdcCountErd = Erd_FeaturePanCabinetThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FeaturePan_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_ConvertibleCompartmentAsFreshFood_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_ConvertibleCompartmentCabinetThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_ConvertibleCompartmentCabinetThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_ConvertibleCompartmentCabinetThermistorDiscovered,
+   .sensorIsValidErd = Erd_FeaturePanCabinetThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FeaturePanCabinetThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FeaturePanCabinetThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 

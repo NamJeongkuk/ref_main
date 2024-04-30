@@ -59,7 +59,7 @@ static const StepperMotorDriverConfiguration_t stepperMotorDriverConfig = {
 };
 
 static const SealedSystemValveVotedPosition_t defaultData = {
-   .position = SealedSystemValvePosition_D,
+   .position = SealedSystemValvePosition_B,
    .care = false
 };
 

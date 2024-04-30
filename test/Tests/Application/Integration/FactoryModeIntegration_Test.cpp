@@ -861,8 +861,8 @@ TEST_GROUP(FactoryModeIntegration_FourDoor)
       After((valveData->refrigerantValvePowerUpTimeInSeconds + 1) * MSEC_PER_SEC);
       SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_Home);
 
-      After((2 * valveData->excitationDelayInMilliseconds) + (valveData->positionDStep * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
-      SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_D);
+      After((2 * valveData->excitationDelayInMilliseconds) + (valveData->positionBStep * (valveData->delayBetweenStepEventsInMilliseconds + 1)));
+      SealedSystemValveCurrentPositionShouldBe(SealedSystemValvePosition_B);
 
       GivenResolvedPositionIs(SealedSystemValvePosition_C);
       After((2 * valveData->excitationDelayInMilliseconds) + ((valveData->positionCStep - valveData->positionDStep) * (valveData->delayBetweenStepEventsInMilliseconds + 1)));

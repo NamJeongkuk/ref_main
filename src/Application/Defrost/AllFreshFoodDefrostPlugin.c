@@ -46,51 +46,6 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .numberOfDoors = NUM_ELEMENTS(doorsConfiguration)
 };
 
-static void UpdateDefrostStateBasedOnDefrostHsmState(I_DataModel_t *dataModel)
-{
-   DefrostHsmState_t initialHsmState;
-   DataModel_Read(
-      dataModel,
-      Erd_DefrostHsmState,
-      &initialHsmState);
-
-   DefrostState_t initialDefrostState;
-
-   switch(initialHsmState)
-   {
-      case DefrostHsmState_Idle:
-         initialDefrostState = DefrostState_Idle;
-         break;
-
-      case DefrostHsmState_PrechillPrep:
-      case DefrostHsmState_Prechill:
-         initialDefrostState = DefrostState_Prechill;
-         break;
-
-      case DefrostHsmState_HeaterOnEntry:
-      case DefrostHsmState_HeaterOn:
-         initialDefrostState = DefrostState_HeaterOn;
-         break;
-
-      case DefrostHsmState_Dwell:
-         initialDefrostState = DefrostState_Dwell;
-         break;
-
-      case DefrostHsmState_PostDwell:
-         initialDefrostState = DefrostState_PostDwell;
-         break;
-
-      case DefrostHsmState_Disabled:
-         initialDefrostState = DefrostState_Disabled;
-         break;
-   }
-
-   DataModel_Write(
-      dataModel,
-      Erd_DefrostState,
-      &initialDefrostState);
-}
-
 void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
@@ -175,6 +130,4 @@ void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_Dat
       dataModel,
       &sabbathReadyToDefrostConfig,
       PersonalityParametricData_Get(dataModel)->sabbathData);
-
-   UpdateDefrostStateBasedOnDefrostHsmState(dataModel);
 }

@@ -11,6 +11,7 @@
 #include "SystemErds.h"
 
 static const DefrostState_t stateIdle = DefrostState_Idle;
+static const DefrostState_t statePrechillPrep = DefrostState_PrechillPrep;
 static const DefrostState_t statePrechill = DefrostState_Prechill;
 static const DefrostState_t stateHeaterOn = DefrostState_HeaterOn;
 static const DefrostState_t stateDwell = DefrostState_Dwell;
@@ -37,7 +38,7 @@ static const ErdWriterOnCompareMatchConfigurationEntry_t configurationEntries[] 
       Erd_DefrostHsmState,
       Erd_DefrostState,
       &hsmStatePrechillPrep,
-      &statePrechill,
+      &statePrechillPrep,
    },
    {
       Erd_DefrostHsmState,

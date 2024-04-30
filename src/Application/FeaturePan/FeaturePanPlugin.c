@@ -66,13 +66,13 @@ static const FeaturePanSetpointOffsetUpdaterConfiguration_t featurePanSetpointOf
 
 static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingConvertibleCompartmentConfig = {
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
-   .featurePanTemperatureDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .featurePanTemperatureDegFx100Erd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .heaterVotedErd = Erd_ConvertibleCompartmentHeater_WarmupSlopeVote,
 };
 
 static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingDeliPanConfig = {
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
-   .featurePanTemperatureDegFx100Erd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
+   .featurePanTemperatureDegFx100Erd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .heaterVotedErd = Erd_DeliPanHeater_WarmupSlopeVote,
 };
 
@@ -94,14 +94,14 @@ static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingDeliPa
 };
 
 static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingConvertibleCompartmentConfig = {
-   .featurePanTemperatureErd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .featurePanTemperatureErd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .featurePanDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_PulldownVote,
    .featurePanFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_PulldownVote,
    .featurePanHeaterVoteErd = Erd_ConvertibleCompartmentHeater_PulldownVote
 };
 
 static const FeaturePanPulldownVotingConfig_t featurePanPulldownVotingDeliPanConfig = {
-   .featurePanTemperatureErd = Erd_DeliPan_FilteredTemperatureResolvedInDegFx100,
+   .featurePanTemperatureErd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .featurePanDamperPositionVoteErd = Erd_DeliDamperPosition_PulldownVote,
    .featurePanFanVoteErd = Erd_DeliFanSpeed_PulldownVote,
    .featurePanHeaterVoteErd = Erd_DeliPanHeater_PulldownVote
@@ -186,10 +186,6 @@ void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataMode
 
    if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_Convertible))
    {
-      ConvertibleCompartmentAdjustedSetpointPlugin_Init(
-         &instance->_private.convertibleCompartmentAdjustedSetpointPlugin,
-         dataModel);
-
       FeaturePanWarmupSlopeVoting_Init(
          &instance->_private.featurePanWarmupSlopeVoting,
          dataModel,

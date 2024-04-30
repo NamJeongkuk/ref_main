@@ -7,7 +7,10 @@ TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 
 include lib/applcommon/defaults.mk
 
-CPPFLAGS+=-O2 -Wno-macro-redefined
+ifneq ($(DEBUG),Y)
+  CPPFLAGS+=-O2 -Wno-macro-redefined
+endif
+
 CXXFLAGS+=-Wno-unneeded-internal-declaration -Wno-overloaded-virtual
 
 DEFINES+=TDD_BUILD
@@ -45,6 +48,7 @@ SRC_DIRS:=\
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \
   src/Application/Heater \
+  src/Application/IceCabinet \
   src/Application/IceMaker \
   src/Application/IceMaker/IceMakerSlots \
   src/Application/IceMaker/AluminumMoldIceMaker \
@@ -116,9 +120,11 @@ SRC_DIRS:=\
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
   test/Tests/Application/Grid \
+  test/Tests/Application/IceCabinet \
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \
   test/Tests/Application/IceMaker/TwistTrayIceMaker \
+  test/Tests/Application/IceCabinet \
   test/Tests/Application/Lighting \
   test/Tests/Application/Mapper \
   test/Tests/Application/Motor \
