@@ -9,7 +9,7 @@
 #ifndef SHIFTOFFSETCALCULATOR_H
 #define SHIFTOFFSETCALCULATOR_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "EventSubscription.h"
 #include "I_DataModel.h"
 #include "I_Filter.h"

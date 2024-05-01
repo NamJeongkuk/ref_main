@@ -8,7 +8,7 @@
 #ifndef GRIDLINECALCULATOR_H
 #define GRIDLINECALCULATOR_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "CalculatedGridLines.h"
 #include "EventSubscription.h"
 #include "GridData.h"

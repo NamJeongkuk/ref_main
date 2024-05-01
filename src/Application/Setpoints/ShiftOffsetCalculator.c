@@ -169,7 +169,7 @@ void ShiftOffsetCalculator_Init(
    instance->_private.shiftOffsetData = shiftOffsetData;
 
    const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData =
-      PersonalityParametricData_Get(dataModel)->adjustedSetpointData->shiftOffsetCalculatorData;
+      PersonalityParametricData_Get(dataModel)->shiftOffsetCalculatorData;
 
    SetShiftOffsetTo(instance, 0);
    FilterSeed(instance, AdjustedSetpointWithoutShift(instance));

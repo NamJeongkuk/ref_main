@@ -58,7 +58,7 @@ TEST_GROUP(FeaturePanSetpointOffsetUpdater)
 
 TEST(FeaturePanSetpointOffsetUpdater, ShouldUpdateTheSetpointOffsetBasedOnTheCurrentFeaturePanModeWhenCurrentModeChanges)
 {
-   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(dataModel)->adjustedSetpointData->featurePanAdjustedSetpointData->setpointOffsetData;
+   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(dataModel)->featurePanThermalOffsetData->setpointOffsetData;
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
    TheModuleIsInitialized();

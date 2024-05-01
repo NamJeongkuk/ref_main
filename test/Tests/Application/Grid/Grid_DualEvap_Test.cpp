@@ -38,7 +38,7 @@ TEST_GROUP(Grid_DualEvap_Test)
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    ConstArrayMap_FourDoorDualEvap_t fourDoorDualEvapConstArrayMap;
-   const FreshFoodAdjustedSetpointData_t *freshFoodAdjustedSetpointData;
+   const FreshFoodThermalOffsetData_t *freshFoodThermalOffsetData;
    EventSubscription_t dataModelOnChangeSubscription;
 
    void setup()
@@ -46,7 +46,7 @@ TEST_GROUP(Grid_DualEvap_Test)
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvapFourDoor);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-      freshFoodAdjustedSetpointData = PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freshFoodAdjustedSetpointData;
+      freshFoodThermalOffsetData = PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData;
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
       DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_FourDoorDualEvap_Init(&fourDoorDualEvapConstArrayMap));
@@ -543,7 +543,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks5And6)
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       LowAmbientValveBehaviorShouldBe(DISABLED);
-      FreshFoodPulldownOffsetShouldBe(freshFoodAdjustedSetpointData->pulldownOffsetInDegFx100);
+      FreshFoodPulldownOffsetShouldBe(freshFoodThermalOffsetData->pulldownOffsetInDegFx100);
       PulldownFanBehaviorShouldBe(ENABLED);
       PulldownValveBehaviorShouldBe(DISABLED);
       CondenserFanAntiSweatBehaviorShouldBe(DISABLED);

@@ -22,17 +22,17 @@ void IceCabinetShiftOffsetCalculatorPlugin_Init(
    IceCabinetShiftOffsetCalculatorPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   const AdjustedSetpointData_t *adjustedSetpointData =
-      PersonalityParametricData_Get(dataModel)->adjustedSetpointData;
+   const PersonalityParametricData_t *parametricData =
+      PersonalityParametricData_Get(dataModel);
 
    Filter_LongTermAverage_Init(
       &instance->_private.iceCabinetLongTermAverageFilter,
-      adjustedSetpointData->shiftOffsetCalculatorData->longTermBeta);
+      parametricData->shiftOffsetCalculatorData->longTermBeta);
    ShiftOffsetCalculator_Init(
       &instance->_private.iceCabinetShiftOffsetCalculator,
       dataModel,
       &instance->_private.iceCabinetLongTermAverageFilter.interface,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &iceCabinetShiftOffsetCalculatorConfig,
-      adjustedSetpointData->iceCabinetAdjustedSetpointData->shiftOffsetData);
+      parametricData->iceCabinetThermalOffsetData->shiftOffsetData);
 }

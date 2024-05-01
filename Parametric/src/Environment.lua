@@ -47,11 +47,10 @@ return function(directory)
   import('Bsp/LinearSearchConfiguration')
   import('Bsp/ErdListToSortedErdMappings')
   import('Setpoints/SetpointZone')
-  import('Setpoints/AdjustedSetpoint')
-  import('Setpoints/FreshFoodAdjustedSetpoint')
-  import('Setpoints/FreezerAdjustedSetpoint')
-  import('Setpoints/FeaturePanAdjustedSetpoint')
-  import('Setpoints/IceCabinetAdjustedSetpoint')
+  import('Setpoints/FreshFoodThermalOffset')
+  import('Setpoints/FreezerThermalOffset')
+  import('Setpoints/FeaturePanThermalOffset')
+  import('Setpoints/IceCabinetThermalOffset')
   import('Setpoints/CrossAmbientOffsetCalculator')
   import('Setpoints/ShiftOffsetCalculator')
   import('Setpoints/FeaturePanSetpointOffset')
@@ -161,11 +160,10 @@ return function(directory)
   binary_search_configuration = BinarySearchConfiguration(core)
   linear_search_configuration = LinearSearchConfiguration(core)
   setpoint_zone = SetpointZone(core)
-  adjusted_setpoint = AdjustedSetpoint(core)
-  fresh_food_adjusted_setpoint = FreshFoodAdjustedSetpoint(core)
-  freezer_adjusted_setpoint = FreezerAdjustedSetpoint(core)
-  feature_pan_adjusted_setpoint = FeaturePanAdjustedSetpoint(core)
-  ice_cabinet_adjusted_setpoint = IceCabinetAdjustedSetpoint(core)
+  fresh_food_thermal_offset = FreshFoodThermalOffset(core)
+  freezer_thermal_offset = FreezerThermalOffset(core)
+  feature_pan_thermal_offset = FeaturePanThermalOffset(core)
+  ice_cabinet_thermal_offset = IceCabinetThermalOffset(core)
   cross_ambient_offset_calculator = CrossAmbientOffsetCalculator(core)
   shift_offset_calculator = ShiftOffsetCalculator(core)
   feature_pan_setpoint_offset = FeaturePanSetpointOffset(core)
@@ -281,11 +279,10 @@ return function(directory)
     binary_search_configuration = binary_search_configuration,
     linear_search_configuration = linear_search_configuration,
     setpoint_zone = setpoint_zone,
-    adjusted_setpoint = adjusted_setpoint,
-    fresh_food_adjusted_setpoint = fresh_food_adjusted_setpoint,
-    freezer_adjusted_setpoint = freezer_adjusted_setpoint,
-    feature_pan_adjusted_setpoint = feature_pan_adjusted_setpoint,
-    ice_cabinet_adjusted_setpoint = ice_cabinet_adjusted_setpoint,
+    fresh_food_thermal_offset = fresh_food_thermal_offset,
+    freezer_thermal_offset = freezer_thermal_offset,
+    feature_pan_thermal_offset = feature_pan_thermal_offset,
+    ice_cabinet_thermal_offset = ice_cabinet_thermal_offset,
     cross_ambient_offset_calculator = cross_ambient_offset_calculator,
     shift_offset_calculator = shift_offset_calculator,
     feature_pan_setpoint_offset = feature_pan_setpoint_offset,

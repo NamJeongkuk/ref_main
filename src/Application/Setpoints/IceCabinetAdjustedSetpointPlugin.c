@@ -46,7 +46,7 @@ static void InitializeCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_IceCabinet_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->iceCabinetOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->iceCabinetThermalOffsetData->cabinetOffsetInDegFx100);
 }
 
 void IceCabinetAdjustedSetpointPlugin_Init(
@@ -71,7 +71,7 @@ void IceCabinetAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.iceCabinetOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->adjustedSetpointData->iceCabinetAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->iceCabinetThermalOffsetData->crossAmbientOffsetData,
       &iceCabinetOffsetCalculatorConfig);
 
    IceFormationOffsetWriter_Init(&instance->_private.iceFormationOffsetWriter, dataModel);

@@ -24,7 +24,7 @@ static FeaturePanCurrentMode_t FeaturePanCurrentMode(FeaturePanSetpointOffsetUpd
 
 static void UpdateSetpointOffsetBasedOnCurrentFeaturePanMode(FeaturePanSetpointOffsetUpdater_t *instance)
 {
-   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(instance->_private.dataModel)->adjustedSetpointData->featurePanAdjustedSetpointData->setpointOffsetData;
+   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(instance->_private.dataModel)->featurePanThermalOffsetData->setpointOffsetData;
    FeaturePanCurrentMode_t currentMode = FeaturePanCurrentMode(instance);
    TemperatureDegFx100_t setpointOffset = 0;
 
