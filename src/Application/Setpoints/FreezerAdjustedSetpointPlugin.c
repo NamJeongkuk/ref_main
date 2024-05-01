@@ -79,12 +79,12 @@ void FreezerAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.freezerCrossAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
       &freezerCrossAmbientOffsetCalculatorConfig);
    HighAmbientHumidityOffsetCalculator_Init(
       &instance->_private.freezerHighAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->highAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freezerAdjustedSetpointData->highAmbientOffsetData,
       &freezerHighAmbientOffsetCalculatorConfig);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

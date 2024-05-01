@@ -22,6 +22,7 @@
 #include "EnhancedSabbathData.h"
 #include "CompressorData.h"
 #include "SetpointData.h"
+#include "AdjustedSetpointData.h"
 #include "CabinetOffsetData.h"
 #include "BspParametricConfiguration.h"
 #include "DamperData.h"
@@ -64,6 +65,7 @@ typedef struct
    const SystemMonitorData_t *systemMonitorData;
    const CompressorData_t *compressorData;
    const SetpointData_t *setpointData;
+   const AdjustedSetpointData_t *adjustedSetpointData;
    const CabinetOffsetData_t *cabinetOffsetData;
    const BspParametricConfiguration_t *bspConfigurationData;
    const DamperData_t *damperData;

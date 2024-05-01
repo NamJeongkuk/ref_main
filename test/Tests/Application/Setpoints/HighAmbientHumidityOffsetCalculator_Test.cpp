@@ -51,7 +51,7 @@ TEST_GROUP(HighAmbientOffsetCalculator)
       dataModel = dataModelDouble.dataModel;
 
       freshFoodHighAmbientOffsetData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->highAmbientOffsetData;
+         PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freshFoodAdjustedSetpointData->highAmbientOffsetData;
    }
 
    void GivenTheFreshFoodModuleIsInitialized()

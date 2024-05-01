@@ -71,7 +71,7 @@ void IceCabinetAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.iceCabinetOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->iceCabinetAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->adjustedSetpointData->iceCabinetAdjustedSetpointData->crossAmbientOffsetData,
       &iceCabinetOffsetCalculatorConfig);
 
    IceFormationOffsetWriter_Init(&instance->_private.iceFormationOffsetWriter, dataModel);

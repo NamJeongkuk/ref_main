@@ -26,6 +26,7 @@ describe("Personality", function()
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
       setpoint = TypedString('setpoint', 'setpoint'),
+      adjusted_setpoint = TypedString('adjusted_setpoint', 'adjusted_setpoint'),
       cabinet_offset = TypedString('cabinet_offset', 'cabinet_offset'),
       bsp_configuration = TypedString('bsp_configuration', 'bsp_configuration'),
       damper = TypedString('damper', 'damper'),
@@ -174,6 +175,14 @@ describe("Personality", function()
     should_fail_with('setpoint must be a typed string with type setpoint, but is a number', function()
       personality(generate_config({
         setpoint = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('adjusted_setpoint must be a typed string with type adjusted_setpoint, but is a number', function()
+      personality(generate_config({
+        adjusted_setpoint = -1
       }))
     end)
   end)
@@ -333,6 +342,7 @@ describe("Personality", function()
         pointer(system_monitor),
         pointer(compressor),
         pointer(setpoint),
+        pointer(adjusted_setpoint),
         pointer(cabinet_offset),
         pointer(bsp_configuration),
         pointer(damper),

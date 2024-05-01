@@ -50,7 +50,7 @@ TEST_GROUP(CrossAmbientOffsetCalculator)
       dataModel = dataModelDouble.dataModel;
 
       crossAmbientOffsetData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->crossAmbientOffsetData;
+         PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freshFoodAdjustedSetpointData->crossAmbientOffsetData;
    }
 
    void TheModuleIsInitialized()

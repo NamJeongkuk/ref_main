@@ -390,7 +390,7 @@ void Grid_DualEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetLowAmbientValveBehavior(dataModel, DISABLED);
-         SetFreshFoodPulldownOffset(dataModel, PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->pulldownOffsetInDegFx100);
+         SetFreshFoodPulldownOffset(dataModel, PersonalityParametricData_Get(dataModel)->adjustedSetpointData->freshFoodAdjustedSetpointData->pulldownOffsetInDegFx100);
          SetPulldownFanBehavior(dataModel, ENABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);

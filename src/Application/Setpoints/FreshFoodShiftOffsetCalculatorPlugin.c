@@ -23,7 +23,7 @@ void FreshFoodShiftOffsetCalculatorPlugin_Init(
    I_DataModel_t *dataModel)
 {
    const AdjustedSetpointData_t *adjustedSetpointData =
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData;
+      PersonalityParametricData_Get(dataModel)->adjustedSetpointData;
 
    Filter_LongTermAverage_Init(
       &instance->_private.freshFoodLongTermAverageFilter,

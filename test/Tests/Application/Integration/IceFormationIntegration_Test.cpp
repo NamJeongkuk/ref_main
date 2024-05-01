@@ -52,7 +52,7 @@ TEST_GROUP(IceFormationIntegration)
    void IceFormationOffsetShouldBeSetToValueFromParametricData()
    {
       IceFormationOffsetShouldBe(
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->iceCabinetAdjustedSetpointData->iceFormationOffsetInDegFx100);
+         PersonalityParametricData_Get(dataModel)->adjustedSetpointData->iceCabinetAdjustedSetpointData->iceFormationOffsetInDegFx100);
    }
 };
 
