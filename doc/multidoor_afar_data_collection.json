@@ -1,5 +1,5 @@
 {
-   "name": "MD_AFAR_Data_Collection_1.1",
+   "name": "MD_AFAR_Data_Collection_1.3",
    "options": {
       "continuous": false,
       "period": 60000,
@@ -113,17 +113,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_DamperCurrentPosition",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_ConvertibleCompartmentDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -139,11 +129,6 @@
       {
          "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentDamperPosition_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_ConvertibleCompartmentDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -204,6 +189,21 @@
       {
          "namespace": "mb",
          "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Freezer_LongTermAverageInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreshFood_LongTermAverageInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FeaturePan_LongTermAverageInDegFx100",
          "interval": 60000
       },
       {
@@ -1218,32 +1218,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_FeaturePanSetpoint_UserVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentHeater_WarmupSlopeVote",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentHeater_DisableForAmbientTemperatureVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
          "interval": 60000
       },
       {
@@ -1259,11 +1239,6 @@
       {
          "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentHeater_PulldownVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
@@ -1323,11 +1298,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentAsFreezer_CrossAmbientOffsetInDegFx100",
          "interval": 60000
       },
@@ -1339,11 +1309,6 @@
       {
          "namespace": "mb",
          "name": "Erd_FeaturePan_ResetThermalShiftOffsetSignal",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_FeaturePan_LongTermAverageInDegFx100",
          "interval": 60000
       },
       {
@@ -1393,11 +1358,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_CrossAmbientHysteresisAdjustmentInDegFx100",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_ConvertibleCompartmentDamperPosition_GridVote",
          "interval": 60000
       },
@@ -1413,27 +1373,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_CoolingMode",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_FeaturePanCoolingMode",
          "interval": 60000
       },
       {
          "namespace": "mb",
          "name": "Erd_FeaturePanForcedHeatingMode",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_DelayConvertibleCompartmentCooling",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_CoolConvertibleCompartmentBeforeOff",
          "interval": 60000
       }
    ]
