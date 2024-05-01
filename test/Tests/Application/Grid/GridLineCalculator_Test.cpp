@@ -74,7 +74,7 @@ static const GridLineCalculatorConfiguration_t freshFoodAndFreezerConfig = {
 static const GridLineCalculatorConfiguration_t featurePanConfig = {
    .calculatedGridLineErd = Erd_FeaturePanGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .gridDeltaOffsetErd = Erd_FeaturePanCurrentMode,
+   .gridDeltaOffsetErd = Erd_FeaturePanCurrentModeStatus,
    .gridLineAdjustmentErds = {
       featurePanFirstDimensionGridLinesAdjustmentErds,
    }
@@ -142,7 +142,7 @@ TEST_GROUP(GridLineCalculator)
    {
       DataModel_Write(
          dataModel,
-         Erd_FeaturePanCurrentMode,
+         Erd_FeaturePanCurrentModeStatus,
          &mode);
    }
 
@@ -221,7 +221,7 @@ TEST_GROUP(GridLineCalculator)
       DataModel_Read(dataModel, Erd_FeaturePanGrid_CalculatedGridLines, &calcLines);
 
       FeaturePanCurrentMode_t gridDeltaOffset;
-      DataModel_Read(dataModel, Erd_FeaturePanCurrentMode, &gridDeltaOffset);
+      DataModel_Read(dataModel, Erd_FeaturePanCurrentModeStatus, &gridDeltaOffset);
 
       gridDeltaOffset = TRUNCATE_UNSIGNED_SUBTRACTION(gridDeltaOffset, 1);
 

@@ -25,7 +25,7 @@ static const Erd_t resolvedModeSetpointErds[] = {
 };
 
 static const FeaturePanUserSetpointVoterConfiguration_t config = {
-   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentModeStatus,
    .userSetpointVoteErd = Erd_FeaturePanSetpoint_UserVote,
    .resolvedModeSetpointErds = resolvedModeSetpointErds,
    .numberOfErds = NUM_ELEMENTS(resolvedModeSetpointErds)
@@ -63,7 +63,7 @@ TEST_GROUP(FeaturePanUserSetpointVoter)
 
    void WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_t mode)
    {
-      DataModel_Write(dataModel, Erd_FeaturePanCurrentMode, &mode);
+      DataModel_Write(dataModel, Erd_FeaturePanCurrentModeStatus, &mode);
    }
 
    void WhenTheSetpointErdChangesTo(Erd_t erd, TemperatureDegFx100_t temperature)

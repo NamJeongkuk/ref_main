@@ -53,14 +53,14 @@ static const Erd_t resolvedModeSetpointErds[] = {
 };
 
 static const FeaturePanUserSetpointVoterConfiguration_t featurePanUserSetpointVoterConfig = {
-   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentModeStatus,
    .userSetpointVoteErd = Erd_FeaturePanSetpoint_UserVote,
    .resolvedModeSetpointErds = resolvedModeSetpointErds,
    .numberOfErds = NUM_ELEMENTS(resolvedModeSetpointErds)
 };
 
 static const FeaturePanSetpointOffsetUpdaterConfiguration_t featurePanSetpointOffsetUpdaterConfig = {
-   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentModeStatus,
    .setpointOffsetErd = Erd_FeaturePan_SetpointOffsetInDegFx100
 };
 
@@ -129,26 +129,6 @@ static const FeaturePanDeliDeliFanDependencyVotingConfig_t featurePanDeliDeliFan
    .deliHeaterVotedErd = Erd_DeliPanHeater_DeliFanDependencyVote
 };
 
-static void WriteCurrentModeErdIfUninitialized(I_DataModel_t *dataModel)
-{
-   const PersonalityParametricData_t *personalityData = PersonalityParametricData_Get(dataModel);
-
-   FeaturePanCurrentMode_t currentMode;
-
-   DataModel_Read(
-      dataModel,
-      Erd_FeaturePanCurrentMode,
-      &currentMode);
-
-   if(UINT8_MAX == currentMode)
-   {
-      DataModel_Write(
-         dataModel,
-         Erd_FeaturePanCurrentMode,
-         &personalityData->featurePanData->featurePanDefaultMode);
-   }
-}
-
 static void WriteSetpointRangeDataToErds(I_DataModel_t *dataModel)
 {
    const PersonalityParametricData_t *personalityData = PersonalityParametricData_Get(dataModel);
@@ -164,8 +144,12 @@ static void WriteSetpointRangeDataToErds(I_DataModel_t *dataModel)
 
 void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   WriteCurrentModeErdIfUninitialized(dataModel);
    WriteSetpointRangeDataToErds(dataModel);
+
+   FeaturePanModeRequestHandler_Init(
+      &instance->_private.featurePanModeRequestHandler,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->featurePanData);
 
    FeaturePanModeSetpointResolver_Init(
       &instance->_private.convertibleCompartmentModeSetpointResolver,

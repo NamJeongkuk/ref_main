@@ -20,6 +20,8 @@ typedef struct
    TemperatureDegFx100_t featurePanPulldownTemperatureLimitInDegFx100;
    FanSpeed_t freshFoodFanDeliCoolingSpeed;
    FeaturePanCurrentMode_t featurePanDefaultMode;
+   FeaturePanCurrentMode_t featurePanMinAllowedMode;
+   FeaturePanCurrentMode_t featurePanMaxAllowedMode;
 } FeaturePanData_t;
 
 #endif

@@ -2318,10 +2318,17 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feature Pan Current Mode",
-          "name": "Erd_FeaturePanCurrentMode",
+          "displayName": "Feature Pan Current Mode Request",
+          "name": "Erd_FeaturePanCurrentModeRequest",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feature Pan Current Mode Status",
+          "name": "Erd_FeaturePanCurrentModeStatus",
+          "read": true,
+          "write": false
         },
         {
           "namespace": "mb",
