@@ -10,6 +10,7 @@ extern "C"
 #include "CompressorSpeedDriver.h"
 #include "PersonalityParametricData.h"
 #include "Constants_Binary.h"
+#include "Vote.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -25,7 +26,8 @@ static const CompressorSpeedDriverConfig_t config = {
    .compressorFrequencyErd = Erd_CompressorInverterDriver,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointZoneErd = Erd_FreezerSetpointZone,
-   .compressorControllerSpeedErd = Erd_CompressorControllerSpeedRequest
+   .resolvedVoteCompressorSpeedErd = Erd_CompressorSpeed_ResolvedVote,
+   .compressorIsOnErd = Erd_CompressorIsOn
 };
 
 static CompressorSpeedDriver_t instance;
@@ -61,7 +63,8 @@ TEST_GROUP(CompressorSpeedDriver_SingleSpeed)
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
+      CompressorVotedSpeed_t vote = { speed, Vote_Care };
+      DataModel_Write(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
    }
 };
 
@@ -130,16 +133,6 @@ TEST(CompressorSpeedDriver_SingleSpeed, ShouldTurnOnCompressorRelayWhenCompresso
    CompressorRelayShouldBe(ON);
 }
 
-TEST(CompressorSpeedDriver_SingleSpeed, ShouldTurnOnCompressorRelayWhenCompressorSpeedIsStartup)
-{
-   Given CompressorRelayIs(OFF);
-   Given CompressorSpeedIs(CompressorSpeed_Off);
-   Given TheModuleIsInitialized();
-
-   When CompressorSpeedIs(CompressorSpeed_Startup);
-   CompressorRelayShouldBe(ON);
-}
-
 TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnabled)
 {
    ReferDataModel_TestDouble_t dataModelTestDouble;
@@ -165,7 +158,8 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnab
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
+      CompressorVotedSpeed_t vote = { .speed = speed, .care = Vote_Care };
+      DataModel_Write(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
    }
 
    void CompressorFrequencyShouldBe(uint16_t expected)
@@ -195,7 +189,7 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnabled, S
    Given CompressorSpeedIs(CompressorSpeed_Off);
    Given TheModuleIsInitialized();
 
-   When CompressorSpeedIs(CompressorSpeed_Startup);
+   When CompressorSpeedIs(compressorSpeeds->startupSpeedFrequencyInHz);
    CompressorFrequencyShouldBe(compressorSpeeds->startupSpeedFrequencyInHz);
 }
 
@@ -306,20 +300,10 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnabled, S
    CompressorRelayShouldBe(ON);
 }
 
-TEST(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnabled, ShouldTurnOnCompressorRelayWhenCompressorSpeedIsStartupAndRelayIsEnabled)
-{
-   Given CompressorRelayIs(OFF);
-   Given CompressorSpeedIs(CompressorSpeed_Off);
-   Given TheModuleIsInitialized();
-
-   When CompressorSpeedIs(CompressorSpeed_Startup);
-   CompressorRelayShouldBe(ON);
-}
-
 TEST(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnabled, ShouldTurnOffCompressorRelayWhenCompressorSpeedIsOffAndRelayIsEnabled)
 {
    Given CompressorRelayIs(ON);
-   Given CompressorSpeedIs(CompressorSpeed_Startup);
+   Given CompressorSpeedIs(CompressorSpeed_High);
    Given TheModuleIsInitialized();
 
    When CompressorSpeedIs(CompressorSpeed_Off);
@@ -351,7 +335,8 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabl
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
+      CompressorVotedSpeed_t vote = { .speed = speed, .care = Vote_Care };
+      DataModel_Write(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
    }
 
    void CoolingModeIs(CoolingMode_t mode)
@@ -384,6 +369,13 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabl
 
       CHECK_EQUAL(expected, actual);
    }
+
+   void CompressorIsOnErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_CompressorIsOn, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
 };
 
 TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldUpdateCompressorFrequencyWithStartUpSpeedFrequencyWhenCompressorSpeedIsStartup)
@@ -391,7 +383,7 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, Sh
    Given CompressorSpeedIs(CompressorSpeed_Off);
    Given TheModuleIsInitialized();
 
-   When CompressorSpeedIs(CompressorSpeed_Startup);
+   When CompressorSpeedIs(compressorSpeeds->startupSpeedFrequencyInHz);
    CompressorFrequencyShouldBe(compressorSpeeds->startupSpeedFrequencyInHz);
 }
 
@@ -681,6 +673,7 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, Sh
 
    When CompressorSpeedIs(CompressorSpeed_Medium);
    CompressorRelayShouldBe(OFF);
+   CompressorIsOnErdShouldBe(ON);
 }
 
 TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldTurnOnCompressorRelayWhenCompressorSpeedIsHighAndRelayIsDisabled)
@@ -691,6 +684,7 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, Sh
 
    When CompressorSpeedIs(CompressorSpeed_High);
    CompressorRelayShouldBe(OFF);
+   CompressorIsOnErdShouldBe(ON);
 }
 
 TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldTurnOffCompressorRelayWhenCompressorSpeedIsSuperHighAndRelayIsDisabled)
@@ -701,24 +695,26 @@ TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, Sh
 
    When CompressorSpeedIs(CompressorSpeed_SuperHigh);
    CompressorRelayShouldBe(OFF);
-}
-
-TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldTurnOffCompressorRelayWhenCompressorSpeedIsStartupAndRelayIsDisabled)
-{
-   Given CompressorRelayIs(ON);
-   Given CompressorSpeedIs(CompressorSpeed_Off);
-   Given TheModuleIsInitialized();
-
-   When CompressorSpeedIs(CompressorSpeed_Startup);
-   CompressorRelayShouldBe(OFF);
+   CompressorIsOnErdShouldBe(ON);
 }
 
 TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldTurnOffCompressorRelayWhenCompressorSpeedIsOffAndRelayIsDisabled)
 {
    Given CompressorRelayIs(ON);
-   Given CompressorSpeedIs(CompressorSpeed_Startup);
+   Given CompressorSpeedIs(CompressorSpeed_High);
    Given TheModuleIsInitialized();
 
    When CompressorSpeedIs(CompressorSpeed_Off);
    CompressorRelayShouldBe(OFF);
+   CompressorIsOnErdShouldBe(OFF);
+}
+
+TEST(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabled, ShouldHandleCompressorSpeedAsFrequencyInHz)
+{
+   Given CompressorRelayIs(ON);
+   Given CompressorSpeedIs(CompressorSpeed_High);
+   Given TheModuleIsInitialized();
+
+   When CompressorSpeedIs(200);
+   CompressorFrequencyShouldBe(200);
 }

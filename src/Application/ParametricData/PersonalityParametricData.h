@@ -14,13 +14,15 @@
 #include "FanData.h"
 #include "GridData.h"
 #include "ConvertibleCompartmentData.h"
+#include "IceCabinetData.h"
+#include "FeaturePanData.h"
 #include "SensorData.h"
 #include "PlatformData.h"
 #include "SystemMonitorData.h"
 #include "EnhancedSabbathData.h"
 #include "CompressorData.h"
 #include "SetpointData.h"
-#include "CabinetOffsetData.h"
+#include "ThermalOffsetData.h"
 #include "BspParametricConfiguration.h"
 #include "DamperData.h"
 #include "DamperHeaterData.h"
@@ -37,6 +39,7 @@
 #include "CabinetTemperatureExceededData.h"
 #include "SealedSystemValveData.h"
 #include "FreshFoodNonHeatedCycleDefrostData.h"
+#include "FeaturePanData.h"
 
 enum
 {
@@ -52,13 +55,20 @@ typedef struct
    const CombinedFanData_t *fanData;
    const GridData_t *freshFoodAndFreezerGridData;
    const GridData_t *featurePanGridData;
+   const GridData_t *iceCabinetGridData;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;
+   const FeaturePanData_t *featurePanData;
+   const IceCabinetData_t *iceCabinetData;
    const SensorData_t *sensorData;
    const SystemMonitorData_t *systemMonitorData;
    const CompressorData_t *compressorData;
    const SetpointData_t *setpointData;
-   const CabinetOffsetData_t *cabinetOffsetData;
+   const FreshFoodThermalOffsetData_t *freshFoodThermalOffsetData;
+   const FreezerThermalOffsetData_t *freezerThermalOffsetData;
+   const FeaturePanThermalOffsetData_t *featurePanThermalOffsetData;
+   const IceCabinetThermalOffsetData_t *iceCabinetThermalOffsetData;
+   const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
    const BspParametricConfiguration_t *bspConfigurationData;
    const DamperData_t *damperData;
    const DamperHeaterData_t *damperHeaterData;

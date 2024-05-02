@@ -42,7 +42,7 @@ TEST_GROUP(Grid_SingleDoorSingleEvap)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SingleDoorSingleEvap_Init(&singleDoorSingleEvapConstArrayMap));
+      DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SingleDoorSingleEvap_Init(&singleDoorSingleEvapConstArrayMap));
    }
 
    void GivenGridBlockIs(GridBlockNumber_t actual)
@@ -297,7 +297,7 @@ TEST(Grid_SingleDoorSingleEvap, ShouldOutputCorrectValuesForBlocks22And46IfGiven
 
       CoolingSpeedShouldBe(CoolingSpeed_Low);
       TheIceMakerEnableShouldBe(ENABLED);
-      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       GridAreaShouldBe(GridArea_2);
       GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low);
    }
@@ -310,7 +310,7 @@ TEST(Grid_SingleDoorSingleEvap, ShouldOutputCorrectValuesForBlocks22And46IfGiven
    {
       GivenGridBlockIs(gridBlockNumbers[i]);
       GivenTheIceMakerEnableIs(DISABLED);
-      GivenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
       BothThermistorsAreValid();
       GivenCoolingSpeedIs(CoolingSpeed_High);
       GivenGridAreaIs(GridArea_1);

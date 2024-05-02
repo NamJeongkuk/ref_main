@@ -10,7 +10,7 @@
 
 #include "I_DataModel.h"
 #include "EventSubscription.h"
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 
 typedef struct
 {

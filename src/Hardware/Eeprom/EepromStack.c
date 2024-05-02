@@ -9,7 +9,7 @@
 #include "InputOutput_Simple.h"
 #include "SimpleStorage.h"
 #include "Eeprom_HardwareEeprom.h"
-#include "HardwareEeprom_I2cMt24xxmmm_temp.h"
+#include "HardwareEeprom_I2cMt24xxmmm.h"
 #include "I2c_Rx130SerialChannel0.h"
 #include "ContextProtector_Rx2xx.h"
 #include "utils.h"

@@ -23,6 +23,19 @@ return function(core)
           u16(config.grid_periodic_run_rate_in_msec)
         )
       )
+    elseif config.grid_id == grid_id_type.grid_ice_cabinet then
+      return TypedString(
+        { 'ice_cabinet_grid' },
+        structure(
+          u8(config.grid_id),
+          pointer(config.grid_deltas),
+          u8(0),
+          u8(config.grid_invalid_thermistor_fallback_block),
+          i16(config.minimum_cross_ambient_adjusted_hysteresis_in_degfx100),
+          u16(config.cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf),
+          u16(config.grid_periodic_run_rate_in_msec)
+        )
+      )
     else
       return TypedString(
         { 'fresh_food_and_freezer_grid' },
@@ -57,7 +70,7 @@ return function(core)
         cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = { constraint.u16 },
       })
 
-    if config.grid_id == grid_id_type.grid_feature_pan then
+    if config.grid_id == grid_id_type.grid_feature_pan or config.grid_id == grid_id_type.grid_ice_cabinet then
       validate_arguments(
         config,
         {

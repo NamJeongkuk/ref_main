@@ -11,7 +11,6 @@ describe('ConvertibleCompartment', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      has_convertible_compartment = true,
       cabinet_threshold_in_degfx100 = 2000
     }, overrides or {})
   end
@@ -28,18 +27,9 @@ describe('ConvertibleCompartment', function()
     end)
   end)
 
-  it('should assert if has_convertible_compartment is not a bool', function()
-    should_fail_with('has_convertible_compartment must be of type boolean but is of type string', function()
-      convertible_compartment(generate_config({
-        has_convertible_compartment = "📮 true 📮"
-      }))
-    end)
-  end)
-
   it('should generate a typed string with the correct data and type convertible_compartment', function()
     local expected = remove_whitespace([[
       structure(
-        bool(true),
         i16(2000)
       )
     ]])

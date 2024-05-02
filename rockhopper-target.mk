@@ -92,10 +92,12 @@ SRC_DIRS:=\
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \
   src/Application/Heater \
+  src/Application/IceCabinet \
   src/Application/IceMaker \
   src/Application/IceMaker/IceMakerSlots \
   src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/IceMaker/TwistTrayIceMaker \
+  src/Application/IceCabinet \
   src/Application/IsolationWaterValve \
   src/Application/Lighting \
   src/Application/Notifications \
@@ -158,7 +160,6 @@ include lib_refercommon.mk
 
 PARAMETRIC_HASH:=$(shell cd Parametric && git rev-parse --short HEAD)
 
-PACKAGE_CONTENTS:=
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/doc', to = 'doc' })
 $(call add_to_package,{ from = 'doc/*.json', to = 'doc' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
@@ -181,7 +182,7 @@ build_all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
-target: erd_definitions nv_usage_report
+target: erd_definitions nv_usage_report erd_lock
 
 .PHONY: package
 package: build_all artifacts erd_lock
@@ -201,7 +202,7 @@ $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
 
 .PHONY: upload
-upload: $(call upload_deps,all jlink_tools)
+upload: $(call upload_deps,all jlink_tools) erd_lock
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot)
 
 .PHONY: clean

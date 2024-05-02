@@ -805,8 +805,6 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          RequestFeelerArmMonitoring(instance);
 
          TriggerFreezerIceRateIfNecessary(instance);
-
-         instance->_private.initialFreezeStateTransition = false;
          break;
 
       case Signal_FreezerIceRateIsInactive:
@@ -831,6 +829,7 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         instance->_private.initialFreezeStateTransition = false;
          StopHarvestCountCalculation(instance);
          StopFeelerArmMonitoring(instance);
          break;
@@ -1153,7 +1152,12 @@ static void DataModelChanged(void *context, const void *args)
 
    if(erd == instance->_private.config->harvestCountIsReadyToHarvestErd)
    {
-      Hsm_SendSignal(&instance->_private.hsm, Signal_HarvestCountIsReadyToHarvest, NULL);
+      const bool *readyToHarvest = onChangeData->data;
+
+      if(*readyToHarvest)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_HarvestCountIsReadyToHarvest, NULL);
+      }
    }
    else if(erd == instance->_private.config->moldFilteredTemperatureInDegFx100Erd)
    {
@@ -1165,7 +1169,12 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->feelerArmIsReadyToEnterHarvestErd)
    {
-      Hsm_SendSignal(&instance->_private.hsm, Signal_FeelerArmIsReadyToEnterHarvest, NULL);
+      const bool *readyToHarvest = onChangeData->data;
+
+      if(*readyToHarvest)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FeelerArmIsReadyToEnterHarvest, NULL);
+      }
    }
    else if((erd == instance->_private.config->sabbathModeErd) ||
       (erd == instance->_private.config->enhancedSabbathModeErd))

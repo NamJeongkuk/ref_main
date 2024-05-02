@@ -12,7 +12,8 @@ return function(core)
       { 'user_setpoint_data' },
       structure(
         pointer(config.fresh_food_user_setpoint),
-        pointer(config.freezer_user_setpoint)
+        pointer(config.freezer_user_setpoint),
+        pointer(config.feature_pan_user_setpoints)
       )
     )
   end)
@@ -22,7 +23,8 @@ return function(core)
       config,
       {
         fresh_food_user_setpoint = { constraint.typed_string('user_setpoint') },
-        freezer_user_setpoint = { constraint.typed_string('user_setpoint') }
+        freezer_user_setpoint = { constraint.typed_string('user_setpoint') },
+        feature_pan_user_setpoints = { constraint.typed_string('feature_pan_user_setpoints') }
       })
     return generate(config)
   end

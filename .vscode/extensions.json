@@ -1,5 +1,6 @@
 {
    "recommendations": [
-      "gea-embedded.gea-build-tools"
+      "gea-embedded.gea-build-tools",
+      "esbenp.prettier-vscode",
    ]
 }

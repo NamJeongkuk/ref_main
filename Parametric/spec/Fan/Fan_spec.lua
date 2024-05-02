@@ -136,7 +136,6 @@ describe('Fan', function()
   it('should generate a typed string with the correct data with valve rpm table and type fan', function()
     local expected = remove_whitespace([[
       structure(
-        bool(false),
         u8(4),
         u8(2),
         bool(false),
@@ -171,6 +170,14 @@ describe('Fan', function()
           u8(1),
           u16(0)
         ),
+        structure(
+          u8(1),
+          u16(0)
+        ),
+        structure(
+          u8(1),
+          u16(0)
+        ),
         i16(0),
         u16(0)
       )
@@ -193,7 +200,6 @@ describe('Fan', function()
   it('should generate a typed string with the correct data with valve care about cooling mode rpm table and type fan', function()
     local expected = remove_whitespace([[
       structure(
-        bool(false),
         u8(4),
         u8(2),
         bool(true),
@@ -220,6 +226,14 @@ describe('Fan', function()
             u8(13)
           ),
         pointer(fan_care_about_cooling_mode_speed_table),
+        structure(
+          u8(1),
+          u16(0)
+        ),
+        structure(
+          u8(1),
+          u16(0)
+        ),
         structure(
           u8(1),
           u16(0)

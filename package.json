@@ -1,31 +1,22 @@
 {
-   "name": "rockhopper-mainboard",
-   "version": "1.0.0",
-   "description": "Integration tests for Rockhopper Mainboard",
-   "scripts": {
-      "lint": "eslint 'test/Tests/Integration/**/*.js'",
-      "fix": "eslint 'test/Tests/Integration/**/*.js' --fix",
-      "integration": "jasmine --config=test/Tests/Integration/support/jasmine.json"
-   },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/geappliances/refrigeration.rockhopper-mainboard.git"
-   },
-   "author": "",
-   "license": "ISC",
-   "bugs": {
-      "url": "https://github.com/geappliances/refrigeration.rockhopper-mainboard/issues"
-   },
-   "homepage": "https://github.com/geappliances/refrigeration.rockhopper-mainboard#readme",
-   "dependencies": {
-      "erd-core": "git+https://github.com/geappliances/PCToolsJavascript.erd-core.git#a5c6c3a",
-      "gea-communication": "git+https://github.com/geappliances/PCToolsJavascript.gea-communication#549e5b9",
-      "javascript-common": "git+https://github.com/geappliances/PCToolsJavascript.javascript-common.git#531bb4c"
-   },
-   "devDependencies": {
-      "eslint": "^6.8.0",
-      "jasmine": "^3.5.0",
-      "mach.js": "^0.8.0",
-      "proxyquire": "^2.1.3"
-   }
+  "name": "rockhopper-mainboard",
+  "version": "1.0.0",
+  "description": "Node Integration for Rockhopper Mainboard",
+  "scripts": {
+    "bench_test": "jasmine --config=./test/AutomatedBenchTests/setup/jasmine.json || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geappliances/refrigeration.rockhopper-mainboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geappliances/refrigeration.rockhopper-mainboard/issues"
+  },
+  "homepage": "https://github.com/geappliances/refrigeration.rockhopper-mainboard#readme",
+  "dependencies": {
+    "integration-testing-tools": "git+https://github.com/geappliances/applcommon.integration-testing-tools.git#v1.0.9",
+    "lodash": "4.17.21"
+  }
 }

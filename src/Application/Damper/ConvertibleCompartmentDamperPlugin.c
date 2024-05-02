@@ -43,7 +43,7 @@ static const ErdResolverConfiguration_t damperHeaterErdResolverConfiguration = {
 };
 
 static const DamperRequestManagerConfiguration_t requestManagerConfig = {
-   .damperPositionRequestResolvedVoteErd = Erd_ConvertibleCompartmentDamperPosition_ResolvedVote,
+   .damperPositionRequestResolvedVoteErd = Erd_ConvertibleCompartmentDamperPosition_ResolvedVoteWithSabbathDelay,
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
@@ -59,9 +59,9 @@ static const DamperFreezePreventionConfiguration_t damperFreezePreventionConfig 
    .damperHeaterVoteErd = Erd_DamperHeater_DamperFreezePreventionVote,
    .damperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DamperFreezePreventionVote,
    .sourceThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
-   .targetThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   .targetThermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
    .sourceFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
-   .targetFilteredTemperatureErd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
+   .targetFilteredTemperatureErd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
    .timerModuleErd = Erd_TimerModule,
    .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState
@@ -71,6 +71,12 @@ static const DamperHeaterDefrostControlConfig_t damperHeaterDefrostControlConfig
    .defrostHeaterStateErd = Erd_FreezerDefrostHeaterRelay,
    .damperHeaterDefrostHeaterSyncVoteErd = Erd_DamperHeater_DefrostHeaterSyncVote,
    .defrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote
+};
+
+static const SabbathDelayHandlerConfiguration_t sabbathDelayConfig = {
+   .compressorResolvedVote = Erd_CompressorSpeed_ResolvedVote,
+   .loadResolvedVote = Erd_ConvertibleCompartmentDamperPosition_ResolvedVote,
+   .loadResolvedVoteWithSabbathDelay = Erd_ConvertibleCompartmentDamperPosition_ResolvedVoteWithSabbathDelay
 };
 
 void ConvertibleCompartmentDamperPlugin_Init(
@@ -86,6 +92,11 @@ void ConvertibleCompartmentDamperPlugin_Init(
       &instance->_private.damperHeaterErdResolver,
       DataModel_AsDataSource(dataModel),
       &damperHeaterErdResolverConfiguration);
+
+   SabbathDelayHandler_Init(
+      &instance->_private.sabbathDelayHandler,
+      dataModel,
+      &sabbathDelayConfig);
 
    DamperMotorPlugin_Init(
       &instance->_private.damperMotorPlugin,

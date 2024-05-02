@@ -14,20 +14,11 @@
 #include "DeltaGridLines.h"
 #include "PersonalityParametricData.h"
 
-typedef void (*GridFunction_t)(void *context);
-
-typedef struct
-{
-   const GridFunction_t *grids;
-   uint8_t numOfGrids;
-} GridFunctionArray_t;
-
 typedef struct
 {
    Erd_t timerModuleErd;
    Erd_t gridOverrideSignalErd; // Signal_t
    Erd_t gridOverrideEnableErd; // bool
-   const GridFunctionArray_t *gridFunctions;
 } GridConfiguration_t;
 
 typedef struct
@@ -40,18 +31,29 @@ typedef struct
       Timer_t gridTimer;
       EventSubscription_t gridOverrideEnableSubscription;
       EventSubscription_t gridOverrideSignalSubscription;
+
+      /*!
+       * Grid function to run.
+       * @pre Run(context)
+       * @param context DataModel context object
+       */
+      void (*gridFunction)(void *context);
    } _private;
 } Grid_t;
 
 /*!
  * Initialize a Grid Module
  * @param instance The object instance.
- * @param configuration contains erds and other unique configs for instance.
  * @param dataModel instance of dataModel
+ * @param configuration contains erds and other unique configs for instance.
+ * @param gridData contains grid data information for specific grid in use.
+ * @param gridFunction "run" function of the grid to use
  */
 void Grid_Init(
    Grid_t *instance,
+   I_DataModel_t *dataModel,
    const GridConfiguration_t *configuration,
-   I_DataModel_t *dataModel);
+   const GridData_t *gridData,
+   void (*gridFunction)(void *context));
 
 #endif

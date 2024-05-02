@@ -838,6 +838,11 @@ TEST_GROUP(AluminumMoldIceMaker)
       DataModel_Write(dataModel, Erd_Freezer_IceRateIsActive, &state);
    }
 
+   void WhenIceRateIsActiveIs(bool state)
+   {
+      GivenIceRateActiveErdStateIs(state);
+   }
+
    void WhenIceRateActiveErdStateBecomes(bool state)
    {
       GivenIceRateActiveErdStateIs(state);
@@ -1886,8 +1891,9 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
    FreezerTriggerIceRateSignalShouldBe(0);
 
    WhenReadyToEnterHarvest();
-   FreezerTriggerIceRateSignalShouldBe(1);
+   FreezerTriggerIceRateSignalShouldBe(0);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
+   WhenHarvestCountIsNotReadyToHarvest();
 
    After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_HarvestFix);
@@ -1896,18 +1902,24 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
    WhenMotorOnTimeExpiresAndRakeRequestIsClearedThenMotorOffTimeExpiresAndRakeRequestIsSet();
    WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
-   FreezerTriggerIceRateSignalShouldBe(2);
 
-   WhenHarvestCountIsNotReadyToHarvest();
+   FreezerTriggerIceRateSignalShouldBe(1);
+   WhenIceRateIsActiveIs(true);
+
+   WhenIceRateIsActiveIs(false);
+   FreezerTriggerIceRateSignalShouldBe(2);
+   WhenIceRateIsActiveIs(true);
+
+   WhenIceRateIsActiveIs(false);
    FreezerTriggerIceRateSignalShouldBe(3);
 
-   WhenFeelerArmIsNotReadyToEnterHarvest();
+   WhenIceRateIsActiveIs(true);
+
+   WhenIceRateIsActiveIs(false);
    FreezerTriggerIceRateSignalShouldBe(4);
 
-   WhenHarvestCountIsReadyToHarvest();
-   FreezerTriggerIceRateSignalShouldBe(5);
-
    WhenFeelerArmIsReadyToEnterHarvest();
+   WhenHarvestCountIsReadyToHarvest();
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 
    WhenRakeCompletedRevolutionIsCleared();
@@ -1918,7 +1930,7 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
    WhenMotorOnTimeExpiresAndRakeRequestIsClearedThenMotorOffTimeExpiresAndRakeRequestIsSet();
    WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
-   FreezerTriggerIceRateSignalShouldBe(6);
+   FreezerTriggerIceRateSignalShouldBe(5);
 }
 
 TEST(AluminumMoldIceMaker, ShouldNotTriggerFreezerIceRateWhenSabbathModeEnabledAndIceMakerDisabled)
@@ -1971,7 +1983,7 @@ TEST(AluminumMoldIceMaker, ShouldNotTriggerFreezerIceRateWhenBucketIsFull)
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
 }
 
-TEST(AluminumMoldIceMaker, ShouldTriggerFreezerIceRateWhenBucketIsNotFullAndSabbathModeDisabledAndIceMakerEnabled)
+TEST(AluminumMoldIceMaker, ShouldNotTriggerFreezerIceRateWhenBucketIsNotFullAndSabbathModeDisabledAndIceMakerEnabledIfItsTheFirstFreezeAfterPowerUp)
 {
    GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
    GivenFeelerArmIsNotReadyToEnterHarvest();
@@ -1979,14 +1991,14 @@ TEST(AluminumMoldIceMaker, ShouldTriggerFreezerIceRateWhenBucketIsNotFullAndSabb
 
    WhenBucketIsNotFull();
    WhenSabbathModeIs(DISABLED);
-   FreezerTriggerIceRateSignalShouldBe(1);
+   FreezerTriggerIceRateSignalShouldBe(0);
 
    WhenSabbathModeIs(ENABLED);
    WhenSabbathModeIs(DISABLED);
-   FreezerTriggerIceRateSignalShouldBe(2);
+   FreezerTriggerIceRateSignalShouldBe(0);
 }
 
-TEST(AluminumMoldIceMaker, ShouldTriggerFreezerIceRateWhenFreezerIceRateAlgorithmCompletesWhileInFreezeState)
+TEST(AluminumMoldIceMaker, ShouldNotTriggerFreezerIceRateWhenFreezerIceRateAlgorithmCompletesWhileInFirstFreezeStateAfterPowerUp)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
    GivenFeelerArmIsNotReadyToEnterHarvest();
@@ -1996,11 +2008,11 @@ TEST(AluminumMoldIceMaker, ShouldTriggerFreezerIceRateWhenFreezerIceRateAlgorith
    WhenBucketIsNotFull();
    WhenIceRateActiveErdStateBecomes(CLEAR);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
-   FreezerTriggerIceRateSignalShouldBe(1);
+   FreezerTriggerIceRateSignalShouldBe(0);
 
    WhenIceRateActiveErdStateBecomes(SET);
    WhenIceRateActiveErdStateBecomes(CLEAR);
-   FreezerTriggerIceRateSignalShouldBe(2);
+   FreezerTriggerIceRateSignalShouldBe(0);
 }
 
 TEST(AluminumMoldIceMaker, ShouldNotRetriggerFreezerIceRateWhenFreezerIceRateIsActive)

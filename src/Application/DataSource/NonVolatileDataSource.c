@@ -6,7 +6,6 @@
  */
 
 #include "NonVolatileDataSource.h"
-#include "Action_Context.h"
 #include "InputGroup_Null.h"
 #include "Constants_Binary.h"
 #include "utils.h"
@@ -34,8 +33,8 @@ static const ConstArrayMap_BinarySearchConfiguration_t syncMapConfiguration = {
 
 static void MarkReady(void *context)
 {
-   REINTERPRET(ready, context, bool *);
-   *ready = true;
+   NonVolatileDataSource_t *instance = context;
+   instance->_private.ready = true;
 }
 
 STATIC_ASSERT(NUM_ELEMENTS(syncMapElements) < (MEMBER_SIZE(NonVolatileDataSource_t, _private.syncMetadataCache) * BitsPerByte));
@@ -46,13 +45,20 @@ void NonVolatileDataSource_Init(
    I_Action_t *watchdog,
    I_AsyncDataSource_t *async)
 {
-   bool ready = false;
-   Action_Context_t onReadyAction;
-   Action_Context_Init(&onReadyAction, &ready, MarkReady);
+   instance->_private.ready = false;
+   Action_Context_Init(
+      &instance->_private.onReadyAction,
+      instance,
+      MarkReady);
 
    ConstArrayMap_BinarySearch_Init(&instance->_private.syncMap, &syncMapConfiguration);
 
-   TimerModule_StartOneShot(timerModule, &instance->_private.timeout, EepromMissingTimeoutTicks, MarkReady, &ready);
+   TimerModule_StartOneShot(
+      timerModule,
+      &instance->_private.timeout,
+      EepromMissingTimeoutTicks,
+      MarkReady,
+      instance);
 
    DataSource_CachedAsyncDataSource_Init(
       &instance->_private.sync,
@@ -62,10 +68,10 @@ void NonVolatileDataSource_Init(
       &instance->_private.syncCache,
       sizeof(instance->_private.syncCache),
       &instance->_private.syncWriteCache,
-      &onReadyAction.interface,
+      &instance->_private.onReadyAction.interface,
       Erd_NonVolatileDataSourceCacheSyncState);
 
-   while(!ready)
+   while(!instance->_private.ready)
    {
       Action_Invoke(watchdog);
       TimerModule_Run(timerModule);

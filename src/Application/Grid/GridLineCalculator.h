@@ -8,7 +8,7 @@
 #ifndef GRIDLINECALCULATOR_H
 #define GRIDLINECALCULATOR_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "CalculatedGridLines.h"
 #include "EventSubscription.h"
 #include "GridData.h"
@@ -25,6 +25,7 @@ typedef struct
 {
    Erd_t calculatedGridLineErd; // TwoDimensionalCalculatedGridLines_t
    Erd_t crossAmbientHysteresisAdjustmentErd; // TemperatureDegFx100_t
+   Erd_t gridDeltaOffsetErd; // uint8_t
    const GridLineAdjustmentErds_t gridLineAdjustmentErds[CalculatedGridLines_MaxGridDimensionsCount];
 } GridLineCalculatorConfiguration_t;
 

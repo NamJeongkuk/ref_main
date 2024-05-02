@@ -87,15 +87,15 @@ TEST_GROUP(SensorsIntegrationFourDoor)
    void ConvertibleCompartmentFilteredTemperatureResolvedValueShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100, &actual);
+      DataModel_Read(dataModel, Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
    void GivenConvertibleFilteredOverrideIsEnabledWithValue(TemperatureDegFx100_t overrideValue)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest, enabled);
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100, &overrideValue);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureOverrideRequest, enabled);
+      DataModel_Write(dataModel, Erd_FeaturePan_FilteredTemperatureOverrideValueInDegFx100, &overrideValue);
    }
 
    void WhenConvertibleFilteredOverrideIsEnabledWithValue(TemperatureDegFx100_t overrideValue)

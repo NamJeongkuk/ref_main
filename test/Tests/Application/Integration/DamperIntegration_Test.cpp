@@ -556,34 +556,6 @@ TEST(DamperIntegration, ShouldResetMinimumTemperatureChangeTimerWhenDamperPositi
    FreezePreventionDamperPositionVoteShouldBeOpenAndCare();
 }
 
-TEST(DamperIntegration, ShouldContinueRequestingForDamperToCloseWhenMaxTimeOpenIsReachedButIsNotThePriority)
-{
-   GivenThatTheApplicationHasStartedAndDamperIsInMonitoringTemperatureChangesState();
-   When HomingHasCompleted();
-
-   When FactoryDamperPositionVoteIsOpenAndCare();
-   And TargetTemperatureIs(InitialTemperatureInDegFx100);
-   And StepsAreSetToZero();
-   DamperCurrentPositionShouldBe(DamperPosition_Open);
-
-   // This lowers the temperature periodically so as to prevent the damper freeze prevention from closing damper.
-   // Also this assumes that the max open time is a multiple of the the minimum temperature change time.
-   for(int i = 1; i <= (damperData->maxTimeForDamperToBeOpenInMinutes / damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
-   {
-      TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
-      After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
-      FreezePreventionDamperPositionVoteShouldBeDontCare();
-   }
-
-   DamperPositionShouldBeDamperClosedAndCareForMaxOpenTimeVote();
-   DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_FactoryVote);
-   DamperPositionResolvedVoteShouldBe(DamperPosition_Open);
-
-   When FactoryDamperPositionVoteIsOpenAndDontCare();
-   DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
-   DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_MaxOpenTimeVote);
-}
-
 TEST(DamperIntegration, ShouldCloseDamperWhenDefrostVotesForDamperOpenAndThenMaxOpenTimeoutIsReached)
 {
    GivenThatTheApplicationHasStartedAndDamperIsInMonitoringTemperatureChangesState();

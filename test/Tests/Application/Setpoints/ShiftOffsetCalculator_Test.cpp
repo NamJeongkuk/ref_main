@@ -28,20 +28,46 @@ enum
 {
    SomeAdjustedSetpointInDegFx100 = 100,
    SomeShiftOffset = 5,
-   Beta = 3
+   Beta = 3,
+   Average1Low = 20,
 };
 
 static const ShiftOffsetCalculatorConfig_t config = {
    .filteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
-   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointWithoutShiftErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
-   .timerModuleErd = Erd_TimerModule,
    .postDwellCompletionSignalErd = Erd_PostDwellCompletionSignal,
    .resetThermalShiftOffsetSignalErd = Erd_FreshFood_ResetThermalShiftOffsetSignal,
    .longTermAverageErd = Erd_FreshFood_LongTermAverageInDegFx100,
-   .adjustedSetpointPluginReadyErd = Erd_AdjustedSetpointPluginReady
 };
+
+static void OnChange(void *context, const void *args)
+{
+   I_DataModel_t *dataModel = (I_DataModel_t *)context;
+   const DataModelOnDataChangeArgs_t *dataChangeArgs = (const DataModelOnDataChangeArgs_t *)args;
+
+   switch(dataChangeArgs->erd)
+   {
+      case Erd_FreshFood_ThermalShiftInDegFx100:
+      case Erd_FreshFood_AdjustedSetpointInDegFx100:
+         break;
+
+      default:
+         return;
+   }
+
+   TemperatureDegFx100_t setpoint;
+   DataModel_Read(dataModel, Erd_FreshFood_AdjustedSetpointInDegFx100, &setpoint);
+
+   TemperatureDegFx100_t shift;
+   DataModel_Read(dataModel, Erd_FreshFood_ThermalShiftInDegFx100, &shift);
+
+   setpoint -= shift;
+
+   DataModel_Write(dataModel,
+      Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+      &setpoint);
+}
 
 TEST_GROUP(ShiftOffsetCalculator)
 {
@@ -54,6 +80,8 @@ TEST_GROUP(ShiftOffsetCalculator)
    ReferDataModel_TestDouble_t dataModelDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
 
+   EventSubscription_t subscription;
+
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
@@ -61,12 +89,14 @@ TEST_GROUP(ShiftOffsetCalculator)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       shiftOffsetCalculatorData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->shiftOffsetCalculatorData;
+         PersonalityParametricData_Get(dataModel)->shiftOffsetCalculatorData;
       shiftOffsetData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->shiftOffsetData;
+         PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->shiftOffsetData;
 
       Filter_LongTermAverage_Init(&longTermAverageFilter, Beta);
-      AdjustedSetpointPluginReadyIs(SET);
+
+      EventSubscription_Init(&subscription, dataModel, OnChange);
+      DataModel_SubscribeAll(dataModel, &subscription);
    }
 
    void TheModuleIsInitialized()
@@ -75,6 +105,7 @@ TEST_GROUP(ShiftOffsetCalculator)
          &instance,
          dataModel,
          &longTermAverageFilter.interface,
+         &timerModuleTestDouble->timerModule,
          &config,
          shiftOffsetData);
    }
@@ -93,14 +124,6 @@ TEST_GROUP(ShiftOffsetCalculator)
    {
       TemperatureDegFx100_t actual;
       DataModel_Read(dataModel, Erd_FreshFood_ThermalShiftInDegFx100, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void AdjustedSetpointWithoutShiftShouldBe(TemperatureDegFx100_t expected)
-   {
-      TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -137,18 +160,7 @@ TEST_GROUP(ShiftOffsetCalculator)
    {
       Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_FreshFood_ResetThermalShiftOffsetSignal);
    }
-
-   void AdjustedSetpointPluginReadyIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, &state);
-   }
 };
-
-TEST(ShiftOffsetCalculator, ShouldAssertWhenAdjustedSetpointPluginReadyIsClearOnInit)
-{
-   Given AdjustedSetpointPluginReadyIs(CLEAR);
-   ShouldFailAssertion(TheModuleIsInitialized());
-}
 
 TEST(ShiftOffsetCalculator, ShouldResetShiftOffsetToZeroOnInit)
 {
@@ -185,34 +197,6 @@ TEST(ShiftOffsetCalculator, ShouldFeedFilteredTemperatureEveryLongTermAverageUpd
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + 14);
 }
 
-TEST(ShiftOffsetCalculator, ShouldCalculateAdjustedSetpointWithoutShiftAndShiftOffsetEveryShiftUpdateTime)
-{
-   Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
-   Given TheModuleIsInitialized();
-   ShiftOffsetShouldBe(0);
-
-   When FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 + 200);
-   After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   AdjustedSetpointWithoutShiftShouldBe(0);
-   And ShiftOffsetShouldBe(0);
-   And LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + 21);
-
-   When FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100);
-   After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100);
-   And ShiftOffsetShouldBe(-2);
-
-   After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100);
-   And ShiftOffsetShouldBe(-2);
-   And LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + 43);
-
-   When FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 + 21);
-   After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 + 2);
-   And ShiftOffsetShouldBe(-4);
-}
-
 TEST(ShiftOffsetCalculator, ShouldNotCalculateShiftOffsetWhenLongTermAverageIsEqualToAdjustedSetpointMinusLowerAdjustmentLimit)
 {
    Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
@@ -221,12 +205,10 @@ TEST(ShiftOffsetCalculator, ShouldNotCalculateShiftOffsetWhenLongTermAverageIsEq
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(0);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100 + shiftOffsetData->lowerAdjustmentLimitInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 + shiftOffsetData->lowerAdjustmentLimitInDegFx100);
    ShiftOffsetShouldBe(0);
 }
 
@@ -238,12 +220,10 @@ TEST(ShiftOffsetCalculator, ShouldNotCalculateShiftOffsetWhenLongTermAverageIsLe
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - shiftOffsetData->lowerAdjustmentLimitInDegFx100 - 1);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(0);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100);
    ShiftOffsetShouldBe(0);
 }
 
@@ -255,12 +235,10 @@ TEST(ShiftOffsetCalculator, ShouldNotCalculateShiftOffsetWhenLongTermAverageIsGr
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + shiftOffsetData->upperAdjustmentLimitInDegFx100 + 1);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(0);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100);
    ShiftOffsetShouldBe(0);
 }
 
@@ -272,12 +250,10 @@ TEST(ShiftOffsetCalculator, ShouldNotCalculateShiftOffsetWhenLongTermAverageIsEq
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + shiftOffsetData->upperAdjustmentLimitInDegFx100);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(0);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100);
    ShiftOffsetShouldBe(0);
 }
 
@@ -290,12 +266,10 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetMinusTenWhenLong
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + 101);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 - SomeShiftOffset);
    ShiftOffsetShouldBe(SomeShiftOffset - 10);
 }
 
@@ -308,12 +282,10 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetMinusTwoWhenLong
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 + 21);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 - SomeShiftOffset);
    ShiftOffsetShouldBe(SomeShiftOffset - 2);
 }
 
@@ -326,12 +298,10 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTenWhenLongT
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 110);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 - SomeShiftOffset);
    ShiftOffsetShouldBe(SomeShiftOffset + 10);
 }
 
@@ -344,12 +314,10 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTwoWhenLongT
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 26);
-   And AdjustedSetpointWithoutShiftShouldBe(0);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
    After(1);
-   AdjustedSetpointWithoutShiftShouldBe(SomeAdjustedSetpointInDegFx100 - SomeShiftOffset);
    ShiftOffsetShouldBe(SomeShiftOffset + 2);
 }
 
@@ -400,4 +368,18 @@ TEST(ShiftOffsetCalculator, ShouldSeedAdjustedSetpointMinusShiftOffsetAndResetSh
    When ResetThermalShiftOffsetRequested();
    LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - SomeShiftOffset);
    And ShiftOffsetShouldBe(0);
+}
+
+TEST(ShiftOffsetCalculator, ShouldOnlyChangeShiftIfAverageMinusAdjustedSetpointWithoutShiftIsInRange)
+{
+   Given AdjustedSetpointIs(0);
+   Given TheModuleIsInitialized();
+
+   ShiftOffsetIs(Average1Low + 1);
+   After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN);
+   ShiftOffsetShouldBe(Average1Low - 1);
+
+   ShiftOffsetIs(Average1Low);
+   After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN);
+   ShiftOffsetShouldBe(Average1Low);
 }

@@ -42,24 +42,24 @@ return {
     ]],
     OneDimensionalCalculatedAxisGridLines_t = [[
       struct {
-        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
-        TemperatureDegFx100_t 'highGridLinesDegFx100',
-        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'setpointDeltaGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowGridLinesDegFx100',
         TemperatureDegFx100_t 'superLowGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'setpointDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'highGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
       }
     ]],
     FeaturePanCalculatedAxisGridLines_t = [[
       struct {
-        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
-        TemperatureDegFx100_t 'highGridLinesDegFx100',
-        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'setpointDeltaGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
-        TemperatureDegFx100_t 'lowGridLinesDegFx100',
         TemperatureDegFx100_t 'superLowGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'setpointDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'highGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
       }
     ]],
     FanControl_t = [[
@@ -71,7 +71,6 @@ return {
     PwmDutyCycle_t = 'uint16_t',
     PercentageDutyCycle_t = 'uint8_t',
     PwmFrequency_t = 'uint16_t',
-    RakePosition_t = 'uint8_t',
     GitHash_t = 'raw[20]',
     ShortGitHash_t = 'raw[4]',
     IceMakerEnableRequest_t = 'bool',

@@ -11,10 +11,10 @@
 
 void FourDoorAdjustedSetpointPlugin_Init(FourDoorAdjustedSetpointPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, set);
-
    FreezerAdjustedSetpointPlugin_Init(&instance->_private.freezerAdjustedSetpointPlugin, dataModel);
    FreshFoodAdjustedSetpointPlugin_Init(&instance->_private.freshFoodAdjustedSetpointPlugin, dataModel);
-   ConvertibleCompartmentAdjustedSetpointPlugin_Init(&instance->_private.convertibleCompartmentAdjustedSetpointPlugin, dataModel);
-   IceFormationOffsetWriter_Init(&instance->_private.iceFormationOffsetWriter, dataModel);
+   FeaturePanAdjustedSetpointPlugin_Init(&instance->_private.featurePanAdjustedSetpointPlugin, dataModel);
+   IceCabinetAdjustedSetpointPlugin_Init(&instance->_private.iceCabinetAdjustedSetpointPlugin, dataModel);
+
+   DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, set);
 }

@@ -13,13 +13,69 @@ describe('GridDeltas', function()
     return require 'lua-common'.table.merge({
       deltas = {
         grid_deltas = {
-          gridline_1 = TypedString('gridline', 'gridline_1'),
-          gridline_2 = TypedString('gridline', 'gridline_2'),
-          gridline_3 = TypedString('gridline', 'gridline_3'),
-          gridline_4 = TypedString('gridline', 'gridline_4'),
-          gridline_5 = TypedString('gridline', 'gridline_5'),
-          gridline_6 = TypedString('gridline', 'gridline_6'),
-          gridline_7 = TypedString('gridline', 'gridline_7')
+          mode_1 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_1_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_1_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_1_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_1_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_1_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_1_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_1_gridline_7')
+          },
+          mode_2 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_2_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_2_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_2_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_2_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_2_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_2_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_2_gridline_7')
+          },
+          mode_3 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_3_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_3_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_3_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_3_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_3_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_3_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_3_gridline_7')
+          },
+          mode_4 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_4_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_4_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_4_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_4_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_4_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_4_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_4_gridline_7')
+          },
+          mode_5 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_5_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_5_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_5_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_5_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_5_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_5_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_5_gridline_7')
+          },
+          mode_6 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_6_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_6_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_6_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_6_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_6_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_6_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_6_gridline_7')
+          },
+          mode_7 = {
+            gridline_1 = TypedString('gridline', 'feature_pan_mode_7_gridline_1'),
+            gridline_2 = TypedString('gridline', 'feature_pan_mode_7_gridline_2'),
+            gridline_3 = TypedString('gridline', 'feature_pan_mode_7_gridline_3'),
+            gridline_4 = TypedString('gridline', 'feature_pan_mode_7_gridline_4'),
+            gridline_5 = TypedString('gridline', 'feature_pan_mode_7_gridline_5'),
+            gridline_6 = TypedString('gridline', 'feature_pan_mode_7_gridline_6'),
+            gridline_7 = TypedString('gridline', 'feature_pan_mode_7_gridline_7')
+          }
         }
       }
     }, overrides or {})
@@ -57,21 +113,23 @@ describe('GridDeltas', function()
   end)
 
   it('should fail with missing arguments for a one dimensional config', function()
-    should_fail_with('missing argument deltas.grid_deltas', function()
-      local config = generate_one_dimensional_config({deltas = {grid_deltas = {}}})
+    should_fail_with('missing argument deltas.grid_deltas.mode_1', function()
+      local config = generate_one_dimensional_config({
+        deltas = { grid_deltas = { mode_2 = {}, mode_3 = {}, mode_4 = {}, mode_5 = {}, mode_6 = {}, mode_7 = {} }}
+      })
       grid_deltas(config)
     end)
   end)
 
   it('should fail with missing arguments for a two dimensional config', function()
-    should_fail_with('missing argument deltas.grid_deltas', function()
+    should_fail_with('missing argument deltas.freezer_grid_deltas', function()
       local config = generate_two_dimensional_config({deltas = {fresh_food_grid_deltas = {}}})
       grid_deltas(config)
     end)
   end)
 
   it('should fail with missing arguments for a two dimensional config', function()
-    should_fail_with('missing argument deltas.grid_deltas', function()
+    should_fail_with('missing argument deltas.fresh_food_grid_deltas', function()
       local config = generate_two_dimensional_config({deltas = {freezer_grid_deltas = {}}})
       grid_deltas(config)
     end)
@@ -87,13 +145,55 @@ describe('GridDeltas', function()
                 u8(7),
                 pointer(
                   structure(
-                    gridline_1,
-                    gridline_2,
-                    gridline_3,
-                    gridline_4,
-                    gridline_5,
-                    gridline_6,
-                    gridline_7
+                    feature_pan_mode_1_gridline_1,
+                    feature_pan_mode_1_gridline_2,
+                    feature_pan_mode_1_gridline_3,
+                    feature_pan_mode_1_gridline_4,
+                    feature_pan_mode_1_gridline_5,
+                    feature_pan_mode_1_gridline_6,
+                    feature_pan_mode_1_gridline_7,
+                    feature_pan_mode_2_gridline_1,
+                    feature_pan_mode_2_gridline_2,
+                    feature_pan_mode_2_gridline_3,
+                    feature_pan_mode_2_gridline_4,
+                    feature_pan_mode_2_gridline_5,
+                    feature_pan_mode_2_gridline_6,
+                    feature_pan_mode_2_gridline_7,
+                    feature_pan_mode_3_gridline_1,
+                    feature_pan_mode_3_gridline_2,
+                    feature_pan_mode_3_gridline_3,
+                    feature_pan_mode_3_gridline_4,
+                    feature_pan_mode_3_gridline_5,
+                    feature_pan_mode_3_gridline_6,
+                    feature_pan_mode_3_gridline_7,
+                    feature_pan_mode_4_gridline_1,
+                    feature_pan_mode_4_gridline_2,
+                    feature_pan_mode_4_gridline_3,
+                    feature_pan_mode_4_gridline_4,
+                    feature_pan_mode_4_gridline_5,
+                    feature_pan_mode_4_gridline_6,
+                    feature_pan_mode_4_gridline_7,
+                    feature_pan_mode_5_gridline_1,
+                    feature_pan_mode_5_gridline_2,
+                    feature_pan_mode_5_gridline_3,
+                    feature_pan_mode_5_gridline_4,
+                    feature_pan_mode_5_gridline_5,
+                    feature_pan_mode_5_gridline_6,
+                    feature_pan_mode_5_gridline_7,
+                    feature_pan_mode_6_gridline_1,
+                    feature_pan_mode_6_gridline_2,
+                    feature_pan_mode_6_gridline_3,
+                    feature_pan_mode_6_gridline_4,
+                    feature_pan_mode_6_gridline_5,
+                    feature_pan_mode_6_gridline_6,
+                    feature_pan_mode_6_gridline_7,
+                    feature_pan_mode_7_gridline_1,
+                    feature_pan_mode_7_gridline_2,
+                    feature_pan_mode_7_gridline_3,
+                    feature_pan_mode_7_gridline_4,
+                    feature_pan_mode_7_gridline_5,
+                    feature_pan_mode_7_gridline_6,
+                    feature_pan_mode_7_gridline_7
                   )
                 )
               )
@@ -103,6 +203,156 @@ describe('GridDeltas', function()
     ]])
 
     local actual = grid_deltas(generate_one_dimensional_config())
+
+    assert(actual.is_of_type('grid_deltas'))
+    assert.equals(expected, remove_whitespace(tostring(actual)))
+  end)
+
+  it('should generate a typed string with the correct data and type grid_deltas for a one dimensional config without all modes defined', function()
+    local expected = remove_whitespace([[
+        structure(
+          u8(1),
+          pointer(
+            structure(
+              structure(
+                u8(7),
+                pointer(
+                  structure(
+                    feature_pan_mode_1_gridline_1,
+                    feature_pan_mode_1_gridline_2,
+                    feature_pan_mode_1_gridline_3,
+                    feature_pan_mode_1_gridline_4,
+                    feature_pan_mode_1_gridline_5,
+                    feature_pan_mode_1_gridline_6,
+                    feature_pan_mode_1_gridline_7,
+                    feature_pan_mode_2_gridline_1,
+                    feature_pan_mode_2_gridline_2,
+                    feature_pan_mode_2_gridline_3,
+                    feature_pan_mode_2_gridline_4,
+                    feature_pan_mode_2_gridline_5,
+                    feature_pan_mode_2_gridline_6,
+                    feature_pan_mode_2_gridline_7,
+                    feature_pan_mode_3_gridline_1,
+                    feature_pan_mode_3_gridline_2,
+                    feature_pan_mode_3_gridline_3,
+                    feature_pan_mode_3_gridline_4,
+                    feature_pan_mode_3_gridline_5,
+                    feature_pan_mode_3_gridline_6,
+                    feature_pan_mode_3_gridline_7,
+                    feature_pan_mode_4_gridline_1,
+                    feature_pan_mode_4_gridline_2,
+                    feature_pan_mode_4_gridline_3,
+                    feature_pan_mode_4_gridline_4,
+                    feature_pan_mode_4_gridline_5,
+                    feature_pan_mode_4_gridline_6,
+                    feature_pan_mode_4_gridline_7,
+                    feature_pan_mode_5_gridline_1,
+                    feature_pan_mode_5_gridline_2,
+                    feature_pan_mode_5_gridline_3,
+                    feature_pan_mode_5_gridline_4,
+                    feature_pan_mode_5_gridline_5,
+                    feature_pan_mode_5_gridline_6,
+                    feature_pan_mode_5_gridline_7
+                  )
+                )
+              )
+            )
+          )
+        )
+    ]])
+
+    local actual = grid_deltas(generate_one_dimensional_config({
+      deltas = { grid_deltas = {
+        mode_1 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_1_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_1_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_1_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_1_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_1_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_1_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_1_gridline_7')
+        },
+        mode_2 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_2_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_2_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_2_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_2_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_2_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_2_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_2_gridline_7')
+        },
+        mode_3 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_3_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_3_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_3_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_3_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_3_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_3_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_3_gridline_7')
+        },
+        mode_4 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_4_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_4_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_4_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_4_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_4_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_4_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_4_gridline_7')
+        },
+        mode_5 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_5_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_5_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_5_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_5_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_5_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_5_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_5_gridline_7')
+        }
+      }}
+    }))
+
+    assert(actual.is_of_type('grid_deltas'))
+    assert.equals(expected, remove_whitespace(tostring(actual)))
+  end)
+
+  it('should generate a typed string with the correct data and type grid_deltas for a one dimensional config with only one mode defined', function()
+    local expected = remove_whitespace([[
+        structure(
+          u8(1),
+          pointer(
+            structure(
+              structure(
+                u8(7),
+                pointer(
+                  structure(
+                    feature_pan_mode_1_gridline_1,
+                    feature_pan_mode_1_gridline_2,
+                    feature_pan_mode_1_gridline_3,
+                    feature_pan_mode_1_gridline_4,
+                    feature_pan_mode_1_gridline_5,
+                    feature_pan_mode_1_gridline_6,
+                    feature_pan_mode_1_gridline_7
+                  )
+                )
+              )
+            )
+          )
+        )
+    ]])
+
+    local actual = grid_deltas(generate_one_dimensional_config({
+      deltas = { grid_deltas = {
+        mode_1 = {
+          gridline_1 = TypedString('gridline', 'feature_pan_mode_1_gridline_1'),
+          gridline_2 = TypedString('gridline', 'feature_pan_mode_1_gridline_2'),
+          gridline_3 = TypedString('gridline', 'feature_pan_mode_1_gridline_3'),
+          gridline_4 = TypedString('gridline', 'feature_pan_mode_1_gridline_4'),
+          gridline_5 = TypedString('gridline', 'feature_pan_mode_1_gridline_5'),
+          gridline_6 = TypedString('gridline', 'feature_pan_mode_1_gridline_6'),
+          gridline_7 = TypedString('gridline', 'feature_pan_mode_1_gridline_7')
+        }
+      }}
+    }))
 
     assert(actual.is_of_type('grid_deltas'))
     assert.equals(expected, remove_whitespace(tostring(actual)))

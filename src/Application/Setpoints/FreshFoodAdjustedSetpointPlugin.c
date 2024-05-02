@@ -18,17 +18,29 @@ static TemperatureDegFx100_t coldSetpointOffsetInDegFx100;
 static TemperatureDegFx100_t middleSetpointOffsetInDegFx100 = 0;
 static TemperatureDegFx100_t warmSetpointOffsetInDegFx100;
 
-static const Erd_t freshFoodAdjustedSetpointErds[] = {
+static const Erd_t freshFoodAdjustedSetpointWithoutShiftErds[] = {
    Erd_FreshFood_ResolvedSetpointInDegFx100,
    Erd_FreshFood_CabinetOffsetInDegFx100,
    Erd_FreshFood_SetpointOffsetInDegFx100,
    Erd_FreshFood_CrossAmbientOffsetInDegFx100,
    Erd_FreshFood_HighAmbientOffsetInDegFx100,
    Erd_FreshFood_PulldownOffsetInDegFx100,
-   Erd_FreshFood_ThermalShiftInDegFx100
 };
 
-static const I16ErdAdderConfiguration_t freshFoodErdAdderConfig = {
+static const I16ErdAdderConfiguration_t freshFoodAdjustedSetpointWithoutShiftConfig = {
+   .resultErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+   .i16ErdsToBeAdded = {
+      freshFoodAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(freshFoodAdjustedSetpointWithoutShiftErds),
+   },
+};
+
+static const Erd_t freshFoodAdjustedSetpointErds[] = {
+   Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_FreshFood_ThermalShiftInDegFx100,
+};
+
+static const I16ErdAdderConfiguration_t freshFoodAdjustedSetpointConfig = {
    .resultErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       freshFoodAdjustedSetpointErds,
@@ -63,7 +75,7 @@ static const ErdWriterOnCompareMatchConfiguration_t erdWriteOnCompareMatchConfig
 };
 
 static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
+   .setpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .resolvedSetpointErd = Erd_FreshFood_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
@@ -91,8 +103,8 @@ static void InitializeSetpointOffsetErd(FreshFoodAdjustedSetpointPlugin_t *insta
 {
    uassert(SetpointZonePluginIsReady(dataModel));
 
-   coldSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->coldOffsetInDegFx100;
-   warmSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->warmOffsetInDegFx100;
+   coldSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->setpointOffsetData->coldOffsetInDegFx100;
+   warmSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->setpointOffsetData->warmOffsetInDegFx100;
 
    SetpointZone_t freshFoodSetpointZone;
    DataModel_Read(dataModel, Erd_FreshFoodSetpointZone, &freshFoodSetpointZone);
@@ -125,7 +137,7 @@ static void InitializeCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_FreshFood_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->freshFoodOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->cabinetOffsetInDegFx100);
 }
 
 void FreshFoodAdjustedSetpointPlugin_Init(
@@ -138,16 +150,17 @@ void FreshFoodAdjustedSetpointPlugin_Init(
       &instance->_private.freshFoodResolvedSetpointWriter,
       dataModel,
       &freshFoodResolvedSetpointWriterConfiguration);
-   I16ErdAdder_Init(&instance->_private.freshFoodErdAdder, dataModel, &freshFoodErdAdderConfig);
+   I16ErdAdder_Init(&instance->_private.freshFoodAdjustedSetpointWithoutShiftErdAdder, dataModel, &freshFoodAdjustedSetpointWithoutShiftConfig);
+   I16ErdAdder_Init(&instance->_private.freshFoodAdjustedSetpointErdAdder, dataModel, &freshFoodAdjustedSetpointConfig);
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.freshFoodCrossAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->crossAmbientOffsetData,
       &freshFoodCrossAmbientOffsetCalculatorConfig);
    HighAmbientHumidityOffsetCalculator_Init(
       &instance->_private.freshFoodHighAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->highAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->highAmbientOffsetData,
       &freshFoodHighAmbientOffsetCalculatorConfig);
    FreshFoodShiftOffsetCalculatorPlugin_Init(&instance->_private.freshFoodShiftOffsetCalculatorPlugin, dataModel);
 }

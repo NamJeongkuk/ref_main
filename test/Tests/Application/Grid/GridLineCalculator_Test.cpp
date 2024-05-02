@@ -57,13 +57,14 @@ static const GridLineAdjustmentErds_t freshFoodAndFreezerSecondDimensionGridLine
 };
 
 static const GridLineAdjustmentErds_t featurePanFirstDimensionGridLinesAdjustmentErds = {
-   .offsetInDegFx100Erd = Erd_FeaturePan_CabinetPlusCrossAmbientOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FeaturePan_AdjustedSetpointInDegFx100
 };
 
 static const GridLineCalculatorConfiguration_t freshFoodAndFreezerConfig = {
    .calculatedGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridDeltaOffsetErd = Erd_U8Zero,
    .gridLineAdjustmentErds = {
       freshFoodAndFreezerFirstDimensionGridLinesAdjustmentErds,
       freshFoodAndFreezerSecondDimensionGridLinesAdjustmentErds,
@@ -73,6 +74,7 @@ static const GridLineCalculatorConfiguration_t freshFoodAndFreezerConfig = {
 static const GridLineCalculatorConfiguration_t featurePanConfig = {
    .calculatedGridLineErd = Erd_FeaturePanGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridDeltaOffsetErd = Erd_FeaturePanCurrentModeStatus,
    .gridLineAdjustmentErds = {
       featurePanFirstDimensionGridLinesAdjustmentErds,
    }
@@ -136,6 +138,14 @@ TEST_GROUP(GridLineCalculator)
          &setpoint);
    }
 
+   void WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_t mode)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeaturePanCurrentModeStatus,
+         &mode);
+   }
+
    void GivenTheAdjustedSetpointsAre(
       TemperatureDegFx100_t freshFoodAdjustedSetpoint,
       TemperatureDegFx100_t freezerAdjustedSetpoint,
@@ -160,10 +170,10 @@ TEST_GROUP(GridLineCalculator)
          &offset);
    }
 
-   void WhenTheFeaturePanSumOffsetIs(TemperatureDegFx100_t offset)
+   void WhenTheFeaturePanCrossAmbientOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_FeaturePan_CabinetPlusCrossAmbientOffsetInDegFx100,
+         Erd_FeaturePan_CrossAmbientOffsetInDegFx100,
          &offset);
    }
 
@@ -174,7 +184,7 @@ TEST_GROUP(GridLineCalculator)
    {
       WhenTheFreshFoodSumOffsetIs(freshFoodOffset);
       WhenTheFreezerSumOffsetIs(freezerOffset);
-      WhenTheFeaturePanSumOffsetIs(featurePanOffset);
+      WhenTheFeaturePanCrossAmbientOffsetIs(featurePanOffset);
    }
 
    void WhenTheCrossAmbientHysteresisAdjustmentChangesTo(TemperatureDegFx100_t adjustment)
@@ -187,6 +197,8 @@ TEST_GROUP(GridLineCalculator)
 
    void GivenTheGridLineCalculationErdsAreInitialized()
    {
+      WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Off);
+
       GivenTheAdjustedSetpointsAre(
          AFreshFoodAdjustedSetpointTemperature,
          AFreezerAdjustedSetpointTemperature,
@@ -208,8 +220,13 @@ TEST_GROUP(GridLineCalculator)
       TwoDimensionalCalculatedGridLines_t calcLines;
       DataModel_Read(dataModel, Erd_FeaturePanGrid_CalculatedGridLines, &calcLines);
 
+      FeaturePanCurrentMode_t gridDeltaOffset;
+      DataModel_Read(dataModel, Erd_FeaturePanCurrentModeStatus, &gridDeltaOffset);
+
+      gridDeltaOffset = TRUNCATE_UNSIGNED_SUBTRACTION(gridDeltaOffset, 1);
+
       temperature +=
-         parametric->featurePanGridData->deltaGridLines->gridLines[GridDelta_FirstDimension].gridLineData[gridLineIndex].gridLinesDegFx100;
+         parametric->featurePanGridData->deltaGridLines->gridLines[GridDelta_FirstDimension].gridLineData[(CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + gridLineIndex].gridLinesDegFx100;
 
       CHECK_EQUAL(temperature, calcLines.firstDimensionGridLines.gridLinesDegFx100[gridLineIndex]);
    }
@@ -484,4 +501,55 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges_O
    TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_5);
    TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_6);
    TheOneDimensionalCalculatedGridLineTempShouldBe(AnotherFeaturePanAdjustedSetpointTemperature, GridLine_7);
+}
+
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenGridOffset_OneDimensionalGrid)
+{
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitializedForOneDimensionalGrid();
+
+   WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Mode1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
+
+   WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Mode2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
+
+   WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Mode3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
+
+   WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Mode4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
+
+   WhenTheFeaturePanCurrentModeIs(FeaturePanCurrentMode_Mode5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_1);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_2);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_3);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_4);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_5);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_6);
+   TheOneDimensionalCalculatedGridLineTempShouldBe(AFeaturePanAdjustedSetpointTemperature, GridLine_7);
 }

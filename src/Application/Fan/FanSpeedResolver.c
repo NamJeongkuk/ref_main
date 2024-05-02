@@ -12,55 +12,6 @@
 #include "TemperatureDegFx100.h"
 #include "utils.h"
 
-static bool CareAboutHighAmbientTemperature(FanSpeedResolver_t *instance)
-{
-   return instance->_private.fanData->careAboutHighAmbientTemperature;
-}
-
-static TemperatureDegFx100_t AmbientTemperature(FanSpeedResolver_t *instance)
-{
-   TemperatureDegFx100_t ambientTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->ambientFilteredTemperatureResolvedInDegFx100Erd,
-      &ambientTemperature);
-
-   return ambientTemperature;
-}
-
-static RelativeHumidityPercentx100_t AmbientHumidity(FanSpeedResolver_t *instance)
-{
-   RelativeHumidityPercentx100_t ambientHumidity;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->ambientFilteredHumidityPercentx100ResolvedErd,
-      &ambientHumidity);
-
-   return ambientHumidity;
-}
-
-static bool AmbientHumiditySensorIsValid(FanSpeedResolver_t *instance)
-{
-   bool ambientHumiditySensorIsValid;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->ambientHumiditySensorIsValidErd,
-      &ambientHumiditySensorIsValid);
-
-   return ambientHumiditySensorIsValid;
-}
-
-static bool AmbientThermistorIsValid(FanSpeedResolver_t *instance)
-{
-   bool ambientThermistorIsValid;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->ambientThermistorIsValidErd,
-      &ambientThermistorIsValid);
-
-   return ambientThermistorIsValid;
-}
-
 static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
 {
    return instance->_private.fanData->careAboutCoolingMode;
@@ -69,40 +20,6 @@ static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
 static bool CareAboutSetpoint(FanSpeedResolver_t *instance)
 {
    return instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpoint;
-}
-
-static bool FanAntiSweatBehaviorIsEnabled(FanSpeedResolver_t *instance)
-{
-   bool fanAntiSweatBehaviorIsEnabled;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->fanAntiSweatBehaviorEnabledErd,
-      &fanAntiSweatBehaviorIsEnabled);
-
-   return fanAntiSweatBehaviorIsEnabled;
-}
-
-static FanControl_t SuperLowFanControl(FanSpeedResolver_t *instance, FanControl_t defaultFanControl)
-{
-   FanControl_t control = defaultFanControl;
-
-   if(CareAboutHighAmbientTemperature(instance) && FanAntiSweatBehaviorIsEnabled(instance))
-   {
-      if(AmbientHumiditySensorIsValid(instance) && AmbientThermistorIsValid(instance))
-      {
-         if(AmbientHumidity(instance) >= instance->_private.fanData->highAmbientTriggerHumidityInPercentx100)
-         {
-            control = instance->_private.fanData->superLowAtHighAmbientHumidityAndLowTemperature;
-
-            if(AmbientTemperature(instance) >= instance->_private.fanData->highAmbientTriggerTemperatureInDegFx100)
-            {
-               control = instance->_private.fanData->superLowAtHighAmbientHumidityAndHighTemperature;
-            }
-         }
-      }
-   }
-
-   return control;
 }
 
 static void CalculateFanSpeed(FanSpeedResolver_t *instance)
@@ -121,7 +38,7 @@ static void CalculateFanSpeed(FanSpeedResolver_t *instance)
    switch(votedSpeed.speed)
    {
       case FanSpeed_SuperLow:
-         control = SuperLowFanControl(instance, instance->_private.fanData->speedData->superLowSpeed);
+         control = instance->_private.fanData->speedData->superLowSpeed;
          break;
 
       case FanSpeed_Low:
@@ -229,7 +146,7 @@ static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance
    switch(votedSpeed.speed)
    {
       case FanSpeed_SuperLow:
-         control = SuperLowFanControl(instance, instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.superLowSpeed);
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.superLowSpeed;
          break;
 
       case FanSpeed_Low:
@@ -299,7 +216,7 @@ static FanControl_t CoolingModeFanSpeedWithoutSetpoint(FanSpeedResolver_t *insta
    switch(votedSpeed.speed)
    {
       case FanSpeed_SuperLow:
-         control = SuperLowFanControl(instance, instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed);
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed;
          break;
 
       case FanSpeed_Low:
@@ -425,10 +342,7 @@ static void DataModelChanged(void *context, const void *_args)
 
    if((erd == instance->_private.config->resolvedFanSpeedVoteErd) ||
       erd == instance->_private.config->coolingModeErd ||
-      erd == instance->_private.config->ambientHumiditySensorIsValidErd ||
-      erd == instance->_private.config->ambientThermistorIsValidErd ||
-      erd == instance->_private.config->ambientFilteredTemperatureResolvedInDegFx100Erd ||
-      erd == instance->_private.config->ambientFilteredHumidityPercentx100ResolvedErd)
+      erd == instance->_private.config->freezerSetpointErd)
    {
       CalculateResolvedFanSpeedBasedOnDependence(instance);
    }

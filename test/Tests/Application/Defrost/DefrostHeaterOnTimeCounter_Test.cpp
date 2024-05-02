@@ -81,6 +81,11 @@ TEST_GROUP(DefrostHeaterOnTimeCounter)
 
       CHECK_EQUAL(expected, actual);
    }
+
+   void WhenDefrostStateIs(DefrostState_t state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
 };
 
 TEST(DefrostHeaterOnTimeCounter, ShouldResetHeaterOnTimeAndNotCountOnInitWhenDefrostStateIsNotHeaterOnAndHeaterIsOff)
@@ -147,22 +152,6 @@ TEST(DefrostHeaterOnTimeCounter, ShouldCountHeaterOnTimeWhenDefrostStateIsHeater
    HeaterOnTimeInMinutesShouldBe(1);
 }
 
-TEST(DefrostHeaterOnTimeCounter, ShouldResetHeaterOnTimeWhenDefrostStateIsHeaterOnAndHeaterChangesToOff)
-{
-   GivenDefrostStateIs(DefrostState_HeaterOn);
-   GivenDefrostHeaterIs(HeaterState_On);
-   GivenDefrostHeaterOnTimeCounterIsInitialized();
-
-   After(MSEC_PER_MIN);
-   HeaterOnTimeInMinutesShouldBe(1);
-
-   WhenDefrostHeaterIs(HeaterState_Off);
-   HeaterOnTimeInMinutesShouldBe(0);
-
-   After(MSEC_PER_MIN);
-   HeaterOnTimeInMinutesShouldBe(0);
-}
-
 TEST(DefrostHeaterOnTimeCounter, ShouldNotCountHeaterOnTimeWhenDefrostStateIsNotHeaterOnAndHeaterChangesToOn)
 {
    GivenDefrostStateIs(DefrostState_Idle);
@@ -182,5 +171,40 @@ TEST(DefrostHeaterOnTimeCounter, ShouldNotCountHeaterOnTimeWhenDefrostStateIsNot
 
    WhenDefrostHeaterIs(HeaterState_Off);
    After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(0);
+}
+
+TEST(DefrostHeaterOnTimeCounter, ShouldStopCountingAndNotResetCountWhenHeaterTurnsOffButDefrostStateIsStillHeaterOn)
+{
+   GivenDefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostHeaterIs(HeaterState_On);
+   GivenDefrostHeaterOnTimeCounterIsInitialized();
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   WhenDefrostHeaterIs(HeaterState_Off);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
+}
+
+TEST(DefrostHeaterOnTimeCounter, ShouldResetCountWhenHeaterTurnsOffAndDefrostStateIsNotHeaterOn)
+{
+   GivenDefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostHeaterIs(HeaterState_On);
+   GivenDefrostHeaterOnTimeCounterIsInitialized();
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   WhenDefrostHeaterIs(HeaterState_Off);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   WhenDefrostStateIs(DefrostState_Dwell);
    HeaterOnTimeInMinutesShouldBe(0);
 }

@@ -17,13 +17,20 @@ describe("Personality", function()
       fans = TypedString('fan_list', 'fan_list'),
       fresh_food_and_freezer_grid = TypedString('fresh_food_and_freezer_grid', 'fresh_food_and_freezer_grid'),
       feature_pan_grid = TypedString('feature_pan_grid', 'feature_pan_grid'),
+      ice_cabinet_grid = TypedString('ice_cabinet_grid', 'ice_cabinet_grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
+      feature_pan = TypedString('feature_pan', 'feature_pan'),
+      ice_cabinet = TypedString('ice_cabinet', 'ice_cabinet'),
       sensors = TypedString('sensors', 'sensors'),
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
       setpoint = TypedString('setpoint', 'setpoint'),
-      cabinet_offset = TypedString('cabinet_offset', 'cabinet_offset'),
+      fresh_food_thermal_offset = TypedString('fresh_food_thermal_offset', 'fresh_food_thermal_offset'),
+      freezer_thermal_offset = TypedString('freezer_thermal_offset', 'freezer_thermal_offset'),
+      feature_pan_thermal_offset = TypedString('feature_pan_thermal_offset', 'feature_pan_thermal_offset'),
+      ice_cabinet_thermal_offset = TypedString('ice_cabinet_thermal_offset', 'ice_cabinet_thermal_offset'),
+      shift_offset_calculator = TypedString('shift_offset_calculator', 'shift_offset_calculator'),
       bsp_configuration = TypedString('bsp_configuration', 'bsp_configuration'),
       damper = TypedString('damper', 'damper'),
       damper_heater = TypedString('damper_heater', 'damper_heater'),
@@ -104,6 +111,14 @@ describe("Personality", function()
   end)
 
   it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet_grid must be a typed string with type ice_cabinet_grid, but is a number', function()
+      personality(generate_config({
+        ice_cabinet_grid = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
     should_fail_with('sabbath must be a typed string with type sabbath, but is a number', function()
       personality(generate_config({
         sabbath = -1
@@ -115,6 +130,22 @@ describe("Personality", function()
     should_fail_with('convertible_compartment must be a typed string with type convertible_compartment, but is a number', function()
       personality(generate_config({
         convertible_compartment = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('feature_pan must be a typed string with type feature_pan, but is a number', function()
+      personality(generate_config({
+        feature_pan = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet must be a typed string with type ice_cabinet, but is a number', function()
+      personality(generate_config({
+        ice_cabinet = -1
       }))
     end)
   end)
@@ -152,9 +183,41 @@ describe("Personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('cabinet_offset must be a typed string with type cabinet_offset, but is a number', function()
+    should_fail_with('fresh_food_thermal_offset must be a typed string with type fresh_food_thermal_offset, but is a number', function()
       personality(generate_config({
-        cabinet_offset = -1
+        fresh_food_thermal_offset = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('freezer_thermal_offset must be a typed string with type freezer_thermal_offset, but is a number', function()
+      personality(generate_config({
+        freezer_thermal_offset = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('feature_pan_thermal_offset must be a typed string with type feature_pan_thermal_offset, but is a number', function()
+      personality(generate_config({
+        feature_pan_thermal_offset = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet_thermal_offset must be a typed string with type ice_cabinet_thermal_offset, but is a number', function()
+      personality(generate_config({
+        ice_cabinet_thermal_offset = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('shift_offset_calculator must be a typed string with type shift_offset_calculator, but is a number', function()
+      personality(generate_config({
+        shift_offset_calculator = -1
       }))
     end)
   end)
@@ -297,13 +360,20 @@ describe("Personality", function()
         pointer(fan_list),
         pointer(fresh_food_and_freezer_grid),
         pointer(feature_pan_grid),
+        pointer(ice_cabinet_grid),
         pointer(sabbath),
         pointer(convertible_compartment),
+        pointer(feature_pan),
+        pointer(ice_cabinet),
         pointer(sensors),
         pointer(system_monitor),
         pointer(compressor),
         pointer(setpoint),
-        pointer(cabinet_offset),
+        pointer(fresh_food_thermal_offset),
+        pointer(freezer_thermal_offset),
+        pointer(feature_pan_thermal_offset),
+        pointer(ice_cabinet_thermal_offset),
+        pointer(shift_offset_calculator),
         pointer(bsp_configuration),
         pointer(damper),
         pointer(damper_heater),

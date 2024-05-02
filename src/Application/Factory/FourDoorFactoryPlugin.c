@@ -35,7 +35,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
    { Erd_FreshFoodEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_ConvertibleCompartmentDamperPosition_FactoryVote, PercentageDutyCycle_Min },
    { Erd_ConvertibleCompartmentHeater_FactoryVote, HeaterState_Off },

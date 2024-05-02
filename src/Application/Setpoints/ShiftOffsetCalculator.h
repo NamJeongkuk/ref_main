@@ -9,7 +9,7 @@
 #ifndef SHIFTOFFSETCALCULATOR_H
 #define SHIFTOFFSETCALCULATOR_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "EventSubscription.h"
 #include "I_DataModel.h"
 #include "I_Filter.h"
@@ -18,14 +18,11 @@
 typedef struct
 {
    Erd_t filteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
-   Erd_t adjustedSetpointErd; // TemperatureDegFx100_t
    Erd_t shiftOffsetErd; // TemperatureDegFx100_t
    Erd_t adjustedSetpointWithoutShiftErd; // TemperatureDegFx100_t
-   Erd_t timerModuleErd; // TimerModule_t *
    Erd_t postDwellCompletionSignalErd; // Signal_t
    Erd_t resetThermalShiftOffsetSignalErd; // Signal_t
    Erd_t longTermAverageErd; // TemperatureDegFx100_t
-   Erd_t adjustedSetpointPluginReadyErd; // bool
 } ShiftOffsetCalculatorConfig_t;
 
 typedef struct
@@ -38,7 +35,6 @@ typedef struct
       I_Filter_t *longTermAverageFilter;
       EventSubscription_t dataModelSubscription;
 
-      const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
       const ShiftOffsetCalculatorConfig_t *config;
       const ShiftOffsetData_t *shiftOffsetData;
    } _private;
@@ -48,6 +44,7 @@ void ShiftOffsetCalculator_Init(
    ShiftOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    I_Filter_t *longTermAverageFilter,
+   TimerModule_t *timerModule,
    const ShiftOffsetCalculatorConfig_t *config,
    const ShiftOffsetData_t *shiftOffsetData);
 

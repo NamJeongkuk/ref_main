@@ -60,6 +60,20 @@
                "name": "Erd_BootLoaderVersion",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Unit Model Number",
+               "name": "Erd_ModelNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Unit Serial Number",
+               "name": "Erd_SerialNumber",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },
@@ -178,8 +192,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Compressor State",
-               "name": "Erd_CompressorState",
+               "displayName": "Compressor Winning Vote",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             },

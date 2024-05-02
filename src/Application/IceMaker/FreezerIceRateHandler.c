@@ -45,7 +45,7 @@ static void TimerExpired(void *context)
       &fanSpeedVoteDontCare);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->iceRateIsActiveErd,
+      instance->_private.config->freezerIceRateIsActiveErd,
       clear);
 }
 
@@ -130,7 +130,10 @@ static void IceRateSignalTriggered(void *context, const void *_args)
    SubscribeToDataModel(instance);
    UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(instance);
    UpdateFreezerSetpointIceRateVote(instance);
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->iceRateIsActiveErd, set);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerIceRateIsActiveErd,
+      set);
 }
 
 void FreezerIceRateHandler_Init(

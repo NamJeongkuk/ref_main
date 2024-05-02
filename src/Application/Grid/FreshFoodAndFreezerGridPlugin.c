@@ -16,36 +16,12 @@
 #include "Constants_Binary.h"
 #include "ParametricData.h"
 
-typedef struct
-{
-   GridFunction_t singleEvap;
-   GridFunction_t dualEvap;
-   GridFunction_t tripleEvap;
-   GridFunction_t singleDoorSingleEvap;
-} GridFunctions_t;
-
-STATIC_ASSERT(OFFSET_OF(GridFunctions_t, singleEvap) / sizeof(GridFunction_t) == GridId_SingleEvap);
-STATIC_ASSERT(OFFSET_OF(GridFunctions_t, dualEvap) / sizeof(GridFunction_t) == GridId_DualEvap);
-STATIC_ASSERT(OFFSET_OF(GridFunctions_t, tripleEvap) / sizeof(GridFunction_t) == GridId_TripleEvap);
-STATIC_ASSERT(OFFSET_OF(GridFunctions_t, singleDoorSingleEvap) / sizeof(GridFunction_t) == GridId_SingleDoorSingleEvap);
-
-static const GridFunctions_t gridFunctions = {
-   .singleEvap = Grid_SingleEvap,
-   .dualEvap = Grid_DualEvap,
-   .tripleEvap = Grid_TripleEvap,
-   .singleDoorSingleEvap = Grid_SingleDoorSingleEvap
-};
-
-static const GridFunctionArray_t gridFunctionArray = {
-   (const GridFunction_t *)&gridFunctions,
-   sizeof(gridFunctions) / sizeof(GridFunction_t)
-};
+static void (*GridFunctions[])(void *context) = { Grid_SingleEvap, Grid_DualEvap, Grid_TripleEvap, Grid_SingleDoorSingleEvap };
 
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
    .gridOverrideSignalErd = Erd_GridOverrideSignal,
    .gridOverrideEnableErd = Erd_GridOverrideEnable,
-   .gridFunctions = &gridFunctionArray,
 };
 
 static const Erd_t freshFoodErdAdderList[] = {
@@ -79,6 +55,7 @@ static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_FreshFoodAndFreezerGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .gridDeltaOffsetErd = Erd_U8Zero,
    .gridLineAdjustmentErds = {
       {
          .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
@@ -193,8 +170,10 @@ void FreshFoodAndFreezerGridPlugin_Init(
 
    Grid_Init(
       &instance->gridInstance,
+      dataModel,
       &gridConfig,
-      dataModel);
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+      GridFunctions[PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData->gridId]);
 
    DataModel_Write(
       dataModel,

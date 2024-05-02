@@ -49,7 +49,7 @@ TEST_GROUP(Grid_SingleEvap_Test)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SideBySideSingleEvap_Init(&sideBySideConstArrayMap));
+      DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SideBySideSingleEvap_Init(&sideBySideConstArrayMap));
    }
 
    void GridBlockIs(GridBlockNumber_t actual)
@@ -881,15 +881,15 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIs
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsOff)
 {
    Given GridBlockIs(38);
-   And CoolingModeIs(CoolingMode_Freezer);
+   And CoolingModeIs(CoolingMode_FreshFood);
    And CoolingSpeedIs(CoolingSpeed_Off);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
-   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Off);
 
-   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Low, DamperPosition_Open);
    PulldownActiveShouldBe(Inactive);
 }
 

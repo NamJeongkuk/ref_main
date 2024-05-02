@@ -11,7 +11,6 @@ return function(core)
     return TypedString(
       { 'convertible_compartment' },
       structure(
-        bool(config.has_convertible_compartment),
         i16(config.cabinet_threshold_in_degfx100)
       )
     )
@@ -21,7 +20,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        has_convertible_compartment = { constraint.boolean },
         cabinet_threshold_in_degfx100 = { constraint.i16 }
       })
 

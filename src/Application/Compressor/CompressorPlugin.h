@@ -9,24 +9,25 @@
 #define COMPRESSORPLUGIN_H
 
 #include "I_DataModel.h"
-#include "CompressorSpeedController.h"
 #include "CompressorSpeedDriver.h"
 #include "ErdResolver.h"
-#include "CompressorStartupFanVotes.h"
-#include "SabbathFanDelayHandler.h"
+#include "CompressorStartup.h"
 #include "CompressorFaultHandler.h"
+#include "CompressorMinimumOnOffTime.h"
+#include "CompressorSealedSystemValveDelay.h"
+#include "SabbathDelayHandler.h"
 
 typedef struct
 {
    struct
    {
       CompressorSpeedDriver_t compressorSpeedDriver;
-      CompressorSpeedController_t compressorSpeedController;
-      CompressorStartupFanVotes_t compressorStartupFanVotes;
-      SabbathFanDelayHandler_t sabbathFanDelayHandler;
+      CompressorStartup_t compressorStartup;
+      CompressorMinimumOnOffTime_t compressorMinimumOnOffTime;
+      CompressorSealedSystemValveDelay_t compressorSealedSystemValveDelay;
       ErdResolver_t compressorSpeedErdResolver;
-      ErdResolver_t disableMinimumCompressorTimesErdResolver;
       CompressorFaultHandler_t compressorFaultHandler;
+      SabbathDelayHandler_t sabbathDelayHandler;
    } _private;
 } CompressorPlugin_t;
 

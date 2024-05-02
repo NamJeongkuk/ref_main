@@ -13,6 +13,7 @@
 enum
 {
    DefrostState_Idle,
+   DefrostState_PrechillPrep,
    DefrostState_Prechill,
    DefrostState_HeaterOn,
    DefrostState_Dwell,

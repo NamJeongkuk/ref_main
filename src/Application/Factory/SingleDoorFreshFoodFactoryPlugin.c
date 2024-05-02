@@ -18,7 +18,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
    { Erd_FreshFoodEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds

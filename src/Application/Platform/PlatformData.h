@@ -14,7 +14,8 @@ enum
 {
    Compartment_FreshFood,
    Compartment_Freezer,
-   Compartment_Convertible
+   Compartment_Convertible,
+   Compartment_DeliPan,
 };
 typedef uint8_t Compartment_t;
 

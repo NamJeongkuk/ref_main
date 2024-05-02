@@ -91,7 +91,7 @@ static void SearchSingleDoorTableAndPublishGridVotes(I_DataModel_t *dataModel, G
    CoolingSpeed_t coolingSpeed = CoolingSpeed(dataModel);
 
    uint16_t searchIndex;
-   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface);
+   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface);
    ConstArrayMap_Find(coolingStateMap, &coolingSpeed, &searchIndex, &foundTableEntry);
 
    ExecuteGridVote(dataModel, foundTableEntry.votes);
@@ -139,7 +139,6 @@ void Grid_SingleDoorSingleEvap(void *context)
                ? CoolingSpeed_Low
                : coolingSpeed);
          SetIceMakerEnable(dataModel, ENABLED);
-         SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          SetGridArea(dataModel, GridArea_2);
          break;
 

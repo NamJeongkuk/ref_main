@@ -156,7 +156,7 @@ static void SearchSideBySideTableAndPublishGridVotes(I_DataModel_t *dataModel, G
    DataModel_Read(dataModel, Erd_CoolingSpeed, &coolingKey.speed);
 
    uint16_t searchIndex;
-   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface);
+   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface);
    ConstArrayMap_Find(coolingStateMap, &coolingKey, &searchIndex, &foundTableEntry);
 
    ApplyGridBlockOverrides(dataModel, blockNumber, &foundTableEntry.votes);
@@ -341,7 +341,7 @@ void Grid_SingleEvap(void *context)
          break;
 
       case 38:
-         SetCoolingMode(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingMode_FreshFood : CoolingMode_Freezer);
+         SetCoolingMode(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingMode_FreshFood : currentCoolingMode);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingSpeed_Low : CoolingSpeed_Off);
          SetPulldownActive(dataModel, CLEAR);
          break;

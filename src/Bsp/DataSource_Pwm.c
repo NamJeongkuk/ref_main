@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief MTU0 and MTU1 are synchronous to allow for MTU1.TGRA to be used as the cycle (frequency) register
+ * @brief MTU0 and MTU1 are synchronous to allow for MTU0.TGRD to be used as the cycle (frequency) register
  *        and allow all 3 of MTIOC0A, MTIOC0B, MTIOC0C on MTU0 and MTIOC1A, MTIOC1B on MTU1
  *        to be used on PWM Mode 2. MTIOC3A and MTIOC3C are configured on PWM Mode 1.
  *
@@ -202,24 +202,24 @@ static void ConfigurePwmMode2(void)
    // Count on rising edge
    PWM_TABLE(EXPAND_AS_SET_COUNT_RISING_EDGE)
 
-   // TCNT cleared by TGRA compare match
-   MTU1.TCR.BIT.CCLR = 0x01;
+   // TCNT synchronous clearing - sync with MTU0
+   MTU1.TCR.BIT.CCLR = 0x03;
 
-   // TCNT synchronous clearing
-   MTU0.TCR.BIT.CCLR = 0x03;
+   // TCNT clear on TGRD match
+   MTU0.TCR.BIT.CCLR = 0x06;
 
    // Configure PWM 2 mode
    PWM_TABLE(EXPAND_AS_SET_PWM_MODE2)
 
    // Init fan polarity
-   // Initially low - Low at TRGA compare match
-   MTU1.TIOR.BIT.IOA = 0x01;
+   // Initially low - High at TRGA compare match
+   MTU1.TIOR.BIT.IOA = 0x02;
 
    // Initially low - High at TRGB compare match
    MTU1.TIOR.BIT.IOB = 0x02;
 
    // Configure frequency
-   MTU1.TGRA = Mtu0Mtu1SynchronousFrequencyCount;
+   MTU0.TGRD = Mtu0Mtu1SynchronousFrequencyCount;
 
    // Initially low - High at TGRA compare match
    MTU0.TIORH.BIT.IOA = 0x02;

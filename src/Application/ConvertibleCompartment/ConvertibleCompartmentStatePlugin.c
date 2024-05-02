@@ -11,12 +11,12 @@
 #include "uassert.h"
 
 static const ConvertibleCompartmentStateConfig_t config = {
-   .convertibleCompartmentResolvedSetpointErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
+   .featurePanResolvedSetpointErd = Erd_FeaturePanSetpoint_UserVote,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
 /*!
- * Initializes State plugin which sets ConvertibleCompartmentState Erd based on ConvertibleCompartmentSetpoint
+ * Initializes State plugin which sets ConvertibleCompartmentState Erd based on FeaturePanSetpoint
  * @param dataModel The data model.
  * @param config
  */

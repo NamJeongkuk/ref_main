@@ -62,3 +62,5 @@ node_modules/
 package-lock.json
 
 test/Lcov/
+
+test/AutomatedBenchTests/tests/*

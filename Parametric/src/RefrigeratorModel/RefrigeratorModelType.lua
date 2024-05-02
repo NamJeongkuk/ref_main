@@ -7,8 +7,8 @@ return enum({
   'single_cabinet_fresh_food',
   'single_cabinet_freezer',
   'top_freezer',
-  'convertible_drawer_double_drawer_bottom_freezer',
-  'convertible_drawer_quad_door',
+  'convertible_compartment_double_drawer_bottom_freezer',
+  'convertible_compartment_quad_door',
   'f_and_p_wine_column',
   'f_and_p_columns_b',
   'dual_zone_wine_chiller',
@@ -21,5 +21,5 @@ return enum({
   'f_and_p_active_smart_freestanding',
   'f_and_p_active_smart_built_in',
   'haier_counter_depth_platform',
-  'convertible_drawer_single_fresh_food_door_with_double_drawer_bottom_freezer'
+  'convertible_compartment_single_fresh_food_door_with_double_drawer_bottom_freezer'
 }, 'refrigerator_model_type')

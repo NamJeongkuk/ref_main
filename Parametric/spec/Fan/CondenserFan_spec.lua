@@ -68,8 +68,10 @@ describe('CondenserFan', function()
       pid = some_pid,
       fault = some_fault,
       speed_table = TypedString('fan_speed_table', 'fan_speed_table'),
-      super_low_at_high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
-      super_low_at_high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
+      high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature_ff_cooling_mode = rpm({rpm = 800}),
+      high_ambient_humidity_and_low_temperature_ff_cooling_mode = rpm({rpm = 900}),
       high_ambient_trigger_temperature_in_degfx100 = 8200,
       high_ambient_trigger_humidity_in_percentx100 = 7600
     }, overrides or {})
@@ -138,15 +140,27 @@ describe('CondenserFan', function()
   end)
 
   it('should assert if fields are not a speed', function()
-    should_fail_with('super_low_at_high_ambient_humidity_and_high_temperature must be a typed string with type speed, has type(s) blah', function()
+    should_fail_with('high_ambient_humidity_and_high_temperature must be a typed string with type speed, has type(s) blah', function()
       condenser_fan(generate_config({
-        super_low_at_high_ambient_humidity_and_high_temperature = TypedString('blah', 'some_blah')
+        high_ambient_humidity_and_high_temperature = TypedString('blah', 'some_blah')
       }))
     end)
 
-    should_fail_with('super_low_at_high_ambient_humidity_and_low_temperature must be a typed string with type speed, has type(s) blah', function()
+    should_fail_with('high_ambient_humidity_and_low_temperature must be a typed string with type speed, has type(s) blah', function()
       condenser_fan(generate_config({
-        super_low_at_high_ambient_humidity_and_low_temperature = TypedString('blah', 'some_blah')
+        high_ambient_humidity_and_low_temperature = TypedString('blah', 'some_blah')
+      }))
+    end)
+
+    should_fail_with('high_ambient_humidity_and_high_temperature_ff_cooling_mode must be a typed string with type speed, has type(s) blah', function()
+      condenser_fan(generate_config({
+        high_ambient_humidity_and_high_temperature_ff_cooling_mode = TypedString('blah', 'some_blah')
+      }))
+    end)
+
+    should_fail_with('high_ambient_humidity_and_low_temperature_ff_cooling_mode must be a typed string with type speed, has type(s) blah', function()
+      condenser_fan(generate_config({
+        high_ambient_humidity_and_low_temperature_ff_cooling_mode = TypedString('blah', 'some_blah')
       }))
     end)
   end)
@@ -170,7 +184,6 @@ describe('CondenserFan', function()
   it('should generate a typed string with the correct data with valve rpm table and type condenser_fan', function()
     local expected = remove_whitespace([[
       structure(
-        bool(true),
         u8(4),
         u8(2),
         bool(false),
@@ -205,6 +218,14 @@ describe('CondenserFan', function()
           u8(1),
           u16(1200)
         ),
+        structure(
+          u8(1),
+          u16(900)
+        ),
+        structure(
+          u8(1),
+          u16(1100)
+        ),
         i16(8200),
         u16(7600)
         )
@@ -218,8 +239,10 @@ describe('CondenserFan', function()
       pid = some_pid,
       fault = some_fault,
       speed_table = TypedString('fan_speed_table', 'fan_speed_table'),
-      super_low_at_high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
-      super_low_at_high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
+      high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature_ff_cooling_mode = rpm({rpm = 900}),
+      high_ambient_humidity_and_low_temperature_ff_cooling_mode = rpm({rpm = 1100}),
       high_ambient_trigger_temperature_in_degfx100 = 8200,
       high_ambient_trigger_humidity_in_percentx100 = 7600
     })
@@ -231,7 +254,6 @@ describe('CondenserFan', function()
   it('should generate a typed string with the correct data with valve care about cooling mode rpm table and type condenser_fan', function()
     local expected = remove_whitespace([[
       structure(
-        bool(true),
         u8(4),
         u8(2),
         bool(true),
@@ -266,6 +288,14 @@ describe('CondenserFan', function()
           u8(1),
           u16(1200)
         ),
+        structure(
+          u8(1),
+          u16(900)
+        ),
+        structure(
+          u8(1),
+          u16(1100)
+        ),
         i16(8200),
         u16(7600)
       )
@@ -279,8 +309,10 @@ describe('CondenserFan', function()
       pid = some_pid,
       fault = some_fault,
       speed_table = TypedString('fan_care_about_cooling_mode_speed_table', 'fan_care_about_cooling_mode_speed_table'),
-      super_low_at_high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
-      super_low_at_high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature = rpm({rpm = 1000}),
+      high_ambient_humidity_and_low_temperature = rpm({rpm = 1200}),
+      high_ambient_humidity_and_high_temperature_ff_cooling_mode = rpm({rpm = 900}),
+      high_ambient_humidity_and_low_temperature_ff_cooling_mode = rpm({rpm = 1100}),
       high_ambient_trigger_temperature_in_degfx100 = 8200,
       high_ambient_trigger_humidity_in_percentx100 = 7600
     })

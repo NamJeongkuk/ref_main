@@ -11,15 +11,27 @@
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 
-static const Erd_t freezerAdjustedSetpointErds[] = {
+static const Erd_t freezerAdjustedSetpointWithoutShiftErds[] = {
    Erd_Freezer_ResolvedSetpointInDegFx100,
    Erd_Freezer_CabinetOffsetInDegFx100,
    Erd_Freezer_CrossAmbientOffsetInDegFx100,
    Erd_Freezer_HighAmbientOffsetInDegFx100,
-   Erd_Freezer_ThermalShiftInDegFx100
 };
 
-static const I16ErdAdderConfiguration_t freezerErdAdderConfig = {
+static const I16ErdAdderConfiguration_t freezerAdjustedSetpointWithoutShiftConfig = {
+   .resultErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
+   .i16ErdsToBeAdded = {
+      freezerAdjustedSetpointWithoutShiftErds,
+      NUM_ELEMENTS(freezerAdjustedSetpointWithoutShiftErds),
+   },
+};
+
+static const Erd_t freezerAdjustedSetpointErds[] = {
+   Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
+   Erd_Freezer_ThermalShiftInDegFx100,
+};
+
+static const I16ErdAdderConfiguration_t freezerAdjustedSetpointConfig = {
    .resultErd = Erd_Freezer_AdjustedSetpointInDegFx100,
    .i16ErdsToBeAdded = {
       freezerAdjustedSetpointErds,
@@ -28,7 +40,7 @@ static const I16ErdAdderConfiguration_t freezerErdAdderConfig = {
 };
 
 static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_FreezerSetpoint_ResolvedVote,
+   .setpointVoteErd = Erd_FreezerSetpoint_ResolvedVote,
    .resolvedSetpointErd = Erd_Freezer_ResolvedSetpointInDegFx100,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
@@ -50,7 +62,7 @@ static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_Freezer_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->freezerOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->cabinetOffsetInDegFx100);
 }
 
 void FreezerAdjustedSetpointPlugin_Init(
@@ -58,7 +70,8 @@ void FreezerAdjustedSetpointPlugin_Init(
    I_DataModel_t *dataModel)
 {
    InitializeFreezerCabinetOffsetErd(dataModel);
-   I16ErdAdder_Init(&instance->_private.freezerErdAdder, dataModel, &freezerErdAdderConfig);
+   I16ErdAdder_Init(&instance->_private.freezerAdjustedSetpointWithoutShiftErdAdder, dataModel, &freezerAdjustedSetpointWithoutShiftConfig);
+   I16ErdAdder_Init(&instance->_private.freezerAdjustedSetpointErdAdder, dataModel, &freezerAdjustedSetpointConfig);
    ResolvedSetpointWriter_Init(
       &instance->_private.freezerResolvedSetpointWriter,
       dataModel,
@@ -66,12 +79,12 @@ void FreezerAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.freezerCrossAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->crossAmbientOffsetData,
       &freezerCrossAmbientOffsetCalculatorConfig);
    HighAmbientHumidityOffsetCalculator_Init(
       &instance->_private.freezerHighAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->highAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->highAmbientOffsetData,
       &freezerHighAmbientOffsetCalculatorConfig);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

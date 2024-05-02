@@ -17,7 +17,7 @@ static void OnChange(void *context, const void *args)
 
    if(*state)
    {
-      temp = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->iceCabinetAdjustedSetpointData->iceFormationOffsetInDegFx100;
+      temp = PersonalityParametricData_Get(dataModel)->iceCabinetThermalOffsetData->iceFormationOffsetInDegFx100;
    }
 
    DataModel_Write(

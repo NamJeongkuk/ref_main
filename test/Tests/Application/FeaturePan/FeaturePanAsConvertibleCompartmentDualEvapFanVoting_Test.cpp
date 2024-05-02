@@ -16,7 +16,7 @@ extern "C"
 #include "uassert_test.h"
 
 const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t config = {
-   .featurePanModeErd = Erd_FeaturePanMode,
+   .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
    .evapFanVote = Erd_FreezerEvapFanSpeed_FeaturePanVote
 };
 
@@ -58,6 +58,16 @@ TEST_GROUP(FeaturePanAsConvertibleCompartmentDualEvapFanVoting)
       DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_FeaturePanVote, &fanVotedSpeed);
    }
 
+   void GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_t featurePanMode)
+   {
+      DataModel_Write(dataModel, Erd_FeaturePanCoolingMode, &featurePanMode);
+   }
+
+   void WhenFeaturePanCoolingModeBecomes(FeaturePanCoolingMode_t featurePanMode)
+   {
+      GivenFeaturePanCoolingModeIs(featurePanMode);
+   }
+
    void FreezerEvapFanVoteShouldBe(FanSpeed_t expectedSpeed, Vote_t expectedCare)
    {
       FanVotedSpeed_t actual;
@@ -66,30 +76,12 @@ TEST_GROUP(FeaturePanAsConvertibleCompartmentDualEvapFanVoting)
       CHECK_EQUAL(expectedSpeed, actual.speed);
       CHECK_EQUAL(expectedCare, actual.care);
    }
-
-   void GivenFeaturePanModeIs(FeaturePanMode_t featurePanMode)
-   {
-      DataModel_Write(dataModel, Erd_FeaturePanMode, &featurePanMode);
-   }
-
-   void WhenFeaturePanModeBecomes(FeaturePanMode_t featurePanMode)
-   {
-      GivenFeaturePanModeIs(featurePanMode);
-   }
-
-   void FeaturePanModeShouldBe(FeaturePanMode_t expected)
-   {
-      FeaturePanMode_t actual;
-      DataModel_Read(dataModel, Erd_FeaturePanMode, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
 };
 
 TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldVoteFreezerEvapFanHighWhenFeaturePanModeIsActiveCoolingOnInit)
 {
    GivenFreezerEvapFanVoteIs(FanSpeed_Off, Vote_DontCare);
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenModuleIsInitialized();
 
    FreezerEvapFanVoteShouldBe(FanSpeed_High, Vote_Care);
@@ -98,7 +90,7 @@ TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldVoteFreezerEvapF
 TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldNotVoteFreezerEvapFanHighWhenFeaturePanModeIsNeutralOnInit)
 {
    GivenFreezerEvapFanVoteIs(FanSpeed_Off, Vote_DontCare);
-   GivenFeaturePanModeIs(FeaturePanMode_Neutral);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_Neutral);
    GivenModuleIsInitialized();
 
    FreezerEvapFanVoteShouldBe(FanSpeed_High, Vote_DontCare);
@@ -107,19 +99,19 @@ TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldNotVoteFreezerEv
 TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldVoteFreezerEvapFanHighWhenFeaturePanModeChangesToActiveCooling)
 {
    GivenFreezerEvapFanVoteIs(FanSpeed_Off, Vote_DontCare);
-   GivenFeaturePanModeIs(FeaturePanMode_Neutral);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_Neutral);
    GivenModuleIsInitialized();
 
-   WhenFeaturePanModeBecomes(FeaturePanMode_ActiveCooling);
+   WhenFeaturePanCoolingModeBecomes(FeaturePanCoolingMode_ActiveCooling);
    FreezerEvapFanVoteShouldBe(FanSpeed_High, Vote_Care);
 }
 
 TEST(FeaturePanAsConvertibleCompartmentDualEvapFanVoting, ShouldNotVoteFreezerEvapFanHighWhenFeaturePanModeChangesToNeutral)
 {
    GivenFreezerEvapFanVoteIs(FanSpeed_Off, Vote_DontCare);
-   GivenFeaturePanModeIs(FeaturePanMode_ActiveCooling);
+   GivenFeaturePanCoolingModeIs(FeaturePanCoolingMode_ActiveCooling);
    GivenModuleIsInitialized();
 
-   WhenFeaturePanModeBecomes(FeaturePanMode_Neutral);
+   WhenFeaturePanCoolingModeBecomes(FeaturePanCoolingMode_Neutral);
    FreezerEvapFanVoteShouldBe(FanSpeed_High, Vote_DontCare);
 }

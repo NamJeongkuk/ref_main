@@ -17,7 +17,7 @@ typedef struct
    Erd_t freezerSetpointFreezerIceRateVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerEvapFanSpeedFreezerIceRateVoteErd; // FanVotedSpeed_t
    Erd_t freezerEvapFanSpeedResolvedVoteErd; // FanVotedSpeed_t
-   Erd_t iceRateIsActiveErd; // bool
+   Erd_t freezerIceRateIsActiveErd; // bool
 } FreezerIceRateHandlerConfig_t;
 
 typedef struct

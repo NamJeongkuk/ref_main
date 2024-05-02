@@ -26,8 +26,7 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
    .coolingSystemRequestVoteList = {
       .pairs = votingPairs,
-      .numberOfPairs = NUM_ELEMENTS(votingPairs)
-   }
+      .numberOfPairs = NUM_ELEMENTS(votingPairs) }
 };
 
 void SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_Init(
@@ -35,7 +34,7 @@ void SingleDoorFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
-   DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
+   DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
 
    SingleDoorFreezerSetpointPlugin_Init(&instance->_private.singleDoorFreezerSetpointPlugin, dataModel);
    SingleDoorFreezerCoolingSystemSensorFilteringPlugin_Init(

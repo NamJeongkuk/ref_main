@@ -24,6 +24,7 @@ return defrost({
     prechill_deli_damper_position = 'open',
     prechill_convertible_compartment_evap_fan_speed = 'high_speed',
     prechill_fresh_food_damper_position = 'closed',
+    prechill_condenser_fan_speed = 'super_low_speed',
     prechill_freezer_min_temp_in_degfx100 = -600,
     prechill_fresh_food_min_temp_in_degfx100 = 3200,
     prechill_fresh_food_max_temp_in_degfx100 = 4600,

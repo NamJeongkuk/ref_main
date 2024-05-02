@@ -38,7 +38,7 @@ static const DataModel_TestDoubleConfigurationEntry_t dataModelTestDoubleConfig[
 };
 
 static const ResolvedSetpointWriterConfiguration_t resolvedSetpointWriterConfiguration = {
-   .resolvedSetpointVoteErd = Erd_SetpointResolvedVote,
+   .setpointVoteErd = Erd_SetpointResolvedVote,
    .resolvedSetpointErd = Erd_ResolvedSetpoint,
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };

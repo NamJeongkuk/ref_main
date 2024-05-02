@@ -17,7 +17,6 @@
 #include "utils.h"
 #include "FanSpeed.h"
 #include "Setpoint.h"
-#include "CompressorState.h"
 #include "CompressorVotedSpeed.h"
 #include "Signal.h"
 #include "uassert.h"
@@ -937,16 +936,17 @@ static void VoteForConvertibleCompartmentDamperPosition(Defrost_t *instance, Dam
 
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
+   VoteForSealedSystemValvePosition(instance, instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition, care);
+   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition, care);
    VoteForCompressorSpeed(instance, instance->_private.defrostData->prechillData.prechillCompressorSpeed, care);
+   VoteForCondenserFanSpeed(instance, instance->_private.defrostData->prechillData.prechillCondenserFanSpeed, care);
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillFreezerEvaporatorFanSpeed, care);
    VoteForFreshFoodEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillFreshFoodEvaporatorFanSpeed, care);
-   VoteForConvertibleCompartmentEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentEvapFanSpeed, care);
    VoteForIceCabinetFanSpeed(instance, instance->_private.defrostData->prechillData.prechillIceCabinetFanSpeed, care);
    VoteForDeliFanSpeed(instance, instance->_private.defrostData->prechillData.prechillDeliFanSpeed, care);
-   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostData->prechillData.prechillFreshFoodDamperPosition, care);
-   VoteForConvertibleCompartmentDamperPosition(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentDamperPosition, care);
    VoteForDeliDamperPosition(instance, instance->_private.defrostData->prechillData.prechillDeliDamperPosition, care);
-   VoteForSealedSystemValvePosition(instance, instance->_private.defrostData->prechillData.prechillSealedSystemValvePosition, care);
+   VoteForConvertibleCompartmentDamperPosition(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentDamperPosition, care);
+   VoteForConvertibleCompartmentEvapFanSpeed(instance, instance->_private.defrostData->prechillData.prechillConvertibleCompartmentEvapFanSpeed, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
@@ -1056,32 +1056,6 @@ static void VoteForSecondaryEvaporatorHeaters(
 static void VoteForHeaterOnLoads(Defrost_t *instance, bool care)
 {
    VoteForHeaterOnEntryLoads(instance, care);
-}
-
-static void EnableMinimumCompressorTimes(Defrost_t *instance)
-{
-   BooleanVotedState_t booleanVote = {
-      .state = false,
-      .care = Vote_DontCare
-   };
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableCompressorMinimumTimesVoteErd,
-      &booleanVote);
-}
-
-static void DisableMinimumCompressorTimes(Defrost_t *instance)
-{
-   BooleanVotedState_t booleanVote = {
-      .state = true,
-      .care = Vote_Care
-   };
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableCompressorMinimumTimesVoteErd,
-      &booleanVote);
 }
 
 static void VoteForDwellLoads(Defrost_t *instance, bool care)
@@ -1298,7 +1272,9 @@ static HsmState_t InitialState(Defrost_t *instance)
       {
          initialState = State_Dwell;
       }
-      else if(defrostState == DefrostState_Prechill || defrostState == DefrostState_HeaterOn)
+      else if(defrostState == DefrostState_PrechillPrep ||
+         defrostState == DefrostState_Prechill ||
+         defrostState == DefrostState_HeaterOn)
       {
          initialState = State_HeaterOnEntry;
       }
@@ -1891,7 +1867,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
-         DisableMinimumCompressorTimes(instance);
          ClearDefrostTestStateRequest(instance);
          VoteForHeaterOnEntryLoads(instance, Vote_Care);
          StartDefrostTimer(
@@ -1909,7 +1884,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 
       case Hsm_Exit:
          StopTimer(instance, &instance->_private.defrostTimer);
-         EnableMinimumCompressorTimes(instance);
          VoteForHeaterOnEntryLoads(instance, Vote_DontCare);
          break;
 
@@ -1929,7 +1903,6 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOn);
-         DisableMinimumCompressorTimes(instance);
          VoteForHeaterOnLoads(instance, Vote_Care);
 
          switch(CurrentDefrostType(instance))
@@ -2041,7 +2014,6 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             SetInvalidEvaporatorThermistorDuringDefrostTo(instance, false);
          }
 
-         EnableMinimumCompressorTimes(instance);
          VoteForHeaterOnLoads(instance, Vote_DontCare);
 
          switch(CurrentDefrostType(instance))
@@ -2091,7 +2063,6 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
-         DisableMinimumCompressorTimes(instance);
          RequestValveHoming(instance);
          VoteForDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
@@ -2113,7 +2084,6 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Hsm_Exit:
          StopTimer(instance, &instance->_private.defrostTimer);
-         EnableMinimumCompressorTimes(instance);
          VoteForDwellLoads(instance, Vote_DontCare);
          break;
 
@@ -2170,7 +2140,6 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PostDwell);
-         DisableMinimumCompressorTimes(instance);
          VoteForPostDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
@@ -2191,7 +2160,6 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       }
 
       case Hsm_Exit:
-         EnableMinimumCompressorTimes(instance);
          VoteForPostDwellLoads(instance, Vote_DontCare);
          StopTimer(instance, &instance->_private.defrostTimer);
          break;
@@ -2566,6 +2534,28 @@ static void OverrideNextDefrostTypeIfEepromClearedOnPowerUpOrPreviouslyDisabledO
    }
 }
 
+static void UpdateDefrostStateOnlyWhenDefrostHsmStateIsIdle(Defrost_t *instance)
+{
+   DefrostHsmState_t initialHsmState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostHsmStateErd,
+      &initialHsmState);
+
+   // DefrostStateOnCompareMatch doesn't cover the case.
+   // Because on change event doesn't occur when the initial HSM state is idle.
+   if(initialHsmState == DefrostHsmState_Idle)
+   {
+      DefrostState_t initialDefrostState;
+
+      initialDefrostState = DefrostState_Idle;
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->defrostStateErd,
+         &initialDefrostState);
+   }
+}
+
 void Defrost_Init(
    Defrost_t *instance,
    I_DataModel_t *dataModel,
@@ -2611,4 +2601,6 @@ void Defrost_Init(
    DataModel_SubscribeAll(
       dataModel,
       &instance->_private.dataModelSubscription);
+
+   UpdateDefrostStateOnlyWhenDefrostHsmStateIsIdle(instance);
 }

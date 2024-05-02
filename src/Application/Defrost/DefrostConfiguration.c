@@ -64,7 +64,6 @@ const DefrostConfiguration_t defrostConfiguration = {
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .cabinetFilteredTemperatureTooWarmOnPowerUpErd = Erd_CabinetFilteredTemperatureTooWarmOnPowerUp,
    .defrostPowerUpReadyErd = Erd_DefrostPowerUpReady,
-   .disableCompressorMinimumTimesVoteErd = Erd_DisableMinimumCompressorTimes_DefrostVote,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
    .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,
@@ -94,8 +93,8 @@ const DefrostConfiguration_t defrostConfiguration = {
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
    .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
 
-   .convertibleCompartmentFilteredTemperatureResolvedInDegFx100Erd = Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,
-   .convertibleCompartmentThermistorIsValidResolvedErd = Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   .convertibleCompartmentFilteredTemperatureResolvedInDegFx100Erd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
+   .convertibleCompartmentThermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
 
    .freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd = Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,
    .freezerEvaporatorThermistorIsValidResolvedErd = Erd_FreezerEvapThermistor_IsValidResolved,

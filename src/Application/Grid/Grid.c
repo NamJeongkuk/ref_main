@@ -17,7 +17,7 @@ static void Grid_Run(void *context)
 {
    Grid_t *instance = context;
 
-   instance->_private.configuration->gridFunctions->grids[instance->_private.gridData->gridId](instance->_private.dataModel);
+   instance->_private.gridFunction(instance->_private.dataModel);
 }
 
 static void OnGridOverrideEnableChange(void *context, const void *args)
@@ -62,12 +62,15 @@ static void OnGridOverrideSignalChange(void *context, const void *args)
 
 void Grid_Init(
    Grid_t *instance,
+   I_DataModel_t *dataModel,
    const GridConfiguration_t *configuration,
-   I_DataModel_t *dataModel)
+   const GridData_t *gridData,
+   void (*gridFunction)(void *context))
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
-   instance->_private.gridData = PersonalityParametricData_Get(instance->_private.dataModel)->freshFoodAndFreezerGridData;
+   instance->_private.gridData = gridData;
+   instance->_private.gridFunction = gridFunction;
 
    EventSubscription_Init(
       &instance->_private.gridOverrideEnableSubscription,

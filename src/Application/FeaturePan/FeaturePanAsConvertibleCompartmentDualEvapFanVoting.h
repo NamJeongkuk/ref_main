@@ -13,7 +13,7 @@
 
 typedef struct
 {
-   Erd_t featurePanModeErd; // FeaturePanMode_t
+   Erd_t featurePanCoolingModeErd; // FeaturePanCoolingMode_t
    Erd_t evapFanVote; // FanVotedSpeed_t
 } FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t;
 

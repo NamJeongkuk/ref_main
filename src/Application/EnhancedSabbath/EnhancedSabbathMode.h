@@ -17,7 +17,6 @@
 
 typedef struct
 {
-   Erd_t disableMinimumCompressorTimesVoteErd; // BooleanVotedState_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t condenserFanVoteErd; // FanVotedSpeed_t
    Erd_t freezerEvapFanVoteErd; // FanVotedSpeed_t

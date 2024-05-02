@@ -33,7 +33,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true }
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds
 };

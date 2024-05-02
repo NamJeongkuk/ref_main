@@ -8,6 +8,7 @@ return function(directory)
   import('Compressor/CoolingModeDependentCompressorSpeeds')
   import('Compressor/CoolingModeIndependentCompressorSpeeds')
   import('ConvertibleCompartment/ConvertibleCompartment')
+  import('FeaturePan/FeaturePan')
   import('Defrost/Defrost')
   import('Dispenser/Dispenser')
   import('Dispenser/DoorInhibitDispenseTable')
@@ -46,15 +47,13 @@ return function(directory)
   import('Bsp/LinearSearchConfiguration')
   import('Bsp/ErdListToSortedErdMappings')
   import('Setpoints/SetpointZone')
-  import('Setpoints/AdjustedSetpoint')
-  import('Setpoints/FreshFoodAdjustedSetpoint')
-  import('Setpoints/FreezerAdjustedSetpoint')
-  import('Setpoints/ConvertibleCompartmentAdjustedSetpoint')
-  import('Setpoints/DeliPanAdjustedSetpoint')
-  import('Setpoints/IceCabinetAdjustedSetpoint')
+  import('Setpoints/FreshFoodThermalOffset')
+  import('Setpoints/FreezerThermalOffset')
+  import('Setpoints/FeaturePanThermalOffset')
+  import('Setpoints/IceCabinetThermalOffset')
   import('Setpoints/CrossAmbientOffsetCalculator')
   import('Setpoints/ShiftOffsetCalculator')
-  import('Setpoints/FixedSetpointOffset')
+  import('Setpoints/FeaturePanSetpointOffset')
   import('Setpoints/SetpointOffset')
   import('Setpoints/ShiftOffset')
   import('Setpoints/CrossAmbientOffset')
@@ -110,6 +109,13 @@ return function(directory)
   import('Cooling/CabinetTemperatureExceeded')
   import('SealedSystemValve/SealedSystemValve')
   import('NonHeatedCycleDefrost/FreshFoodNonHeatedCycleDefrost')
+  import('Setpoints/FeaturePanUserSetpoint')
+  import('Setpoints/FeaturePanUserSetpoints')
+  import('FeaturePan/FeaturePanMode')
+  import('FeaturePan/FeaturePanModeLabel')
+  import('IceCabinet/FreezerSetpointToIceCabinetSetpointTable')
+  import('IceCabinet/IceCabinet')
+  import('IceCabinet/GammaTable')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -124,6 +130,7 @@ return function(directory)
   coolingModeDependentCompressorSpeeds = CoolingModeDependentCompressorSpeeds(core)
   compressorTimes = CompressorTimes(core)
   convertible_compartment = ConvertibleCompartment(core)
+  feature_pan = FeaturePan(core)
   cross_ambient_hysteresis_adjustment = CrossAmbientHysteresisAdjustment(core)
   defrost = Defrost(core)
   duty_cycle = DutyCycle(core)
@@ -153,15 +160,13 @@ return function(directory)
   binary_search_configuration = BinarySearchConfiguration(core)
   linear_search_configuration = LinearSearchConfiguration(core)
   setpoint_zone = SetpointZone(core)
-  adjusted_setpoint = AdjustedSetpoint(core)
-  fresh_food_adjusted_setpoint = FreshFoodAdjustedSetpoint(core)
-  freezer_adjusted_setpoint = FreezerAdjustedSetpoint(core)
-  convertible_compartment_adjusted_setpoint = ConvertibleCompartmentAdjustedSetpoint(core)
-  deli_pan_adjusted_setpoint = DeliPanAdjustedSetpoint(core)
-  ice_cabinet_adjusted_setpoint = IceCabinetAdjustedSetpoint(core)
+  fresh_food_thermal_offset = FreshFoodThermalOffset(core)
+  freezer_thermal_offset = FreezerThermalOffset(core)
+  feature_pan_thermal_offset = FeaturePanThermalOffset(core)
+  ice_cabinet_thermal_offset = IceCabinetThermalOffset(core)
   cross_ambient_offset_calculator = CrossAmbientOffsetCalculator(core)
   shift_offset_calculator = ShiftOffsetCalculator(core)
-  fixed_setpoint_offset = FixedSetpointOffset(core)
+  feature_pan_setpoint_offset = FeaturePanSetpointOffset(core)
   setpoint_offset = SetpointOffset(core)
   shift_offset = ShiftOffset(core)
   cross_ambient_offset = CrossAmbientOffset(core)
@@ -221,6 +226,13 @@ return function(directory)
   cabinet_temperature_exceeded = CabinetTemperatureExceeded(core)
   sealed_system_valve = SealedSystemValve(core)
   fresh_food_non_heated_cycle_defrost = FreshFoodNonHeatedCycleDefrost(core)
+  feature_pan_user_setpoint = FeaturePanUserSetpoint(core)
+  feature_pan_user_setpoints = FeaturePanUserSetpoints(core)
+  feature_pan_mode = FeaturePanMode
+  feature_pan_mode_label = FeaturePanModeLabel
+  freezer_setpoint_to_ice_cabinet_setpoint_table = FreezerSetpointToIceCabinetSetpointTable(core)
+  ice_cabinet = IceCabinet(core)
+  gamma_table = GammaTable(core)
 
   return {
     core = core,
@@ -231,6 +243,7 @@ return function(directory)
     cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds,
     cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds,
     convertible_compartment = convertible_compartment,
+    feature_pan = feature_pan,
     cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment,
     defrost = defrost,
     duty_cycle = duty_cycle,
@@ -266,15 +279,13 @@ return function(directory)
     binary_search_configuration = binary_search_configuration,
     linear_search_configuration = linear_search_configuration,
     setpoint_zone = setpoint_zone,
-    adjusted_setpoint = adjusted_setpoint,
-    fresh_food_adjusted_setpoint = fresh_food_adjusted_setpoint,
-    freezer_adjusted_setpoint = freezer_adjusted_setpoint,
-    convertible_compartment_adjusted_setpoint = convertible_compartment_adjusted_setpoint,
-    deli_pan_adjusted_setpoint = deli_pan_adjusted_setpoint,
-    ice_cabinet_adjusted_setpoint = ice_cabinet_adjusted_setpoint,
+    fresh_food_thermal_offset = fresh_food_thermal_offset,
+    freezer_thermal_offset = freezer_thermal_offset,
+    feature_pan_thermal_offset = feature_pan_thermal_offset,
+    ice_cabinet_thermal_offset = ice_cabinet_thermal_offset,
     cross_ambient_offset_calculator = cross_ambient_offset_calculator,
     shift_offset_calculator = shift_offset_calculator,
-    fixed_setpoint_offset = fixed_setpoint_offset,
+    feature_pan_setpoint_offset = feature_pan_setpoint_offset,
     setpoint_offset = setpoint_offset,
     shift_offset = shift_offset,
     cross_ambient_offset = cross_ambient_offset,
@@ -335,6 +346,13 @@ return function(directory)
     cabinet_temperature_exceeded = cabinet_temperature_exceeded,
     sealed_system_valve = sealed_system_valve,
     fresh_food_non_heated_cycle_defrost = fresh_food_non_heated_cycle_defrost,
+    feature_pan_user_setpoint = feature_pan_user_setpoint,
+    feature_pan_user_setpoints = feature_pan_user_setpoints,
+    feature_pan_mode = feature_pan_mode,
+    feature_pan_mode_label = feature_pan_mode_label,
+    freezer_setpoint_to_ice_cabinet_setpoint_table = freezer_setpoint_to_ice_cabinet_setpoint_table,
+    ice_cabinet = ice_cabinet,
+    gamma_table = gamma_table,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

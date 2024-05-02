@@ -44,6 +44,7 @@ typedef struct
    DamperPosition_t prechillDeliDamperPosition;
    FanSpeed_t prechillConvertibleCompartmentEvapFanSpeed;
    DamperPosition_t prechillFreshFoodDamperPosition;
+   FanSpeed_t prechillCondenserFanSpeed;
    TemperatureDegFx100_t prechillFreezerMinTempInDegFx100;
    TemperatureDegFx100_t prechillFreshFoodMinTempInDegFx100;
    TemperatureDegFx100_t prechillFreshFoodMaxTempInDegFx100;

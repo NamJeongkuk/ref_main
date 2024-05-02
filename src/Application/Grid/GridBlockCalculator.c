@@ -23,8 +23,8 @@ enum
 
    TwoDimensions = 2,
 
-   NonInvertedGridLine = 0,
-   InvertedGridLine = 1,
+   GridLineIsNotInverted = false,
+   GridLineIsInverted = true,
 
    PreviousGridBlockDefaultValue = 0xFF,
 };
@@ -122,7 +122,7 @@ static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *ins
       {
          firstDimensionGridLinesIndex = GridLineIndex(
             instance,
-            NonInvertedGridLine,
+            GridLineIsNotInverted,
             FirstDimension);
       }
       else
@@ -134,7 +134,7 @@ static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *ins
       {
          secondDimensionGridLinesIndex = GridLineIndex(
             instance,
-            InvertedGridLine,
+            GridLineIsInverted,
             SecondDimension);
       }
       else
@@ -148,7 +148,7 @@ static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *ins
       {
          firstDimensionGridLinesIndex = GridLineIndex(
             instance,
-            InvertedGridLine,
+            GridLineIsInverted,
             FirstDimension);
       }
       else
@@ -249,7 +249,7 @@ static void OnDataModelChanged(void *context, const void *args)
 
    if(erd == instance->_private.config->calculatedGridLinesErd)
    {
-      if(ThermistorIsValid(instance, FirstDimension) || ThermistorIsValid(instance, SecondDimension))
+      if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
       {
          UpdateGridBlockIfDifferent(instance);
       }
@@ -261,7 +261,7 @@ static void OnDataModelChanged(void *context, const void *args)
          if((erd == instance->_private.config->gridBlockAdjustmentErds[i].filteredResolvedTemperatureInDegFx100) ||
             (erd == instance->_private.config->gridBlockAdjustmentErds[i].thermistorIsValidResolvedErd))
          {
-            if(ThermistorIsValid(instance, FirstDimension) || ThermistorIsValid(instance, SecondDimension))
+            if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
             {
                UpdateGridBlockIfDifferent(instance);
                break;

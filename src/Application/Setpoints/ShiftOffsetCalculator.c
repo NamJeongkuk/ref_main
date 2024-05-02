@@ -12,6 +12,14 @@
 #include "PersonalityParametricData.h"
 #include "TemperatureDegFx100.h"
 #include "uassert.h"
+#include <stdlib.h>
+
+static bool FilterIsReady(ShiftOffsetCalculator_t *instance)
+{
+   bool ready;
+   Input_Read(Filter_GetReadyInput(instance->_private.longTermAverageFilter), &ready);
+   return ready;
+}
 
 static void UpdateLongTermAverage(ShiftOffsetCalculator_t *instance)
 {
@@ -23,16 +31,23 @@ static void UpdateLongTermAverage(ShiftOffsetCalculator_t *instance)
       &longTermAverage);
 }
 
-static void FilterFeed(ShiftOffsetCalculator_t *instance, TemperatureDegFx100_t feedValue)
-{
-   Filter_Feed(instance->_private.longTermAverageFilter, &feedValue);
-   UpdateLongTermAverage(instance);
-}
-
 static void FilterSeed(ShiftOffsetCalculator_t *instance, TemperatureDegFx100_t seedValue)
 {
    Filter_Seed(instance->_private.longTermAverageFilter, &seedValue);
    UpdateLongTermAverage(instance);
+}
+
+static void FilterFeed(ShiftOffsetCalculator_t *instance, TemperatureDegFx100_t feedValue)
+{
+   if(FilterIsReady(instance))
+   {
+      Filter_Feed(instance->_private.longTermAverageFilter, &feedValue);
+      UpdateLongTermAverage(instance);
+   }
+   else
+   {
+      FilterSeed(instance, feedValue);
+   }
 }
 
 static void SetShiftOffsetTo(ShiftOffsetCalculator_t *instance, TemperatureDegFx100_t shiftOffset)
@@ -41,17 +56,6 @@ static void SetShiftOffsetTo(ShiftOffsetCalculator_t *instance, TemperatureDegFx
       instance->_private.dataModel,
       instance->_private.config->shiftOffsetErd,
       &shiftOffset);
-}
-
-static TemperatureDegFx100_t AdjustedSetpoint(ShiftOffsetCalculator_t *instance)
-{
-   TemperatureDegFx100_t adjustedSetpoint;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->adjustedSetpointErd,
-      &adjustedSetpoint);
-
-   return adjustedSetpoint;
 }
 
 static TemperatureDegFx100_t ShiftOffset(ShiftOffsetCalculator_t *instance)
@@ -78,29 +82,30 @@ static TemperatureDegFx100_t FilteredTemperature(ShiftOffsetCalculator_t *instan
 
 static void LongTermAverageUpdateTimeExpired(void *context)
 {
-   ShiftOffsetCalculator_t *instance = context;
-   TemperatureDegFx100_t filteredTemperature = FilteredTemperature(instance);
-   FilterFeed(instance, filteredTemperature);
+   FilterFeed(context, FilteredTemperature(context));
+}
+
+static TemperatureDegFx100_t AdjustedSetpointWithoutShift(ShiftOffsetCalculator_t *instance)
+{
+   TemperatureDegFx100_t adjustedSetpointWithoutShift;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->adjustedSetpointWithoutShiftErd,
+      &adjustedSetpointWithoutShift);
+
+   return adjustedSetpointWithoutShift;
 }
 
 static void ShiftOffsetCalculateTimeExpired(void *context)
 {
    ShiftOffsetCalculator_t *instance = context;
-   TemperatureDegFx100_t adjustedSetpoint;
    TemperatureDegFx100_t average1;
    TemperatureDegFx100_t difference;
-   TemperatureDegFx100_t shiftOffset;
+   TemperatureDegFx100_t shiftOffset = ShiftOffset(instance);
 
-   adjustedSetpoint = AdjustedSetpoint(instance);
-   shiftOffset = ShiftOffset(instance);
    Filter_Read(instance->_private.longTermAverageFilter, &average1);
 
-   TemperatureDegFx100_t adjustedSetpointWithoutShift = adjustedSetpoint - shiftOffset;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->adjustedSetpointWithoutShiftErd,
-      &adjustedSetpointWithoutShift);
+   TemperatureDegFx100_t adjustedSetpointWithoutShift = AdjustedSetpointWithoutShift(instance);
 
    if(average1 > (adjustedSetpointWithoutShift - instance->_private.shiftOffsetData->lowerAdjustmentLimitInDegFx100) &&
       average1 < (adjustedSetpointWithoutShift + instance->_private.shiftOffsetData->upperAdjustmentLimitInDegFx100))
@@ -123,34 +128,15 @@ static void ShiftOffsetCalculateTimeExpired(void *context)
          shiftOffset += 2;
       }
 
-      if(shiftOffset > instance->_private.shiftOffsetData->maxShiftInDegFx100)
-      {
-         shiftOffset = instance->_private.shiftOffsetData->maxShiftInDegFx100;
-      }
-      else if(shiftOffset < instance->_private.shiftOffsetData->minShiftInDegFx100)
-      {
-         shiftOffset = instance->_private.shiftOffsetData->minShiftInDegFx100;
-      }
+      shiftOffset = CLAMP(shiftOffset,
+         instance->_private.shiftOffsetData->minShiftInDegFx100,
+         instance->_private.shiftOffsetData->maxShiftInDegFx100);
 
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->shiftOffsetErd,
          &shiftOffset);
    }
-}
-
-static bool AdjustedSetpointPluginIsReady(
-   I_DataModel_t *dataModel,
-   Erd_t adjustedSetpointPluginReadyErd)
-{
-   bool adjustedSetpointPluginIsReady;
-
-   DataModel_Read(
-      dataModel,
-      adjustedSetpointPluginReadyErd,
-      &adjustedSetpointPluginIsReady);
-
-   return adjustedSetpointPluginIsReady;
 }
 
 static void DataModelUpdated(void *context, const void *args)
@@ -164,7 +150,7 @@ static void DataModelUpdated(void *context, const void *args)
    }
    else if(onDataChangeArgs->erd == instance->_private.config->resetThermalShiftOffsetSignalErd)
    {
-      FilterSeed(instance, AdjustedSetpoint(instance) - ShiftOffset(instance));
+      FilterSeed(instance, AdjustedSetpointWithoutShift(instance));
       SetShiftOffsetTo(instance, 0);
    }
 }
@@ -173,36 +159,32 @@ void ShiftOffsetCalculator_Init(
    ShiftOffsetCalculator_t *instance,
    I_DataModel_t *dataModel,
    I_Filter_t *longTermAverageFilter,
+   TimerModule_t *timerModule,
    const ShiftOffsetCalculatorConfig_t *config,
    const ShiftOffsetData_t *shiftOffsetData)
 {
-   uassert(AdjustedSetpointPluginIsReady(dataModel, config->adjustedSetpointPluginReadyErd));
-
    instance->_private.dataModel = dataModel;
    instance->_private.longTermAverageFilter = longTermAverageFilter;
-   instance->_private.shiftOffsetCalculatorData =
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->shiftOffsetCalculatorData;
    instance->_private.config = config;
    instance->_private.shiftOffsetData = shiftOffsetData;
 
+   const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData =
+      PersonalityParametricData_Get(dataModel)->shiftOffsetCalculatorData;
+
    SetShiftOffsetTo(instance, 0);
-   FilterSeed(instance, AdjustedSetpoint(instance));
+   FilterSeed(instance, AdjustedSetpointWithoutShift(instance));
 
    TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(
-         dataModel,
-         config->timerModuleErd),
+      timerModule,
       &instance->_private.longTermAverageUpdateTimer,
-      instance->_private.shiftOffsetCalculatorData->longTermAverageUpdateTimeInMinutes * MSEC_PER_MIN,
+      shiftOffsetCalculatorData->longTermAverageUpdateTimeInMinutes * MSEC_PER_MIN,
       LongTermAverageUpdateTimeExpired,
       instance);
 
    TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(
-         dataModel,
-         config->timerModuleErd),
+      timerModule,
       &instance->_private.shiftOffsetCalculateTimer,
-      instance->_private.shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN,
+      shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN,
       ShiftOffsetCalculateTimeExpired,
       instance);
 

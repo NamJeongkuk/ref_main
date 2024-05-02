@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief On change of resolvedSetpointVoteErd (SetpointVotedTemperature_t),
+ * @brief On change of setpointVoteErd (SetpointVotedTemperature_t),
  * writes the new temperature to resolvedSetpointErd (TemperatureDegFx100_t)
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
@@ -13,7 +13,7 @@
 
 typedef struct
 {
-   Erd_t resolvedSetpointVoteErd; // SetpointVotedTemperature_t
+   Erd_t setpointVoteErd; // SetpointVotedTemperature_t
    Erd_t resolvedSetpointErd; // TemperatureDegFx100_t
    Erd_t userSetpointPluginReadyErd; // bool
 } ResolvedSetpointWriterConfiguration_t;

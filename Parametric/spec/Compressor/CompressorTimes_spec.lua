@@ -15,7 +15,6 @@ describe('CompressorTimes', function()
       startup_on_time_in_seconds = 45,
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
-      variable_speed_minimum_run_time_in_minutes = 3,
       sabbath_delay_time_in_seconds = 20,
       compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24,
       compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3
@@ -66,14 +65,6 @@ describe('CompressorTimes', function()
     end)
   end)
 
-  it('should assert if variable_speed_minimum_run_time_in_minutes is not in range if variable speed', function()
-    should_fail_with('variable_speed_minimum_run_time_in_minutes=-1 must be in [0, 255]', function()
-      compressor_times(generate_config({
-        variable_speed_minimum_run_time_in_minutes = -1
-      }))
-    end)
-  end)
-
   it('should assert if sabbath_delay_time_in_seconds is not in range', function()
     should_fail_with('sabbath_delay_time_in_seconds=-1 must be in [15, 25]', function()
       compressor_times(generate_config({
@@ -106,7 +97,6 @@ describe('CompressorTimes', function()
         u8(45),
         u8(30),
         u8(29),
-        u8(3),
         u8(20),
         u8(3),
         u16(24))
@@ -118,7 +108,6 @@ describe('CompressorTimes', function()
       startup_on_time_in_seconds = 45,
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
-      variable_speed_minimum_run_time_in_minutes = 3,
       sabbath_delay_time_in_seconds = 20,
       compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
       compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24

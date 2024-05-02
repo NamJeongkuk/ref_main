@@ -20,8 +20,9 @@ static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagno
 static void InitializePlatformParametricErds(I_DataModel_t *dataModel)
 {
    const PersonalityParametricData_t *parametricData = PersonalityParametricData_Get(dataModel);
+   bool hasConvertibleCompartment = BITMAP_STATE(&parametricData->platformData->compartmentBitmap, Compartment_Convertible);
 
-   DataModel_Write(dataModel, Erd_HasConvertibleCompartment, &parametricData->convertibleCompartmentData->hasConvertibleCompartment);
+   DataModel_Write(dataModel, Erd_HasConvertibleCompartment, &hasConvertibleCompartment);
    DataModel_Write(dataModel, Erd_RefrigeratorModel, parametricData->refrigeratorModelData);
 }
 

@@ -4,4 +4,5 @@ return enum({
   'fresh_food',
   'freezer',
   'convertible',
+  'deli_pan',
 }, 'compartment_enum')
