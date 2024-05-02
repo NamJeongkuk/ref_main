@@ -18,5 +18,8 @@
     "editor.suggest.insertMode": "replace",
     "editor.tabSize": 2,
     "editor.insertSpaces": true
+  },
+  "files.associations": {
+    "nonvolatileasyncdatasource.h": "c"
   }
 }
