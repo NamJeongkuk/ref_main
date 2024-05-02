@@ -15,8 +15,12 @@ typedef struct
    I_ServiceTest_t interface;
 } ServiceModeTest_ExitServiceMode_t;
 
+/*!
+ * @param instance
+ * @param testNumbersMappingConfig The ServiceTest Group Numbers Mapping Configuration
+ */
 void ServiceModeTest_ExitServiceMode_Init(
    ServiceModeTest_ExitServiceMode_t *instance,
-   ServiceModeTestNumber_t testNumber);
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig);
 
 #endif

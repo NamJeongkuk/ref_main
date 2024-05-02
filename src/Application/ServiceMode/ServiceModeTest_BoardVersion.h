@@ -13,8 +13,9 @@
 
 typedef struct
 {
-   uint8_t destinationAddress;
-} ServiceModeTest_BoardVersionConfig_t;
+   const uint8_t *destinationAddresses;
+   uint8_t numberOfItems;
+} ServiceModeTest_BoardVersionMappingConfig_t;
 
 typedef struct
 {
@@ -23,13 +24,19 @@ typedef struct
    struct
    {
       ServiceTestResources_t *resources;
-      const ServiceModeTest_BoardVersionConfig_t *config;
+      const ServiceModeTest_BoardVersionMappingConfig_t *boardVersionsMappingConfig;
+
    } _private;
 } ServiceModeTest_BoardVersion_t;
 
+/*!
+ * @param instance
+ * @param testNumbersMappingConfig The ServiceTest Group Numbers Mapping Configuration
+ * @param boardVersionsMappingConfig The ExternalBoard Versions Mapping Configuration
+ */
 void ServiceModeTest_BoardVersion_Init(
    ServiceModeTest_BoardVersion_t *instance,
-   ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_BoardVersionConfig_t *config);
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig,
+   const ServiceModeTest_BoardVersionMappingConfig_t *boardVersionsMappingConfig);
 
 #endif

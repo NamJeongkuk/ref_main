@@ -7,8 +7,8 @@
 
 #include <string.h>
 #include "ServiceModeRequestHandler.h"
-#include "ServiceModeTestStatus.h"
 #include "ServiceModeTestRequest.h"
+#include "ServiceModeTestStatus.h"
 #include "SystemErds.h"
 
 static void ClearServiceTestRequest(ServiceModeRequestHandler_t *instance)
@@ -39,9 +39,15 @@ static void TestsResultCallback(void *context, const ServiceTestResultArgs_t *ar
 static I_ServiceTest_t *FindTestComponentWithTestNumber(ServiceModeRequestHandler_t *instance, ServiceModeTestNumber_t testNumber)
 {
    LinkedList_ForEach(&instance->_private.components, ServiceModeTestComponent_t, component, {
-      if(component->test->testNumber == testNumber)
+      for(uint8_t index = 0; index < component->test->testNumbersMappingTable->numberOfItems; index++)
       {
-         return component->test;
+         if(component->test->testNumbersMappingTable->testNumberEntries[index] == testNumber)
+         {
+            instance->_private.resources.itemIndex = index;
+            instance->_private.resources.testNumber = testNumber;
+
+            return component->test;
+         }
       }
    });
 

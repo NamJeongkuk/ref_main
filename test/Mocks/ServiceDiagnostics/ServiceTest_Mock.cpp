@@ -38,10 +38,10 @@ static const I_ServiceTest_Api_t api = {
    .Stop = Stop
 };
 
-I_ServiceTest_t *ServiceTest_Mock_Init(ServiceTest_Mock_t *instance, ServiceModeTestNumber_t testNumber)
+I_ServiceTest_t *ServiceTest_Mock_Init(ServiceTest_Mock_t *instance, const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingTable)
 {
    instance->interface.api = &api;
-   instance->interface.testNumber = testNumber;
+   instance->interface.testNumbersMappingTable = testNumbersMappingTable;
 
    return &instance->interface;
 }

@@ -16,11 +16,31 @@ extern "C"
 
 enum
 {
-   SomeTestNumber = 23
+   TestIndex_0,
+   TestIndex_1,
+
+   SomeTestNumber = 23,
+   SomeOtherTestNumber
 };
 
-static const ServiceModeTest_VersionConfig_t config = {
-   .versionErd = Erd_ApplicationVersion
+static const ServiceModeTestNumber_t testGroupItems[] = {
+   SomeTestNumber,
+   SomeOtherTestNumber
+};
+
+static const ServiceModeTest_TestNumbersMappingTable_t testGroupConfig = {
+   .testNumberEntries = testGroupItems,
+   .numberOfItems = NUM_ELEMENTS(testGroupItems)
+};
+
+static const Erd_t configDataItems[] = {
+   Erd_ApplicationVersion,
+   Erd_ParametricVersion
+};
+
+static const ServiceModeTest_VersionMappingConfig_t config = {
+   .versionErds = configDataItems,
+   .numberOfItems = NUM_ELEMENTS(configDataItems)
 };
 
 static void TestsResultCallback(void *context, const ServiceTestResultArgs_t *args)
@@ -47,7 +67,7 @@ TEST_GROUP(ServiceModeTest_Version)
 
    void GivenTheModuleIsInitialized()
    {
-      ServiceModeTest_Version_Init(&instance, SomeTestNumber, &config);
+      ServiceModeTest_Version_Init(&instance, &testGroupConfig, &config);
    }
 
    void ServiceModeTestNumberStatusShouldBe(ServiceModeTestStatus_t expected)
@@ -58,13 +78,19 @@ TEST_GROUP(ServiceModeTest_Version)
       MEMCMP_EQUAL(&expected, &actual, sizeof(ServiceModeTestStatus_t));
    }
 
-   void WhenTestIsStarted(void)
+   void WhenTestIsStartedFor(ServiceModeTestNumber_t testNumber, uint8_t itemIndex)
    {
+      resources.itemIndex = itemIndex;
+      resources.testNumber = testNumber;
+
       ServiceTest_Start(&instance.interface, dataModel, &resources, TestsResultCallback);
    }
 
-   void WhenTestIsStopped(void)
+   void WhenTestIsStoppedFor(ServiceModeTestNumber_t testNumber, uint8_t itemIndex)
    {
+      resources.itemIndex = itemIndex;
+      resources.testNumber = testNumber;
+
       ServiceTest_Stop(&instance.interface, dataModel, &resources, TestsResultCallback);
    }
 
@@ -75,14 +101,15 @@ TEST_GROUP(ServiceModeTest_Version)
       version.criticalMinor = criticalMinor;
       version.major = major;
       version.minor = minor;
-      DataModel_Write(dataModel, config.versionErd, &version);
+      DataModel_Write(dataModel, configDataItems[TestIndex_1], &version);
    }
 };
 
-TEST(ServiceModeTest_Version, ShouldStoreTestNumberInTheInterface)
+TEST(ServiceModeTest_Version, ShouldStoreTestGroupInTheInterface)
 {
    GivenTheModuleIsInitialized();
-   CHECK_EQUAL(SomeTestNumber, instance.interface.testNumber);
+
+   MEMCMP_EQUAL(&testGroupConfig, instance.interface.testNumbersMappingTable, sizeof(ServiceModeTest_TestNumbersMappingTable_t));
 }
 
 TEST(ServiceModeTest_Version, ShouldSetVersionToTheResponseWhenTestIsStarted)
@@ -93,13 +120,13 @@ TEST(ServiceModeTest_Version, ShouldSetVersionToTheResponseWhenTestIsStarted)
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = SomeOtherTestNumber;
    testStatus.diagnosticData[0] = 3;
    testStatus.diagnosticData[1] = 4;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
 
-   WhenTestIsStarted();
+   WhenTestIsStartedFor(SomeOtherTestNumber, TestIndex_1);
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -110,12 +137,12 @@ TEST(ServiceModeTest_Version, ShouldSetStopToTheResponseWhenTestIsStopped)
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Stopped;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = SomeOtherTestNumber;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
 
-   WhenTestIsStopped();
+   WhenTestIsStoppedFor(SomeOtherTestNumber, TestIndex_1);
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }

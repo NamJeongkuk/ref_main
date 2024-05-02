@@ -22,6 +22,15 @@ enum
    SomeTestNumber = 16
 };
 
+static const ServiceModeTestNumber_t testGroupItems[] = {
+   SomeTestNumber
+};
+
+static const ServiceModeTest_TestNumbersMappingTable_t testGroupConfig = {
+   .testNumberEntries = testGroupItems,
+   .numberOfItems = NUM_ELEMENTS(testGroupItems)
+};
+
 TEST_GROUP(ServiceModeTest_ExitServiceMode)
 {
    ServiceModeTest_ExitServiceMode_t instance;
@@ -38,7 +47,7 @@ TEST_GROUP(ServiceModeTest_ExitServiceMode)
 
    void GivenModuleIsInitialized()
    {
-      ServiceModeTest_ExitServiceMode_Init(&instance, SomeTestNumber);
+      ServiceModeTest_ExitServiceMode_Init(&instance, &testGroupConfig);
    }
 
    void BroadcastResetSignalErdShouldBe(Signal_t expected)
@@ -54,6 +63,13 @@ TEST_GROUP(ServiceModeTest_ExitServiceMode)
    }
 };
 
+TEST(ServiceModeTest_ExitServiceMode, ShouldStoreTestGroupInTheInterface)
+{
+   GivenModuleIsInitialized();
+
+   MEMCMP_EQUAL(&testGroupConfig, instance.interface.testNumbersMappingTable, sizeof(ServiceModeTest_TestNumbersMappingTable_t));
+}
+
 TEST(ServiceModeTest_ExitServiceMode, ShouldIncrementBroadcastSignalWhenStarted)
 {
    BroadcastResetSignalErdShouldBe(0);
@@ -61,10 +77,4 @@ TEST(ServiceModeTest_ExitServiceMode, ShouldIncrementBroadcastSignalWhenStarted)
 
    WhenTestIsStarted();
    BroadcastResetSignalErdShouldBe(1);
-}
-
-TEST(ServiceModeTest_ExitServiceMode, ShouldStoreTestNumberInTheInterface)
-{
-   GivenModuleIsInitialized();
-   CHECK_EQUAL(SomeTestNumber, instance.interface.testNumber);
 }

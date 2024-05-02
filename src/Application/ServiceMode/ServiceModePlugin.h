@@ -9,11 +9,12 @@
 #define SERVICEMODEPLUGIN_H
 
 #include "I_DataModel.h"
+#include "I_ServiceTest.h"
 #include "ServiceModeRequestHandler.h"
 #include "ServiceModeTest_BoardVersion.h"
 #include "ServiceModeTest_ExitServiceMode.h"
+#include "ServiceModeTest_Thermistor.h"
 #include "ServiceModeTest_Version.h"
-#include "I_ServiceTest.h"
 
 typedef struct
 {
@@ -31,37 +32,19 @@ typedef struct
       {
          ServiceModeTest_Version_t test;
          ServiceModeTestComponent_t component;
-      } mainBoardApplicationVersion;
-
-      struct
-      {
-         ServiceModeTest_Version_t test;
-         ServiceModeTestComponent_t component;
-      } mainBoardParametricVersion;
+      } mainBoardVersion;
 
       struct
       {
          ServiceModeTest_BoardVersion_t test;
          ServiceModeTestComponent_t component;
-      } dispenserBoardVersion;
+      } externalBoardsVersion;
 
       struct
       {
-         ServiceModeTest_BoardVersion_t test;
+         ServiceModeTest_Thermistor_t test;
          ServiceModeTestComponent_t component;
-      } internalTempBoardUiVersion;
-
-      struct
-      {
-         ServiceModeTest_BoardVersion_t test;
-         ServiceModeTestComponent_t component;
-      } wifiBoardVersion;
-
-      struct
-      {
-         ServiceModeTest_BoardVersion_t test;
-         ServiceModeTestComponent_t component;
-      } rfidBoardVersion;
+      } thermistorsTest;
    } _private;
 } ServiceModePlugin_t;
 

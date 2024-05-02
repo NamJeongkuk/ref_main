@@ -8,11 +8,11 @@
 #ifndef I_SERVICETEST_H
 #define I_SERVICETEST_H
 
-#include "ServiceModeTestStatus.h"
-#include "ServiceModeTestNumber.h"
-#include "I_DataModel.h"
-#include "Timer.h"
 #include "EventSubscription.h"
+#include "I_DataModel.h"
+#include "ServiceModeTestNumber.h"
+#include "ServiceModeTestStatus.h"
+#include "Timer.h"
 
 typedef struct
 {
@@ -21,8 +21,14 @@ typedef struct
 
 typedef struct
 {
+   const ServiceModeTestNumber_t *testNumberEntries;
+   uint8_t numberOfItems;
+} ServiceModeTest_TestNumbersMappingTable_t;
+
+typedef struct
+{
    const struct I_ServiceTest_Api_t *api;
-   ServiceModeTestNumber_t testNumber;
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingTable;
 } I_ServiceTest_t;
 
 typedef void (*ServiceTestCallback_t)(void *context, const ServiceTestResultArgs_t *args);
@@ -30,9 +36,11 @@ typedef void (*ServiceTestCallback_t)(void *context, const ServiceTestResultArgs
 typedef struct
 {
    I_DataModel_t *dataModel;
-   Timer_t timer;
    void *context;
+   Timer_t timer;
+   uint8_t itemIndex;
    ServiceTestCallback_t callback;
+   ServiceModeTestNumber_t testNumber;
    EventSubscription_t eventSubscription;
 } ServiceTestResources_t;
 

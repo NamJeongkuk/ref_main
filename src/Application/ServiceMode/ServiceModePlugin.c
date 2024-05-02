@@ -7,31 +7,60 @@
 
 #include "ServiceModePlugin.h"
 #include "Gea2Addresses.h"
+#include "ServiceModeAssociatedTestGroup.h"
 #include "ServiceModeTestNumber.h"
 #include "SystemErds.h"
 
-static const ServiceModeTest_VersionConfig_t mainBoardApplicationVersionConfig = {
-   .versionErd = Erd_ApplicationVersion
+// clang-format off
+
+#define EXPAND_AS_GENERATE_SERVICE_MODE_TEST_GROUP_CONFIGURATIONS(TestGroup, ...) \
+   static const ServiceModeTest_TestNumbersMappingTable_t TestGroup##Config = {   \
+      .testNumberEntries = TestGroup##Items COMMA                                 \
+      .numberOfItems = NUM_ELEMENTS(TestGroup##Items)                             \
+   };
+
+// clang-format on
+
+static const ServiceModeTestNumber_t exitServiceModeTestGroupItems[] = {
+   EXIT_SERVICE_MODE_TEST_GROUP_MAPPINGS(EXPAND_AS_GROUP_TEST_NUMBERS)
 };
 
-static const ServiceModeTest_VersionConfig_t mainBoardParametricVersionConfig = {
-   .versionErd = Erd_ParametricVersion
+static const ServiceModeTestNumber_t mainBoardVersionsTestGroupItems[] = {
+   MAINBOARD_VERSIONS_TEST_GROUP_MAPPINGS(EXPAND_AS_GROUP_TEST_NUMBERS)
 };
 
-static const ServiceModeTest_BoardVersionConfig_t dispenserBoardVersionConfig = {
-   .destinationAddress = Gea2Address_Dispenser
+static const ServiceModeTestNumber_t externalBoardsVersionsTestGroupItems[] = {
+   EXTERNAL_BOARDS_VERSIONS_TEST_GROUP_MAPPINGS(EXPAND_AS_GROUP_TEST_NUMBERS)
 };
 
-static const ServiceModeTest_BoardVersionConfig_t internalTempUiBoardVersionConfig = {
-   .destinationAddress = Gea2Address_InternalTemperatureUi
+static const ServiceModeTestNumber_t thermistorsTestGroupItems[] = {
+   THERMISTORS_TEST_GROUP_MAPPINGS(EXPAND_AS_GROUP_TEST_NUMBERS)
 };
 
-static const ServiceModeTest_BoardVersionConfig_t wifiBoardVersionConfig = {
-   .destinationAddress = Gea2Address_EmbeddedWiFi
+SERVICE_MODE_TEST_GROUPS_CONFIGS(EXPAND_AS_GENERATE_SERVICE_MODE_TEST_GROUP_CONFIGURATIONS)
+
+static const Erd_t mainBoardVersionsDataTestItems[] = {
+   MAINBOARD_VERSIONS_TEST_GROUP_MAPPINGS(EXPAND_AS_GET_ASSOCIATED_TESTS_INPUTS)
+};
+static const ServiceModeTest_VersionMappingConfig_t mainBoardVersionsTestDataConfig = {
+   .versionErds = mainBoardVersionsDataTestItems,
+   .numberOfItems = NUM_ELEMENTS(mainBoardVersionsDataTestItems)
 };
 
-static const ServiceModeTest_BoardVersionConfig_t rfidBoardVersionConfig = {
-   .destinationAddress = Gea2Address_RfidBoard
+static const uint8_t externalBoardsVersionsDataTestItems[] = {
+   EXTERNAL_BOARDS_VERSIONS_TEST_GROUP_MAPPINGS(EXPAND_AS_GET_ASSOCIATED_TESTS_INPUTS)
+};
+static const ServiceModeTest_BoardVersionMappingConfig_t externalBoardsVersionsTestDataConfig = {
+   .destinationAddresses = externalBoardsVersionsDataTestItems,
+   .numberOfItems = NUM_ELEMENTS(externalBoardsVersionsDataTestItems)
+};
+
+static const Erd_t thermistorsDataTestItems[] = {
+   THERMISTORS_TEST_GROUP_MAPPINGS(EXPAND_AS_GET_ASSOCIATED_TESTS_INPUTS)
+};
+static const ServiceModeTest_ThermistorMappingConfig_t thermistorsTestDataConfig = {
+   .unfilteredTemperatureErds = thermistorsDataTestItems,
+   .numberOfItems = NUM_ELEMENTS(thermistorsDataTestItems)
 };
 
 void ServiceModePlugin_Init(ServiceModePlugin_t *instance, I_DataModel_t *dataModel)
@@ -43,63 +72,36 @@ void ServiceModePlugin_Init(ServiceModePlugin_t *instance, I_DataModel_t *dataMo
 
    ServiceModeTest_ExitServiceMode_Init(
       &instance->_private.exitServiceMode.test,
-      ServiceModeTestNumber_ExitServiceMode);
+      &exitServiceModeTestGroupConfig);
    ServiceModeRequestHandler_AddTest(
       &instance->_private.serviceModeRequestHandler,
       &instance->_private.exitServiceMode.test.interface,
       &instance->_private.exitServiceMode.component);
 
    ServiceModeTest_Version_Init(
-      &instance->_private.mainBoardApplicationVersion.test,
-      ServiceModeTestNumber_MainBoardApplicationVersion,
-      &mainBoardApplicationVersionConfig);
+      &instance->_private.mainBoardVersion.test,
+      &mainBoardVersionsTestGroupConfig,
+      &mainBoardVersionsTestDataConfig);
    ServiceModeRequestHandler_AddTest(
       &instance->_private.serviceModeRequestHandler,
-      &instance->_private.mainBoardApplicationVersion.test.interface,
-      &instance->_private.mainBoardApplicationVersion.component);
-
-   ServiceModeTest_Version_Init(
-      &instance->_private.mainBoardParametricVersion.test,
-      ServiceModeTestNumber_MainBoardParametricVersion,
-      &mainBoardParametricVersionConfig);
-   ServiceModeRequestHandler_AddTest(
-      &instance->_private.serviceModeRequestHandler,
-      &instance->_private.mainBoardParametricVersion.test.interface,
-      &instance->_private.mainBoardParametricVersion.component);
+      &instance->_private.mainBoardVersion.test.interface,
+      &instance->_private.mainBoardVersion.component);
 
    ServiceModeTest_BoardVersion_Init(
-      &instance->_private.dispenserBoardVersion.test,
-      ServiceModeTestNumber_DispenserBoardVersion,
-      &dispenserBoardVersionConfig);
+      &instance->_private.externalBoardsVersion.test,
+      &externalBoardsVersionsTestGroupConfig,
+      &externalBoardsVersionsTestDataConfig);
    ServiceModeRequestHandler_AddTest(
       &instance->_private.serviceModeRequestHandler,
-      &instance->_private.dispenserBoardVersion.test.interface,
-      &instance->_private.dispenserBoardVersion.component);
+      &instance->_private.externalBoardsVersion.test.interface,
+      &instance->_private.externalBoardsVersion.component);
 
-   ServiceModeTest_BoardVersion_Init(
-      &instance->_private.internalTempBoardUiVersion.test,
-      ServiceModeTestNumber_InternalTempBoardUiVersion,
-      &internalTempUiBoardVersionConfig);
+   ServiceModeTest_Thermistor_Init(
+      &instance->_private.thermistorsTest.test,
+      &thermistorsTestGroupConfig,
+      &thermistorsTestDataConfig);
    ServiceModeRequestHandler_AddTest(
       &instance->_private.serviceModeRequestHandler,
-      &instance->_private.internalTempBoardUiVersion.test.interface,
-      &instance->_private.internalTempBoardUiVersion.component);
-
-   ServiceModeTest_BoardVersion_Init(
-      &instance->_private.wifiBoardVersion.test,
-      ServiceModeTestNumber_WifiBoardVersion,
-      &wifiBoardVersionConfig);
-   ServiceModeRequestHandler_AddTest(
-      &instance->_private.serviceModeRequestHandler,
-      &instance->_private.wifiBoardVersion.test.interface,
-      &instance->_private.wifiBoardVersion.component);
-
-   ServiceModeTest_BoardVersion_Init(
-      &instance->_private.rfidBoardVersion.test,
-      ServiceModeTestNumber_RfidBoardVersion,
-      &rfidBoardVersionConfig);
-   ServiceModeRequestHandler_AddTest(
-      &instance->_private.serviceModeRequestHandler,
-      &instance->_private.rfidBoardVersion.test.interface,
-      &instance->_private.rfidBoardVersion.component);
+      &instance->_private.thermistorsTest.test.interface,
+      &instance->_private.thermistorsTest.component);
 }

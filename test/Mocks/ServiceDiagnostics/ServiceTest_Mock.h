@@ -17,14 +17,18 @@ typedef struct
 
    struct
    {
-      ServiceTestCallback_t callback;
       void *context;
+      ServiceTestCallback_t callback;
    } _private;
 } ServiceTest_Mock_t;
 
+/*!
+ * @param instance
+ * @param testNumbersMappingConfig The ServiceTest Group Numbers Mapping Configuration
+ */
 I_ServiceTest_t *ServiceTest_Mock_Init(
    ServiceTest_Mock_t *instance,
-   ServiceModeTestNumber_t testNumber);
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingTable);
 
 /*!
  * @brief Function to invoke the I_Service_Test callback

@@ -26,7 +26,7 @@ static void SendVersionRequest(ServiceModeTest_BoardVersion_t *instance)
 
    Gea2Message_SetDestination(
       message,
-      instance->_private.config->destinationAddress);
+      instance->_private.boardVersionsMappingConfig->destinationAddresses[instance->_private.resources->itemIndex]);
    Gea2Message_SetCommand(message, Gea2CommonCommand_Version);
    Gea2MessageEndpoint_Send(
       DataModelErdPointerAccess_GetGea2MessageEndpoint(
@@ -43,7 +43,7 @@ static void VersionRequestTimeout(void *context)
    ServiceTestResultArgs_t testResultArgs;
    testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Running;
    testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_NoVersionInfo;
-   testResultArgs.status.testNumber = instance->interface.testNumber;
+   testResultArgs.status.testNumber = instance->_private.resources->testNumber;
    testResultArgs.status.diagnosticData[0] = 0;
    testResultArgs.status.diagnosticData[1] = 0;
    testResultArgs.status.diagnosticData[2] = 0;
@@ -73,7 +73,7 @@ static void OnGeaMessageReceived(void *context, const void *args)
    ServiceModeTest_BoardVersion_t *instance = context;
    const Gea2MessageEndpointOnReceiveArgs_t *received = args;
 
-   if((Gea2Message_GetSource(received->message) == instance->_private.config->destinationAddress) &&
+   if((Gea2Message_GetSource(received->message) == instance->_private.boardVersionsMappingConfig->destinationAddresses[instance->_private.resources->itemIndex]) &&
       (Gea2Message_GetCommand(received->message) == Gea2CommonCommand_Version) &&
       (Gea2Message_GetPayloadLength(received->message) >= sizeof(Version_t)))
    {
@@ -82,7 +82,7 @@ static void OnGeaMessageReceived(void *context, const void *args)
       ServiceTestResultArgs_t testResultArgs;
       testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Running;
       testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-      testResultArgs.status.testNumber = instance->interface.testNumber;
+      testResultArgs.status.testNumber = instance->_private.resources->testNumber;
       testResultArgs.status.diagnosticData[0] = payload[2];
       testResultArgs.status.diagnosticData[1] = payload[3];
       testResultArgs.status.diagnosticData[2] = 0;
@@ -97,6 +97,7 @@ static void OnGeaMessageReceived(void *context, const void *args)
 static void Start(I_ServiceTest_t *_instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
 {
    REINTERPRET(instance, _instance, ServiceModeTest_BoardVersion_t *);
+
    resources->context = context;
    resources->callback = callback;
    instance->_private.resources = resources;
@@ -118,6 +119,7 @@ static void Start(I_ServiceTest_t *_instance, void *context, ServiceTestResource
 static void Stop(I_ServiceTest_t *_instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
 {
    REINTERPRET(instance, _instance, ServiceModeTest_BoardVersion_t *);
+
    resources->context = context;
    resources->callback = callback;
    instance->_private.resources = resources;
@@ -125,7 +127,7 @@ static void Stop(I_ServiceTest_t *_instance, void *context, ServiceTestResources
    ServiceTestResultArgs_t testResultArgs;
    testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Stopped;
    testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testResultArgs.status.testNumber = instance->interface.testNumber;
+   testResultArgs.status.testNumber = instance->_private.resources->testNumber;
    testResultArgs.status.diagnosticData[0] = 0;
    testResultArgs.status.diagnosticData[1] = 0;
    testResultArgs.status.diagnosticData[2] = 0;
@@ -154,11 +156,11 @@ static const I_ServiceTest_Api_t api = {
 
 void ServiceModeTest_BoardVersion_Init(
    ServiceModeTest_BoardVersion_t *instance,
-   ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_BoardVersionConfig_t *config)
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig,
+   const ServiceModeTest_BoardVersionMappingConfig_t *boardVersionsMappingConfig)
 {
-   instance->interface.testNumber = testNumber;
    instance->interface.api = &api;
+   instance->interface.testNumbersMappingTable = testNumbersMappingConfig;
 
-   instance->_private.config = config;
+   instance->_private.boardVersionsMappingConfig = boardVersionsMappingConfig;
 }

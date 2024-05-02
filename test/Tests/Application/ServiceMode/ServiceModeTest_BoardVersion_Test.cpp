@@ -9,8 +9,9 @@ extern "C"
 {
 #include "ServiceModeTest_BoardVersion.h"
 #include "Constants_Time.h"
-#include "Gea2RefAddresses.h"
 #include "Gea2CommonCommands.h"
+#include "Gea2RefAddresses.h"
+#include "ServiceModeTestNumber.h"
 #include "SystemErds.h"
 }
 
@@ -21,25 +22,44 @@ extern "C"
 
 enum
 {
-   SomeTestNumber = 23,
+   Dispenser_Version_Index,
+   RFID_Version_Index,
+
    NumberOfGea2MessageRetries = 2,
    LongVersionResponsePayloadLength = 13,
 
    VersionRequestTimeoutInMsec = 1 * MSEC_PER_SEC
 };
 
-static const ServiceModeTest_BoardVersionConfig_t config = {
-   .destinationAddress = Gea2Address_Dispenser
+static const ServiceModeTestNumber_t testGroupItems[] = {
+   ServiceModeTestNumber_DispenserBoardVersion,
+   ServiceModeTestNumber_RfidBoardVersion
 };
 
-STATIC_ALLOC_GEA2MESSAGE(expectedDispenserUiRequestMessage, 0);
-STATIC_ALLOC_GEA2MESSAGE(expectedDispenserUiResponseMessage, 4);
-STATIC_ALLOC_GEA2MESSAGE(expectedDispenserUiIncorrectResponseMessage, 3);
+static const ServiceModeTest_TestNumbersMappingTable_t testGroupConfig = {
+   .testNumberEntries = testGroupItems,
+   .numberOfItems = NUM_ELEMENTS(testGroupItems)
+};
+
+static const uint8_t externalBoardsVersionsDataTestItems[] = {
+   Gea2Address_Dispenser,
+   Gea2Address_RfidBoard
+};
+
+static const ServiceModeTest_BoardVersionMappingConfig_t externalBoardsVersionsTestDataConfig = {
+   .destinationAddresses = externalBoardsVersionsDataTestItems,
+   .numberOfItems = NUM_ELEMENTS(externalBoardsVersionsDataTestItems)
+};
+
+STATIC_ALLOC_GEA2MESSAGE(expectedBoardRequestMessage, 0);
+STATIC_ALLOC_GEA2MESSAGE(expectedBoardResponseMessage, 4);
+STATIC_ALLOC_GEA2MESSAGE(expectedBoardIncorrectResponseMessage, 3);
 STATIC_ALLOC_GEA2MESSAGE(expectedLongVersionResponseMessage, LongVersionResponsePayloadLength);
 
 static void TestsResultCallback(void *context, const ServiceTestResultArgs_t *args)
 {
    REINTERPRET(dataModel, context, I_DataModel_t *);
+
    DataModel_Write(dataModel, Erd_ServiceModeTestNumberStatus, &args->status);
 }
 
@@ -85,29 +105,38 @@ TEST_GROUP(ServiceModeTest_BoardVersion)
 
    void GivenTheModuleIsInitialized()
    {
-      ServiceModeTest_BoardVersion_Init(&instance, SomeTestNumber, &config);
+      ServiceModeTest_BoardVersion_Init(
+         &instance,
+         &testGroupConfig,
+         &externalBoardsVersionsTestDataConfig);
    }
 
-   void WhenTestIsStarted(void)
+   void WhenTestIsStartedFor(ServiceModeTestNumber_t testNumber, uint8_t itemIndex)
    {
+      resources.itemIndex = itemIndex;
+      resources.testNumber = testNumber;
+
       ServiceTest_Start(&instance.interface, dataModel, &resources, TestsResultCallback);
    }
 
-   void WhenTestIsStopped(void)
+   void WhenTestIsStoppedFor(ServiceModeTestNumber_t testNumber, uint8_t itemIndex)
    {
+      resources.itemIndex = itemIndex;
+      resources.testNumber = testNumber;
+
       ServiceTest_Stop(&instance.interface, dataModel, &resources, TestsResultCallback);
    }
 
-   void VersionRequestShouldBeSent()
+   void VersionRequestShouldBeSentForIndex(uint8_t itemIndex)
    {
-      Gea2Message_SetDestination(expectedDispenserUiRequestMessage, config.destinationAddress);
-      Gea2Message_SetCommand(expectedDispenserUiRequestMessage, Gea2CommonCommand_Version);
-      Gea2Message_SetSource(expectedDispenserUiRequestMessage, Gea2Address_ReferMainBoard);
+      Gea2Message_SetDestination(expectedBoardRequestMessage, externalBoardsVersionsDataTestItems[itemIndex]);
+      Gea2Message_SetCommand(expectedBoardRequestMessage, Gea2CommonCommand_Version);
+      Gea2Message_SetSource(expectedBoardRequestMessage, Gea2Address_ReferMainBoard);
 
       mock()
          .expectOneCall("Send")
          .onObject(messageEndpoint)
-         .withParameterOfType("Gea2Message_t", "message", expectedDispenserUiRequestMessage)
+         .withParameterOfType("Gea2Message_t", "message", expectedBoardRequestMessage)
          .withParameter("retries", NumberOfGea2MessageRetries);
    }
 
@@ -118,31 +147,31 @@ TEST_GROUP(ServiceModeTest_BoardVersion)
 
    void WhenVersionResponseIsReceived(uint8_t criticalMajor, uint8_t criticalMinor, uint8_t major, uint8_t minor)
    {
-      Gea2Message_SetDestination(expectedDispenserUiResponseMessage, Gea2Address_ReferMainBoard);
-      Gea2Message_SetSource(expectedDispenserUiResponseMessage, config.destinationAddress);
-      Gea2Message_SetCommand(expectedDispenserUiResponseMessage, Gea2CommonCommand_Version);
-      uint8_t *payload = Gea2Message_GetPayload(expectedDispenserUiResponseMessage);
+      Gea2Message_SetDestination(expectedBoardResponseMessage, Gea2Address_ReferMainBoard);
+      Gea2Message_SetSource(expectedBoardResponseMessage, externalBoardsVersionsDataTestItems[resources.itemIndex]);
+      Gea2Message_SetCommand(expectedBoardResponseMessage, Gea2CommonCommand_Version);
+      uint8_t *payload = Gea2Message_GetPayload(expectedBoardResponseMessage);
       payload[0] = criticalMajor;
       payload[1] = criticalMinor;
       payload[2] = major;
       payload[3] = minor;
 
-      Gea2MessageEndpoint_TestDouble_TriggerReceive(&messageEndpointTestDouble, expectedDispenserUiResponseMessage);
+      Gea2MessageEndpoint_TestDouble_TriggerReceive(&messageEndpointTestDouble, expectedBoardResponseMessage);
    }
 
    void WhenIncorrectVersionResponseIsReceived()
    {
-      Gea2Message_SetDestination(expectedDispenserUiIncorrectResponseMessage, Gea2Address_ReferMainBoard);
-      Gea2Message_SetSource(expectedDispenserUiIncorrectResponseMessage, config.destinationAddress);
-      Gea2Message_SetCommand(expectedDispenserUiIncorrectResponseMessage, Gea2CommonCommand_Version);
+      Gea2Message_SetDestination(expectedBoardIncorrectResponseMessage, Gea2Address_ReferMainBoard);
+      Gea2Message_SetSource(expectedBoardIncorrectResponseMessage, externalBoardsVersionsDataTestItems[resources.itemIndex]);
+      Gea2Message_SetCommand(expectedBoardIncorrectResponseMessage, Gea2CommonCommand_Version);
 
-      Gea2MessageEndpoint_TestDouble_TriggerReceive(&messageEndpointTestDouble, expectedDispenserUiIncorrectResponseMessage);
+      Gea2MessageEndpoint_TestDouble_TriggerReceive(&messageEndpointTestDouble, expectedBoardIncorrectResponseMessage);
    }
 
    void WhenLongVersionResponseIsReceived(const uint8_t *expectedResponsePayload)
    {
       Gea2Message_SetDestination(expectedLongVersionResponseMessage, Gea2Address_ReferMainBoard);
-      Gea2Message_SetSource(expectedLongVersionResponseMessage, config.destinationAddress);
+      Gea2Message_SetSource(expectedLongVersionResponseMessage, externalBoardsVersionsDataTestItems[resources.itemIndex]);
       Gea2Message_SetCommand(expectedLongVersionResponseMessage, Gea2CommonCommand_Version);
       uint8_t *payload = Gea2Message_GetPayload(expectedLongVersionResponseMessage);
       memcpy(payload, expectedResponsePayload, LongVersionResponsePayloadLength);
@@ -159,26 +188,27 @@ TEST_GROUP(ServiceModeTest_BoardVersion)
    }
 };
 
-TEST(ServiceModeTest_BoardVersion, ShouldStoreTestNumberInTheInterface)
+TEST(ServiceModeTest_BoardVersion, ShouldStoreTestGroupInTheInterface)
 {
    GivenTheModuleIsInitialized();
-   CHECK_EQUAL(SomeTestNumber, instance.interface.testNumber);
+
+   MEMCMP_EQUAL(&testGroupConfig, instance.interface.testNumbersMappingTable, sizeof(ServiceModeTest_TestNumbersMappingTable_t));
 }
 
 TEST(ServiceModeTest_BoardVersion, ShouldSendVersionRequestPeriodicallyWhenTestIsStarted)
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_RfidBoardVersion, RFID_Version_Index);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
    After(VersionRequestTimeoutInMsec);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
    After(VersionRequestTimeoutInMsec);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
    After(VersionRequestTimeoutInMsec);
 }
 
@@ -186,20 +216,21 @@ TEST(ServiceModeTest_BoardVersion, ShouldSetVersionToTheResponseWhenVersionRespo
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_RfidBoardVersion, RFID_Version_Index);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
    WhenVersionResponseIsReceived(1, 2, 3, 4);
 
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_RfidBoardVersion;
    testStatus.diagnosticData[0] = 3;
    testStatus.diagnosticData[1] = 4;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -207,8 +238,8 @@ TEST(ServiceModeTest_BoardVersion, ShouldSetNoVersionInfoToTheResponseWhenVersio
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_RfidBoardVersion, RFID_Version_Index);
 
    After(VersionRequestTimeoutInMsec - 1);
    ServiceModeTestStatus_t testStatus;
@@ -219,17 +250,19 @@ TEST(ServiceModeTest_BoardVersion, ShouldSetNoVersionInfoToTheResponseWhenVersio
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(RFID_Version_Index);
    After(1);
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_NoVersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_RfidBoardVersion;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -237,23 +270,24 @@ TEST(ServiceModeTest_BoardVersion, ShouldNotSetNoVersionInfoToTheResponseWhenVer
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    After(VersionRequestTimeoutInMsec - 1);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
    WhenVersionResponseIsReceived(1, 2, 3, 4);
 
    After(1);
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 3;
    testStatus.diagnosticData[1] = 4;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -261,15 +295,15 @@ TEST(ServiceModeTest_BoardVersion, ShouldRestartTheTimerWhenVersionResponseIsRec
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    After(VersionRequestTimeoutInMsec - 1);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
    WhenVersionResponseIsReceived(1, 2, 3, 4);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
    After(VersionRequestTimeoutInMsec);
 }
 
@@ -277,8 +311,8 @@ TEST(ServiceModeTest_BoardVersion, ShouldNotUpdateTestResponseWhenIncorrectVersi
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    WhenIncorrectVersionResponseIsReceived();
    ServiceModeTestStatus_t testStatus;
@@ -291,15 +325,16 @@ TEST(ServiceModeTest_BoardVersion, ShouldNotUpdateTestResponseWhenIncorrectVersi
    testStatus.diagnosticData[3] = 0;
    ServiceModeTestNumberStatusShouldBe(testStatus);
 
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
    After(VersionRequestTimeoutInMsec);
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_NoVersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -307,18 +342,19 @@ TEST(ServiceModeTest_BoardVersion, ShouldSetStopToTheResponseWhenTestIsStopped)
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
-   WhenTestIsStopped();
+   WhenTestIsStoppedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Stopped;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -326,10 +362,10 @@ TEST(ServiceModeTest_BoardVersion, ShouldStopTheTimerWhenTestIsStopped)
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
-   WhenTestIsStopped();
+   WhenTestIsStoppedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    VersionRequestShouldNotBeSent();
    After(VersionRequestTimeoutInMsec);
@@ -339,20 +375,21 @@ TEST(ServiceModeTest_BoardVersion, ShouldNotSetVersionToTheResponseAfterTestIsSt
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
-   WhenTestIsStopped();
+   WhenTestIsStoppedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
    WhenVersionResponseIsReceived(1, 2, 3, 4);
 
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Stopped;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -360,20 +397,21 @@ TEST(ServiceModeTest_BoardVersion, ShouldNotSetNoVersionInfoToTheResponseAfterTe
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
-   WhenTestIsStopped();
+   WhenTestIsStoppedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    After(VersionRequestTimeoutInMsec);
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Stopped;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }
 
@@ -381,20 +419,21 @@ TEST(ServiceModeTest_BoardVersion, ShouldAcceptLongVersionResponse)
 {
    GivenTheModuleIsInitialized();
 
-   VersionRequestShouldBeSent();
-   WhenTestIsStarted();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
+   WhenTestIsStartedFor(ServiceModeTestNumber_DispenserBoardVersion, Dispenser_Version_Index);
 
    uint8_t longVersionResponse[LongVersionResponsePayloadLength] = { 1, 2, 0xE, 0xF, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD };
-   VersionRequestShouldBeSent();
+   VersionRequestShouldBeSentForIndex(Dispenser_Version_Index);
    WhenLongVersionResponseIsReceived(longVersionResponse);
 
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Running;
    testStatus.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-   testStatus.testNumber = instance.interface.testNumber;
+   testStatus.testNumber = ServiceModeTestNumber_DispenserBoardVersion;
    testStatus.diagnosticData[0] = 0xE;
    testStatus.diagnosticData[1] = 0xF;
    testStatus.diagnosticData[2] = 0;
    testStatus.diagnosticData[3] = 0;
+
    ServiceModeTestNumberStatusShouldBe(testStatus);
 }

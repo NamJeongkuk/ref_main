@@ -15,6 +15,7 @@ static void Start(I_ServiceTest_t *instance, void *context, ServiceTestResources
    IGNORE(instance);
    IGNORE(context);
    IGNORE(callback);
+
    Signal_SendViaErd(DataModel_AsDataSource(resources->dataModel), Erd_BroadcastResetRequestSignal);
 }
 
@@ -33,8 +34,8 @@ static const I_ServiceTest_Api_t api = {
 
 void ServiceModeTest_ExitServiceMode_Init(
    ServiceModeTest_ExitServiceMode_t *instance,
-   ServiceModeTestNumber_t testNumber)
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig)
 {
    instance->interface.api = &api;
-   instance->interface.testNumber = testNumber;
+   instance->interface.testNumbersMappingTable = testNumbersMappingConfig;
 }

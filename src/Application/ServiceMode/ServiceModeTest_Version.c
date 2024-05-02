@@ -6,19 +6,20 @@
  */
 
 #include "ServiceModeTest_Version.h"
-#include "utils.h"
 #include "Version.h"
+#include "utils.h"
 
-static void Start(I_ServiceTest_t *instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
+static void Start(I_ServiceTest_t *_instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
 {
-   REINTERPRET(versionTestInstance, instance, ServiceModeTest_Version_t *);
+   REINTERPRET(instance, _instance, ServiceModeTest_Version_t *);
+
    Version_t version;
-   DataModel_Read(resources->dataModel, versionTestInstance->_private.config->versionErd, &version);
+   DataModel_Read(resources->dataModel, instance->_private.versionsMappingConfig->versionErds[resources->itemIndex], &version);
 
    ServiceTestResultArgs_t testResultArgs;
    testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Running;
    testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
-   testResultArgs.status.testNumber = instance->testNumber;
+   testResultArgs.status.testNumber = resources->testNumber;
    testResultArgs.status.diagnosticData[0] = version.major;
    testResultArgs.status.diagnosticData[1] = version.minor;
    testResultArgs.status.diagnosticData[2] = 0;
@@ -27,14 +28,14 @@ static void Start(I_ServiceTest_t *instance, void *context, ServiceTestResources
    callback(context, &testResultArgs);
 }
 
-static void Stop(I_ServiceTest_t *instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
+static void Stop(I_ServiceTest_t *_instance, void *context, ServiceTestResources_t *resources, ServiceTestCallback_t callback)
 {
-   IGNORE(resources);
+   IGNORE(_instance);
 
    ServiceTestResultArgs_t testResultArgs;
    testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Stopped;
    testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_Unused;
-   testResultArgs.status.testNumber = instance->testNumber;
+   testResultArgs.status.testNumber = resources->testNumber;
    testResultArgs.status.diagnosticData[0] = 0;
    testResultArgs.status.diagnosticData[1] = 0;
    testResultArgs.status.diagnosticData[2] = 0;
@@ -50,10 +51,11 @@ static const I_ServiceTest_Api_t api = {
 
 void ServiceModeTest_Version_Init(
    ServiceModeTest_Version_t *instance,
-   ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_VersionConfig_t *config)
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig,
+   const ServiceModeTest_VersionMappingConfig_t *versionsMappingConfig)
 {
    instance->interface.api = &api;
-   instance->interface.testNumber = testNumber;
-   instance->_private.config = config;
+   instance->interface.testNumbersMappingTable = testNumbersMappingConfig;
+
+   instance->_private.versionsMappingConfig = versionsMappingConfig;
 }

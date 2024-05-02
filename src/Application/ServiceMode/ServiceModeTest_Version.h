@@ -12,8 +12,9 @@
 
 typedef struct
 {
-   Erd_t versionErd; // Version_t
-} ServiceModeTest_VersionConfig_t;
+   const Erd_t *versionErds;
+   uint8_t numberOfItems;
+} ServiceModeTest_VersionMappingConfig_t;
 
 typedef struct
 {
@@ -21,13 +22,19 @@ typedef struct
 
    struct
    {
-      const ServiceModeTest_VersionConfig_t *config;
+      const ServiceModeTest_VersionMappingConfig_t *versionsMappingConfig;
+
    } _private;
 } ServiceModeTest_Version_t;
 
+/*!
+ * @param instance
+ * @param testNumbersMappingConfig The ServiceTest Group Numbers Mapping Configuration
+ * @param versionsMappingConfig The Versions Mapping Configuration
+ */
 void ServiceModeTest_Version_Init(
    ServiceModeTest_Version_t *instance,
-   ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_VersionConfig_t *config);
+   const ServiceModeTest_TestNumbersMappingTable_t *testNumbersMappingConfig,
+   const ServiceModeTest_VersionMappingConfig_t *versionsMappingConfig);
 
 #endif

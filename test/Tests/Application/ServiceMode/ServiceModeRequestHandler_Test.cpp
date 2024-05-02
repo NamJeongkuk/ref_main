@@ -24,9 +24,32 @@ enum
 {
    ValidTestNumber0,
    ValidTestNumber1,
+   ValidTestNumber2,
+   ValidTestNumber3,
+
    NonInitializedTestNumber,
    NumberOfServiceTests,
-   OutOfBoundTestNumber = NumberOfServiceTests,
+   OutOfBoundTestNumber = NumberOfServiceTests
+};
+
+static const ServiceModeTestNumber_t testGroup_0_Items[] = {
+   ValidTestNumber0,
+   ValidTestNumber1
+};
+
+static const ServiceModeTest_TestNumbersMappingTable_t testGroup_0_Config = {
+   .testNumberEntries = testGroup_0_Items,
+   .numberOfItems = NUM_ELEMENTS(testGroup_0_Items)
+};
+
+static const ServiceModeTestNumber_t testGroup_1_Items[] = {
+   ValidTestNumber2,
+   ValidTestNumber3
+};
+
+static const ServiceModeTest_TestNumbersMappingTable_t testGroup_1_Config = {
+   .testNumberEntries = testGroup_1_Items,
+   .numberOfItems = NUM_ELEMENTS(testGroup_1_Items)
 };
 
 TEST_GROUP(ServiceModeRequestHandler)
@@ -43,8 +66,8 @@ TEST_GROUP(ServiceModeRequestHandler)
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
 
-      ServiceTest_Mock_Init(&testMock0, ValidTestNumber0);
-      ServiceTest_Mock_Init(&testMock1, ValidTestNumber1);
+      ServiceTest_Mock_Init(&testMock0, &testGroup_0_Config);
+      ServiceTest_Mock_Init(&testMock1, &testGroup_1_Config);
    }
 
    void GivenModuleIsInitialized()
@@ -173,7 +196,7 @@ TEST(ServiceModeRequestHandler, ShouldStartAValidTestWhenRequested)
    WhenTestNumberIsRequestedWithCommand(ValidTestNumber0, ServiceModeTestRequestCommand_Start);
 
    ShouldCallTestsStartFunctionOn(&testMock1.interface);
-   WhenTestNumberIsRequestedWithCommand(ValidTestNumber1, ServiceModeTestRequestCommand_Start);
+   WhenTestNumberIsRequestedWithCommand(ValidTestNumber2, ServiceModeTestRequestCommand_Start);
 }
 
 TEST(ServiceModeRequestHandler, ShouldStopAValidTestWhenRequested)
@@ -181,10 +204,10 @@ TEST(ServiceModeRequestHandler, ShouldStopAValidTestWhenRequested)
    GivenModuleIsInitialized();
 
    ShouldCallTestsStopFunctionOn(&testMock0.interface);
-   WhenTestNumberIsRequestedWithCommand(ValidTestNumber0, ServiceModeTestRequestCommand_Stop);
+   WhenTestNumberIsRequestedWithCommand(ValidTestNumber1, ServiceModeTestRequestCommand_Stop);
 
    ShouldCallTestsStopFunctionOn(&testMock1.interface);
-   WhenTestNumberIsRequestedWithCommand(ValidTestNumber1, ServiceModeTestRequestCommand_Stop);
+   WhenTestNumberIsRequestedWithCommand(ValidTestNumber3, ServiceModeTestRequestCommand_Stop);
 }
 
 TEST(ServiceModeRequestHandler, ShouldSetStatusErdWithDataFromCallback)
@@ -192,12 +215,12 @@ TEST(ServiceModeRequestHandler, ShouldSetStatusErdWithDataFromCallback)
    GivenModuleIsInitialized();
 
    ShouldCallTestsStartFunctionOn(&testMock0.interface);
-   WhenTestNumberIsRequestedWithCommand(ValidTestNumber0, ServiceModeTestRequestCommand_Start);
+   WhenTestNumberIsRequestedWithCommand(ValidTestNumber1, ServiceModeTestRequestCommand_Start);
 
    ServiceModeTestStatus_t status;
    status.testResponse = ServiceModeTestStatusResponse_Running;
    status.dataFormat = ServiceModeTestStatusDataFormat_DegreesFx100;
-   status.testNumber = ValidTestNumber0;
+   status.testNumber = ValidTestNumber1;
    status.diagnosticData[0] = 0x12;
    status.diagnosticData[1] = 0x23;
    status.diagnosticData[2] = 0x45;
