@@ -1,0 +1,41 @@
+{
+  "configurations": [
+    {
+      "args": [
+        "-g",
+        "${input:groupName}"
+      ],
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "name": "Test Group",
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "preLaunchTask": "Integration_vscode_debug",
+      "program": "${workspaceFolder}/build/test/debug/rockhopper",
+      "request": "launch",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "ignoreFailures": true,
+          "text": "-enable-pretty-printing"
+        }
+      ],
+      "stopAtEntry": false,
+      "type": "cppdbg"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "groupName",
+      "description": "Enter a substring to match against groups to run",
+      "default": "",
+      "type": "promptString"
+    }
+  ],
+  "version": "0.2.0"
+}

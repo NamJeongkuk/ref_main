@@ -38,6 +38,9 @@ verbose:
 integration:
 	$(MAKE_TDD) INTEGRATION=Y
 
+group-%:
+	$(MAKE_TDD) group GROUP=$*
+
 node:
 	@. $(NVM_DIR)/nvm.sh
 	@nvm install

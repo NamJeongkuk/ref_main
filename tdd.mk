@@ -1,11 +1,7 @@
 include lib/applcommon/setup.mk
 
 TARGET:=rockhopper
-ifeq ($(INTEGRATION),Y)
-OUTPUT_DIR:=build/integration-test
-else
 OUTPUT_DIR:=build/test
-endif
 DISPLAY_ASCII_ART_RESULTS?=Y
 TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 
@@ -13,6 +9,8 @@ include lib/applcommon/defaults.mk
 
 ifneq ($(DEBUG),Y)
   CPPFLAGS+=-O2 -Wno-macro-redefined
+else
+  OUTPUT_DIR:=$(OUTPUT_DIR)/debug
 endif
 
 CXXFLAGS+=-Wno-unneeded-internal-declaration -Wno-overloaded-virtual
@@ -117,9 +115,9 @@ SRC_DIRS:=\
   test/Tests/Application/EnhancedSabbath \
   test/Tests/Application/ErdService \
   test/Tests/Application/Factory \
-  test/Tests/Application/FaultHandlers \
   test/Tests/Application/Fan \
   test/Tests/Application/Fault \
+  test/Tests/Application/FaultHandlers \
   test/Tests/Application/FeaturePan \
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
@@ -128,12 +126,12 @@ SRC_DIRS:=\
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \
   test/Tests/Application/IceMaker/TwistTrayIceMaker \
-  test/Tests/Application/IceCabinet \
+  test/Tests/Application/Integration \
   test/Tests/Application/Lighting \
   test/Tests/Application/Mapper \
   test/Tests/Application/Motor \
-  test/Tests/Application/Notifications \
   test/Tests/Application/NonHeatedCycleDefrost \
+  test/Tests/Application/Notifications \
   test/Tests/Application/ParametricData \
   test/Tests/Application/PersonalityEeprom \
   test/Tests/Application/RequestStatusUpdater \
@@ -141,8 +139,8 @@ SRC_DIRS:=\
   test/Tests/Application/Sabbath \
   test/Tests/Application/SealedSystemValve \
   test/Tests/Application/Sensor \
-  test/Tests/Application/Setpoints \
   test/Tests/Application/ServiceMode \
+  test/Tests/Application/Setpoints \
   test/Tests/Application/SoundLevel \
   test/Tests/Application/StepperMotor \
   test/Tests/Application/SystemMonitor \
@@ -152,11 +150,6 @@ SRC_DIRS:=\
   test/Tests/Application/WaterVolumeUsage \
   test/Tests/Bsp \
   test/Tests/Hardware/SoftPwm \
-
-ifeq ($(INTEGRATION),Y)
-SRC_DIRS += \
-  test/Tests/Application/Integration
-endif
 
 SRC_FILES+=\
   src/Bsp/DataSource_Bsp.c \
@@ -191,3 +184,11 @@ include lib/applcommon/lib_applcommon_test_tools.mk
 include lib/applcommon/lib_applcommon_test_runner.mk
 
 include lib/applcommon/worker.mk
+
+# -xg will exclude groups containing a given substring
+# The result is all TDD builds will include the integration tests, but they are skipped unless INTEGRATION=Y
+# Integration tests must include the substring 'Integration' in their group name
+# Non integration tests should not include the substring 'Integration' in the group name
+ifneq ($(INTEGRATION),Y)
+RUN_TEST_TARGET+=-xg Integration
+endif
