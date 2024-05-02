@@ -16,7 +16,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 
 static const FeaturePanSetpointOffsetUpdaterConfiguration_t config = {
-   .featurePanCurrentModeErd = Erd_FeaturePanCurrentMode,
+   .featurePanCurrentModeErd = Erd_FeaturePanCurrentModeStatus,
    .setpointOffsetErd = Erd_FeaturePan_SetpointOffsetInDegFx100,
 };
 
@@ -40,7 +40,7 @@ TEST_GROUP(FeaturePanSetpointOffsetUpdater)
 
    void WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_t mode)
    {
-      DataModel_Write(dataModel, Erd_FeaturePanCurrentMode, &mode);
+      DataModel_Write(dataModel, Erd_FeaturePanCurrentModeStatus, &mode);
    }
 
    void TheSetpointOffsetErdShouldBe(TemperatureDegFx100_t expected)
@@ -58,7 +58,7 @@ TEST_GROUP(FeaturePanSetpointOffsetUpdater)
 
 TEST(FeaturePanSetpointOffsetUpdater, ShouldUpdateTheSetpointOffsetBasedOnTheCurrentFeaturePanModeWhenCurrentModeChanges)
 {
-   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->setpointOffsetData;
+   const FeaturePanSetpointOffsetData_t *setpointOffsetData = PersonalityParametricData_Get(dataModel)->featurePanThermalOffsetData->setpointOffsetData;
 
    WhenTheFeaturePanCurrentModeErdChangesTo(FeaturePanCurrentMode_Mode5);
    TheModuleIsInitialized();

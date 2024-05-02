@@ -22,17 +22,17 @@ void FreshFoodShiftOffsetCalculatorPlugin_Init(
    FreshFoodShiftOffsetCalculatorPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   const AdjustedSetpointData_t *adjustedSetpointData =
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData;
+   const PersonalityParametricData_t *parametricData =
+      PersonalityParametricData_Get(dataModel);
 
    Filter_LongTermAverage_Init(
       &instance->_private.freshFoodLongTermAverageFilter,
-      adjustedSetpointData->shiftOffsetCalculatorData->longTermBeta);
+      parametricData->shiftOffsetCalculatorData->longTermBeta);
    ShiftOffsetCalculator_Init(
       &instance->_private.freshFoodShiftOffsetCalculator,
       dataModel,
       &instance->_private.freshFoodLongTermAverageFilter.interface,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &freshFoodShiftOffsetCalculatorConfig,
-      adjustedSetpointData->freshFoodAdjustedSetpointData->shiftOffsetData);
+      parametricData->freshFoodThermalOffsetData->shiftOffsetData);
 }

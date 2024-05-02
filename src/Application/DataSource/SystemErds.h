@@ -612,7 +612,9 @@ enum
    ENTRY(Erd_FeaturePanMode7_Status,                        0x1251, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Int16Max,                   1,             NotFault) \
    ENTRY(Erd_FeaturePanMode7_SetpointRangeData,             0x1252, FeaturePanModeRange_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_FeaturePanCurrentMode,                         0x1254, FeaturePanCurrentMode_t,                            Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_UInt8Max,                   1,             NotFault) \
+   ENTRY(Erd_FeaturePanCurrentModeRequest,                  0x1253, FeaturePanCurrentMode_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_FeaturePanCurrentModeStatus,                   0x1254, FeaturePanCurrentMode_t,                            Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_UInt8Max,                   1,             NotFault) \
+   \
    ENTRY(Erd_RecessLightOnRequest,                          0x1255, RecessLightOnRequest_t,                             Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_RecessLightOnStatus,                           0x1256, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    \
@@ -1884,7 +1886,7 @@ enum
    ENTRY(Erd_AmbientHumiditySensorDiscovered,               0xFB94, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_FreshFoodEvaporatorThermistorDiscovered,       0xFB95, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvapThermistorDiscovered, 0xFB96, bool,                                              Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
-   ENTRY(Erd_FeaturePanCabinetThermistorDiscovered,         0xFB97, bool,                                           Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
+   ENTRY(Erd_FeaturePanCabinetThermistorDiscovered,         0xFB97, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_IceMakerCabinetThermistorDiscovered,           0xFB98, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_IceCabinetThermistorDiscovered,                0xFB99, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    \

@@ -93,13 +93,13 @@ void FeaturePanAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.convertibleCompartmentAsFreshFoodOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->crossAmbientAsFreshFoodOffsetData,
+      PersonalityParametricData_Get(dataModel)->featurePanThermalOffsetData->crossAmbientAsFreshFoodOffsetData,
       &convertibleCompartmentAsFreshFoodOffsetCalculatorConfig);
 
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.convertibleCompartmentAsFreezerOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->featurePanAdjustedSetpointData->crossAmbientAsFreezerOffsetData,
+      PersonalityParametricData_Get(dataModel)->featurePanThermalOffsetData->crossAmbientAsFreezerOffsetData,
       &convertibleCompartmentAsFreezerOffsetCalculatorConfig);
 
    OverrideArbiter_Init(

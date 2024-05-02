@@ -8,7 +8,7 @@
 #ifndef FRESHFOODADJUSTEDSETPOINTPLUGIN_H
 #define FRESHFOODADJUSTEDSETPOINTPLUGIN_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "ErdWriterOnCompareMatch.h"
 #include "FreshFoodShiftOffsetCalculatorPlugin.h"
 #include "CrossAmbientOffsetCalculator.h"

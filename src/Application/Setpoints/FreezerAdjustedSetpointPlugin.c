@@ -62,7 +62,7 @@ static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_Freezer_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->freezerOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->cabinetOffsetInDegFx100);
 }
 
 void FreezerAdjustedSetpointPlugin_Init(
@@ -79,12 +79,12 @@ void FreezerAdjustedSetpointPlugin_Init(
    CrossAmbientOffsetCalculator_Init(
       &instance->_private.freezerCrossAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->crossAmbientOffsetData,
       &freezerCrossAmbientOffsetCalculatorConfig);
    HighAmbientHumidityOffsetCalculator_Init(
       &instance->_private.freezerHighAmbientOffsetCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->highAmbientOffsetData,
+      PersonalityParametricData_Get(dataModel)->freezerThermalOffsetData->highAmbientOffsetData,
       &freezerHighAmbientOffsetCalculatorConfig);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

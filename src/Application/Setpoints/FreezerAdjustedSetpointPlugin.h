@@ -8,7 +8,7 @@
 #ifndef FREEZERADJUSTEDSETPOINTPLUGIN_H
 #define FREEZERADJUSTEDSETPOINTPLUGIN_H
 
-#include "AdjustedSetpointData.h"
+#include "ThermalOffsetData.h"
 #include "ErdWriterOnCompareMatch.h"
 #include "FreezerShiftOffsetCalculatorPlugin.h"
 #include "CrossAmbientOffsetCalculator.h"

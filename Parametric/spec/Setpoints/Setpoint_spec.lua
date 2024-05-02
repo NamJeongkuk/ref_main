@@ -12,7 +12,6 @@ describe('Setpoint', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
       setpoint_zone = TypedString('setpoint_zone', 'setpoint_zone'),
-      adjusted_setpoint = TypedString('adjusted_setpoint', 'adjusted_setpoint'),
       user_setpoint_data = TypedString('user_setpoint_data', 'user_setpoint_data')
     }, overrides or {})
   end
@@ -22,12 +21,6 @@ describe('Setpoint', function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('adjusted_setpoint must be a typed string with type adjusted_setpoint, but is a number', function()
-      setpoint(generate_config({
-        adjusted_setpoint = -1
-      }))
-    end)
-
     should_fail_with('setpoint_zone must be a typed string with type setpoint_zone, but is a number', function()
       setpoint(generate_config({
         setpoint_zone = -1
@@ -45,7 +38,6 @@ describe('Setpoint', function()
     local expected = remove_whitespace([[
       structure(
         pointer(setpoint_zone),
-        pointer(adjusted_setpoint),
         pointer(user_setpoint_data)
       )
     ]])

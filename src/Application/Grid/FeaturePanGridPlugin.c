@@ -23,7 +23,7 @@ static const GridConfiguration_t gridConfig = {
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_FeaturePanGrid_CalculatedGridLines,
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .gridDeltaOffsetErd = Erd_FeaturePanCurrentMode,
+   .gridDeltaOffsetErd = Erd_FeaturePanCurrentModeStatus,
    .gridLineAdjustmentErds = {
       {
          .offsetInDegFx100Erd = Erd_FeaturePan_CrossAmbientOffsetInDegFx100,

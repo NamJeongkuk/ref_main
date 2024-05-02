@@ -9,12 +9,12 @@ return function(core)
 
   local generate = memoize(function(config)
     return TypedString(
-      { 'feature_pan_adjusted_setpoint' },
+      { 'freezer_thermal_offset' },
       structure(
-        pointer(config.setpoint_offset),
-        pointer(config.shift_offset),
-        pointer(config.cross_ambient_offset_as_fresh_food),
-        pointer(config.cross_ambient_offset_as_freezer)
+        i16(config.cabinet_offset_in_degfx100),
+        pointer(config.cross_ambient_offset),
+        pointer(config.high_ambient_offset),
+        pointer(config.shift_offset)
       )
     )
   end)
@@ -23,15 +23,11 @@ return function(core)
     validate_arguments(
       config,
       {
-        setpoint_offset = { constraint.typed_string('feature_pan_setpoint_offset') },
+        cabinet_offset_in_degfx100 = { constraint.i16 },
+        cross_ambient_offset = { constraint.typed_string('cross_ambient_offset') },
+        high_ambient_offset = { constraint.typed_string('high_ambient_offset') },
         shift_offset = { constraint.typed_string('shift_offset') }
-      },
-      {
-        cross_ambient_offset_as_fresh_food = { constraint.typed_string('cross_ambient_offset') },
-        cross_ambient_offset_as_freezer = { constraint.typed_string('cross_ambient_offset') }
-      }
-    )
-
+      })
     return generate(config)
   end
 end

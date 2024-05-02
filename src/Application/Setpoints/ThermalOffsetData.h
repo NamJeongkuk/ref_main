@@ -1,12 +1,12 @@
 /*!
  * @file
- * @brief adjusted setpoint parametric data
+ * @brief thermal offset parametric data
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef ADJUSTEDSETPOINTDATA_H
-#define ADJUSTEDSETPOINTDATA_H
+#ifndef THERMALOFFSETDATA_H
+#define THERMALOFFSETDATA_H
 
 #include "TemperatureDegFx100.h"
 
@@ -53,19 +53,21 @@ typedef struct
 
 typedef struct
 {
+   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    TemperatureDegFx100_t pulldownOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const HighAmbientOffsetData_t *highAmbientOffsetData;
    const SetpointOffsetData_t *setpointOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
-} FreshFoodAdjustedSetpointData_t;
+} FreshFoodThermalOffsetData_t;
 
 typedef struct
 {
+   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const HighAmbientOffsetData_t *highAmbientOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
-} FreezerAdjustedSetpointData_t;
+} FreezerThermalOffsetData_t;
 
 typedef struct
 {
@@ -73,14 +75,15 @@ typedef struct
    const ShiftOffsetData_t *shiftOffsetData;
    const CrossAmbientOffsetData_t *crossAmbientAsFreshFoodOffsetData;
    const CrossAmbientOffsetData_t *crossAmbientAsFreezerOffsetData;
-} FeaturePanAdjustedSetpointData_t;
+} FeaturePanThermalOffsetData_t;
 
 typedef struct
 {
+   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    TemperatureDegFx100_t iceFormationOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
-} IceCabinetAdjustedSetpointData_t;
+} IceCabinetThermalOffsetData_t;
 
 typedef struct
 {
@@ -88,14 +91,5 @@ typedef struct
    uint8_t longTermAverageUpdateTimeInMinutes;
    uint8_t updateTimeInMinutes;
 } ShiftOffsetCalculatorData_t;
-
-typedef struct
-{
-   const FreshFoodAdjustedSetpointData_t *freshFoodAdjustedSetpointData;
-   const FreezerAdjustedSetpointData_t *freezerAdjustedSetpointData;
-   const IceCabinetAdjustedSetpointData_t *iceCabinetAdjustedSetpointData;
-   const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
-   const FeaturePanAdjustedSetpointData_t *featurePanAdjustedSetpointData;
-} AdjustedSetpointData_t;
 
 #endif

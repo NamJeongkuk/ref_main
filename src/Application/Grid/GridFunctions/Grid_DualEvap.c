@@ -87,6 +87,11 @@ static void IceCabinetHighSpeedOverride(I_DataModel_t *dataModel, bool state)
    DataModel_Write(dataModel, Erd_IceCabinetHighSpeedOverrideEnabledByGrid, &state);
 }
 
+static void IceCabinetFanOffSpeedOverride(I_DataModel_t *dataModel, bool state)
+{
+   DataModel_Write(dataModel, Erd_IceCabinetFanDisabledByGrid, &state);
+}
+
 static void MaxTimeInValveA(I_DataModel_t *dataModel, bool state)
 {
    DataModel_Write(dataModel, Erd_MaxValveTimeInPosAEnabled, &state);
@@ -356,6 +361,7 @@ void Grid_DualEvap(void *context)
          SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, ENABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -372,6 +378,7 @@ void Grid_DualEvap(void *context)
          SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, ENABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -383,12 +390,13 @@ void Grid_DualEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetLowAmbientValveBehavior(dataModel, DISABLED);
-         SetFreshFoodPulldownOffset(dataModel, PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->pulldownOffsetInDegFx100);
+         SetFreshFoodPulldownOffset(dataModel, PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->pulldownOffsetInDegFx100);
          SetPulldownFanBehavior(dataModel, ENABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, ENABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -464,6 +472,7 @@ void Grid_DualEvap(void *context)
          SetPulldownValveBehavior(dataModel, DISABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -478,6 +487,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -508,6 +518,7 @@ void Grid_DualEvap(void *context)
          SetPulldownValveBehavior(dataModel, DISABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -523,6 +534,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -536,6 +548,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -566,6 +579,7 @@ void Grid_DualEvap(void *context)
          SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -577,6 +591,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -590,6 +605,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -621,6 +637,7 @@ void Grid_DualEvap(void *context)
          SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -645,6 +662,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, SET);
          break;
@@ -659,6 +677,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -672,6 +691,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -721,6 +741,7 @@ void Grid_DualEvap(void *context)
          SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          SetFreshFoodAndFreezerIceMakers(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          break;
@@ -758,6 +779,7 @@ void Grid_DualEvap(void *context)
          SetPulldownValveBehavior(dataModel, DISABLED);
          SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          break;
@@ -769,6 +791,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -782,6 +805,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, ENABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);
@@ -795,6 +819,7 @@ void Grid_DualEvap(void *context)
          SetPulldownFanBehavior(dataModel, DISABLED);
          SetPulldownValveBehavior(dataModel, DISABLED);
          IceCabinetHighSpeedOverride(dataModel, DISABLED);
+         IceCabinetFanOffSpeedOverride(dataModel, DISABLED);
          MaxTimeInValveA(dataModel, DISABLED);
          DelayConvertibleCompartmentCooling(dataModel, CLEAR);
          CoolConvertibleCompartmentBeforeOff(dataModel, CLEAR);

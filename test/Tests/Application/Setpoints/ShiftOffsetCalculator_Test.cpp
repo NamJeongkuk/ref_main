@@ -89,9 +89,9 @@ TEST_GROUP(ShiftOffsetCalculator)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       shiftOffsetCalculatorData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->shiftOffsetCalculatorData;
+         PersonalityParametricData_Get(dataModel)->shiftOffsetCalculatorData;
       shiftOffsetData =
-         PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->shiftOffsetData;
+         PersonalityParametricData_Get(dataModel)->freshFoodThermalOffsetData->shiftOffsetData;
 
       Filter_LongTermAverage_Init(&longTermAverageFilter, Beta);
 
