@@ -88,7 +88,6 @@ describe('Compressor', function()
             u8(55),
             u8(2),
             u8(3),
-            u8(1),
             u8(20),
             u8(3),
             u16(24)
@@ -105,12 +104,10 @@ describe('Compressor', function()
         startup_on_time_in_seconds  = 55,
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
-        variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
         compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
         compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24
       })
-
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
@@ -129,7 +126,6 @@ describe('Compressor', function()
       u8(55),
       u8(2),
       u8(3),
-      u8(1),
       u8(20),
       u8(3),
       u16(24)
@@ -176,7 +172,6 @@ describe('Compressor', function()
         startup_on_time_in_seconds  = 55,
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
-        variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
         compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
         compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24
@@ -228,7 +223,6 @@ describe('Compressor', function()
         u8(55),
         u8(2),
         u8(3),
-        u8(1),
         u8(20),
         u8(3),
         u16(24)
@@ -257,7 +251,6 @@ describe('Compressor', function()
         startup_on_time_in_seconds  = 55,
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
-        variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
         compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
         compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24

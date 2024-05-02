@@ -398,11 +398,6 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
    }
 
-   void CompressorStateIs(CompressorState_t state)
-   {
-      DataModel_Write(dataModel, Erd_CompressorState, &state);
-   }
-
    void ReadyToDefrost()
    {
       DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
@@ -639,15 +634,6 @@ TEST_GROUP(Defrost_SingleEvapSideBySide)
       DataModel_Read(dataModel, Erd_CompressorSpeed_DefrostVote, &actual);
 
       CHECK_FALSE(actual.care);
-   }
-
-   void DisableMinimumCompressorTimesShouldBe(bool expectedState, Vote_t expectedCare)
-   {
-      BooleanVotedState_t actualVote;
-      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes_DefrostVote, &actualVote);
-
-      CHECK_EQUAL(expectedState, actualVote.state);
-      CHECK_EQUAL(expectedCare, actualVote.care);
    }
 
    void FanSpeedVotesShouldBeDontCare()
@@ -1588,31 +1574,6 @@ TEST(Defrost_SingleEvapSideBySide, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndF
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldSetDisableMinimumCompressorOnTimesWhenEnteringHeaterOnEntry)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
-}
-
-TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringIdle)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
-}
-
-TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechillPrep)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
-}
-
-TEST(Defrost_SingleEvapSideBySide, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechill)
-{
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   GivenDefrostIsInitializedAndInPrechillWithAllThermistorsValidAndNotMeetingPrechillConditions();
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
-}
-
 TEST(Defrost_SingleEvapSideBySide, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValidAndDontSkipPrechillPrepIsNotSet)
 {
    Given LastFreshFoodDefrostWasNormal();
@@ -2480,7 +2441,7 @@ TEST(Defrost_SingleEvapSideBySide, ShouldReleaseControlOfHeaterOnEntryLoadsWhenD
    SealedSystemValvePositionVoteShouldBeDontCare();
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAndEnableMinimumCompressorTimesAfterDefrostHeaterOnDelayTimerExpired)
+TEST(Defrost_SingleEvapSideBySide, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAfterDefrostHeaterOnDelayTimerExpired)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -2492,7 +2453,6 @@ TEST(Defrost_SingleEvapSideBySide, ShouldExitOnHeaterEntryStateAndTurnOnTheDefro
 
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On, Vote_Care);
    FreshFoodDefrostHeaterVoteShouldBeDontCare();
    ConvertibleCompartmentDefrostHeaterVoteShouldBeDontCare();
@@ -2656,11 +2616,10 @@ TEST(Defrost_SingleEvapSideBySide, ShouldIncrementNumberOfFreezerAbnormalDefrost
    NumberOfFreezerAbnormalDefrostsShouldBe(2);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldDisableMinimumCompressorTimesAndRequestValveHomingAndVoteForDwellLoadsWhenEnteringDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldRequestValveHomingAndVoteForDwellLoadsWhenEnteringDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
    SealedSystemValveHomingRequestShouldBe(SET);
 
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
@@ -2696,11 +2655,9 @@ TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPostDwellAfterDwellTimeHasP
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldDisableMinimumCompressorTimesAndVoteForPostDwellLoadsWhenEnteringPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldVoteForPostDwellLoadsWhenEnteringPostDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
-
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
 
    CompressorSpeedVoteShouldBe(defrostData.postDwellData.postDwellCompressorSpeed);
    CondenserFanSpeedVoteShouldBe(defrostData.postDwellData.postDwellCondenserFanSpeed);
@@ -2768,14 +2725,13 @@ TEST(Defrost_SingleEvapSideBySide, ShouldNotTransitionToIdleWhenFreezerEvaporato
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldNotCareAboutPostDwellLoadsAndEnableMinimumCompressorTimesWhenEnteringIdleFromPostDwell)
+TEST(Defrost_SingleEvapSideBySide, ShouldNotCareAboutPostDwellLoadsWhenEnteringIdleFromPostDwell)
 {
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
    When FilteredFreezerEvapTemperatureIs(defrostData.postDwellData.postDwellPrimaryEvaporatorExitTemperatureInDegFx100 - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
    CompressorSpeedVoteShouldBeDontCare();
    CondenserFanSpeedVoteShouldBeDontCare();
    FreezerDefrostHeaterVoteShouldBeDontCare();
@@ -3227,13 +3183,12 @@ TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToHeaterOnEntryAndClearTheDef
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesAndVoteDontCareForDwellLoadsWhenIdleTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndVoteDontCareForDwellLoadsWhenIdleTestIsRequestedInDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
    FreezerDefrostHeaterVoteShouldBeDontCare();
    FreshFoodDefrostHeaterVoteShouldBeDontCare();
    ConvertibleCompartmentHeaterVoteShouldBeDontCare();
@@ -3249,7 +3204,7 @@ TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToIdleAndClearTheDefrostTestS
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellState)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -3257,11 +3212,10 @@ TEST(Defrost_SingleEvapSideBySide, ShouldTransitionToPrechillPrepAndClearTheDefr
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-   DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvapSideBySide, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestAndNotEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalidAndHasBeenDiscovered)
+TEST(Defrost_SingleEvapSideBySide, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalidAndHasBeenDiscovered)
 {
    Given FreezerThermistorValidityIs(Valid);
    GivenFreezerThermistorHasBeenDiscovered();
@@ -3271,7 +3225,6 @@ TEST(Defrost_SingleEvapSideBySide, ShouldSkipPrechillPrepAndTransitionToHeaterOn
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
    DefrostTestStateRequestShouldBeNone();
 }
 

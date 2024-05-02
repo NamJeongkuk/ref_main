@@ -33,7 +33,7 @@ static const ErdResolverConfiguration_t condenserFanSpeedResolverConfiguration =
 };
 
 static const FanSpeedResolverConfig_t condenserConfig = {
-   .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVote,
+   .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVoteWithSabbathDelay,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanControl
@@ -66,6 +66,12 @@ static const CondenserFanAntiSweatBehaviorConfig_t condenserFanAntiSweatBehavior
    .coolingModeErd = Erd_CoolingMode
 };
 
+static const SabbathDelayHandlerConfiguration_t sabbathDelayConfig = {
+   .compressorResolvedVote = Erd_CompressorSpeed_ResolvedVote,
+   .loadResolvedVote = Erd_CondenserFanSpeed_ResolvedVote,
+   .loadResolvedVoteWithSabbathDelay = Erd_CondenserFanSpeed_ResolvedVoteWithSabbathDelay
+};
+
 void CondenserFanPlugin_Init(
    CondenserFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -83,6 +89,11 @@ void CondenserFanPlugin_Init(
       dataModel,
       &condenserFanAntiSweatBehaviorConfig,
       &fanData->condenserFan);
+
+   SabbathDelayHandler_Init(
+      &instance->_private.sabbathDelayHandler,
+      dataModel,
+      &sabbathDelayConfig);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver,

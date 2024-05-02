@@ -35,6 +35,11 @@ static bool CompressorIsSwitchingToOn(CompressorMinimumOnOffTime_t *instance, Co
    return ((instance->_private.previousCompressorSpeed == CompressorSpeed_Off) && (newSpeed != CompressorSpeed_Off));
 }
 
+static bool CompressorIsSwitchingToOff(CompressorMinimumOnOffTime_t *instance, CompressorSpeed_t newSpeed)
+{
+   return ((instance->_private.previousCompressorSpeed != CompressorSpeed_Off) && (newSpeed == CompressorSpeed_Off));
+}
+
 static void ResolvedVoteChanged(void *context, const void *args)
 {
    CompressorMinimumOnOffTime_t *instance = context;
@@ -51,7 +56,7 @@ static void ResolvedVoteChanged(void *context, const void *args)
          VoteDontCare,
          instance);
    }
-   else if(resolvedVote->speed == CompressorSpeed_Off)
+   else if(CompressorIsSwitchingToOff(instance, resolvedVote->speed))
    {
       VoteForCompressor(instance, resolvedVote->speed, Vote_Care);
 

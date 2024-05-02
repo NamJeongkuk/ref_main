@@ -35,10 +35,9 @@ static const Erd_t lightVotes[] = {
 };
 
 static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
-   .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_EnhancedSabbathVote,
-   .condenserFanVoteErd = Erd_CondenserFanSpeed_SabbathVote,
-   .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
+   .condenserFanVoteErd = Erd_CondenserFanSpeed_EnhancedSabbathVote,
+   .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_EnhancedSabbathVote,
    .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
    .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .regularSabbathModeStatusErd = Erd_SabbathModeEnable,

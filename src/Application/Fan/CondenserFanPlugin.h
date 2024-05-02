@@ -14,6 +14,7 @@
 #include "FanController.h"
 #include "FanFaultHandler.h"
 #include "CondenserFanAntiSweatBehavior.h"
+#include "SabbathDelayHandler.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
       FanController_t fanController;
       FanFaultHandler_t fanFaultHandler;
       CondenserFanAntiSweatBehavior_t condenserFanAntiSweatBehavior;
+      SabbathDelayHandler_t sabbathDelayHandler;
    } _private;
 } CondenserFanPlugin_t;
 

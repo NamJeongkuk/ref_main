@@ -220,35 +220,6 @@ static void SetDamperPositionVoteToCareWithValueOf(EnhancedSabbathMode_t *instan
       &vote);
 }
 
-static void SetDisableCompressorMinimumTimesToDontCare(EnhancedSabbathMode_t *instance)
-{
-   BooleanVotedState_t vote;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->disableMinimumCompressorTimesVoteErd,
-      &vote);
-
-   vote.care = Vote_DontCare;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableMinimumCompressorTimesVoteErd,
-      &vote);
-}
-
-static void SetDisableCompressorMinimumTimesToCareWithValue(EnhancedSabbathMode_t *instance, bool state)
-{
-   BooleanVotedState_t vote = {
-      .state = state,
-      .care = Vote_Care
-   };
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableMinimumCompressorTimesVoteErd,
-      &vote);
-}
-
 static void SetLightVotesToOffAndDontCare(EnhancedSabbathMode_t *instance)
 {
    RampingPwmDutyCyclePercentage_t lightingOffRampingPwmDutyCyclePercentage = {
@@ -592,7 +563,6 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetAllLoadVotesToDontCare(instance);
          SetFreshFoodSetpointVoteToDontCare(instance);
          SetFreezerSetpointVoteToDontCare(instance);
-         SetDisableCompressorMinimumTimesToDontCare(instance);
          SetGridOverrideTo(instance, false);
          SetDispensingDisabledTo(instance, false);
          SetLightVotesToOffAndDontCare(instance);
@@ -629,7 +599,6 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetFreezerSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freezerSetpointTemperatureInDegFx100);
          SetDispensingDisabledTo(instance, true);
          SetGridOverrideTo(instance, true);
-         SetDisableCompressorMinimumTimesToCareWithValue(instance, true);
          StartEnhancedSabbathRunTimeTimer(instance);
          SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(instance);
          break;

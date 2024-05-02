@@ -33,7 +33,7 @@ static const ErdResolverConfiguration_t freezerEvapFanSpeedResolverConfiguration
 };
 
 static const FanSpeedResolverConfig_t freezerEvapConfig = {
-   .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVoteWithSabbathDelay,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanControl
@@ -56,6 +56,12 @@ static const FanFaultHandlerConfiguration_t freezerEvapFanFaultHandlerConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const SabbathDelayHandlerConfiguration_t sabbathDelayConfig = {
+   .compressorResolvedVote = Erd_CompressorSpeed_ResolvedVote,
+   .loadResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .loadResolvedVoteWithSabbathDelay = Erd_FreezerEvapFanSpeed_ResolvedVoteWithSabbathDelay
+};
+
 void FreezerEvapFanPlugin_Init(
    FreezerEvapFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -67,6 +73,11 @@ void FreezerEvapFanPlugin_Init(
       &instance->_private.fanSpeedVoteResolver,
       DataModel_AsDataSource(dataModel),
       &freezerEvapFanSpeedResolverConfiguration);
+
+   SabbathDelayHandler_Init(
+      &instance->_private.sabbathDelayHandler,
+      dataModel,
+      &sabbathDelayConfig);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver,

@@ -67,6 +67,11 @@ TEST_GROUP(CompressorMinimumOnOffTime)
       GivenResolvedVoteIs(speed);
    }
 
+   void WhenTheResolvedVoteBecomes(CompressorSpeed_t speed, Vote_t care)
+   {
+      GivenResolvedVoteIs(speed, care);
+   }
+
    void GivenResolvedVoteIs(CompressorSpeed_t speed, Vote_t care)
    {
       CompressorVotedSpeed_t votedSpeed;
@@ -182,5 +187,15 @@ TEST(CompressorMinimumOnOffTime, ShouldChangeVotesIfResolvedVoteChangesBeforeTim
    TheMinimumOnOffVoteShouldBe(CompressorSpeed_Off, Vote_Care);
 
    After(timesData.minimumOffTimeInMinutes * MSEC_PER_MIN);
+   TheMinimumOnOffVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
+}
+
+TEST(CompressorMinimumOnOffTime, ShouldNotVoteForMinimumOffTimeIfNotPreviouslyOn)
+{
+   GivenResolvedVoteIs(CompressorSpeed_Off, Vote_Care);
+   GivenMinimumOnOffTimeIs(CompressorSpeed_Off, Vote_DontCare);
+   GivenTheModuleIsInitialized();
+
+   WhenTheResolvedVoteBecomes(CompressorSpeed_Off, Vote_DontCare);
    TheMinimumOnOffVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
 }

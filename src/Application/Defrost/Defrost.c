@@ -17,7 +17,6 @@
 #include "utils.h"
 #include "FanSpeed.h"
 #include "Setpoint.h"
-#include "CompressorState.h"
 #include "CompressorVotedSpeed.h"
 #include "Signal.h"
 #include "uassert.h"
@@ -1059,32 +1058,6 @@ static void VoteForHeaterOnLoads(Defrost_t *instance, bool care)
    VoteForHeaterOnEntryLoads(instance, care);
 }
 
-static void EnableMinimumCompressorTimes(Defrost_t *instance)
-{
-   BooleanVotedState_t booleanVote = {
-      .state = false,
-      .care = Vote_DontCare
-   };
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableCompressorMinimumTimesVoteErd,
-      &booleanVote);
-}
-
-static void DisableMinimumCompressorTimes(Defrost_t *instance)
-{
-   BooleanVotedState_t booleanVote = {
-      .state = true,
-      .care = Vote_Care
-   };
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->disableCompressorMinimumTimesVoteErd,
-      &booleanVote);
-}
-
 static void VoteForDwellLoads(Defrost_t *instance, bool care)
 {
    VoteForCompressorSpeed(instance, CompressorSpeed_Off, care);
@@ -1894,7 +1867,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
-         DisableMinimumCompressorTimes(instance);
          ClearDefrostTestStateRequest(instance);
          VoteForHeaterOnEntryLoads(instance, Vote_Care);
          StartDefrostTimer(
@@ -1912,7 +1884,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 
       case Hsm_Exit:
          StopTimer(instance, &instance->_private.defrostTimer);
-         EnableMinimumCompressorTimes(instance);
          VoteForHeaterOnEntryLoads(instance, Vote_DontCare);
          break;
 
@@ -1932,7 +1903,6 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOn);
-         DisableMinimumCompressorTimes(instance);
          VoteForHeaterOnLoads(instance, Vote_Care);
 
          switch(CurrentDefrostType(instance))
@@ -2044,7 +2014,6 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             SetInvalidEvaporatorThermistorDuringDefrostTo(instance, false);
          }
 
-         EnableMinimumCompressorTimes(instance);
          VoteForHeaterOnLoads(instance, Vote_DontCare);
 
          switch(CurrentDefrostType(instance))
@@ -2094,7 +2063,6 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
-         DisableMinimumCompressorTimes(instance);
          RequestValveHoming(instance);
          VoteForDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
@@ -2116,7 +2084,6 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Hsm_Exit:
          StopTimer(instance, &instance->_private.defrostTimer);
-         EnableMinimumCompressorTimes(instance);
          VoteForDwellLoads(instance, Vote_DontCare);
          break;
 
@@ -2173,7 +2140,6 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PostDwell);
-         DisableMinimumCompressorTimes(instance);
          VoteForPostDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
@@ -2194,7 +2160,6 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       }
 
       case Hsm_Exit:
-         EnableMinimumCompressorTimes(instance);
          VoteForPostDwellLoads(instance, Vote_DontCare);
          StopTimer(instance, &instance->_private.defrostTimer);
          break;

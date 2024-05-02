@@ -19,7 +19,8 @@ typedef struct
    Erd_t compressorFrequencyErd; // uint8_t
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerSetpointZoneErd; // SetpointZone_t
-   Erd_t compressorControllerSpeedErd; // CompressorSpeed_t
+   Erd_t resolvedVoteCompressorSpeedErd; // CompressorVotedSpeed_t
+   Erd_t compressorIsOnErd; // bool
 } CompressorSpeedDriverConfig_t;
 
 typedef struct

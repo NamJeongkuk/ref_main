@@ -192,8 +192,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Compressor State",
-               "name": "Erd_CompressorState",
+               "displayName": "Compressor Winning Vote",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             },

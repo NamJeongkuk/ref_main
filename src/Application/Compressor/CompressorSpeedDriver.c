@@ -216,17 +216,10 @@ static void UpdateCompressorFrequency(
 
    if((compressorSpeed == CompressorSpeed_Off) ||
       (compressorSpeed == CompressorSpeed_SuperLow) ||
-      (compressorSpeed == CompressorSpeed_SuperHigh) ||
-      (compressorSpeed == CompressorSpeed_Startup))
+      (compressorSpeed == CompressorSpeed_SuperHigh))
    {
       switch(compressorSpeed)
       {
-         case CompressorSpeed_Startup:
-            SetCompressorFrequency(
-               instance,
-               compressorSpeeds->startupSpeedFrequencyInHz);
-            break;
-
          case CompressorSpeed_SuperLow:
             SetCompressorFrequency(
                instance,
@@ -245,6 +238,12 @@ static void UpdateCompressorFrequency(
                PwmFrequency_Min);
             break;
       }
+   }
+   else if(compressorSpeed >= CompressorSpeed_MaxNumberOfSpeeds)
+   {
+      SetCompressorFrequency(
+         instance,
+         compressorSpeed);
    }
    else if(!compressorSpeeds->coolingModeDependent)
    {
@@ -312,6 +311,12 @@ static void CompressorControllerSpeedUpdated(void *context, const void *args)
    {
       UpdateCompressorFrequency(instance, compressorVotedSpeed->speed);
    }
+
+   bool compressorIsOn = (compressorVotedSpeed->speed != CompressorSpeed_Off);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorIsOnErd,
+      &compressorIsOn);
 }
 
 void CompressorSpeedDriver_Init(
@@ -329,6 +334,6 @@ void CompressorSpeedDriver_Init(
       CompressorControllerSpeedUpdated);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->compressorControllerSpeedErd,
+      instance->_private.config->resolvedVoteCompressorSpeedErd,
       &instance->_private.compressorSpeedSubscription);
 }

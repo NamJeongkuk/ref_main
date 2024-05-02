@@ -21,7 +21,6 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "TddPersonality.h"
 #include "Interrupt_TestDouble.h"
-#include <stdio.h>
 
 enum
 {
@@ -99,7 +98,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
 };
 
 TEST_GROUP(FactoryModeIntegration)

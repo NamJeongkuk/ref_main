@@ -39,10 +39,9 @@ static const ErdList_t lightVoteErdList = {
 };
 
 static const EnhancedSabbathModeConfig_t config = {
-   .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_EnhancedSabbathVote,
-   .condenserFanVoteErd = Erd_CondenserFanSpeed_SabbathVote,
-   .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
+   .condenserFanVoteErd = Erd_CondenserFanSpeed_EnhancedSabbathVote,
+   .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_EnhancedSabbathVote,
    .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
    .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .regularSabbathModeStatusErd = Erd_SabbathModeEnable,
@@ -126,7 +125,7 @@ TEST_GROUP(EnhancedSabbathMode)
          .care = care
       };
 
-      DataModel_Write(dataModel, Erd_CondenserFanSpeed_SabbathVote, &vote);
+      DataModel_Write(dataModel, Erd_CondenserFanSpeed_EnhancedSabbathVote, &vote);
    }
 
    void WhenTheCondenserFanSpeedVoteChangesTo(FanSpeed_t speed, Vote_t care)
@@ -141,7 +140,7 @@ TEST_GROUP(EnhancedSabbathMode)
          .care = care
       };
 
-      DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &vote);
+      DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_EnhancedSabbathVote, &vote);
    }
 
    void WhenTheFreezerEvapFanSpeedVoteChangesTo(FanSpeed_t speed, Vote_t care)
@@ -162,16 +161,6 @@ TEST_GROUP(EnhancedSabbathMode)
    void WhenTheDamperPositionVoteChangesTo(DamperPosition_t position, Vote_t care)
    {
       GivenTheDamperPositionVoteIs(position, care);
-   }
-
-   void GivenTheDisableCompressorMiniumTimesVoteIs(bool state, Vote_t care)
-   {
-      BooleanVotedState_t vote = {
-         .state = state,
-         .care = care
-      };
-
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote, &vote);
    }
 
    void GivenTheEnhancedSabbathModeStatusIs(bool state)
@@ -270,7 +259,7 @@ TEST_GROUP(EnhancedSabbathMode)
    void TheCondenserFanSpeedVoteShouldBe(FanSpeed_t expectedSpeed, Vote_t expectedCare)
    {
       FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_CondenserFanSpeed_SabbathVote, &actual);
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_EnhancedSabbathVote, &actual);
 
       CHECK_EQUAL(expectedSpeed, actual.speed);
       CHECK_EQUAL(expectedCare, actual.care);
@@ -279,7 +268,7 @@ TEST_GROUP(EnhancedSabbathMode)
    void TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_t expectedSpeed, Vote_t expectedCare)
    {
       FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &actual);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_EnhancedSabbathVote, &actual);
 
       CHECK_EQUAL(expectedSpeed, actual.speed);
       CHECK_EQUAL(expectedCare, actual.care);
@@ -302,23 +291,14 @@ TEST_GROUP(EnhancedSabbathMode)
       DamperVotedPosition_t actualDamperPositionVote;
 
       DataModel_Read(dataModel, Erd_CompressorSpeed_EnhancedSabbathVote, &actualCompressorSpeedVote);
-      DataModel_Read(dataModel, Erd_CondenserFanSpeed_SabbathVote, &actualCondenserFanVote);
-      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &actualFreezerEvapFanVote);
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_EnhancedSabbathVote, &actualCondenserFanVote);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_EnhancedSabbathVote, &actualFreezerEvapFanVote);
       DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_EnhancedSabbathVote, &actualDamperPositionVote);
 
       CHECK_EQUAL(expectedCare, actualCompressorSpeedVote.care);
       CHECK_EQUAL(expectedCare, actualCondenserFanVote.care);
       CHECK_EQUAL(expectedCare, actualDamperPositionVote.care);
       CHECK_EQUAL(expectedCare, actualFreezerEvapFanVote.care);
-   }
-
-   void TheDisableCompressorMiniumTimesVoteShouldBe(bool expectedState, Vote_t expectedCare)
-   {
-      BooleanVotedState_t actual;
-      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote, &actual);
-
-      CHECK_EQUAL(expectedState, actual.state);
-      CHECK_EQUAL(expectedCare, actual.care);
    }
 
    void TheDispensingDisabledShouldBe(bool expected)
@@ -449,7 +429,6 @@ TEST_GROUP(EnhancedSabbathMode)
       GivenTheCondenserFanSpeedVoteIs(FanSpeed_SuperHigh, Vote_Care);
       GivenTheFreezerEvapFanSpeedVoteIs(FanSpeed_SuperHigh, Vote_Care);
       GivenTheDamperPositionVoteIs(DamperPosition_Open, Vote_Care);
-      GivenTheDisableCompressorMiniumTimesVoteIs(false, Vote_Care);
       GivenTheHsmStateIs(EnhancedSabbathModeHsmState_Unknown);
       GivenTheGridOverrideIs(true);
       GivenDispensingDisabledIs(true);
@@ -461,7 +440,6 @@ TEST_GROUP(EnhancedSabbathMode)
       TheCondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
       TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
       TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
-      TheDisableCompressorMiniumTimesVoteShouldBe(false, Vote_DontCare);
       TheGridOverrideShouldBe(false);
       TheDispensingDisabledShouldBe(false);
       TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -727,7 +705,6 @@ TEST(EnhancedSabbathMode, ShouldVoteForLoadsToDontCareWhenWhenEnteringDisabledOn
    GivenTheCondenserFanSpeedVoteIs(FanSpeed_SuperHigh, Vote_Care);
    GivenTheFreezerEvapFanSpeedVoteIs(FanSpeed_SuperHigh, Vote_Care);
    GivenTheDamperPositionVoteIs(DamperPosition_Open, Vote_Care);
-   GivenTheDisableCompressorMiniumTimesVoteIs(false, Vote_Care);
    GivenTheEnhancedSabbathModeStatusIs(CLEAR);
    GivenTheHsmStateIs(EnhancedSabbathModeHsmState_Unknown);
    GivenInitialization();
@@ -738,7 +715,6 @@ TEST(EnhancedSabbathMode, ShouldVoteForLoadsToDontCareWhenWhenEnteringDisabledOn
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
-   TheDisableCompressorMiniumTimesVoteShouldBe(false, Vote_DontCare);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 }
 
@@ -1205,7 +1181,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreshFoodStageAndS
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
-   TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1236,7 +1211,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreezerStageAndSta
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
-   TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1267,7 +1241,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInOffStageAndStatusI
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
-   TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1304,7 +1277,6 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
 
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
-   TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_Care);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
 
@@ -1314,7 +1286,6 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
 
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
-   TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
 }

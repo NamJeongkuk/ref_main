@@ -307,14 +307,6 @@ TEST_GROUP(SabbathIntegration)
       CHECK_TRUE(actual == 0);
    }
 
-   void CompressorStateShouldBe(CompressorState_t expected)
-   {
-      CompressorState_t actual;
-      DataModel_Read(dataModel, Erd_CompressorState, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
    void CompressorShouldBe(bool expected)
    {
       bool actual;
@@ -428,15 +420,13 @@ TEST(SabbathIntegration, ShouldWaitToTurnOnFans)
    WhenCompressorFactoryVoteIs(ON);
 
    CompressorShouldBe(OFF);
-   CompressorStateShouldBe(CompressorState_SabbathDelay);
 
    After(compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
-   CompressorStateShouldBe(CompressorState_SabbathDelay);
    FreezerEvapFanShouldBeOff();
    CondenserFanShouldBeOff();
 
    After(1);
-   CompressorStateShouldBe(CompressorState_Startup);
+   CompressorShouldBe(ON);
    FreezerEvapFanShouldBeOn();
    CondenserFanShouldBeOn();
 }

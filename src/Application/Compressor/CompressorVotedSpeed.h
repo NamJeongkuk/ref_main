@@ -19,7 +19,6 @@ enum
    CompressorSpeed_Medium,
    CompressorSpeed_High,
    CompressorSpeed_SuperHigh,
-   CompressorSpeed_Startup,
    CompressorSpeed_MaxNumberOfSpeeds
 };
 typedef uint8_t CompressorSpeed_t;

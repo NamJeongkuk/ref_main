@@ -64,7 +64,6 @@ const DefrostConfiguration_t defrostConfiguration = {
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .cabinetFilteredTemperatureTooWarmOnPowerUpErd = Erd_CabinetFilteredTemperatureTooWarmOnPowerUp,
    .defrostPowerUpReadyErd = Erd_DefrostPowerUpReady,
-   .disableCompressorMinimumTimesVoteErd = Erd_DisableMinimumCompressorTimes_DefrostVote,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
    .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,

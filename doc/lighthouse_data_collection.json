@@ -48,11 +48,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_CompressorState",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
          "interval": 60000
       },

@@ -88,13 +88,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Compressor State",
-          "name": "Erd_CompressorState",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Compressor Is On",
           "name": "Erd_CompressorIsOn",
           "read": true,
@@ -313,8 +306,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Speed Sabbath Vote",
-          "name": "Erd_CondenserFanSpeed_SabbathVote",
+          "displayName": "Condenser Fan Speed Enhanced Sabbath Vote",
+          "name": "Erd_CondenserFanSpeed_EnhancedSabbathVote",
           "read": true,
           "write": true
         },
@@ -355,8 +348,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Evap Fan Speed Sabbath Vote",
-          "name": "Erd_FreshFoodEvapFanSpeed_SabbathVote",
+          "displayName": "Fresh Food Evap Fan Speed Enhanced Sabbath Vote",
+          "name": "Erd_FreshFoodEvapFanSpeed_EnhancedSabbathVote",
           "read": true,
           "write": true
         },
@@ -411,8 +404,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Evap Fan Speed Sabbath Vote",
-          "name": "Erd_FreezerEvapFanSpeed_SabbathVote",
+          "displayName": "Freezer Evap Fan Speed Enhanced Sabbath Vote",
+          "name": "Erd_FreezerEvapFanSpeed_EnhancedSabbathVote",
           "read": true,
           "write": true
         },
@@ -4289,8 +4282,8 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Compressor State",
-          "name": "Erd_CompressorState",
+          "displayName": "Compressor Resolved Vote",
+          "name": "Erd_CompressorSpeed_ResolvedVote",
           "read": true,
           "write": true
         },

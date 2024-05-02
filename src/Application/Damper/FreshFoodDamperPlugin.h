@@ -16,6 +16,7 @@
 #include "DamperMaxOpenTimeMonitor.h"
 #include "DamperFreezePrevention.h"
 #include "ErdResolver.h"
+#include "SabbathDelayHandler.h"
 
 typedef struct
 {
@@ -29,6 +30,7 @@ typedef struct
       DamperFreezePrevention_t damperFreezePrevention;
       DamperHeaterDefrostControl_t damperHeaterDefrostControl;
       DamperMaxOpenTime_t damperMaxOpenTime;
+      SabbathDelayHandler_t sabbathDelayHandler;
    } _private;
 } FreshFoodDamperPlugin_t;
 

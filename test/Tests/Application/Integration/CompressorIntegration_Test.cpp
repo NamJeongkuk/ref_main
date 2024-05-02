@@ -45,12 +45,12 @@ TEST_GROUP(SingleSpeedCompressorIntegration)
          resetReason);
    }
 
-   void WhenCompressorSpeedChangesTo(CompressorSpeed_t compressorSpeed)
+   void WhenTheGridCompressorVoteBecomes(CompressorSpeed_t compressorSpeed)
    {
       CompressorVotedSpeed_t compressorVote;
       compressorVote.speed = compressorSpeed;
       compressorVote.care = Vote_Care;
-      DataModel_Write(dataModel, Erd_CompressorSpeed_FactoryVote, &compressorVote);
+      DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVote);
    }
 
    void CompressorRelayShouldBe(bool expected)
@@ -69,24 +69,9 @@ TEST_GROUP(SingleSpeedCompressorIntegration)
    {
       GivenApplicationHasBeenInitialized();
 
-      WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
+      WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperLow);
 
-      After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
       CompressorRelayShouldBe(ON);
-   }
-
-   void GivenDisableMinimumCompressorTimesIs(bool state)
-   {
-      BooleanVotedState_t votedState;
-      votedState.state = state;
-      votedState.care = Vote_Care;
-
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_ResolvedVote, &votedState);
-   }
-
-   void WhenDisableMinimumCompressorTimesIs(bool state)
-   {
-      GivenDisableMinimumCompressorTimesIs(state);
    }
 };
 
@@ -95,54 +80,27 @@ TEST(SingleSpeedCompressorIntegration, ShouldInitialize)
    GivenApplicationHasBeenInitialized();
 }
 
-TEST(SingleSpeedCompressorIntegration, ShouldTurnOnCompressorRelayAfterSabbathDelayTimeWhenCompressorSpeedChangesToSuperLow)
+TEST(SingleSpeedCompressorIntegration, ShouldTurnOnCompressorRelayWhenTheGridCompressorVoteIsSuperLow)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
-
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
    CompressorRelayShouldBe(OFF);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperLow);
 
-   After(1);
    CompressorRelayShouldBe(ON);
 }
 
-TEST(SingleSpeedCompressorIntegration, ShouldTurnOffCompressorRelayAfterStartupOnAndMinimumOnTimesWhenCompressorSpeedChangesToOff)
+TEST(SingleSpeedCompressorIntegration, ShouldTurnOffCompressorRelayAfterMinimumOnTimeWhenCompressorSpeedChangesToOff)
 {
    GivenApplicationHasBeenInitializedAndCompressorRelayIsOn();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Off);
-
-   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_Off);
 
    After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - 1);
    CompressorRelayShouldBe(ON);
 
    After(1);
    CompressorRelayShouldBe(OFF);
-}
-
-TEST(SingleSpeedCompressorIntegration, ShouldTurnOnCompressorRelayRightAfterUpdatingCompressorSpeedToSuperLowIfMinimumCompressorTimesAreDisabled)
-{
-   GivenApplicationHasBeenInitialized();
-   GivenDisableMinimumCompressorTimesIs(SET);
-   CompressorRelayShouldBe(OFF);
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
-   CompressorRelayShouldBe(ON);
-}
-
-TEST(SingleSpeedCompressorIntegration, ShouldTurnOnCompressorRelayWhenDisableCompressorTimesIsSetDuringSabbathDelay)
-{
-   GivenApplicationHasBeenInitialized();
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
-
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
-
-   WhenDisableMinimumCompressorTimesIs(SET);
-   CompressorRelayShouldBe(ON);
 }
 
 TEST_GROUP(VariableSpeedCompressorIntegration)
@@ -174,21 +132,21 @@ TEST_GROUP(VariableSpeedCompressorIntegration)
    void GivenApplicationHasBeenInitializedAndCompressorSpeedIsSuperHigh()
    {
       GivenApplicationHasBeenInitialized();
+      GivenGridOverrideEnableIs(SET);
 
-      WhenCompressorSpeedChangesTo(CompressorSpeed_SuperHigh);
-      After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
+      WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperHigh);
       CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
       After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
       CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superHighSpeedFrequencyInHz);
    }
 
-   void WhenCompressorSpeedChangesTo(CompressorSpeed_t compressorSpeed)
+   void WhenTheGridCompressorVoteBecomes(CompressorSpeed_t compressorSpeed)
    {
       CompressorVotedSpeed_t compressorVote;
       compressorVote.speed = compressorSpeed;
       compressorVote.care = Vote_Care;
-      DataModel_Write(dataModel, Erd_CompressorSpeed_FactoryVote, &compressorVote);
+      DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVote);
    }
 
    void CompressorFrequencyShouldBe(PwmFrequency_t expected)
@@ -198,23 +156,14 @@ TEST_GROUP(VariableSpeedCompressorIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
+   void GivenGridOverrideEnableIs(bool enable)
+   {
+      DataModel_Write(dataModel, Erd_GridOverrideEnable, &enable);
+   }
+
    void After(TimerTicks_t ticks)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
-   }
-
-   void GivenDisableMinimumCompressorTimesIs(bool state)
-   {
-      BooleanVotedState_t votedState;
-      votedState.state = state;
-      votedState.care = Vote_Care;
-
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_ResolvedVote, &votedState);
-   }
-
-   void WhenDisableMinimumCompressorTimesIs(bool state)
-   {
-      GivenDisableMinimumCompressorTimesIs(state);
    }
 };
 
@@ -223,14 +172,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldInitialize)
    GivenApplicationHasBeenInitialized();
 }
 
-TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToSuperLowAfterSabbathDelayAndStartupOnTimesWhenCompressorSpeedChangesToSuperLow)
+TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToSuperLowAfterStartupOnTimeWhenCompressorSpeedChangesToSuperLow)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
-   CompressorFrequencyShouldBe(0);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperLow);
 
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
@@ -240,14 +187,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToSuperLowA
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superLowSpeedFrequencyInHz);
 }
 
-TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToLowAfterSabbathDelayAndStartupOnTimesWhenCompressorSpeedChangesToLow)
+TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToLowAfterStartupOnTimeWhenCompressorSpeedChangesToLow)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Low);
-   CompressorFrequencyShouldBe(0);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_Low);
 
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
@@ -255,14 +200,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToLowAfterS
       compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
 }
 
-TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToMediumAfterSabbathDelayAndStartupOnTimesWhenCompressorSpeedChangesToMedium)
+TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToMediumAfterStartupOnTimeWhenCompressorSpeedChangesToMedium)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Medium);
-   CompressorFrequencyShouldBe(0);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_Medium);
 
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
@@ -270,14 +213,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToMediumAft
       compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.mediumSpeedFrequencyInHz);
 }
 
-TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToHighAfterSabbathDelayAndStartupOnTimesWhenCompressorSpeedChangesToHigh)
+TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToHighAndStartupOnTimeWhenCompressorSpeedChangesToHigh)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_High);
-   CompressorFrequencyShouldBe(0);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_High);
 
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
@@ -285,14 +226,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToHighAfter
       compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.highSpeedFrequencyInHz);
 }
 
-TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToSuperHighAfterSabbathDelayAndStartupOnTimesWhenCompressorSpeedChangesToSuperHigh)
+TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToSuperHighStartupOnTimeWhenCompressorSpeedChangesToSuperHigh)
 {
    GivenApplicationHasBeenInitialized();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperHigh);
-   CompressorFrequencyShouldBe(0);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperHigh);
 
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
@@ -303,9 +242,9 @@ TEST(VariableSpeedCompressorIntegration, ShouldSetCompressorFrequencyToZeroAfter
 {
    GivenApplicationHasBeenInitializedAndCompressorSpeedIsSuperHigh();
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Off);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_Off);
 
-   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - 1);
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superHighSpeedFrequencyInHz);
 
    After(1);
@@ -316,55 +255,12 @@ TEST(VariableSpeedCompressorIntegration, ShouldUpdateCompressorSpeedFromSuperHig
 {
    GivenApplicationHasBeenInitializedAndCompressorSpeedIsSuperHigh();
 
-   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superHighSpeedFrequencyInHz);
 
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
+   After(1);
+   WhenTheGridCompressorVoteBecomes(CompressorSpeed_SuperLow);
    CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superLowSpeedFrequencyInHz);
-}
-
-TEST(VariableSpeedCompressorIntegration, ShouldUpdateCompressorFrequencyRightAfterUpdatingCompressorSpeedWhenDisableMinimumCompressorTimesIsSet)
-{
-   GivenApplicationHasBeenInitialized();
-   GivenDisableMinimumCompressorTimesIs(SET);
-   CompressorFrequencyShouldBe(0);
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperLow);
-   CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superLowSpeedFrequencyInHz);
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_SuperHigh);
-   CompressorFrequencyShouldBe(compressorData->compressorSpeeds.superHighSpeedFrequencyInHz);
-}
-
-TEST(VariableSpeedCompressorIntegration, ShouldUpdateCompressorFrequencyWhenDisableCompressorTimesIsSetDuringSabbathDelayTime)
-{
-   GivenApplicationHasBeenInitialized();
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Low);
-   CompressorFrequencyShouldBe(0);
-
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
-
-   WhenDisableMinimumCompressorTimesIs(SET);
-   CompressorFrequencyShouldBe(
-      compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
-}
-
-TEST(VariableSpeedCompressorIntegration, ShouldUpdateCompressorFrequencyWhenDisableCompressorTimesIsSetDuringStartupOnTime)
-{
-   GivenApplicationHasBeenInitialized();
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Low);
-   CompressorFrequencyShouldBe(0);
-
-   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
-   CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
-
-   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-
-   WhenDisableMinimumCompressorTimesIs(SET);
-   CompressorFrequencyShouldBe(
-      compressorData->compressorSpeeds.coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
 }
 
 TEST_GROUP(VariableSpeedCompressorIntegrationWithSealedSystemValve)
@@ -393,12 +289,12 @@ TEST_GROUP(VariableSpeedCompressorIntegrationWithSealedSystemValve)
          resetReason);
    }
 
-   void WhenCompressorSpeedChangesTo(CompressorSpeed_t compressorSpeed)
+   void WhenCompressorSpeedGridVoteChangesTo(CompressorSpeed_t compressorSpeed)
    {
       CompressorVotedSpeed_t compressorVote;
       compressorVote.speed = compressorSpeed;
       compressorVote.care = Vote_Care;
-      DataModel_Write(dataModel, Erd_CompressorSpeed_FactoryVote, &compressorVote);
+      DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVote);
    }
 
    void After(TimerTicks_t ticks)
@@ -406,37 +302,61 @@ TEST_GROUP(VariableSpeedCompressorIntegrationWithSealedSystemValve)
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
-   void SealedSystemValvePositionResolvedVoteShouldBe(SealedSystemValveVotedPosition_t expected)
+   void GivenTheSealedSystemValveVoteIs(SealedSystemValvePosition_t position)
    {
-      SealedSystemValveVotedPosition_t actual;
-      DataModel_Read(dataModel, Erd_SealedSystemValvePosition_ResolvedVote, &actual);
-
-      CHECK_EQUAL(expected.position, actual.position);
-      CHECK_EQUAL(expected.care, actual.care);
+      SealedSystemValveVotedPosition_t vote;
+      vote.position = position;
+      vote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_SealedSystemValvePosition_FactoryVote, &vote);
    }
 
-   void TheCompressorHsmStateShouldBe(CompressorState_t expected)
+   void WhenTheSealedSystemValveVoteBecomes(SealedSystemValvePosition_t position)
    {
-      CompressorState_t actual;
-      DataModel_Read(
-         dataModel,
-         Erd_CompressorState,
-         &actual);
+      GivenTheSealedSystemValveVoteIs(position);
+   }
+
+   void CompressorFrequencyShouldBe(PwmFrequency_t expected)
+   {
+      PwmFrequency_t actual;
+      DataModel_Read(dataModel, Erd_CompressorInverterDriver, &actual);
       CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenGridOverrideEnableIs(bool enable)
+   {
+      DataModel_Write(dataModel, Erd_GridOverrideEnable, &enable);
    }
 };
 
-TEST(VariableSpeedCompressorIntegrationWithSealedSystemValve, ShouldTransitionToSabbathDelayWhenTheCompressorSpeedChangesWhileInRemainOffAfterValveMoveState)
+TEST(VariableSpeedCompressorIntegrationWithSealedSystemValve, ShouldNotDelayCompressorStartOnStartupEvenIfSealedSystemValveMoves)
+{
+   GivenTheSealedSystemValveVoteIs(SealedSystemValvePosition_A);
+   GivenApplicationHasBeenInitialized();
+
+   WhenTheSealedSystemValveVoteBecomes(SealedSystemValvePosition_B);
+   WhenCompressorSpeedGridVoteChangesTo(CompressorSpeed_Medium);
+   CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
+}
+
+TEST(VariableSpeedCompressorIntegrationWithSealedSystemValve, ShouldDelayCompressorStartOnStartupIfSealedSystemValveMovesOnSecondCompressorCycle)
 {
    GivenApplicationHasBeenInitialized();
-   SealedSystemValvePositionResolvedVoteShouldBe({ .position = SealedSystemValvePosition_A, .care = Vote_Care });
-   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+   GivenTheSealedSystemValveVoteIs(SealedSystemValvePosition_A);
+   GivenGridOverrideEnableIs(SET);
+
+   WhenCompressorSpeedGridVoteChangesTo(CompressorSpeed_Medium);
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
+
+   WhenCompressorSpeedGridVoteChangesTo(CompressorSpeed_Off);
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN);
+
+   WhenTheSealedSystemValveVoteBecomes(SealedSystemValvePosition_B);
+   WhenCompressorSpeedGridVoteChangesTo(CompressorSpeed_SuperHigh);
+   CompressorFrequencyShouldBe(0);
 
    After(compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN - 1);
-   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
-
-   WhenCompressorSpeedChangesTo(CompressorSpeed_Medium);
+   CompressorFrequencyShouldBe(0);
 
    After(1);
-   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
+   CompressorFrequencyShouldBe(compressorData->compressorSpeeds.startupSpeedFrequencyInHz);
 }

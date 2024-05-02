@@ -38,7 +38,6 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds
 };

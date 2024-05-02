@@ -33,7 +33,7 @@ static const ErdResolverConfiguration_t freshFoodEvapFanSpeedResolverConfigurati
 };
 
 static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
-   .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
+   .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVoteWithSabbathDelay,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanControl
@@ -56,6 +56,12 @@ static const FanFaultHandlerConfiguration_t freshFoodEvapFanFaultHandlerConfig =
    .timerModuleErd = Erd_TimerModule
 };
 
+static const SabbathDelayHandlerConfiguration_t sabbathDelayConfig = {
+   .compressorResolvedVote = Erd_CompressorSpeed_ResolvedVote,
+   .loadResolvedVote = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
+   .loadResolvedVoteWithSabbathDelay = Erd_FreshFoodEvapFanSpeed_ResolvedVoteWithSabbathDelay
+};
+
 void FreshFoodEvapFanPlugin_Init(
    FreshFoodEvapFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -67,6 +73,11 @@ void FreshFoodEvapFanPlugin_Init(
       &instance->_private.fanSpeedVoteResolver,
       DataModel_AsDataSource(dataModel),
       &freshFoodEvapFanSpeedResolverConfiguration);
+
+   SabbathDelayHandler_Init(
+      &instance->_private.sabbathDelayHandler,
+      dataModel,
+      &sabbathDelayConfig);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver,

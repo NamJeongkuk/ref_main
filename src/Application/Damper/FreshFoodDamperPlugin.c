@@ -43,7 +43,7 @@ static const ErdResolverConfiguration_t damperHeaterErdResolverConfiguration = {
 };
 
 static const DamperRequestManagerConfiguration_t requestManagerConfig = {
-   .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
+   .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVoteWithSabbathDelay,
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
@@ -73,6 +73,12 @@ static const DamperHeaterDefrostControlConfig_t damperHeaterDefrostControlConfig
    .defrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote
 };
 
+static const SabbathDelayHandlerConfiguration_t sabbathDelayConfig = {
+   .compressorResolvedVote = Erd_CompressorSpeed_ResolvedVote,
+   .loadResolvedVote = Erd_FreshFoodDamperPosition_ResolvedVote,
+   .loadResolvedVoteWithSabbathDelay = Erd_FreshFoodDamperPosition_ResolvedVoteWithSabbathDelay
+};
+
 void FreshFoodDamperPlugin_Init(FreshFoodDamperPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -84,6 +90,11 @@ void FreshFoodDamperPlugin_Init(FreshFoodDamperPlugin_t *instance, I_DataModel_t
       &instance->_private.damperHeaterErdResolver,
       DataModel_AsDataSource(dataModel),
       &damperHeaterErdResolverConfiguration);
+
+   SabbathDelayHandler_Init(
+      &instance->_private.sabbathDelayHandler,
+      dataModel,
+      &sabbathDelayConfig);
 
    DamperMotorPlugin_Init(
       &instance->_private.damperMotorPlugin,

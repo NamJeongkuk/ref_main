@@ -317,14 +317,6 @@ TEST_GROUP(GridIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
-   void CompressorStateShouldBe(CompressorState_t expected)
-   {
-      CompressorState_t actual;
-      DataModel_Read(dataModel, Erd_CompressorState, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
    void CompressorGridVoteShouldBe(CompressorSpeed_t expectedSpeed, Vote_t expectedCare)
    {
       CompressorVotedSpeed_t actual;
@@ -341,14 +333,6 @@ TEST_GROUP(GridIntegration)
 
       CHECK_EQUAL(expectedSpeed, actual.speed);
       CHECK_EQUAL(expectedCare, actual.care);
-   }
-
-   void CompressorControllerSpeedRequestShouldBe(CompressorSpeed_t expected)
-   {
-      CompressorSpeed_t actual;
-      DataModel_Read(dataModel, Erd_CompressorControllerSpeedRequest, &actual);
-
-      CHECK_EQUAL(expected, actual);
    }
 
    void TheCalculatedCondenserFanControlShouldBe(FanControl_t expected)
@@ -441,14 +425,8 @@ TEST_GROUP(GridIntegration)
       GivenBothThermistorsAreValid();
    }
 
-   void CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(FanControl_t condenserFanControl, FanControl_t evaporatorFanControl)
+   void CompressorShouldBeOnAndFanControlsAt(FanControl_t condenserFanControl, FanControl_t evaporatorFanControl)
    {
-      After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
-      TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
-      TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
-      TheCompressorRelayShouldBe(OFF);
-
-      After(1);
       TheCalculatedCondenserFanControlShouldBe(condenserFanControl);
       TheCalculatedFreezerEvapFanControlShouldBe(evaporatorFanControl);
       TheCompressorRelayShouldBe(ON);
@@ -456,7 +434,7 @@ TEST_GROUP(GridIntegration)
 
    void CompressorRelayShouldBeOnAndFansAtStartupSpeedDuringStartupTime()
    {
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -471,7 +449,7 @@ TEST_GROUP(GridIntegration)
 
    void CompressorRelayShouldBeOnAndFansAtStartupSpeedDuringStartupTimeThenFansShouldTurnOff()
    {
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -971,7 +949,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks0and1)
       TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       TheIceMakerShouldBe(DISABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       CompressorRelayShouldBeOnAndFansAtStartupSpeedDuringStartupTime();
@@ -1002,7 +980,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks2and3)
       TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       TheIceMakerShouldBe(DISABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       CompressorRelayShouldBeOnAndFansAtStartupSpeedDuringStartupTimeThenFansShouldTurnOff();
@@ -1033,11 +1011,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks4and5and6)
       TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       TheIceMakerShouldBe(DISABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1074,11 +1052,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks7and8and14)
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1109,11 +1087,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks9And10)
       TheCoolingSpeedShouldBe(CoolingSpeed_High);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1163,11 +1141,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks11And12And13)
       TheGridAreaShouldBe(GridArea_2);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1198,11 +1176,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks11And12And13)
       TheGridAreaShouldBe(GridArea_2);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1245,11 +1223,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlock15)
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1281,11 +1259,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlock15)
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1317,11 +1295,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks16And17)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1350,11 +1328,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks16And17)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1387,11 +1365,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks18)
       TheGridAreaShouldBe(GridArea_2);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1420,11 +1398,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks18)
       TheGridAreaShouldBe(GridArea_2);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1460,11 +1438,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks19And20And27And34And4
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1498,7 +1476,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks21)
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
    TheIceMakerShouldBe(ENABLED);
 
-   CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+   CompressorShouldBeOnAndFanControlsAt(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
@@ -1536,11 +1514,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1572,11 +1550,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1608,11 +1586,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1641,11 +1619,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1680,11 +1658,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks25And32And39)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1715,11 +1693,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks25And32And39)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1754,11 +1732,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks26And33And40)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1789,11 +1767,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks26And33And40)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1896,11 +1874,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks31)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -1937,11 +1915,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks36)
       TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       TheIceMakerShouldBe(ENABLED);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2039,11 +2017,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2175,11 +2153,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks46And47)
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+      CompressorShouldBeOnAndFanControlsAt(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2212,11 +2190,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48)
    TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-   CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+   CompressorShouldBeOnAndFanControlsAt(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    TheCalculatedCondenserFanControlShouldBe(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
    TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2251,11 +2229,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48ThenChangeToBlock27
    DamperPositionShouldBe(DamperPosition_Closed);
    GridShouldVoteForDamperToBe({ .position = DamperPosition_Open, .care = Vote_Care });
 
-   CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+   CompressorShouldBeOnAndFanControlsAt(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    TheCalculatedCondenserFanControlShouldBe(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
    TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2306,7 +2284,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenChangeToBlock36
    TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-   CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+   CompressorShouldBeOnAndFanControlsAt(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
@@ -2357,17 +2335,11 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenTurnAllLoadsOff
    TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 
-   CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
+   CompressorShouldBeOnAndFanControlsAt(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 
-   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-   TheCalculatedCondenserFanControlShouldBe(
-      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
-   TheCalculatedFreezerEvapFanControlShouldBe(
-      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
-
-   After(1);
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
    TheCalculatedCondenserFanControlShouldBe(
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
    TheCalculatedFreezerEvapFanControlShouldBe(
@@ -2386,7 +2358,9 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenTurnAllLoadsOff
    TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
    TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
 
-   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - gridData->gridPeriodicRunRateInMSec - 1);
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN -
+      gridData->gridPeriodicRunRateInMSec -
+      compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    TheCompressorRelayShouldBe(ON);
 
    After(1);

@@ -49,7 +49,6 @@ typedef struct
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t cabinetFilteredTemperatureTooWarmOnPowerUpErd; // bool
    Erd_t defrostPowerUpReadyErd; // bool
-   Erd_t disableCompressorMinimumTimesVoteErd; // BooleanVotedState_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t condenserFanSpeedVoteErd; // FanVotedSpeed_t
