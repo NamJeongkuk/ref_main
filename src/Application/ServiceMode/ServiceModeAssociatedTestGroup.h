@@ -49,7 +49,7 @@
 
 #define THERMISTORS_TEST_GROUP_MAPPINGS(ENTRY) \
    ENTRY(ServiceModeTestNumber_AmbientThermistorTest,                           Erd_Ambient_FilteredTemperatureResolvedInDegFx100) \
-   ENTRY(ServiceModeTestNumber_ConvertibleCompartmentCabinetThermistorTest,     Erd_ConvertibleCompartmentCabinet_UnfilteredTemperatureInDegFx100) \
+   ENTRY(ServiceModeTestNumber_FeaturePanCabinetThermistorTest,                 Erd_FeaturePan_UnfilteredTemperatureInDegFx100) \
    ENTRY(ServiceModeTestNumber_FreshFoodCabinetThermistorTest,                  Erd_FreshFood_UnfilteredTemperatureInDegFx100) \
    ENTRY(ServiceModeTestNumber_FreshFoodEvaporatorThermistorTest,               Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100) \
    ENTRY(ServiceModeTestNumber_FreezerCabinetThermistorTest,                    Erd_Freezer_UnfilteredTemperatureInDegFx100) \

@@ -44,7 +44,7 @@ enum
    ServiceModeTestNumber_AmbientThermistorTest,
    ServiceModeTestNumber_Invalid30,
    ServiceModeTestNumber_IceMaker0MoldThermistorTest,
-   ServiceModeTestNumber_ConvertibleCompartmentCabinetThermistorTest,
+   ServiceModeTestNumber_FeaturePanCabinetThermistorTest,
    ServiceModeTestNumber_Invalid33,
    ServiceModeTestNumber_Invalid34,
    ServiceModeTestNumber_Invalid35,
