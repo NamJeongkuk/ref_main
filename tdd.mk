@@ -12,8 +12,6 @@ include lib/applcommon/defaults.mk
 
 ifneq ($(DEBUG),Y)
   CPPFLAGS+=-O2 -Wno-macro-redefined
-else
-  OUTPUT_DIR:=$(OUTPUT_DIR)/debug
 endif
 
 CXXFLAGS+=-Wno-unneeded-internal-declaration -Wno-overloaded-virtual
