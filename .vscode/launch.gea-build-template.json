@@ -16,7 +16,7 @@
         "MIMode": "lldb"
       },
       "preLaunchTask": "Integration_vscode_debug",
-      "program": "${workspaceFolder}/build/test/debug/rockhopper",
+      "program": "${workspaceFolder}/build/test-debug-integration/rockhopper",
       "request": "launch",
       "setupCommands": [
         {
