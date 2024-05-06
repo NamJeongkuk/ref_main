@@ -11,22 +11,14 @@ describe('UserSetpoint', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      max_temperature_setpoint_in_degf = 5,
       min_temperature_setpoint_in_degf = -6,
+      max_temperature_setpoint_in_degf = 5,
       default_temperature_setpoint_in_degf = 0
     }, overrides or {})
   end
 
   it('should require all arguments', function()
     should_require_args(user_setpoint, generate_config())
-  end)
-
-  it('should assert if max_temperature_setpoint_in_degf is not in range', function()
-    should_fail_with('max_temperature_setpoint_in_degf=128 must be in [-128, 127]', function()
-      user_setpoint(generate_config({
-        max_temperature_setpoint_in_degf = 128
-      }))
-    end)
   end)
 
   it('should assert if min_temperature_setpoint_in_degf is not in range', function()
@@ -37,19 +29,27 @@ describe('UserSetpoint', function()
     end)
   end)
 
+  it('should assert if max_temperature_setpoint_in_degf is not in range', function()
+    should_fail_with('max_temperature_setpoint_in_degf=128 must be in [-128, 127]', function()
+      user_setpoint(generate_config({
+        max_temperature_setpoint_in_degf = 128
+      }))
+    end)
+  end)
+
   it('should assert if default_temperature_setpoint_in_degf is not in range', function()
     should_fail_with('default_temperature_setpoint_in_degf=6 must be in [-6, 5]', function()
       user_setpoint(generate_config({
-        max_temperature_setpoint_in_degf = 5,
         min_temperature_setpoint_in_degf = -6,
+        max_temperature_setpoint_in_degf = 5,
         default_temperature_setpoint_in_degf = 6
       }))
     end)
 
     should_fail_with('default_temperature_setpoint_in_degf=-7 must be in [-6, 5]', function()
       user_setpoint(generate_config({
-        max_temperature_setpoint_in_degf = 5,
         min_temperature_setpoint_in_degf = -6,
+        max_temperature_setpoint_in_degf = 5,
         default_temperature_setpoint_in_degf = -7
       }))
     end)

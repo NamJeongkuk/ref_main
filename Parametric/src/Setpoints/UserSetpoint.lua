@@ -22,8 +22,8 @@ return function(core)
     validate_arguments(
       config,
       {
-        max_temperature_setpoint_in_degf = { constraint.i8 },
         min_temperature_setpoint_in_degf = { constraint.i8 },
+        max_temperature_setpoint_in_degf = { constraint.i8 },
         default_temperature_setpoint_in_degf = { constraint.in_range(config.min_temperature_setpoint_in_degf, config.max_temperature_setpoint_in_degf) }
       })
     return generate(config)

@@ -90,14 +90,14 @@ static TimerTicks_t CalculatedFreshFoodEvapFanRunningTimeInMsec(FreshFoodNonHeat
       instance->_private.config->freshFoodSetpointResolvedVoteErd,
       &freshFoodVotedSetpoint);
 
-   uint16_t time = instance->_private.freshFoodNonHeatedCycleDefrostData->valveChangeSlopeInMinutesX10PerDegF;
-   time = time * ((instance->_private.freshFoodUserSetpointRangeData->defaultTemperatureSetpoint * 100 - freshFoodVotedSetpoint.temperatureInDegFx100) / 100);
-   time = time / 10;
-   time = time + instance->_private.freshFoodNonHeatedCycleDefrostData->defaultTimeValveChangeInMinutes;
+   int32_t time = instance->_private.freshFoodNonHeatedCycleDefrostData->valveChangeSlopeInMinutesX10PerDegF;
+   time = (time * (instance->_private.freshFoodUserSetpointRangeData->defaultTemperatureSetpoint * 100 - freshFoodVotedSetpoint.temperatureInDegFx100)) / 100;
+   time = time + instance->_private.freshFoodNonHeatedCycleDefrostData->defaultTimeValveChangeInMinutes * 10;
    time = CLAMP(
       time,
-      instance->_private.freshFoodNonHeatedCycleDefrostData->minTimeValveChangeInMinutes,
-      instance->_private.freshFoodNonHeatedCycleDefrostData->maxTimeValveChangeInMinutes);
+      instance->_private.freshFoodNonHeatedCycleDefrostData->minTimeValveChangeInMinutes * 10,
+      instance->_private.freshFoodNonHeatedCycleDefrostData->maxTimeValveChangeInMinutes * 10);
+   time = DIVIDE_AND_ROUND(time, 10);
 
    return time * MSEC_PER_MIN;
 }
