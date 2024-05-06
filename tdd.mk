@@ -5,6 +5,9 @@ OUTPUT_DIR:=build/test
 DISPLAY_ASCII_ART_RESULTS?=Y
 TOOLCHAIN_VERSION:=zig-llvm-0.11.0
 
+$(call require_bool_flag,DEBUG,default_N append_to_output_dir)
+$(call require_bool_flag,INTEGRATION,default_N append_to_output_dir)
+
 include lib/applcommon/defaults.mk
 
 ifneq ($(DEBUG),Y)
@@ -126,7 +129,6 @@ SRC_DIRS:=\
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \
   test/Tests/Application/IceMaker/TwistTrayIceMaker \
-  test/Tests/Application/Integration \
   test/Tests/Application/Lighting \
   test/Tests/Application/Mapper \
   test/Tests/Application/Motor \
@@ -150,6 +152,11 @@ SRC_DIRS:=\
   test/Tests/Application/WaterVolumeUsage \
   test/Tests/Bsp \
   test/Tests/Hardware/SoftPwm \
+
+ifeq ($(INTEGRATION),Y)
+SRC_DIRS += \
+  test/Tests/Application/Integration
+endif
 
 SRC_FILES+=\
   src/Bsp/DataSource_Bsp.c \
@@ -184,11 +191,3 @@ include lib/applcommon/lib_applcommon_test_tools.mk
 include lib/applcommon/lib_applcommon_test_runner.mk
 
 include lib/applcommon/worker.mk
-
-# -xg will exclude groups containing a given substring
-# The result is all TDD builds will include the integration tests, but they are skipped unless INTEGRATION=Y
-# Integration tests must include the substring 'Integration' in their group name
-# Non integration tests should not include the substring 'Integration' in the group name
-ifneq ($(INTEGRATION),Y)
-RUN_TEST_TARGET+=-xg Integration
-endif
