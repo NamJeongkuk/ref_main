@@ -12,6 +12,7 @@
 #include "FreshFoodEvapFanPlugin.h"
 #include "FreezerEvapFanPlugin.h"
 #include "CondenserFanPlugin.h"
+#include "IceCabinetFanPlugin.h"
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef struct
       FreshFoodEvapFanPlugin_t freshFoodEvapFanPlugin;
       FreezerEvapFanPlugin_t freezerEvapFanPlugin;
       CondenserFanPlugin_t condenserFanPlugin;
+      IceCabinetFanPlugin_t iceCabinetFanPlugin;
    } _private;
 } FourDoorFanPlugin_t;
 

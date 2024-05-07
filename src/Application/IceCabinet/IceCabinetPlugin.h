@@ -10,15 +10,17 @@
 
 #include "I_DataModel.h"
 #include "IceCabinetForcedCoolingFreezerEvaporatorFanVoter.h"
-#include "IceCabinetFreezerEvapFanDependencyVoting.h"
-#include "IceCabinetGridPlugin.h"
 #include "IceCabinetGammaCalculator.h"
+#include "IceCabinetGridPlugin.h"
+#include "IceCabinetFanStartupSpeedVoting.h"
+#include "IceCabinetFreezerEvapFanDependencyVoting.h"
 #include "FreezerSetpointToIceCabinetSetpointMapper.h"
 
 typedef struct
 {
    struct
    {
+      IceCabinetFanStartupSpeedVoting_t iceCabinetFanStartupSpeedVoting;
       IceCabinetForcedCoolingFreezerEvaporatorFanVoter_t iceCabinetForcedCoolingFreezerEvaporatorFanVoter;
       FreezerSetpointToIceCabinetSetpointMapper_t freezerSetpointToIceCabinetSetpointMapper;
       IceCabinetFreezerEvapFanDependencyVoting_t iceCabinetFreezerEvapFanDependencyVoting;

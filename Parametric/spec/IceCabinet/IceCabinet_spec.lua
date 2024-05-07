@@ -13,6 +13,7 @@ describe('IceCabinet', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
       gamma_table = TypedString('gamma_table', 'gamma_table'),
+      ice_cabinet_fan_startup = TypedString('ice_cabinet_fan_startup', 'ice_cabinet_fan_startup'),
       freezer_setpoint_to_ice_cabinet_setpoint_table = TypedString('freezer_setpoint_to_ice_cabinet_setpoint_table', 'freezer_setpoint_to_ice_cabinet_setpoint_table')
     }, overrides or {})
   end
@@ -29,6 +30,14 @@ describe('IceCabinet', function()
     end)
   end)
 
+  it('should assert if ice_cabinet_fan_startup is not a ice_cabinet_fan_startup', function()
+    should_fail_with('ice_cabinet_fan_startup must be a typed string with type ice_cabinet_fan_startup, but is a number', function()
+      ice_cabinet(generate_config({
+        ice_cabinet_fan_startup = -1
+      }))
+    end)
+  end)
+
   it('should assert if freezer_setpoint_to_ice_cabinet_setpoint_table is not a freezer_setpoint_to_ice_cabinet_setpoint_table', function()
     should_fail_with('freezer_setpoint_to_ice_cabinet_setpoint_table must be a typed string with type freezer_setpoint_to_ice_cabinet_setpoint_table, but is a number', function()
       ice_cabinet(generate_config({
@@ -41,6 +50,7 @@ describe('IceCabinet', function()
     local expected = remove_whitespace([[
       structure(
         pointer(gamma_table),
+        pointer(ice_cabinet_fan_startup),
         pointer(freezer_setpoint_to_ice_cabinet_setpoint_table)
       )
     ]])

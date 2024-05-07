@@ -12,4 +12,5 @@ void FourDoorFanPlugin_Init(FourDoorFanPlugin_t *instance, I_DataModel_t *dataMo
    FreshFoodEvapFanPlugin_Init(&instance->_private.freshFoodEvapFanPlugin, dataModel);
    FreezerEvapFanPlugin_Init(&instance->_private.freezerEvapFanPlugin, dataModel);
    CondenserFanPlugin_Init(&instance->_private.condenserFanPlugin, dataModel);
+   IceCabinetFanPlugin_Init(&instance->_private.iceCabinetFanPlugin, dataModel);
 }

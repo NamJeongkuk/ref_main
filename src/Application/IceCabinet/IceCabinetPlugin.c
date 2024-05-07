@@ -6,8 +6,14 @@
  */
 
 #include "IceCabinetPlugin.h"
+#include "SystemErds.h"
 #include "ParametricData.h"
 #include "SystemErds.h"
+
+static const IceCabinetFanStartupSpeedVotingConfig_t iceCabinetFanStartupSpeedVotingConfig = {
+   .iceCabinetFanResolvedVoteErd = Erd_IceCabinetFanSpeed_ResolvedVote,
+   .iceCabinetFanStartupSpeedVoteErd = Erd_IceCabinetFanSpeed_StartupVote
+};
 
 static const IceCabinetForcedCoolingFreezerEvaporatorFanVoterConfig_t iceCabinetForcedCoolingFreezerEvaporatorFanVoterConfig = {
    .freezerEvapFanSpeedIceCabinetVoteErd = Erd_FreezerEvapFanSpeed_IceCabinetVote,
@@ -37,6 +43,12 @@ void IceCabinetPlugin_Init(
    IceCabinetPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   IceCabinetFanStartupSpeedVoting_Init(
+      &instance->_private.iceCabinetFanStartupSpeedVoting,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->iceCabinetData->iceCabinetFanStartupData,
+      &iceCabinetFanStartupSpeedVotingConfig);
+
    IceCabinetForcedCoolingFreezerEvaporatorFanVoter_Init(
       &instance->_private.iceCabinetForcedCoolingFreezerEvaporatorFanVoter,
       dataModel,

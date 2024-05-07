@@ -116,6 +116,7 @@ return function(directory)
   import('IceCabinet/FreezerSetpointToIceCabinetSetpointTable')
   import('IceCabinet/IceCabinet')
   import('IceCabinet/GammaTable')
+  import('IceCabinet/IceCabinetFanStartup')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -233,6 +234,7 @@ return function(directory)
   freezer_setpoint_to_ice_cabinet_setpoint_table = FreezerSetpointToIceCabinetSetpointTable(core)
   ice_cabinet = IceCabinet(core)
   gamma_table = GammaTable(core)
+  ice_cabinet_fan_startup = IceCabinetFanStartup(core)
 
   return {
     core = core,
@@ -353,6 +355,7 @@ return function(directory)
     freezer_setpoint_to_ice_cabinet_setpoint_table = freezer_setpoint_to_ice_cabinet_setpoint_table,
     ice_cabinet = ice_cabinet,
     gamma_table = gamma_table,
+    ice_cabinet_fan_startup = ice_cabinet_fan_startup,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
