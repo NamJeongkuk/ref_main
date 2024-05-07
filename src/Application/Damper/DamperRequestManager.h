@@ -22,6 +22,7 @@ typedef struct
    Erd_t damperHomingRequestErd;
    Erd_t damperCurrentPositionErd;
    Erd_t convertibleCompartmentStateErd;
+   Erd_t damperFullCycleRequestErd;
 } DamperRequestManagerConfiguration_t;
 
 typedef struct
@@ -30,11 +31,13 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Fsm_t fsm;
-      bool homingRequired;
       EventSubscription_t dataModelSubscription;
       const DamperRequestManagerConfiguration_t *configuration;
       const DamperData_t *damperData;
       DamperStepData_t *currentDamperStepData;
+      bool homingRequired;
+      bool fullCycleRequired;
+      bool closeBeforeCycling;
    } _private;
 } DamperRequestManager_t;
 

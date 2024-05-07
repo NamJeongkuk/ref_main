@@ -16,8 +16,8 @@
 
 typedef struct
 {
-   Erd_t damperPositionMaxOpenTimeVoteErd; // DamperVotedPosition_t
    Erd_t damperCurrentPositionErd; // DamperPosition_t
+   Erd_t damperFullCycleRequestErd; // bool
 } DamperMaxOpenTimeConfiguration_t;
 
 typedef struct

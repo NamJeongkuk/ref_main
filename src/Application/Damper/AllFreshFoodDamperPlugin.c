@@ -33,7 +33,8 @@ static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
 void AllFreshFoodDamperPlugin_Init(AllFreshFoodDamperPlugin_t *instance, I_DataModel_t *dataModel)

@@ -12,21 +12,29 @@
 
 enum
 {
+   DontResetSubstep = false,
+   ResetSubstep = true
+};
+
+enum
+{
    Signal_PositionRequested = Fsm_UserSignalStart,
    Signal_StepRequestCompleted,
-   Signal_HomeRequested
+   Signal_HomeRequested,
+   Signal_FullCycleRequested
 };
 
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_FullCycle(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 
 static DamperRequestManager_t *InstanceFromFsm(Fsm_t *fsm)
 {
    return CONTAINER_OF(DamperRequestManager_t, _private.fsm, fsm);
 }
 
-static DamperVotedPosition_t DamperRequestedPosition(DamperRequestManager_t *instance)
+static DamperPosition_t DamperRequestedPosition(DamperRequestManager_t *instance)
 {
    DamperVotedPosition_t damperVotedPosition;
    DataModel_Read(
@@ -34,7 +42,7 @@ static DamperVotedPosition_t DamperRequestedPosition(DamperRequestManager_t *ins
       instance->_private.configuration->damperPositionRequestResolvedVoteErd,
       &damperVotedPosition);
 
-   return damperVotedPosition;
+   return damperVotedPosition.position;
 }
 
 static DamperPosition_t CurrentDamperPosition(DamperRequestManager_t *instance)
@@ -50,7 +58,7 @@ static DamperPosition_t CurrentDamperPosition(DamperRequestManager_t *instance)
 
 static void InitializeDamperPositionAtStartup(DamperRequestManager_t *instance)
 {
-   DamperPosition_t damperCurrentPosition = DamperRequestedPosition(instance).position;
+   DamperPosition_t damperCurrentPosition = DamperRequestedPosition(instance);
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.configuration->damperCurrentPositionErd,
@@ -65,16 +73,6 @@ static void SetDamperStepperMotorPositionRequest(DamperRequestManager_t *instanc
       &stepsToMove);
 }
 
-static void SetStepperPositionRequestForHoming(DamperRequestManager_t *instance)
-{
-   StepperPositionRequest_t stepRequest;
-   stepRequest.direction = TurningDirection_Clockwise;
-   stepRequest.stepsToMove = instance->_private.damperData->stepsToHome;
-   stepRequest.resetSubstep = true;
-
-   SetDamperStepperMotorPositionRequest(instance, stepRequest);
-}
-
 static void SetCurrentDamperPositionTo(DamperRequestManager_t *instance, DamperPosition_t currentPosition)
 {
    DataModel_Write(
@@ -83,37 +81,43 @@ static void SetCurrentDamperPositionTo(DamperRequestManager_t *instance, DamperP
       &currentPosition);
 }
 
-static void SetCurrentPositionRequestTo(DamperRequestManager_t *instance, DamperVotedPosition_t requestedPosition)
+static void OpenDamper(DamperRequestManager_t *instance, uint16_t stepCount, bool resetSubstep)
+{
+   StepperPositionRequest_t stepRequest = {
+      .direction = TurningDirection_CounterClockwise,
+      .stepsToMove = stepCount,
+      .resetSubstep = resetSubstep
+   };
+   SetDamperStepperMotorPositionRequest(instance, stepRequest);
+}
+
+static void CloseDamper(DamperRequestManager_t *instance, uint16_t stepCount, bool resetSubstep)
 {
    StepperPositionRequest_t stepRequest = {
       .direction = TurningDirection_Clockwise,
-      .stepsToMove = 0,
-      .resetSubstep = false
+      .stepsToMove = stepCount,
+      .resetSubstep = resetSubstep
    };
-
-   if(requestedPosition.position == DamperPosition_Open)
-   {
-      stepRequest.direction = TurningDirection_CounterClockwise;
-      stepRequest.stepsToMove = instance->_private.currentDamperStepData->stepsToOpen;
-   }
-   else if(requestedPosition.position == DamperPosition_Closed)
-   {
-      stepRequest.direction = TurningDirection_Clockwise;
-      stepRequest.stepsToMove = instance->_private.currentDamperStepData->stepsToClose;
-   }
-
    SetDamperStepperMotorPositionRequest(instance, stepRequest);
 }
 
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    DamperRequestManager_t *instance = InstanceFromFsm(fsm);
-   IGNORE(data);
+   (void)data;
 
    switch(signal)
    {
       case Fsm_Entry:
-         if(CurrentDamperPosition(instance) != DamperRequestedPosition(instance).position)
+         if(instance->_private.fullCycleRequired)
+         {
+            Fsm_Transition(fsm, State_FullCycle);
+         }
+         else if(instance->_private.homingRequired)
+         {
+            Fsm_Transition(fsm, State_Homing);
+         }
+         else if(CurrentDamperPosition(instance) != DamperRequestedPosition(instance))
          {
             Fsm_Transition(fsm, State_Moving);
          }
@@ -127,6 +131,10 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_Homing);
          break;
 
+      case Signal_FullCycleRequested:
+         Fsm_Transition(fsm, State_FullCycle);
+         break;
+
       case Fsm_Exit:
          break;
    }
@@ -135,12 +143,15 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    DamperRequestManager_t *instance = InstanceFromFsm(fsm);
-   IGNORE(data);
+   (void)data;
 
    switch(signal)
    {
       case Fsm_Entry:
-         SetStepperPositionRequestForHoming(instance);
+         CloseDamper(
+            instance,
+            instance->_private.damperData->stepsToHome,
+            ResetSubstep);
          break;
 
       case Signal_StepRequestCompleted:
@@ -148,12 +159,68 @@ static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_Idle);
          break;
 
+      case Signal_FullCycleRequested:
+         instance->_private.fullCycleRequired = true;
+         break;
+
       case Fsm_Exit:
          instance->_private.homingRequired = false;
          DataModel_Write(
             instance->_private.dataModel,
             instance->_private.configuration->damperHomingRequestErd,
-            off);
+            clear);
+         DataModel_Write(
+            instance->_private.dataModel,
+            instance->_private.configuration->damperFullCycleRequestErd,
+            clear);
+         break;
+   }
+}
+
+static void State_FullCycle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   DamperRequestManager_t *instance = InstanceFromFsm(fsm);
+   (void)data;
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         if(CurrentDamperPosition(instance) == DamperPosition_Open)
+         {
+            CloseDamper(
+               instance,
+               instance->_private.currentDamperStepData->stepsToClose,
+               DontResetSubstep);
+            instance->_private.closeBeforeCycling = true;
+         }
+         else
+         {
+            OpenDamper(
+               instance,
+               instance->_private.damperData->stepsToHome,
+               DontResetSubstep);
+         }
+         break;
+
+      case Signal_StepRequestCompleted:
+         if(instance->_private.closeBeforeCycling)
+         {
+            instance->_private.closeBeforeCycling = false;
+            SetCurrentDamperPositionTo(instance, DamperPosition_Closed);
+            OpenDamper(
+               instance,
+               instance->_private.damperData->stepsToHome,
+               DontResetSubstep);
+         }
+         else
+         {
+            SetCurrentDamperPositionTo(instance, DamperPosition_Open);
+            Fsm_Transition(fsm, State_Homing);
+         }
+         break;
+
+      case Fsm_Exit:
+         instance->_private.fullCycleRequired = false;
          break;
    }
 }
@@ -161,29 +228,38 @@ static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    DamperRequestManager_t *instance = InstanceFromFsm(fsm);
-   IGNORE(data);
+   (void)data;
 
    switch(signal)
    {
       case Fsm_Entry:
-         SetCurrentPositionRequestTo(instance, DamperRequestedPosition(instance));
+         if(DamperRequestedPosition(instance) == DamperPosition_Open)
+         {
+            OpenDamper(
+               instance,
+               instance->_private.currentDamperStepData->stepsToOpen,
+               DontResetSubstep);
+         }
+         else if(DamperRequestedPosition(instance) == DamperPosition_Closed)
+         {
+            CloseDamper(
+               instance,
+               instance->_private.currentDamperStepData->stepsToClose,
+               DontResetSubstep);
+         }
          break;
 
       case Signal_StepRequestCompleted:
          SetCurrentDamperPositionTo(instance, (CurrentDamperPosition(instance) == DamperPosition_Open) ? DamperPosition_Closed : DamperPosition_Open);
-
-         if(instance->_private.homingRequired)
-         {
-            Fsm_Transition(fsm, State_Homing);
-         }
-         else
-         {
-            Fsm_Transition(fsm, State_Idle);
-         }
+         Fsm_Transition(&instance->_private.fsm, State_Idle);
          break;
 
       case Signal_HomeRequested:
          instance->_private.homingRequired = true;
+         break;
+
+      case Signal_FullCycleRequested:
+         instance->_private.fullCycleRequired = true;
          break;
 
       case Fsm_Exit:
@@ -241,6 +317,14 @@ static void OnDataModelChange(void *context, const void *_args)
          }
       }
    }
+   else if(args->erd == instance->_private.configuration->damperFullCycleRequestErd)
+   {
+      const bool *fullCycleState = args->data;
+      if(*fullCycleState)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_FullCycleRequested, NULL);
+      }
+   }
 }
 
 void DamperRequestManager_Init(
@@ -252,6 +336,10 @@ void DamperRequestManager_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = config;
    instance->_private.damperData = damperData;
+
+   instance->_private.homingRequired = false;
+   instance->_private.fullCycleRequired = false;
+   instance->_private.closeBeforeCycling = false;
 
    if(damperData->damperId == DamperId_NormalDamper)
    {

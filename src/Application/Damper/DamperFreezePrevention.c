@@ -11,6 +11,7 @@
 #include "SystemErds.h"
 #include "Constants_Time.h"
 #include "PercentageDutyCycleVote.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -28,7 +29,6 @@ enum
 static void State_Idle(Fsm_t *, const FsmSignal_t, const void *);
 static void State_MonitoringTemperatureChange(Fsm_t *, const FsmSignal_t, const void *);
 static void State_DamperHeaterOn(Fsm_t *, const FsmSignal_t, const void *);
-static void State_MoveDamper(Fsm_t *, const FsmSignal_t, const void *);
 
 static DamperFreezePrevention_t *InstanceFromFsm(Fsm_t *fsm)
 {
@@ -152,43 +152,12 @@ static void VoteDamperHeaterOff(DamperFreezePrevention_t *instance)
       &vote);
 }
 
-static void VoteDamperOpen(DamperFreezePrevention_t *instance)
+static void StartFullCycle(DamperFreezePrevention_t *instance)
 {
-   DamperVotedPosition_t vote;
-   vote.position = DamperPosition_Open;
-   vote.care = Vote_Care;
-
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.configuration->damperPositionVoteErd,
-      &vote);
-}
-
-static void VoteDamperClosed(DamperFreezePrevention_t *instance)
-{
-   DamperVotedPosition_t vote;
-   vote.position = DamperPosition_Closed;
-   vote.care = Vote_Care;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.configuration->damperPositionVoteErd,
-      &vote);
-}
-
-static void VoteDamperDontCare(DamperFreezePrevention_t *instance)
-{
-   DamperVotedPosition_t vote;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.configuration->damperPositionVoteErd,
-      &vote);
-
-   vote.care = Vote_DontCare;
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.configuration->damperPositionVoteErd,
-      &vote);
+      instance->_private.configuration->damperFullCycleRequestErd,
+      set);
 }
 
 static bool ReadyToMonitorTemperature(DamperFreezePrevention_t *instance)
@@ -197,42 +166,6 @@ static bool ReadyToMonitorTemperature(DamperFreezePrevention_t *instance)
       SourceThermistorIsValid(instance) &&
       SourceTemperature(instance) <
          instance->_private.damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
-}
-
-void State_MoveDamper(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
-{
-   IGNORE(data);
-   DamperFreezePrevention_t *instance = InstanceFromFsm(fsm);
-
-   switch(signal)
-   {
-      case Fsm_Entry:
-         SetFsmStateTo(instance, DamperFreezePreventionFsmState_MoveDamper);
-         if(CurrentDamperPosition(instance) == DamperPosition_Closed)
-         {
-            VoteDamperOpen(instance);
-         }
-         else
-         {
-            VoteDamperClosed(instance);
-         }
-         break;
-
-      case Signal_CurrentDamperPositionChanged:
-         VoteDamperDontCare(instance);
-         if(ReadyToMonitorTemperature(instance))
-         {
-            Fsm_Transition(fsm, State_MonitoringTemperatureChange);
-         }
-         else
-         {
-            Fsm_Transition(fsm, State_Idle);
-         }
-         break;
-
-      case Fsm_Exit:
-         break;
-   }
 }
 
 void State_DamperHeaterOn(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
@@ -253,7 +186,15 @@ void State_DamperHeaterOn(Fsm_t *fsm, const FsmSignal_t signal, const void *data
 
       case Signal_DamperHeaterOnTimerExpired:
          VoteDamperHeaterOff(instance);
-         Fsm_Transition(fsm, State_MoveDamper);
+         StartFullCycle(instance);
+         if(ReadyToMonitorTemperature(instance))
+         {
+            Fsm_Transition(fsm, State_MonitoringTemperatureChange);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_Idle);
+         }
          break;
 
       case Fsm_Exit:

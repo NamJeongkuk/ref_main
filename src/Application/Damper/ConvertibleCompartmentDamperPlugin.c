@@ -47,24 +47,25 @@ static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
 static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
-   .damperPositionMaxOpenTimeVoteErd = Erd_ConvertibleCompartmentDamperPosition_MaxOpenTimeVote,
-   .damperCurrentPositionErd = Erd_DamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
 static const DamperFreezePreventionConfiguration_t damperFreezePreventionConfig = {
    .damperHeaterVoteErd = Erd_DamperHeater_DamperFreezePreventionVote,
-   .damperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DamperFreezePreventionVote,
    .sourceThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
    .targetThermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
    .sourceFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .targetFilteredTemperatureErd = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
    .timerModuleErd = Erd_TimerModule,
-   .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState
+   .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
 static const DamperHeaterDefrostControlConfig_t damperHeaterDefrostControlConfig = {

@@ -29,11 +29,11 @@ extern "C"
 #define And
 
 static const DamperMaxOpenTimeConfiguration_t config = {
-   .damperPositionMaxOpenTimeVoteErd = Erd_FreshFoodDamperPosition_MaxOpenTimeVote,
-   .damperCurrentPositionErd = Erd_DamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
-TEST_GROUP(MaxOpenTime)
+TEST_GROUP(DamperMaxOpenTime)
 {
    DamperMaxOpenTime_t instance;
    I_DataModel_t *dataModel;
@@ -72,49 +72,51 @@ TEST_GROUP(MaxOpenTime)
       DamperMaxOpenTimeMonitor_Init(&instance, dataModelDouble.dataModel, &config, damperData);
    }
 
-   void DamperCareStateShouldBeDontCare()
+   void GivenFullCycleRequestIs(bool state)
    {
-      DamperVotedPosition_t actualPosition;
-
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_EQUAL(actualPosition.care, Vote_DontCare);
+      DataModel_Write(dataModel, Erd_DamperFullCycleRequest, &state);
    }
 
-   void DamperCareStateShouldBeDamperClosedAndCareTrue()
+   void FullCycleRequestShouldBeClear()
    {
-      DamperVotedPosition_t actualPosition;
+      bool actualRequest;
+      DataModel_Read(dataModel, Erd_DamperFullCycleRequest, &actualRequest);
+      CHECK_FALSE(actualRequest);
+   }
 
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_EQUAL(actualPosition.care, Vote_Care);
-      CHECK_EQUAL(actualPosition.position, DamperPosition_Closed);
+   void FullCycleRequestShouldBeSet()
+   {
+      bool actualRequest;
+      DataModel_Read(dataModel, Erd_DamperFullCycleRequest, &actualRequest);
+      CHECK_TRUE(actualRequest);
    }
 };
 
-TEST(MaxOpenTime, ShouldStartWithOpenDamperThenTimerOutAndWriteDamperCloseAndCareToTrueMaxOpenVote)
+TEST(DamperMaxOpenTime, ShouldStartWithOpenDamperThenTimerOutAndWriteDamperCloseAndCareToTrueMaxOpenVote)
 {
    Given DamperCurrentPositionIs(DamperPosition_Open);
    Given TheModuleIsInitialized();
 
    After(damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN - 1);
-   DamperCareStateShouldBeDontCare();
+   FullCycleRequestShouldBeClear();
 
    After(1);
-   DamperCareStateShouldBeDamperClosedAndCareTrue();
+   FullCycleRequestShouldBeSet();
 }
 
-TEST(MaxOpenTime, ShouldStartMaxOpenTimerWhenDamperOpensThenSendMaxVoteRequestErdWithDamperCloseAndCareIsTrue)
+TEST(DamperMaxOpenTime, ShouldStartDamperMaxOpenTimerWhenDamperOpensThenStartFullCycle)
 {
    Given TheModuleIsInitialized();
    When DamperCurrentPositionIs(DamperPosition_Open);
 
    After(damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN - 1);
-   DamperCareStateShouldBeDontCare();
+   FullCycleRequestShouldBeClear();
 
    After(1);
-   DamperCareStateShouldBeDamperClosedAndCareTrue();
+   FullCycleRequestShouldBeSet();
 }
 
-TEST(MaxOpenTime, ShouldStartMaxOpenTimerWhenDamperIsOpenThenStopTimerWhenDamperIsClosedAndSetMaxOpenVoteErdCareToFalse)
+TEST(DamperMaxOpenTime, ShouldStartDamperMaxOpenTimerWhenDamperOpensThenStopTimerWhenDamperIsClosedAndNotStartFullCycle)
 {
    Given TheModuleIsInitialized();
    When DamperCurrentPositionIs(DamperPosition_Open);
@@ -123,10 +125,11 @@ TEST(MaxOpenTime, ShouldStartMaxOpenTimerWhenDamperIsOpenThenStopTimerWhenDamper
 
    When DamperCurrentPositionIs(DamperPosition_Closed);
 
-   DamperCareStateShouldBeDontCare();
+   After(1);
+   FullCycleRequestShouldBeClear();
 }
 
-TEST(MaxOpenTime, ShouldStartTimerWhenDamperOpensThenStopsTimerAndSetCareToFalseWhenDamperIsClosedThenStartTimerAgainWhenDamperOpensThenRequestDamperCloseWhenTimerExpires)
+TEST(DamperMaxOpenTime, ShouldStartTimerWhenDamperOpensThenStopTimerAndNotStartFullCycleWhenDamperIsClosedThenStartTimerAgainWhenDamperOpensThenStartFullCycleWhenTimerExpires)
 {
    Given TheModuleIsInitialized();
    When DamperCurrentPositionIs(DamperPosition_Open);
@@ -135,16 +138,16 @@ TEST(MaxOpenTime, ShouldStartTimerWhenDamperOpensThenStopsTimerAndSetCareToFalse
 
    When DamperCurrentPositionIs(DamperPosition_Closed);
 
-   DamperCareStateShouldBeDontCare();
+   FullCycleRequestShouldBeClear();
 
    When DamperCurrentPositionIs(DamperPosition_Open);
 
    After(damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN);
 
-   DamperCareStateShouldBeDamperClosedAndCareTrue();
+   FullCycleRequestShouldBeSet();
 }
 
-TEST_GROUP(MaxOpenTime_Zero)
+TEST_GROUP(DamperMaxOpenTime_Zero)
 {
    DamperMaxOpenTime_t instance;
    I_DataModel_t *dataModel;
@@ -168,7 +171,7 @@ TEST_GROUP(MaxOpenTime_Zero)
 
    void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, 1000);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void TheModuleIsInitialized()
@@ -181,16 +184,15 @@ TEST_GROUP(MaxOpenTime_Zero)
       DataModel_Write(dataModel, Erd_DamperCurrentPosition, &position);
    }
 
-   void DamperCareStateShouldBeDontCare()
+   void FullCycleRequestShouldBeClear()
    {
-      DamperVotedPosition_t actualPosition;
-
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_EQUAL(actualPosition.care, Vote_DontCare);
+      bool actualRequest;
+      DataModel_Read(dataModel, Erd_DamperFullCycleRequest, &actualRequest);
+      CHECK_FALSE(actualRequest);
    }
 };
 
-TEST(MaxOpenTime_Zero, ShouldNotRunTestIfMaxTimeForDamperToBeOpenInMinutesIsZero)
+TEST(DamperMaxOpenTime_Zero, ShouldNotRunTestIfMaxTimeForDamperToBeOpenInMinutesIsZero)
 {
    Given TheModuleIsInitialized();
 
@@ -198,5 +200,5 @@ TEST(MaxOpenTime_Zero, ShouldNotRunTestIfMaxTimeForDamperToBeOpenInMinutesIsZero
 
    After(damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN);
 
-   DamperCareStateShouldBeDontCare();
+   FullCycleRequestShouldBeClear();
 }

@@ -13,7 +13,6 @@ enum
    DamperFreezePreventionFsmState_Idle,
    DamperFreezePreventionFsmState_MonitoringTemperatureChange,
    DamperFreezePreventionFsmState_DamperHeaterOn,
-   DamperFreezePreventionFsmState_MoveDamper
 };
 typedef uint8_t DamperFreezePreventionFsmState_t;
 

@@ -46,7 +46,8 @@ static const DamperRequestManagerConfiguration_t config = {
    .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_DamperHomingRequest,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest,
 };
 
 TEST_GROUP(DamperRequestManager)
@@ -91,6 +92,24 @@ TEST_GROUP(DamperRequestManager)
       DataModel_Read(
          dataModel,
          Erd_DamperHomingRequest,
+         &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void FullCycleErdIsSetTo(bool status)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_DamperFullCycleRequest,
+         &status);
+   }
+
+   void FullCycleStateShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModel,
+         Erd_DamperFullCycleRequest,
          &actual);
       CHECK_EQUAL(expected, actual);
    }
@@ -243,6 +262,25 @@ TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwis
    ResetSubStepShouldBe(true);
 }
 
+TEST(DamperRequestManager, ShouldSetMotorStepsForHomingAfterMoveIfHomingStateFlagIsSet)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
+   Given TheModuleIsInitialized();
+   And TheDamperCompletesPositionChange();
+   And TheRequestedPositionIs(DamperPosition_Open);
+
+   DamperMotorRequestedStepsShouldBe(StepsToOpen);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+   ResetSubStepShouldBe(false);
+
+   When HomingErdIsSetTo(true);
+   And StepsAreSetToZero();
+
+   DamperMotorRequestedStepsShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+   ResetSubStepShouldBe(true);
+}
+
 TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToCounterClockwiseAndResetSubstepToFalseWhenOpenPositionRequested)
 {
    GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
@@ -271,7 +309,6 @@ TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
 {
    GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
    GivenTheModuleIsInitializedAndHomingIsComplete();
-   SetHomingFlagFalse();
    And TheRequestedPositionIs(DamperPosition_Open);
    And TheDamperCompletesPositionChange();
    And TheRequestedPositionIs(DamperPosition_Closed);
@@ -422,4 +459,265 @@ TEST(DamperRequestManager, ShouldNotHomeWhenConvertibleCompartmentStateChangesWh
    WhenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    StepsToMoveShouldBe(0);
    TheCurrentPositionShouldBe(DamperPosition_Closed);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleFromOpenPositionAndThenReturnToOpenWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(ConvertibleStepsToCloseAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(SET);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleFromOpenPositionAndThenReturnToOpenWithoutConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_SwqaSideBySide);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToOpen);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToClose);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(SET);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToOpen);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleFromClosedPositionWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(SET);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleAfterFinishedMovingIfRequestedDuringMoveWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When FullCycleErdIsSetTo(true);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+
+   StepsToMoveShouldBe(ConvertibleStepsToCloseAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(SET);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleAfterHomingIfRequestedDuringHomeFromClosedPositionWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When HomingErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformFullCycleAfterHomingIfRequestedDuringHomeFromOpenPositionWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+
+   When HomingErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldPerformHomeFromIdleWithConvertibleCompartment)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+
+   When HomingErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   FullCycleStateShouldBe(CLEAR);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(ConvertibleStepsToOpenAsFreezer);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(0);
+}
+
+TEST(DamperRequestManager, ShouldIgnoreFullCycleErdGettingClearedFromExternalModules)
+{
+   GivenTheDataModelIsInitializedWithPersonality(TddPersonality_DevelopmentDualEvapFourDoor);
+   GivenConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When FullCycleErdIsSetTo(true);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When FullCycleErdIsSetTo(false);
+   TheCurrentPositionShouldBe(DamperPosition_Open);
+   StepsToMoveShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+   StepsToMoveShouldBe(0);
 }

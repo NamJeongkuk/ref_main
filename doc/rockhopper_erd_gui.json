@@ -3072,20 +3072,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Damper Position Damper Freeze Prevention Vote",
-          "name": "Erd_FreshFoodDamperPosition_DamperFreezePreventionVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Damper Position Max Open Time Vote",
-          "name": "Erd_FreshFoodDamperPosition_MaxOpenTimeVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Damper Position Defrost Vote",
           "name": "Erd_FreshFoodDamperPosition_DefrostVote",
           "read": true,

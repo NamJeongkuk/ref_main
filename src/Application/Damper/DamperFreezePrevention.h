@@ -20,7 +20,6 @@
 typedef struct
 {
    Erd_t damperHeaterVoteErd; // PercentageDutyCycleVote_t
-   Erd_t damperPositionVoteErd; // DamperVotedPosition_t
    Erd_t sourceThermistorIsValidResolvedErd; // bool
    Erd_t targetThermistorIsValidResolvedErd; // bool
    Erd_t sourceFilteredTemperatureErd; // TemperatureDegFx100_t
@@ -28,6 +27,7 @@ typedef struct
    Erd_t damperCurrentPositionErd; // DamperPostion_t
    Erd_t timerModuleErd; // TimerModule_t
    Erd_t damperFreezePreventionFsmStateErd; // DamperFreezePreventionFsmState_t
+   Erd_t damperFullCycleRequestErd; // bool
 } DamperFreezePreventionConfiguration_t;
 
 typedef struct

@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
+#include "Constants_Binary.h"
 
 static void MaxOpenDamperTimeCheck(DamperMaxOpenTime_t *, DamperPosition_t);
 
@@ -18,23 +19,18 @@ enum
    ZeroMinutes = 0,
 };
 
-static void SetMaxOpenDamperRequestPositionVote(DamperMaxOpenTime_t *instance, DamperVotedPosition_t damperMaxOpenVoteCareAndPosition)
+static void StartFullCycle(DamperMaxOpenTime_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.configuration->damperPositionMaxOpenTimeVoteErd,
-      &damperMaxOpenVoteCareAndPosition);
+      instance->_private.configuration->damperFullCycleRequestErd,
+      set);
 }
 
 static void MaxOpenDamperTimerExpired(void *context)
 {
    DamperMaxOpenTime_t *instance = context;
-   DamperVotedPosition_t damperMaxOpenVoteCareAndPosition;
-
-   damperMaxOpenVoteCareAndPosition.care = Vote_Care;
-   damperMaxOpenVoteCareAndPosition.position = DamperPosition_Closed;
-
-   SetMaxOpenDamperRequestPositionVote(instance, damperMaxOpenVoteCareAndPosition);
+   StartFullCycle(instance);
 }
 
 static void StartMaxOpenDamperTimer(DamperMaxOpenTime_t *instance)
@@ -73,14 +69,7 @@ static void MaxOpenDamperTimeCheck(DamperMaxOpenTime_t *instance, DamperPosition
 {
    if(currentDamperPosition == DamperPosition_Closed)
    {
-      DamperVotedPosition_t damperCurrentVotePosition;
-
       StopMaxOpenDamperTimer(instance);
-
-      damperCurrentVotePosition.care = Vote_DontCare;
-      damperCurrentVotePosition.position = DamperPosition_Closed;
-
-      SetMaxOpenDamperRequestPositionVote(instance, damperCurrentVotePosition);
    }
    else
    {

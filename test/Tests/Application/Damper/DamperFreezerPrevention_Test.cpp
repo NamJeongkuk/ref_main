@@ -32,14 +32,14 @@ enum
 
 static const DamperFreezePreventionConfiguration_t config = {
    .damperHeaterVoteErd = Erd_DamperHeater_DamperFreezePreventionVote,
-   .damperPositionVoteErd = Erd_FreshFoodDamperPosition_DamperFreezePreventionVote,
    .sourceThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
    .targetThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved,
    .sourceFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .targetFilteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
    .timerModuleErd = Erd_TimerModule,
-   .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState
+   .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState,
+   .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
 TEST_GROUP(DamperFreezePrevention)
@@ -93,21 +93,23 @@ TEST_GROUP(DamperFreezePrevention)
       DamperCurrentPositionIs(DamperPosition_Closed);
    }
 
-   void DamperPositionShouldBeVotedDontCare()
+   void WhenFullCycleRequestIs(bool state)
    {
-      DamperVotedPosition_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, &vote);
-
-      CHECK_EQUAL(false, vote.care);
+      DataModel_Write(dataModel, Erd_DamperFullCycleRequest, &state);
    }
 
-   void DamperPositionShouldBeVoted(DamperPosition_t position)
+   void FullCycleRequestShouldBeClear()
    {
-      DamperVotedPosition_t actualPosition;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, &actualPosition);
+      bool actualRequest;
+      DataModel_Read(dataModel, Erd_DamperFullCycleRequest, &actualRequest);
+      CHECK_FALSE(actualRequest);
+   }
 
-      CHECK_EQUAL(true, actualPosition.care);
-      CHECK_EQUAL(position, actualPosition.position);
+   void FullCycleRequestShouldBeSet()
+   {
+      bool actualRequest;
+      DataModel_Read(dataModel, Erd_DamperFullCycleRequest, &actualRequest);
+      CHECK_TRUE(actualRequest);
    }
 
    void DamperHeaterShouldNotBeVotedFor()
@@ -309,15 +311,6 @@ TEST_GROUP(DamperFreezePrevention)
       After(1);
       DamperHeaterShouldBeVotedOff();
    }
-
-   void DamperFreezePreventionHasJustVotedDontCareForDamperPosition()
-   {
-      Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-      DamperPositionShouldBeVoted(DamperPosition_Closed);
-
-      When DamperCurrentPositionIs(DamperPosition_Closed);
-      DamperPositionShouldBeVotedDontCare();
-   }
 };
 
 TEST(DamperFreezePrevention, ShouldInitializeIntoIdleStateIfTargetThermistorIsInvalidAndSourceThermistorIsValidAndSourceTemperatureIsLessThanMaxSourceTemperatureForFreezePrevention)
@@ -514,93 +507,99 @@ TEST(DamperFreezePrevention, ShouldTurnOffDamperHeaterAfterDamperHeaterOnTime)
    DamperHeaterShouldBeVotedOff();
 }
 
-TEST(DamperFreezePrevention, ShouldVoteToOpenDamperIfDamperIsClosedWhenDamperHeaterIsTurnedOff)
+TEST(DamperFreezePrevention, ShouldStartFullCycleIfDamperIsClosedWhenDamperHeaterIsTurnedOff)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsClosed();
-   DamperPositionShouldBeVoted(DamperPosition_Open);
+   FullCycleRequestShouldBeSet();
 }
 
-TEST(DamperFreezePrevention, ShouldVoteToCloseDamperIfDamperIsOpenWhenDamperHeaterIsTurnedOff)
+TEST(DamperFreezePrevention, ShouldStartFullCycleIfDamperIsOpenWhenDamperHeaterIsTurnedOff)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 }
 
-TEST(DamperFreezePrevention, ShouldVoteDontCareForDamperPositionWhenCurrentDamperPositionChangesToOpenAfterVotingForOpenPosition)
+TEST(DamperFreezePrevention, ShouldNotStartFullCycleAgainWhenCurrentDamperPositionChangesToOpenAfterRequestingFullCycleOnce)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsClosed();
-   DamperPositionShouldBeVoted(DamperPosition_Open);
+   FullCycleRequestShouldBeSet();
 
+   WhenFullCycleRequestIs(false);
    When DamperCurrentPositionIs(DamperPosition_Open);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 }
 
-TEST(DamperFreezePrevention, ShouldVoteDontCareForDamperPositionWhenCurrentDamperPositionChangesToClosedAfterVotingForClosedPosition)
+TEST(DamperFreezePrevention, ShouldNotStartFullCycleAgainWhenCurrentDamperPositionChangesToClosedAfterRequestingFullCycleOnce)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
+   WhenFullCycleRequestIs(false);
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 }
 
-TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterVotingDontCareForDamperPositionIfTargetThermistorIsInvalid)
+TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterRequestingDamperFullCycleIfTargetThermistorIsInvalid)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
-   TargetThermistorIsInvalid();
+   WhenFullCycleRequestIs(false);
+   When TargetThermistorIsInvalid();
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_Idle);
 }
 
-TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterVotingDontCareForDamperPositionIfSourceThermistorIsInvalid)
+TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterRequestingDamperFullCycleIfSourceThermistorIsInvalid)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
-   SourceThermistorIsInvalid();
+   WhenFullCycleRequestIs(false);
+   When SourceThermistorIsInvalid();
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_Idle);
 }
 
-TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterVotingDontCareForDamperPositionIfSourceTemperatureIsEqualToMaxSourceTemperatureForFreezePrevention)
+TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterRequestingFullCycleIfSourceTemperatureIsEqualToMaxSourceTemperatureForFreezePrevention)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
-   SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
+   When SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
+   WhenFullCycleRequestIs(false);
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_Idle);
 }
 
-TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterVotingDontCareForDamperPositionIfSourceTemperatureIsGreaterThanMaxSourceTemperatureForFreezePrevention)
+TEST(DamperFreezePrevention, ShouldTransitionToIdleAfterRequestingDamperFullCycleIfSourceTemperatureIsGreaterThanMaxSourceTemperatureForFreezePrevention)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
-   SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 + 1);
+   When SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 + 1);
+   WhenFullCycleRequestIs(false);
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_Idle);
 }
 
-TEST(DamperFreezePrevention, ShouldTransitionToMonitoringTemperatureChangeAfterVotingDontCareForDamperPositionIfTargetThermistorIsValidAndSourceTemperatureIsLessThanMaxSourceTemperatureForFreezePrevention)
+TEST(DamperFreezePrevention, ShouldTransitionToMonitoringTemperatureChangeAfterRequestingDamperFullCycleIfSourceTemperatureIsLessThanMaxSourceTemperatureForFreezePrevention)
 {
    Given DamperFreezePreventionHasJustVotedForDamperHeaterOffAndDamperIsOpen();
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
-   TargetThermistorIsValid();
-   SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
+   When SourceTemperatureIs(damperParametricData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
+   WhenFullCycleRequestIs(false);
    When DamperCurrentPositionIs(DamperPosition_Closed);
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_MonitoringTemperatureChange);
 }
@@ -611,18 +610,19 @@ TEST(DamperFreezePrevention, ShouldAttemptToDefrostDamperRepeatedly)
    Given TargetTemperatureIs(InitialTemperatureInDegFx100);
 
    When DamperOpens();
-   TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
+   When TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
    After(damperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
    After(damperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 
+   WhenFullCycleRequestIs(false);
    When DamperCloses();
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
    When DamperOpens();
    After(damperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
    After(damperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 }
 
 TEST(DamperFreezePrevention, ShouldAttemptToDefrostEvenIfItDoesntOnTheFirstTry)
@@ -631,13 +631,13 @@ TEST(DamperFreezePrevention, ShouldAttemptToDefrostEvenIfItDoesntOnTheFirstTry)
    Given TargetTemperatureIs(InitialTemperatureInDegFx100);
 
    When DamperOpens();
-   TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100));
+   When TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100));
    After(damperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
    DamperHeaterShouldNotBeVotedFor();
-   DamperPositionShouldBeVotedDontCare();
+   FullCycleRequestShouldBeClear();
 
-   TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
+   When TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
    After(damperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
    After(damperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
-   DamperPositionShouldBeVoted(DamperPosition_Closed);
+   FullCycleRequestShouldBeSet();
 }
