@@ -31,6 +31,7 @@
 #include "PercentageDutyCycleVote.h"
 #include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
 #include "NonHarvestFillTubeHeaterControl.h"
+#include "IceCabinetFanHarvestFixVoting.h"
 
 typedef struct
 {
@@ -55,6 +56,7 @@ typedef struct
    const OverrideArbiterConfiguration_t *filteredTemperatureArbiterConfig;
    const ResolvedVoteRelayConnectorConfiguration_t *heaterRelayConnectorConfig;
    const OverrideArbiterConfiguration_t *thermistorValidArbiterConfig;
+   const IceCabinetFanHarvestFixVotingConfig_t *iceCabinetFanHarvestFixVotingConfig;
 } AluminumMoldIceMakerPluginConfig_t;
 
 typedef struct
@@ -72,6 +74,7 @@ typedef struct
       IceMakerEnableResolver_t iceMakerEnableResolver;
       IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
       IceMakerWaterFillMonitor_t iceMakerFillMonitor;
+      IceCabinetFanHarvestFixVoting_t iceCabinetFanHarvestFixVoting;
 
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ErdResolver_t iceMakerHeaterVoteResolver;

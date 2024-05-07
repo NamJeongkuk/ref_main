@@ -113,6 +113,13 @@ void TwistTrayIceMakerPlugin_Init(
          config->freezerIceRateHandlerConfig,
          freezerIceRateData);
    }
+   else if(location == IceMakerLocation_FreshFood)
+   {
+      IceCabinetFanHarvestFixVoting_Init(
+         &instance->_private.iceCabinetFanHarvestFixVoting,
+         dataModel,
+         config->iceCabinetFanHarvestFixVotingConfig);
+   }
 
    IceMakerWaterFillMonitor_Init(
       &instance->_private.twistTrayIceMakerFillMonitor,

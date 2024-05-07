@@ -29,6 +29,7 @@
 #include "SensorData.h"
 #include "NonHarvestFillTubeHeaterData.h"
 #include "IceMakerEnableResolver.h"
+#include "IceCabinetFanHarvestFixVoting.h"
 
 typedef struct
 {
@@ -49,6 +50,7 @@ typedef struct
    const HarvestCountCalculatorConfiguration_t *harvestCountCalculatorConfig;
    const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t *motorControllerValueUpdaterConfig;
    const OverrideArbiterConfiguration_t *filteredTemperatureArbiterConfig;
+   const IceCabinetFanHarvestFixVotingConfig_t *iceCabinetFanHarvestFixVotingConfig;
    const TwistTrayIceMakerConfiguration_t *twistTrayIceMakerConfig;
    Erd_t twistTrayMotorOutputErd;
 } TwistTrayIceMakerPlugConfig_t;
@@ -75,6 +77,7 @@ typedef struct
       IceMakerWaterFillMonitor_t twistTrayIceMakerFillMonitor;
       HarvestCountCalculator_t harvestCountCalculator;
       FreezerIceRateHandler_t iceRateHandler;
+      IceCabinetFanHarvestFixVoting_t iceCabinetFanHarvestFixVoting;
    } _private;
 } TwistTrayIceMakerPlugin_t;
 

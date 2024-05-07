@@ -256,6 +256,11 @@ static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
    NUM_ELEMENTS(thermistorValidOverrideArbiterRequestErdList)
 };
 
+static const IceCabinetFanHarvestFixVotingConfig_t iceCabinetFanHarvestFixVotingConfig = {
+   .iceMakerStateErd = Erd_IceMaker0_StateMachineState,
+   .iceCabinetFanHarvestFixVoteErd = Erd_IceCabinetFanSpeed_HarvestFixVote
+};
+
 static const AluminumMoldIceMakerPluginConfig_t config = {
    .freezerIceRateHandlerConfig = &freezerIceRateHandlerConfig,
    .aluminumMoldIceMakerConfig = &aluminumMoldIceMakerConfig,
@@ -278,6 +283,7 @@ static const AluminumMoldIceMakerPluginConfig_t config = {
    .filteredTemperatureArbiterConfig = &filteredTemperatureArbiterConfig,
    .heaterRelayConnectorConfig = &heaterRelayConnectorConfig,
    .thermistorValidArbiterConfig = &thermistorValidArbiterConfig,
+   .iceCabinetFanHarvestFixVotingConfig = &iceCabinetFanHarvestFixVotingConfig
 };
 
 void AluminumMoldIceMaker0Configurator_Init(

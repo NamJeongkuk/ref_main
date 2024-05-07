@@ -186,6 +186,11 @@ static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
    NUM_ELEMENTS(filteredTemperatureOverrideRequestErdList)
 };
 
+static const IceCabinetFanHarvestFixVotingConfig_t iceCabinetFanHarvestFixVotingConfig = {
+   .iceMakerStateErd = Erd_IceMaker0_StateMachineState,
+   .iceCabinetFanHarvestFixVoteErd = Erd_IceCabinetFanSpeed_HarvestFixVote
+};
+
 static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .fsmStateErd = Erd_IceMaker0_StateMachineState,
    .thermistorIsValidResolvedErd = Erd_IceMaker0_MoldThermistor_IsValidResolved,
@@ -232,6 +237,7 @@ static const TwistTrayIceMakerPlugConfig_t config = {
    .harvestCountCalculatorConfig = &harvestCountCalculatorConfig,
    .motorControllerValueUpdaterConfig = &motorControllerValueUpdaterConfig,
    .filteredTemperatureArbiterConfig = &filteredTemperatureArbiterConfig,
+   .iceCabinetFanHarvestFixVotingConfig = &iceCabinetFanHarvestFixVotingConfig,
    .twistTrayIceMakerConfig = &twistTrayIceMakerConfig,
    .twistTrayMotorOutputErd = Erd_IceMaker0_TwistTrayMotorOutput
 };

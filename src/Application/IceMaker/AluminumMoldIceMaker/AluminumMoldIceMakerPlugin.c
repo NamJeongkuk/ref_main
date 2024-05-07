@@ -92,6 +92,13 @@ void AluminumMoldIceMakerPlugin_Init(
          config->freezerIceRateHandlerConfig,
          freezerIceRateData);
    }
+   else if(iceMakerLocation == IceMakerLocation_FreshFood)
+   {
+      IceCabinetFanHarvestFixVoting_Init(
+         &instance->_private.iceCabinetFanHarvestFixVoting,
+         dataModel,
+         config->iceCabinetFanHarvestFixVotingConfig);
+   }
 
    FeelerArmMonitor_Init(
       &instance->_private.feelerArmMonitor,
