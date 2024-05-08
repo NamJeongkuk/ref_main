@@ -14,7 +14,6 @@
 #include "DataSource_CachedAsyncDataSource.h"
 #include "NonVolatileDataSourceReadWriteBuffer.h"
 #include "ConstArrayMap_BinarySearch.h"
-#include "Action_Context.h"
 
 // clang-format off
 
@@ -45,8 +44,6 @@ typedef struct
       NonVolatileDataSourceSyncWriteCache_t syncWriteCache;
       uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceErdCount_t) / 8 + 1];
       Timer_t timeout;
-      Action_Context_t onReadyAction;
-      bool ready;
    } _private;
 } NonVolatileDataSource_t;
 
