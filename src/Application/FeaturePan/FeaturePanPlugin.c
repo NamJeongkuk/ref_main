@@ -78,7 +78,7 @@ static const FeaturePanWarmupSlopeVotingConfig_t featurePanWarmupSlopeVotingDeli
 
 static const FeaturePanAsConvertibleCompartmentDualEvapFanVotingConfig_t dualEvapVotingConfig = {
    .featurePanCoolingModeErd = Erd_FeaturePanCoolingMode,
-   .evapFanVote = Erd_FreezerEvapFanSpeed_ResolvedVote
+   .evapFanVote = Erd_FreezerEvapFanSpeed_FeaturePanVote
 };
 
 static const FeaturePanHeaterDisablingVotingConfig_t heaterDisablingVotingConvertibleCompartmentConfig = {
