@@ -14,7 +14,7 @@
 
 typedef struct
 {
-   Erd_t crossAmbientWindowAveragedTemperatureInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t ambientWindowAveragedTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t crossAmbientOffsetInDegFx100Erd; // TemperatureDegFx100_t
 } CrossAmbientOffsetCalculatorConfig_t;
 

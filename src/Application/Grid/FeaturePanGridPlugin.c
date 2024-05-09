@@ -38,8 +38,8 @@ static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
    .previousGridBlockNumbersErd = Erd_FeaturePanGrid_PreviousBlocks,
    .gridBlockAdjustmentErds = {
       {
-          .filteredResolvedTemperatureInDegFx100 = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
-          .thermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
+         .filteredResolvedTemperatureInDegFx100 = Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
+         .thermistorIsValidResolvedErd = Erd_FeaturePanCabinetThermistor_IsValidResolved,
       },
    }
 };
@@ -62,7 +62,7 @@ static const OverrideArbiterConfiguration_t gridBlockNumberOverrideConfiguration
 
 static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t crossAmbientHysteresisAdjustmentCalculatorConfig = {
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
 };
 
 void FeaturePanGridPlugin_Init(FeaturePanGridPlugin_t *instance, I_DataModel_t *dataModel)

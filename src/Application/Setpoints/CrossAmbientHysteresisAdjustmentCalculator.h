@@ -14,7 +14,7 @@
 typedef struct
 {
    Erd_t crossAmbientHysteresisAdjustmentErd; // TemperatureDegfx100
-   Erd_t crossAmbientWindowAveragedTemperatureErd; // TemperatureDegfx100
+   Erd_t ambientWindowAveragedTemperatureInDegFx100Erd; // TemperatureDegfx100
 } CrossAmbientHysteresisAdjustmentCalculatorConfig_t;
 
 typedef struct

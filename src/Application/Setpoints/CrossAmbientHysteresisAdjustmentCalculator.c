@@ -25,31 +25,31 @@ static TemperatureDegFx100_t LowestHysteresis(CrossAmbientHysteresisAdjustmentCa
 
 static TemperatureDegFx100_t UncappedHysteresisAdjustment(CrossAmbientHysteresisAdjustmentCalculator_t *instance)
 {
-   TemperatureDegFx100_t crossAmbientWindowedTemperature;
+   TemperatureDegFx100_t ambientWindowedTemperatureInDegFx100;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientWindowAveragedTemperatureErd,
-      &crossAmbientWindowedTemperature);
+      instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
+      &ambientWindowedTemperatureInDegFx100);
 
-   return (instance->_private.gridData->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - crossAmbientWindowedTemperature)) / DegFx1000;
+   return (instance->_private.gridData->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - ambientWindowedTemperatureInDegFx100)) / DegFx1000;
 }
 
 static void CalculateCrossAmbientHysteresisAdjustment(CrossAmbientHysteresisAdjustmentCalculator_t *instance)
 {
    TemperatureDegFx100_t ambientHysteresisAdjustment = 0;
 
-   TemperatureDegFx100_t crossAmbientHysteresisAdjustment;
+   TemperatureDegFx100_t ambientWindowedTemperatureInDegFx100;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientHysteresisAdjustmentErd,
-      &crossAmbientHysteresisAdjustment);
+      instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
+      &ambientWindowedTemperatureInDegFx100);
 
-   TemperatureDegFx100_t lowestHysteresis = LowestHysteresis(instance);
+   TemperatureDegFx100_t lowestHysteresisInDegFx100 = LowestHysteresis(instance);
 
-   if((lowestHysteresis >= instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
-      (crossAmbientHysteresisAdjustment < AdjustmentThresholdInDegFx100))
+   if((lowestHysteresisInDegFx100 >= instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
+      (ambientWindowedTemperatureInDegFx100 < AdjustmentThresholdInDegFx100))
    {
-      ambientHysteresisAdjustment = lowestHysteresis - instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      ambientHysteresisAdjustment = lowestHysteresisInDegFx100 - instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
 
       TemperatureDegFx100_t uncappedHysteresisAdjustment = UncappedHysteresisAdjustment(instance);
       if(uncappedHysteresisAdjustment <= ambientHysteresisAdjustment)
@@ -90,6 +90,6 @@ void CrossAmbientHysteresisAdjustmentCalculator_Init(
       OnCrossAmbientWindowedAverageTemperatureChange);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientWindowAveragedTemperatureErd,
+      instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
       &instance->_private.onCrossAmbientWindowedAverageTemperatureSubscription);
 }

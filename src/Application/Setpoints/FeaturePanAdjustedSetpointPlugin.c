@@ -58,12 +58,12 @@ static const OverrideArbiterConfiguration_t convertibleCompartmentCrossAmbientOf
 };
 
 static const CrossAmbientOffsetCalculatorConfig_t convertibleCompartmentAsFreshFoodOffsetCalculatorConfig = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_ConvertibleCompartmentAsFreshFood_CrossAmbientOffsetInDegFx100
 };
 
 static const CrossAmbientOffsetCalculatorConfig_t convertibleCompartmentAsFreezerOffsetCalculatorConfig = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_ConvertibleCompartmentAsFreezer_CrossAmbientOffsetInDegFx100
 };
 

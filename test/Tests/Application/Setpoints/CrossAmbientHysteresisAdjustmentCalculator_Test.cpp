@@ -29,7 +29,7 @@ enum
 
 static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t config = {
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
 };
 
 TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
@@ -161,10 +161,17 @@ TEST(CrossAmbientHysteresisAdjustmentCalculator, ShouldCalculateCrossAmbientHyst
    CrossAmbientHysteresisAdjustmentShouldBe(0);
 }
 
-TEST(CrossAmbientHysteresisAdjustmentCalculator, ShouldCalculateCrossAmbientHysteresisAdjustmentToZeroIfCrossAmbientHysteresisAdjustmentIsHigherThanTheAdjustmentThreshold)
+TEST(CrossAmbientHysteresisAdjustmentCalculator, ShouldCalculateCrossAmbientHysteresisAdjustmentToZeroIfCrossAmbientWindowedTemperaureIsEqualToTheAdjustmentThreshold)
 {
-   GivenCrossAmbientHysteresisAdjustmentIs(AdjustmentThresholdInDegFx100 + 1);
-   GivenCrossAmbientWindowAveragedTemperatureIs(SomeTemperatureInDegFx100);
+   GivenCrossAmbientWindowAveragedTemperatureIs(AdjustmentThresholdInDegFx100);
+   GivenInitialization();
+
+   CrossAmbientHysteresisAdjustmentShouldBe(0);
+}
+
+TEST(CrossAmbientHysteresisAdjustmentCalculator, ShouldCalculateCrossAmbientHysteresisAdjustmentToZeroIfCrossAmbientWindowedTemperaureIsGreaterThanTheAdjustmentThreshold)
+{
+   GivenCrossAmbientWindowAveragedTemperatureIs(AdjustmentThresholdInDegFx100 + 1);
    GivenInitialization();
 
    CrossAmbientHysteresisAdjustmentShouldBe(0);

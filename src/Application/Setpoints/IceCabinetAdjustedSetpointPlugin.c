@@ -37,7 +37,7 @@ static const I16ErdAdderConfiguration_t iceCabinetAdjustedSetpointConfig = {
 };
 
 static const CrossAmbientOffsetCalculatorConfig_t iceCabinetOffsetCalculatorConfig = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetInDegFx100Erd = Erd_IceCabinet_CrossAmbientOffsetInDegFx100
 };
 

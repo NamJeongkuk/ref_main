@@ -19,7 +19,7 @@ static void CalculateCrossAmbientOffsetInDegFx100(void *context, const void *arg
    TemperatureDegFx100_t averageTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientWindowAveragedTemperatureInDegFx100Erd,
+      instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
       &averageTemperature);
 
    TemperatureDegFx100_t crossAmbientOffsetInDegFx100 = (instance->_private.crossAmbientOffsetData->slopeCoefficient * (averageTemperature - 9000)) / 1000;
@@ -47,6 +47,6 @@ void CrossAmbientOffsetCalculator_Init(
 
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientWindowAveragedTemperatureInDegFx100Erd,
+      instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
       &instance->_private.crossAmbientWindowAveragedTemperatureSubscription);
 }
