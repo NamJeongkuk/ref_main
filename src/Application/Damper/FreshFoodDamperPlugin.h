@@ -13,7 +13,7 @@
 #include "DamperRequestManager.h"
 #include "DamperHeaterVotingFrameworkPlugin.h"
 #include "DamperHeaterDefrostControl.h"
-#include "DamperMaxOpenTimeMonitor.h"
+#include "PeriodicDamperCycling.h"
 #include "DamperFreezePrevention.h"
 #include "ErdResolver.h"
 #include "SabbathDelayHandler.h"
@@ -29,7 +29,7 @@ typedef struct
       DamperHeaterVotingFrameworkPlugin_t damperHeaterVotingFrameworkPlugin;
       DamperFreezePrevention_t damperFreezePrevention;
       DamperHeaterDefrostControl_t damperHeaterDefrostControl;
-      DamperMaxOpenTime_t damperMaxOpenTime;
+      PeriodicDamperCycling_t periodicDamperCycling;
       SabbathDelayHandler_t sabbathDelayHandler;
    } _private;
 } FreshFoodDamperPlugin_t;

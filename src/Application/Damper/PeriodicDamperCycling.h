@@ -1,12 +1,13 @@
 /*!
  * @file
- * @brief
+ * @brief Requests a damper full cycle when the damper
+ * has been opened/closed for too long.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DAMPERMAXOPENTIMEMONITOR_H
-#define DAMPERMAXOPENTIMEMONITOR_H
+#ifndef PERIODICDAMPERCYCLING_H
+#define PERIODICDAMPERCYCLING_H
 
 #include "I_DataModel.h"
 #include "EventSubscription.h"
@@ -18,19 +19,19 @@ typedef struct
 {
    Erd_t damperCurrentPositionErd; // DamperPosition_t
    Erd_t damperFullCycleRequestErd; // bool
-} DamperMaxOpenTimeConfiguration_t;
+} PeriodicDamperCyclingConfiguration_t;
 
 typedef struct
 {
    struct
    {
       I_DataModel_t *dataModel;
-      Timer_t maxOpenTimer;
-      TimerTicks_t maxOpenTimerTicks;
+      Timer_t maxTimer;
       EventSubscription_t damperCurrentPositionSubscription;
-      const DamperMaxOpenTimeConfiguration_t *configuration;
+      const PeriodicDamperCyclingConfiguration_t *configuration;
+      const DamperData_t *damperData;
    } _private;
-} DamperMaxOpenTime_t;
+} PeriodicDamperCycling_t;
 
 /*!
  * @param instance
@@ -38,10 +39,10 @@ typedef struct
  * @param configuration
  * @param damperData
  */
-void DamperMaxOpenTimeMonitor_Init(
-   DamperMaxOpenTime_t *instance,
+void PeriodicDamperCycling_Init(
+   PeriodicDamperCycling_t *instance,
    I_DataModel_t *dataModel,
-   const DamperMaxOpenTimeConfiguration_t *configuration,
+   const PeriodicDamperCyclingConfiguration_t *configuration,
    const DamperData_t *damperData);
 
 #endif

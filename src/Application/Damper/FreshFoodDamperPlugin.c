@@ -51,7 +51,7 @@ static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
 
-static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
+static const PeriodicDamperCyclingConfiguration_t periodicDamperCyclingConfig = {
    .damperCurrentPositionErd = Erd_DamperCurrentPosition,
    .damperFullCycleRequestErd = Erd_DamperFullCycleRequest
 };
@@ -117,10 +117,10 @@ void FreshFoodDamperPlugin_Init(FreshFoodDamperPlugin_t *instance, I_DataModel_t
       &damperFreezePreventionConfig,
       PersonalityParametricData_Get(dataModel)->damperData);
 
-   DamperMaxOpenTimeMonitor_Init(
-      &instance->_private.damperMaxOpenTime,
+   PeriodicDamperCycling_Init(
+      &instance->_private.periodicDamperCycling,
       dataModel,
-      &maxOpenDamperConfig,
+      &periodicDamperCyclingConfig,
       PersonalityParametricData_Get(dataModel)->damperData);
 
    DamperHeaterDefrostControl_Init(

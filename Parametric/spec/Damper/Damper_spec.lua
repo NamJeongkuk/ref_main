@@ -36,6 +36,7 @@ describe('Damper', function()
       steps_to_home = 1850,
       delay_between_step_events_in_hundreds_of_microseconds = 1,
       max_time_for_damper_to_be_open_before_cycling_in_minutes = 11,
+      max_time_for_damper_to_be_closed_before_cycling_in_minutes = 720,
       target_compartment_minimum_temperature_change_time_in_minutes = 3,
       target_compartment_damper_heater_on_time_in_minutes = 2,
       source_compartment_maximum_temperature_to_run_check_in_degfx100 = 500,
@@ -88,9 +89,17 @@ describe('Damper', function()
   end)
 
   it('should assert if max_time_for_damper_to_be_open_before_cycling_in_minutes is not in range', function()
-    should_fail_with('max_time_for_damper_to_be_open_before_cycling_in_minutes=256 must be in [0, 255]', function()
+    should_fail_with('max_time_for_damper_to_be_open_before_cycling_in_minutes=65536 must be in [0, 65535]', function()
       damper(generate_config({
-        max_time_for_damper_to_be_open_before_cycling_in_minutes = 256
+        max_time_for_damper_to_be_open_before_cycling_in_minutes = 65536
+      }))
+    end)
+  end)
+
+  it('should assert if max_time_for_damper_to_be_closed_before_cycling_in_minutes is not in range', function()
+    should_fail_with('max_time_for_damper_to_be_closed_before_cycling_in_minutes=65536 must be in [0, 65535]', function()
+      damper(generate_config({
+        max_time_for_damper_to_be_closed_before_cycling_in_minutes = 65536
       }))
     end)
   end)
@@ -139,7 +148,8 @@ describe('Damper', function()
         ),
         u16(1850),
         u8(1),
-        u8(11),
+        u16(11),
+        u16(720),
         u8(3),
         u8(2),
         i16(500),
@@ -153,6 +163,7 @@ describe('Damper', function()
       steps_to_home = 1850,
       delay_between_step_events_in_hundreds_of_microseconds = 1,
       max_time_for_damper_to_be_open_before_cycling_in_minutes = 11,
+      max_time_for_damper_to_be_closed_before_cycling_in_minutes = 720,
       target_compartment_minimum_temperature_change_time_in_minutes = 3,
       target_compartment_damper_heater_on_time_in_minutes = 2,
       source_compartment_maximum_temperature_to_run_check_in_degfx100 = 500,
@@ -181,7 +192,8 @@ describe('Damper', function()
         ),
         u16(1850),
         u8(1),
-        u8(11),
+        u16(11),
+        u16(720),
         u8(3),
         u8(2),
         i16(500),
@@ -195,6 +207,7 @@ describe('Damper', function()
       steps_to_home = 1850,
       delay_between_step_events_in_hundreds_of_microseconds = 1,
       max_time_for_damper_to_be_open_before_cycling_in_minutes = 11,
+      max_time_for_damper_to_be_closed_before_cycling_in_minutes = 720,
       target_compartment_minimum_temperature_change_time_in_minutes = 3,
       target_compartment_damper_heater_on_time_in_minutes = 2,
       source_compartment_maximum_temperature_to_run_check_in_degfx100 = 500,
