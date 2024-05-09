@@ -2730,6 +2730,27 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F109 Ice Cabinet Fan Missing Fan Feedback When Fan Is Running",
+          "name": "Erd_IceCabinetFanMissingFanFeedbackWhenFanIsRunningFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F110 Ice Cabinet Fan Fan Feedback Present When Fan Is Off",
+          "name": "Erd_IceCabinetFanFeedbackPresentWhenFanIsOffFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F111 Ice Cabinet Fan Cannot Reach Target RPM",
+          "name": "Erd_IceCabinetFanCannotReachTargetRpmFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "F200 Freezer Defrost Heater On For Max Time",
           "name": "Erd_FreezerDefrostHeaterOnForMaxTimeFault",
           "read": true,

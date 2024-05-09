@@ -9,6 +9,7 @@
 #define ICECABINETPLUGIN_H
 
 #include "I_DataModel.h"
+#include "IceCabinetFanPlugin.h"
 #include "IceCabinetForcedCoolingFreezerEvaporatorFanVoter.h"
 #include "IceCabinetGammaCalculator.h"
 #include "IceCabinetGridPlugin.h"
