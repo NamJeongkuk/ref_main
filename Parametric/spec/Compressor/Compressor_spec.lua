@@ -135,6 +135,7 @@ describe('Compressor', function()
        u8(10),
        u8(20),
        u8(200),
+       u8(250),
        structure(
          u8(40),
          u8(41),
@@ -181,6 +182,7 @@ describe('Compressor', function()
         startup_speed_frequency_in_hz = 10,
         super_low_speed_frequency_in_hz = 20,
         super_high_speed_frequency_in_hz = 200,
+        delayed_convertible_compartment_speed_frequency_in_hz = 250,
         cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds({
           low_speed_fresh_food_warm_frequency_in_hz = 40,
           low_speed_fresh_food_mid_frequency_in_hz = 41,
@@ -232,6 +234,7 @@ describe('Compressor', function()
         u8(10),
         u8(20),
         u8(200),
+        u8(250),
         structure(
           u8(80),
           u8(81),
@@ -260,6 +263,7 @@ describe('Compressor', function()
         startup_speed_frequency_in_hz = 10,
         super_low_speed_frequency_in_hz = 20,
         super_high_speed_frequency_in_hz = 200,
+        delayed_convertible_compartment_speed_frequency_in_hz = 250,
         cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds({
           low_speed_frequency_in_hz = 80,
           medium_speed_frequency_in_hz = 81,
@@ -287,6 +291,7 @@ describe('Compressor', function()
         super_low_speed_frequency_in_hz = 50,
         super_high_speed_frequency_in_hz = 60,
         startup_speed_frequency_in_hz = 40,
+        delayed_convertible_compartment_speed_frequency_in_hz = 250,
         cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds({
           low_speed_frequency_in_hz = 40,
           medium_speed_frequency_in_hz = 50,
@@ -305,6 +310,7 @@ describe('Compressor', function()
         startup_speed_frequency_in_hz = 10,
         super_low_speed_frequency_in_hz = 20,
         super_high_speed_frequency_in_hz = 200,
+        delayed_convertible_compartment_speed_frequency_in_hz = 250,
         cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds({
           low_speed_fresh_food_warm_frequency_in_hz = 40,
           low_speed_fresh_food_mid_frequency_in_hz = 41,

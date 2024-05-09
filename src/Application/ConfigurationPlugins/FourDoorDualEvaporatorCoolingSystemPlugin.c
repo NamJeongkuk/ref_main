@@ -33,10 +33,41 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    .coolingSystemRequestVoteList.numberOfPairs = NUM_ELEMENTS(votingPairs),
 };
 
+static const CompressorVotedSpeed_t voteOff = { .speed = 0, .care = Vote_DontCare };
+static CompressorVotedSpeed_t voteOn = { .speed = 0, .care = Vote_DontCare };
+
+static const ErdWriterOnCompareMatchConfigurationEntry_t erdWriterOnCompareMatchConfigurationEntries[] = {
+   {
+      Erd_UseDelayedConvertibleCompartmentCoolingSpeedEnabledByGrid,
+      Erd_CompressorSpeed_DelayedCcCoolingSpeedGridVote,
+      &constFalse,
+      &voteOff,
+   },
+   {
+      Erd_UseDelayedConvertibleCompartmentCoolingSpeedEnabledByGrid,
+      Erd_CompressorSpeed_DelayedCcCoolingSpeedGridVote,
+      &constTrue,
+      &voteOn,
+   },
+};
+
+static const ErdWriterOnCompareMatchConfiguration_t erdWriterOnCompareMatchConfiguration = {
+   .entries = erdWriterOnCompareMatchConfigurationEntries,
+   .numberOfEntries = NUM_ELEMENTS(erdWriterOnCompareMatchConfigurationEntries)
+};
+
 void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolingSystemPlugin_t *instance, I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_FourDoorDualEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
    DataModelErdPointerAccess_Write(dataModel, Erd_FreshFoodAndFreezerCoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
+
+   voteOn.speed = PersonalityParametricData_Get(dataModel)->compressorData->compressorSpeeds.delayedConvertibleCompartmentSpeedFrequencyInHz;
+   voteOn.care = Vote_Care;
+
+   ErdWriterOnCompareMatch_Init(
+      &instance->_private.erdWriterOnCompareMatch,
+      DataModel_AsDataSource(dataModel),
+      &erdWriterOnCompareMatchConfiguration);
 
    FourDoorSetpointPlugin_Init(&instance->_private.fourDoorSetpointPlugin, dataModel);
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(

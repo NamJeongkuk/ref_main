@@ -15,6 +15,7 @@ return function(core)
           u8(config.startup_speed_frequency_in_hz),
           u8(config.super_low_speed_frequency_in_hz),
           u8(config.super_high_speed_frequency_in_hz),
+          u8(config.delayed_convertible_compartment_speed_frequency_in_hz),
           config.cooling_mode_independent_compressor_speeds
         )
       )
@@ -26,6 +27,7 @@ return function(core)
           u8(config.startup_speed_frequency_in_hz),
           u8(config.super_low_speed_frequency_in_hz),
           u8(config.super_high_speed_frequency_in_hz),
+          u8(config.delayed_convertible_compartment_speed_frequency_in_hz),
           config.cooling_mode_dependent_compressor_speeds
         )
       )
@@ -41,6 +43,7 @@ return function(core)
           startup_speed_frequency_in_hz = { constraint.u8 },
           super_low_speed_frequency_in_hz = { constraint.u8 },
           super_high_speed_frequency_in_hz = { constraint.u8 },
+          delayed_convertible_compartment_speed_frequency_in_hz = { constraint.u8 },
           cooling_mode_independent_compressor_speeds = { constraint.typed_string('cooling_mode_independent_compressor_speeds') }
         }
       )
@@ -52,6 +55,7 @@ return function(core)
           startup_speed_frequency_in_hz = { constraint.u8 },
           super_low_speed_frequency_in_hz = { constraint.u8 },
           super_high_speed_frequency_in_hz = { constraint.u8 },
+          delayed_convertible_compartment_speed_frequency_in_hz = { constraint.u8 },
           cooling_mode_dependent_compressor_speeds = { constraint.typed_string('cooling_mode_dependent_compressor_speeds') }
         }
       )

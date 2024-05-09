@@ -19,6 +19,7 @@ typedef struct
    CompressorSpeedFrequencyInHz_t startupSpeedFrequencyInHz;
    CompressorSpeedFrequencyInHz_t superLowSpeedFrequencyInHz;
    CompressorSpeedFrequencyInHz_t superHighSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t delayedConvertibleCompartmentSpeedFrequencyInHz;
 
    union
    {

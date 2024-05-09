@@ -18,6 +18,7 @@ describe('CompressorSpeeds', function()
       startup_speed_frequency_in_hz = 40,
       super_low_speed_frequency_in_hz = 10,
       super_high_speed_frequency_in_hz = 200,
+      delayed_convertible_compartment_speed_frequency_in_hz = 250,
     }, overrides or {})
   end
 
@@ -75,19 +76,29 @@ describe('CompressorSpeeds', function()
     end)
   end)
 
+  it('should assert if delayed_convertible_compartment_speed_frequency_in_hz is not in range', function()
+    should_fail_with('delayed_convertible_compartment_speed_frequency_in_hz=-100000 must be in [0, 255]', function()
+      compressor_speeds(generate_config({
+        cooling_mode_dependent = false,
+        cooling_mode_independent_compressor_speeds = TypedString('cooling_mode_independent_compressor_speeds'),
+        delayed_convertible_compartment_speed_frequency_in_hz = -100000
+      }))
+    end)
+  end)
+
   it('should assert if no independent speed table is given for cooling mode independent compressor speeds', function()
     should_fail_with('missing argument cooling_mode_independent_compressor_speeds', function()
-    compressor_speeds(generate_config({
-      cooling_mode_dependent = false,
-    }))
+      compressor_speeds(generate_config({
+        cooling_mode_dependent = false,
+      }))
     end)
   end)
 
   it('should assert if no dependent speed table is given for cooling mode dependent compressor speeds', function()
     should_fail_with('missing argument cooling_mode_dependent_compressor_speeds', function()
-    compressor_speeds(generate_config({
-      cooling_mode_dependent = true,
-    }))
+      compressor_speeds(generate_config({
+        cooling_mode_dependent = true,
+      }))
     end)
   end)
 
@@ -98,6 +109,7 @@ describe('CompressorSpeeds', function()
           u8(10),
           u8(20),
           u8(200),
+          u8(250),
           structure(
             u8(10),
             u8(20),
@@ -111,6 +123,7 @@ describe('CompressorSpeeds', function()
       startup_speed_frequency_in_hz = 10,
       super_low_speed_frequency_in_hz = 20,
       super_high_speed_frequency_in_hz = 200,
+      delayed_convertible_compartment_speed_frequency_in_hz = 250,
       cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds({
         low_speed_frequency_in_hz = 10,
         medium_speed_frequency_in_hz = 20,
@@ -129,6 +142,7 @@ describe('CompressorSpeeds', function()
           u8(10),
           u8(20),
           u8(200),
+          u8(250),
           structure(
             u8(40),
             u8(41),
@@ -160,6 +174,7 @@ describe('CompressorSpeeds', function()
       startup_speed_frequency_in_hz = 10,
       super_low_speed_frequency_in_hz = 20,
       super_high_speed_frequency_in_hz = 200,
+      delayed_convertible_compartment_speed_frequency_in_hz = 250,
       cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds({
         low_speed_fresh_food_warm_frequency_in_hz = 40,
         low_speed_fresh_food_mid_frequency_in_hz = 41,

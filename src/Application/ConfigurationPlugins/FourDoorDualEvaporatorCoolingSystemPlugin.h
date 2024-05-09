@@ -23,6 +23,7 @@
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FreshFoodNonHeatedCycleDefrostPlugin.h"
 #include "IceCabinetGridPlugin.h"
+#include "ErdWriterOnCompareMatch.h"
 
 typedef struct
 {
@@ -42,6 +43,7 @@ typedef struct
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
       FreshFoodNonHeatedCycleDefrostPlugin_t freshFoodNonHeatedCycleDefrostPlugin;
       IceCabinetGridPlugin_t iceCabinetGridPlugin;
+      ErdWriterOnCompareMatch_t erdWriterOnCompareMatch;
    } _private;
 } FourDoorDualEvaporatorCoolingSystemPlugin_t;
 
