@@ -1329,14 +1329,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Convertible Compartment Grid Block",
-               "name": "Erd_ConvertibleCompartmentGridBlockNumber",
-               "read": true,
-               "write": false,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "Delay Convertible Compartment Cooling - Grid Flag Status",
                "name": "Erd_DelayConvertibleCompartmentCooling",
                "read": true,
