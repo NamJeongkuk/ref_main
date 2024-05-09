@@ -196,7 +196,7 @@
         {
           "namespace": "mb",
           "displayName": "AUGER PWR",
-          "name": "Erd_Gpio_AUGER_PWR",
+          "name": "Erd_AugerMotorPower",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -204,7 +204,7 @@
         {
           "namespace": "mb",
           "displayName": "AUGER DIRECTION - Warning: do not change while Auger PWR is on!",
-          "name": "Erd_Gpio_AUGER_DIRECTION",
+          "name": "Erd_AugerMotorDirection",
           "read": true,
           "write": true,
           "interval": 1000000000
