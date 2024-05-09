@@ -12,7 +12,7 @@
 #include "DamperVotedPosition.h"
 #include "FeaturePanMode.h"
 #include "FanSpeed.h"
-#include "HeaterVotedState.h"
+#include "PercentageDutyCycleVote.h"
 #include "I_ConstArrayMap.h"
 
 typedef struct
@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
    DamperPosition_t damperPosition;
-   HeaterState_t heaterState;
+   PercentageDutyCycle_t heaterDutyCycle;
    FanSpeed_t fanSpeed;
 } FeaturePanVotes_t;
 

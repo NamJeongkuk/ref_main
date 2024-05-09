@@ -119,36 +119,36 @@ TEST_GROUP(Grid_FeaturePan_Test)
    void GridVotesShouldBe(
       DamperPosition_t expectedDamperPosition,
       FanSpeed_t expectedFanSpeed,
-      HeaterState_t expectedHeaterState)
+      PercentageDutyCycle_t expectedHeaterPercentageDutyCycle)
    {
       DamperVotedPosition_t actualCCDamperPosition;
       DamperVotedPosition_t actualDeliPanDamperPosition;
       FanVotedSpeed_t actualCCFanSpeed;
       FanVotedSpeed_t actualDeliPanFanSpeed;
-      HeaterVotedState_t actualCCHeaterState;
-      HeaterVotedState_t actualDeliPanHeaterState;
+      PercentageDutyCycleVote_t actualCcHeaterDutyCycle;
+      PercentageDutyCycleVote_t actualDeliPanHeaterDutyCycle;
 
       DataModel_Read(dataModel, Erd_ConvertibleCompartmentDamperPosition_GridVote, &actualCCDamperPosition);
       DataModel_Read(dataModel, Erd_ConvertibleCompartmentEvapFanSpeed_GridVote, &actualCCFanSpeed);
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentHeater_GridVote, &actualCCHeaterState);
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentHeater_GridVote, &actualCcHeaterDutyCycle);
       DataModel_Read(dataModel, Erd_DeliDamperPosition_GridVote, &actualDeliPanDamperPosition);
       DataModel_Read(dataModel, Erd_DeliFanSpeed_GridVote, &actualDeliPanFanSpeed);
-      DataModel_Read(dataModel, Erd_DeliPanHeater_GridVote, &actualDeliPanHeaterState);
+      DataModel_Read(dataModel, Erd_DeliPanHeater_GridVote, &actualDeliPanHeaterDutyCycle);
 
       CHECK_EQUAL(actualCCDamperPosition.position, actualDeliPanDamperPosition.position);
       CHECK_EQUAL(actualCCDamperPosition.care, actualDeliPanDamperPosition.care);
       CHECK_EQUAL(actualCCFanSpeed.speed, actualDeliPanFanSpeed.speed);
       CHECK_EQUAL(actualCCFanSpeed.care, actualDeliPanFanSpeed.care);
-      CHECK_EQUAL(actualCCHeaterState.state, actualDeliPanHeaterState.state);
-      CHECK_EQUAL(actualCCHeaterState.care, actualDeliPanHeaterState.care);
+      CHECK_EQUAL(actualCcHeaterDutyCycle.percentageDutyCycle, actualDeliPanHeaterDutyCycle.percentageDutyCycle);
+      CHECK_EQUAL(actualCcHeaterDutyCycle.care, actualDeliPanHeaterDutyCycle.care);
 
       CHECK_EQUAL(expectedDamperPosition, actualCCDamperPosition.position);
       CHECK_EQUAL(expectedFanSpeed, actualCCFanSpeed.speed);
-      CHECK_EQUAL(expectedHeaterState, actualCCHeaterState.state);
+      CHECK_EQUAL(expectedHeaterPercentageDutyCycle, actualCcHeaterDutyCycle.percentageDutyCycle);
 
       CHECK_TRUE(actualCCDamperPosition.care);
       CHECK_TRUE(actualCCFanSpeed.care);
-      CHECK_TRUE(actualCCHeaterState.care);
+      CHECK_TRUE(actualCcHeaterDutyCycle.care);
    }
 };
 
@@ -160,7 +160,7 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock0)
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
 
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock1)
@@ -170,26 +170,26 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock1)
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_Off, true);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_Off, false);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_ConvertibleCompartment, false);
    And GridBlockBecomes(1);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock2)
@@ -199,25 +199,25 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock2)
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_ConvertibleCompartment, false);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_Freezer, true);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 
    When CoolingConditionParametersAre(false, CoolingMode_Freezer, false);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock3)
@@ -229,7 +229,7 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock3)
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
 
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldMaintainPreviousCoolingModeForBlock3WhenCoolingModeIsNotActiveHeating)
@@ -239,13 +239,13 @@ TEST(Grid_FeaturePan_Test, ShouldMaintainPreviousCoolingModeForBlock3WhenCooling
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveCooling);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Open, FanSpeed_On, PercentageDutyCycle_Min);
 
    When FeaturePanCoolingModeIs(FeaturePanCoolingMode_ForcedHeating);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ForcedHeating);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, HeaterState_On);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, PercentageDutyCycle_Max);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock4)
@@ -256,7 +256,7 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock4)
 
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
 
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock5)
@@ -266,7 +266,7 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock5)
 
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_Neutral);
 
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, HeaterState_Off);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_Off, PercentageDutyCycle_Min);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldMaintainPreviousCoolingModeForBlock5WhenCoolingModeIsNotActiveCooling)
@@ -276,14 +276,14 @@ TEST(Grid_FeaturePan_Test, ShouldMaintainPreviousCoolingModeForBlock5WhenCooling
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveHeating);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, HeaterState_On);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, PercentageDutyCycle_Max);
 
    When FeaturePanCoolingModeIs(FeaturePanCoolingMode_ForcedHeating);
    When GridBlockBecomes(5);
    And The GridIsRun();
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ForcedHeating);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Inactive);
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, HeaterState_On);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, PercentageDutyCycle_Max);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock6)
@@ -293,7 +293,7 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock6)
 
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveHeating);
 
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, HeaterState_On);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, PercentageDutyCycle_Max);
 }
 
 TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock7)
@@ -304,5 +304,5 @@ TEST(Grid_FeaturePan_Test, ShouldOutputCorrectValuesForBlock7)
    FeaturePanCoolingModeShouldBe(FeaturePanCoolingMode_ActiveHeating);
    FeaturePanForcedHeatingModeShouldBe(FeaturePanForcedHeatingMode_Active);
 
-   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, HeaterState_On);
+   GridVotesShouldBe(DamperPosition_Closed, FanSpeed_On, PercentageDutyCycle_Max);
 }

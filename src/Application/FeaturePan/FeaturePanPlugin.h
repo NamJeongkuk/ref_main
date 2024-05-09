@@ -8,6 +8,7 @@
 #ifndef FEATUREPANPLUGIN_H
 #define FEATUREPANPLUGIN_H
 
+#include "ConvertibleCompartmentHeaterVotingFrameworkPlugin.h"
 #include "FeaturePanAsConvertibleCompartmentDualEvapFanVoting.h"
 #include "FeaturePanAsDeliPanEvapFanVoting.h"
 #include "FeaturePanConvertibleFreezerEvapFanDependencyVoting.h"
@@ -26,6 +27,7 @@ typedef struct
 {
    struct
    {
+      ConvertibleCompartmentHeaterVotingFrameworkPlugin_t convertibleCompartmentHeaterVotingFrameworkPlugin;
       FeaturePanAsConvertibleCompartmentDualEvapFanVoting_t featurePanAsConvertibleCompartmentDualEvapFanVoting;
       FeaturePanAsDeliPanEvapFanVoting_t featurePanAsDeliPanEvapFanVoting;
       FeaturePanConvertibleFreezerEvapFanDependencyVoting_t featurePanConvertibleFreezerEvapFanDependencyVoting;

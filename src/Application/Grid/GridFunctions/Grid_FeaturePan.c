@@ -62,17 +62,17 @@ static void Vote(I_DataModel_t *dataModel, FeaturePanVotes_t votes)
       .speed = votes.fanSpeed,
       .care = Vote_Care
    };
-   HeaterVotedState_t heaterVotedState = {
-      .state = votes.heaterState,
+   PercentageDutyCycleVote_t heaterVotedDutyCycle = {
+      .percentageDutyCycle = votes.heaterDutyCycle,
       .care = Vote_Care
    };
 
    DataModel_Write(dataModel, Erd_ConvertibleCompartmentDamperPosition_GridVote, &damperVotedPosition);
    DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvapFanSpeed_GridVote, &fanVotedSpeed);
-   DataModel_Write(dataModel, Erd_ConvertibleCompartmentHeater_GridVote, &heaterVotedState);
+   DataModel_Write(dataModel, Erd_ConvertibleCompartmentHeater_GridVote, &heaterVotedDutyCycle);
    DataModel_Write(dataModel, Erd_DeliDamperPosition_GridVote, &damperVotedPosition);
    DataModel_Write(dataModel, Erd_DeliFanSpeed_GridVote, &fanVotedSpeed);
-   DataModel_Write(dataModel, Erd_DeliPanHeater_GridVote, &heaterVotedState);
+   DataModel_Write(dataModel, Erd_DeliPanHeater_GridVote, &heaterVotedDutyCycle);
 }
 
 static void SearchFeaturePanTableAndPublishGridVotes(I_DataModel_t *dataModel)

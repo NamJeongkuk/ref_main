@@ -170,6 +170,9 @@ void FeaturePanPlugin_Init(FeaturePanPlugin_t *instance, I_DataModel_t *dataMode
 
    if(BITMAP_STATE(platformData->compartmentBitmap.bitmap, Compartment_Convertible))
    {
+      ConvertibleCompartmentHeaterVotingFrameworkPlugin_Init(
+         &instance->_private.convertibleCompartmentHeaterVotingFrameworkPlugin, dataModel);
+
       FeaturePanWarmupSlopeVoting_Init(
          &instance->_private.featurePanWarmupSlopeVoting,
          dataModel,

@@ -9,11 +9,11 @@
 
 // clang-format off
 static const FeaturePanStatesTable_t table[] =
-{   //Feature Pan Mode                      Damper Position        Heater State     Fan Speed
-   { FeaturePanCoolingMode_Neutral,       { DamperPosition_Closed, HeaterState_Off, FanSpeed_Off }},
-   { FeaturePanCoolingMode_ActiveCooling, { DamperPosition_Open,   HeaterState_Off, FanSpeed_On }},
-   { FeaturePanCoolingMode_ActiveHeating, { DamperPosition_Closed, HeaterState_On,  FanSpeed_On }},
-   { FeaturePanCoolingMode_ForcedHeating, { DamperPosition_Closed, HeaterState_On,  FanSpeed_On }},
+{   //Feature Pan Mode                      Damper Position        Heater Duty Cycle        Fan Speed
+   { FeaturePanCoolingMode_Neutral,       { DamperPosition_Closed, PercentageDutyCycle_Min, FanSpeed_Off }},
+   { FeaturePanCoolingMode_ActiveCooling, { DamperPosition_Open,   PercentageDutyCycle_Min, FanSpeed_On }},
+   { FeaturePanCoolingMode_ActiveHeating, { DamperPosition_Closed, PercentageDutyCycle_Max, FanSpeed_On }},
+   { FeaturePanCoolingMode_ForcedHeating, { DamperPosition_Closed, PercentageDutyCycle_Max, FanSpeed_On }},
 };
 // clang-format on
 

@@ -17,7 +17,6 @@
 #include "DefrostHeaterOnTimeCounter.h"
 #include "FreshFoodDefrostHeaterVotingFrameworkPlugin.h"
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
-#include "ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin.h"
 #include "DefrostTestRequestHandler.h"
 #include "ReadyToDefrost.h"
 #include "SabbathReadyToDefrost.h"
@@ -35,7 +34,6 @@ typedef struct
       DefrostHeaterOnTimeCounter_t freezerDefrostHeaterOnTimeCounter;
       FreshFoodDefrostHeaterVotingFrameworkPlugin_t freshFoodDefrostHeaterVotingFramework;
       FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
-      ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin_t convertibleCompartmentDefrostHeaterVotingFramework;
       DefrostTestRequestHandler_t defrostTestRequestHandler;
       SabbathReadyToDefrost_t sabbathReadyToDefrost;
    } _private;
