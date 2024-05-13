@@ -41,14 +41,14 @@ static CoolingMode_t GetCoolingMode(I_DataModel_t *dataModel)
 static FanSpeed_t GetFreshFoodEvapFanSpeed(I_DataModel_t *dataModel)
 {
    FanVotedSpeed_t currentFanVotedSpeed;
-   DataModel_Read(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote, &currentFanVotedSpeed);
+   DataModel_Read(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, &currentFanVotedSpeed);
    return currentFanVotedSpeed.speed;
 }
 
 static FanSpeed_t GetFreezerEvapFanSpeed(I_DataModel_t *dataModel)
 {
    FanVotedSpeed_t currentFanVotedSpeed;
-   DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote, &currentFanVotedSpeed);
+   DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &currentFanVotedSpeed);
    return currentFanVotedSpeed.speed;
 }
 

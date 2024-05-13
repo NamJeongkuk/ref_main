@@ -275,7 +275,7 @@ TEST_GROUP(Grid_DualEvap_Test)
          .care = true
       };
 
-      DataModel_Write(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote, &actual);
+      DataModel_Write(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, &actual);
    }
 
    void FreezerEvapFanSpeedIs(FanSpeed_t speed)
@@ -285,7 +285,7 @@ TEST_GROUP(Grid_DualEvap_Test)
          .care = true
       };
 
-      DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote, &actual);
+      DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &actual);
    }
 
    void CoolConvertibleCompartmentBeforeOffIs(bool state)
