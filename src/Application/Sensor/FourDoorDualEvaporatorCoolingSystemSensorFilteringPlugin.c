@@ -141,22 +141,6 @@ static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetThermis
    NUM_ELEMENTS(convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t iceCabinetThermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_IceCabinetThermistor_IsValidOverrideRequest
-};
-
-static const Erd_t iceCabinetThermistorValidValueErdList[] = {
-   Erd_IceCabinetThermistorIsValid,
-   Erd_IceCabinetThermistor_IsValidOverrideValue
-};
-
-static const OverrideArbiterConfiguration_t iceCabinetThermistorValidArbiterConfiguration = {
-   iceCabinetThermistorValidOverrideArbiterRequestErdList,
-   iceCabinetThermistorValidValueErdList,
-   Erd_IceCabinetThermistor_IsValidResolved,
-   NUM_ELEMENTS(iceCabinetThermistorValidOverrideArbiterRequestErdList)
-};
-
 static const Erd_t freshFoodEvaporatorFilteredTemperatureOverrideRequestErdList[] = {
    Erd_FreshFoodEvap_FilteredTemperatureOverrideRequest
 };
@@ -189,22 +173,6 @@ static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetFiltere
    convertibleCompartmentCabinetFilteredTemperatureValueErdList,
    Erd_FeaturePan_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(convertibleCompartmentCabinetFilteredTemperatureOverrideRequestErdList)
-};
-
-static const Erd_t iceCabinetFilteredTemperatureOverrideRequestErdList[] = {
-   Erd_IceCabinet_FilteredTemperatureOverrideRequest
-};
-
-static const Erd_t iceCabinetFilteredTemperatureValueErdList[] = {
-   Erd_IceCabinet_FilteredTemperatureInDegFx100,
-   Erd_IceCabinet_FilteredTemperatureOverrideValueInDegFx100
-};
-
-static const OverrideArbiterConfiguration_t iceCabinetFilteredTemperatureArbiterConfiguration = {
-   iceCabinetFilteredTemperatureOverrideRequestErdList,
-   iceCabinetFilteredTemperatureValueErdList,
-   Erd_IceCabinet_FilteredTemperatureResolvedInDegFx100,
-   NUM_ELEMENTS(iceCabinetFilteredTemperatureOverrideRequestErdList)
 };
 
 static const SensorFilteringConfig_t freezerCabinetThermistorConfig = {
@@ -267,16 +235,6 @@ static const SensorFilteringConfig_t freshFoodEvapThermistorConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
-static const SensorFilteringConfig_t iceCabinetThermistorConfig = {
-   .sensorAdcCountErd = Erd_IceCabinetThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_IceCabinet_UnfilteredTemperatureInDegFx100,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_IceCabinet_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_IceCabinetThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceCabinetThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_IceCabinetThermistorDiscovered,
-   .timerModuleErd = Erd_TimerModule
-};
-
 static void InitializeFilteredTemperatureOverrideArbiters(
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -305,11 +263,6 @@ static void InitializeFilteredTemperatureOverrideArbiters(
       &instance->convertibleCompartmentCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &convertibleCompartmentCabinetFilteredTemperatureArbiterConfiguration);
-
-   OverrideArbiter_Init(
-      &instance->iceCabinetFilteredTemperatureArbiter,
-      DataModel_AsDataSource(dataModel),
-      &iceCabinetFilteredTemperatureArbiterConfiguration);
 }
 
 static void InitializeThermistorIsValidArbiters(
@@ -340,11 +293,6 @@ static void InitializeThermistorIsValidArbiters(
       &instance->convertibleCompartmentCabinetThermistorValidArbiter,
       DataModel_AsDataSource(dataModel),
       &convertibleCompartmentCabinetThermistorValidArbiterConfiguration);
-
-   OverrideArbiter_Init(
-      &instance->iceCabinetThermistorValidArbiter,
-      DataModel_AsDataSource(dataModel),
-      &iceCabinetThermistorValidArbiterConfiguration);
 }
 
 static void InitializeSensorFiltering(
@@ -393,13 +341,6 @@ static void InitializeSensorFiltering(
       dataModel,
       &convertibleCompartmentCabinetAsFreshFoodThermistorConfig,
       sensorData->convertibleCompartmentAsFreshFood,
-      sensorData->periodicUpdateRateInMs);
-
-   SensorFiltering_Init(
-      &instance->iceCabinetThermistor,
-      dataModel,
-      &iceCabinetThermistorConfig,
-      sensorData->iceCabinetThermistor,
       sensorData->periodicUpdateRateInMs);
 }
 

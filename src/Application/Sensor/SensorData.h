@@ -37,7 +37,6 @@ typedef struct
 {
    SensorDataSensorType_t *freezerCabinetThermistor;
    SensorDataSensorType_t *freshFoodCabinetThermistor;
-   SensorDataSensorType_t *iceCabinetThermistor;
    SensorDataSensorType_t *convertibleCompartmentAsFreezer;
    SensorDataSensorType_t *convertibleCompartmentAsFreshFood;
    SensorDataSensorType_t *freezerEvapThermistor;

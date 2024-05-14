@@ -13,7 +13,6 @@ describe('Sensors', function()
     return require 'lua-common'.table.merge({
       freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
       fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-      ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
       convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
       convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
       freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -46,19 +45,10 @@ describe('Sensors', function()
       }))
     end)
 
-    should_fail_with('ice_cabinet_thermistor must be a typed string with type sensor_type, but is a number', function()
-      sensors(generate_config({
-        freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
-        fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = -1
-      }))
-    end)
-
     should_fail_with('convertible_compartment_as_freezer must be a typed string with type sensor_type, but is a number', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = -1
       }))
     end)
@@ -67,7 +57,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = -1
       }))
@@ -77,7 +66,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = -1
@@ -88,7 +76,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -100,7 +87,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -113,7 +99,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -126,7 +111,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -140,7 +124,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -155,7 +138,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -170,7 +152,6 @@ describe('Sensors', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type', 'fresh_food_cabinet_thermistor'),
-        ice_cabinet_thermistor = TypedString('sensor_type', 'ice_cabinet_thermistor'),
         convertible_compartment_as_freezer = TypedString('sensor_type', 'convertible_compartment_as_freezer'),
         convertible_compartment_as_fresh_food = TypedString('sensor_type', 'convertible_compartment_as_fresh_food'),
         freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
@@ -195,7 +176,6 @@ describe('Sensors', function()
         structure(
           pointer(freezer_cabinet_thermistor),
           pointer(fresh_food_cabinet_thermistor),
-          pointer(ice_cabinet_thermistor),
           pointer(convertible_compartment_as_freezer),
           pointer(convertible_compartment_as_fresh_food),
           pointer(freezer_evap_thermistor),
