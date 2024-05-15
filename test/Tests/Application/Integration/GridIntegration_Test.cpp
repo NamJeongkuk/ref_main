@@ -1568,19 +1568,18 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
    }
 }
 
-TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlock23)
 {
-   for(uint8_t gridBlockIndex = 23; gridBlockIndex <= 24; gridBlockIndex++)
    {
       GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
 
-      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(gridBlockIndex);
+      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(23);
       WhenTheCoolingModeIs(CoolingMode_FreshFood);
       WhenTheCoolingSpeedIs(CoolingSpeed_Off);
       WhenTheSingleEvaporatorPulldownActiveIs(SET);
 
       After(gridData->gridPeriodicRunRateInMSec);
-      TheGridBlockNumberShouldBe(gridBlockIndex);
+      TheGridBlockNumberShouldBe(23);
       TheCoolingModeShouldBe(CoolingMode_Freezer);
       TheCoolingSpeedShouldBe(CoolingSpeed_Low);
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
@@ -1603,17 +1602,83 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
    }
 
-   for(uint8_t gridBlockIndex = 23; gridBlockIndex <= 24; gridBlockIndex++)
    {
       GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
 
-      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(gridBlockIndex);
+      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(23);
       WhenTheCoolingModeIs(CoolingMode_FreshFood);
       WhenTheCoolingSpeedIs(CoolingSpeed_Mid);
       WhenTheSingleEvaporatorPulldownActiveIs(SET);
 
       After(gridData->gridPeriodicRunRateInMSec);
-      TheGridBlockNumberShouldBe(gridBlockIndex);
+      TheGridBlockNumberShouldBe(23);
+      TheCoolingModeShouldBe(CoolingMode_FreshFood);
+      TheCoolingSpeedShouldBe(CoolingSpeed_Mid);
+      TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+      TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+
+      CompressorShouldBeOnAndFanControlsAt(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood,
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
+      TheCalculatedCondenserFanControlShouldBe(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+      TheCalculatedFreezerEvapFanControlShouldBe(
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+
+      After(1);
+      TheCalculatedCondenserFanControlShouldBe(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
+      TheCalculatedFreezerEvapFanControlShouldBe(
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
+   }
+}
+
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlock24)
+{
+   {
+      GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
+
+      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(24);
+      WhenTheCoolingModeIs(CoolingMode_Freezer);
+      WhenTheCoolingSpeedIs(CoolingSpeed_Off);
+      WhenTheSingleEvaporatorPulldownActiveIs(SET);
+
+      After(gridData->gridPeriodicRunRateInMSec);
+      TheGridBlockNumberShouldBe(24);
+      TheCoolingModeShouldBe(CoolingMode_Freezer);
+      TheCoolingSpeedShouldBe(CoolingSpeed_Low);
+      TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+      TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+
+      CompressorShouldBeOnAndFanControlsAt(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+
+      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
+      TheCalculatedCondenserFanControlShouldBe(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+      TheCalculatedFreezerEvapFanControlShouldBe(
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+
+      After(1);
+      TheCalculatedCondenserFanControlShouldBe(
+         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+      TheCalculatedFreezerEvapFanControlShouldBe(
+         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+   }
+
+   {
+      GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
+
+      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(24);
+      WhenTheCoolingModeIs(CoolingMode_FreshFood);
+      WhenTheCoolingSpeedIs(CoolingSpeed_Mid);
+      WhenTheSingleEvaporatorPulldownActiveIs(SET);
+
+      After(gridData->gridPeriodicRunRateInMSec);
+      TheGridBlockNumberShouldBe(24);
       TheCoolingModeShouldBe(CoolingMode_FreshFood);
       TheCoolingSpeedShouldBe(CoolingSpeed_Mid);
       TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
@@ -1838,7 +1903,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks30)
    TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
 }
 
-TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks31)
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlock31)
 {
    {
       GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
@@ -1846,6 +1911,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks31)
       WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(31);
       WhenTheCoolingModeIs(CoolingMode_Off);
       WhenTheCoolingSpeedIs(CoolingSpeed_Off);
+      WhenTheGridAreaIs(GridArea_1);
       WhenTheSingleEvaporatorPulldownActiveIs(SET);
 
       After(gridData->gridPeriodicRunRateInMSec);
@@ -1865,6 +1931,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks31)
       WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(31);
       WhenTheCoolingModeIs(CoolingMode_Off);
       WhenTheCoolingSpeedIs(CoolingSpeed_Low);
+      WhenTheGridAreaIs(GridArea_2);
       WhenTheSingleEvaporatorPulldownActiveIs(SET);
 
       After(gridData->gridPeriodicRunRateInMSec);
