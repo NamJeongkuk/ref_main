@@ -27,8 +27,9 @@
 */
 
 #define DOORBOARD_ERD_MAPPINGS(ENTRY) \
-   ENTRY(DoorBoardErd_SecondaryDoorBoardSignOfLife,                       PublicErd_SignOfLifeFromDoorboardToMainboard,       Published,        None               ) \
-   ENTRY(DoorBoardErd_PrimaryDoorBoardSignOfLife,                         PublicErd_SignOfLifeFromMainboardToDoorboard,       None,             OnChangeOnly       )
+   ENTRY(DoorBoardErd_MainboardSignOfLife,                                PublicErd_SignOfLifeFromDoorBoardToMainboard,       Published,        None               ) \
+   \
+   ENTRY(DoorBoardErd_MainboardSignOfLife,                                PublicErd_SignOfLifeFromMainboardToDoorBoard,       None,             OnChangeOnly       )
 
 // clang-format on
 

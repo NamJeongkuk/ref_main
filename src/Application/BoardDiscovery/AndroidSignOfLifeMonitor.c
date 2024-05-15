@@ -11,7 +11,7 @@
 #include "utils.h"
 
 static const ErdWatchdogWatchedErd_t androidSignOfLifeToMonitor[] = {
-   { 
+   {
       .watchedErd = Erd_PrimaryUiSignOfLife,
       .faultErd = Erd_AndroidSignOfLifeDebugFault,
       .timeoutSeconds = 5,
@@ -40,8 +40,8 @@ static void AndroidBoardInSystemChanged(void *context, const void *_args)
    if(*androidIsInSystem)
    {
       DataModel_Unsubscribe(
-         instance->_private.dataModel, 
-         Erd_AndroidSbcBoardInSystem, 
+         instance->_private.dataModel,
+         Erd_AndroidSbcBoardInSystem,
          &instance->_private.androidInSystemChanged);
       InitializeAndroidWatchdog(instance);
    }
@@ -51,10 +51,10 @@ static bool AndroidSbcBoardIsInSystem(AndroidSignOfLifeMonitor_t *instance)
 {
    bool androidIsInSystem;
    DataModel_Read(
-      instance->_private.dataModel, 
-      Erd_AndroidSbcBoardInSystem, 
+      instance->_private.dataModel,
+      Erd_AndroidSbcBoardInSystem,
       &androidIsInSystem);
-      
+
    return androidIsInSystem;
 }
 
@@ -71,12 +71,12 @@ void AndroidSignOfLifeMonitor_Init(
    else
    {
       EventSubscription_Init(
-         &instance->_private.androidInSystemChanged, 
-         instance, 
+         &instance->_private.androidInSystemChanged,
+         instance,
          AndroidBoardInSystemChanged);
       DataModel_Subscribe(
-         dataModel, 
-         Erd_AndroidSbcBoardInSystem, 
+         dataModel,
+         Erd_AndroidSbcBoardInSystem,
          &instance->_private.androidInSystemChanged);
    }
 }

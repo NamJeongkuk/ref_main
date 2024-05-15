@@ -12,8 +12,7 @@
 
 enum
 {
-   DoorBoardErd_PrimaryDoorBoardSignOfLife = 0xF220,
-   DoorBoardErd_SecondaryDoorBoardSignOfLife = 0xF221,
+   DoorBoardErd_MainboardSignOfLife = 0x0900,
 };
 
 #endif

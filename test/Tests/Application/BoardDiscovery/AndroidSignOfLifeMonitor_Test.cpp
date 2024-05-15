@@ -88,7 +88,7 @@ TEST_GROUP(AndroidSignOfLifeMonitor)
 
    void WhenSignOfLifeIncrementsEverySecondForTwiceTheFaultSettingTime()
    {
-      for(uint8_t i = 1; i <= ((TimeToSetFaultForConsecutiveMissesInMsec / 1000 ) * 2); i++)
+      for(uint8_t i = 1; i <= ((TimeToSetFaultForConsecutiveMissesInMsec / 1000) * 2); i++)
       {
          After(SignOfLifeTimeBetweenIncrementsInMsec);
          TheSignOfLifeIncrements();

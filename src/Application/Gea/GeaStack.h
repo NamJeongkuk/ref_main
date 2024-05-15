@@ -21,6 +21,7 @@
 #include "ErdClient_ApiRevision2.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
 #include "ErdGea2SubscriptionApiRevision2.h"
+#include "ErdGea2ApiRevision2SubscriptionClient.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ErdStreamReceiver.h"
 #include "ErdXMacroUtils.h"
@@ -68,6 +69,7 @@ typedef struct
       Gea2ConfiguratorPacketEndpointNodeResources_t applicationPacketEndpointResources;
 
       ErdClient_ApiRevision2_t erdClient;
+      ErdGea2ApiRevision2SubscriptionClient_t doorBoardErdSubscriptionClient;
       uint8_t queueBuffer[QueueBufferElements];
 
       struct

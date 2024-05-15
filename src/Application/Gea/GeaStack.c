@@ -6,6 +6,7 @@
  */
 
 #include "GeaStack.h"
+#include "DoorBoardGea3Mappings.h"
 #include "DataModelErdPointerAccess.h"
 #include "Gea2Message.h"
 #include "Gea2Addresses.h"
@@ -25,7 +26,11 @@ enum
    RestrictedFullRangeErdStart = 0xF000,
    RestrictedFullRangeErdEnd = 0xFFFF,
    RetryCount = 3,
-   RequestTimeoutInMsec = 1 * MSEC_PER_SEC
+   RequestTimeoutInMsec = 1 * MSEC_PER_SEC,
+   DiagnosticsUpdatePeriodMsec = 1000,
+   ErdClientRetryCount = 10,
+   SubscriptionRetentionPeriodInMsec = 1 * MSEC_PER_MIN,
+   SignOfLifeTimeoutInMsec = 10 * MSEC_PER_SEC,
 };
 
 // clang-format off
@@ -48,6 +53,81 @@ static const ConstArrayMap_BinarySearchConfiguration_t publicAndServiceErdMapCon
    false
 };
 
+#define INCLUDE_ERD_MAPPING_None(...)
+#define INCLUDE_ERD_MAPPING_Published(...) __VA_ARGS__
+#define INCLUDE_ERD_MAPPING_PeriodicAndOnChange(...) __VA_ARGS__
+#define INCLUDE_ERD_MAPPING_OnChangeOnly(...) __VA_ARGS__
+#define WRITE_ONLY_ON_CHANGE_OnChangeOnly true
+#define WRITE_ONLY_ON_CHANGE_PeriodicAndOnChange false
+
+#define EXPAND_AS_PUBLISHED_ERD_MAPPING(MainboardErd, PublicErd, Publish, Write) \
+   CONCAT(INCLUDE_ERD_MAPPING_, Publish)                                         \
+   ({                                                                            \
+       .publishedErd = MainboardErd,                                             \
+       .internalErd = PublicErd,                                                 \
+    }, )
+#define EXPAND_AS_WRITTEN_ERD_MAPPING(MainboardErd, PublicErd, Publish, Write) \
+   CONCAT(INCLUDE_ERD_MAPPING_, Write)                                         \
+   ({                                                                          \
+       .writeOnlyOnChange = WRITE_ONLY_ON_CHANGE_##Write,                      \
+       .internalErd = PublicErd,                                               \
+       .peripheralErd = MainboardErd,                                          \
+    }, )
+
+static const ErdGea2ApiRevision2SubscriptionClientPublishedErdMapping_t publishedErdMappings[] = {
+   DOORBOARD_ERD_MAPPINGS(EXPAND_AS_PUBLISHED_ERD_MAPPING)
+};
+
+static const ErdGea2ApiRevision2SubscriptionClientWrittenErdMapping_t writtenErdMappings[] = {
+   DOORBOARD_ERD_MAPPINGS(EXPAND_AS_WRITTEN_ERD_MAPPING)
+};
+
+static const ErdGea2ApiRevision2SubscriptionClientConfiguration_t subscriptionClientConfig = {
+   .hostGea2Address = Gea2Address_DoorBoard,
+   .writeWrittenErdsPeriodically = true,
+   .writeWrittenErdsOnChange = true,
+   .writePeriod = SubscriptionRetentionPeriodInMsec,
+   .subscriptionRetentionPeriod = SubscriptionRetentionPeriodInMsec,
+   .signOfLifeTimeout = SignOfLifeTimeoutInMsec,
+   .enabledErd = PublicErd_DoorBoardEnable,
+   .initialSyncComplete = PublicErd_InitialSyncWithDoorBoardComplete,
+   .outgoingSignOfLifeErd = PublicErd_SignOfLifeFromMainboardToDoorBoard,
+   .incomingSignOfLifeErd = PublicErd_SignOfLifeFromDoorBoardToMainboard,
+   .signOfLifeFromHostMissingErrorErd = PublicErd_DoorBoardSignOfLifeMissingError,
+   .subscriptionFailedErrorErd = PublicErd_DoorBoardSubscriptionFailedError,
+   .unexpectedPublicationErrorErd = PublicErd_UnexpectedPublicationFromDoorBoardError,
+   .unexpectedPublicationSizeErrorErd = PublicErd_UnexpectedPublicationSizeFromDoorBoardError,
+   .unableToWriteToHostErrorErd = PublicErd_UnableToWriteToDoorBoardError,
+   .unableToQueueErdClientRequestErrorErd = PublicErd_UnableToQueueErdClientRequestError,
+   .publishedErdMappings = publishedErdMappings,
+   .publishedErdMappingCount = NUM_ELEMENTS(publishedErdMappings),
+   .writtenErdMappings = writtenErdMappings,
+   .writtenErdMappingCount = NUM_ELEMENTS(writtenErdMappings),
+};
+
+static const ErdClient_ApiRevision2Configuration_t erdClientConfiguration = {
+   .requestTimeout = RequestTimeoutInMsec,
+   .requestRetries = ErdClientRetryCount,
+};
+
+static void SubscribeToDoorboard(
+   GeaStack_t *instance,
+   TimerModule_t *timerModule,
+   I_DataSource_t *externalDataSource)
+{
+   ErdGea2ApiRevision2SubscriptionClient_Init(
+      &instance->_private.doorBoardErdSubscriptionClient,
+      timerModule,
+      externalDataSource,
+      &instance->_private.erdClient.interface,
+      &subscriptionClientConfig);
+
+   DataSource_Write(
+      externalDataSource,
+      PublicErd_DoorBoardEnable,
+      set);
+}
+
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] = {
    Gea2Address_EmbeddedWiFi,
    Gea2Address_ConnectPlusWiFi
@@ -58,11 +138,6 @@ static const Validator_RestrictedRangeErdConfiguration_t restrictedRangeConfigur
    NUM_ELEMENTS(rangeRestrictedValidatorRestrictedAddressTable),
    RestrictedFullRangeErdStart,
    RestrictedFullRangeErdEnd
-};
-
-static const ErdClient_ApiRevision2Configuration_t erdClientConfiguration = {
-   .requestTimeout = RequestTimeoutInMsec,
-   .requestRetries = RetryCount,
 };
 
 static void InitializeErdSecurityComponents(
@@ -327,6 +402,11 @@ void GeaStack_Init(
       instance,
       externalDataSource,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
+
+   SubscribeToDoorboard(
+      instance,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
+      externalDataSource);
 
    Gea2CommonCommands_Init(
       &instance->_private.commonCommands,
