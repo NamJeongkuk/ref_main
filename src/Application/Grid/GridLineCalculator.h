@@ -11,7 +11,7 @@
 #include "ThermalOffsetData.h"
 #include "CalculatedGridLines.h"
 #include "EventSubscription.h"
-#include "GridData.h"
+#include "DeltaGridLines.h"
 #include "I_DataModel.h"
 #include "TemperatureDegFx100.h"
 
@@ -35,7 +35,7 @@ typedef struct
    {
       EventSubscription_t dataModelSubscription;
       const GridLineCalculatorConfiguration_t *config;
-      const GridData_t *gridData;
+      const DeltaGridLines_t *deltaGridLines;
       I_DataModel_t *dataModel;
       union
       {
@@ -48,7 +48,7 @@ typedef struct
 void GridLineCalculator_Init(
    GridLineCalculator_t *instance,
    const GridLineCalculatorConfiguration_t *config,
-   const GridData_t *gridData,
+   const DeltaGridLines_t *deltaGridLines,
    I_DataModel_t *dataModel);
 
 #endif

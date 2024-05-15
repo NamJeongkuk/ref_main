@@ -9,6 +9,7 @@
 #define GRIDBLOCKCALCULATOR_H
 
 #include "GridData.h"
+#include "DeltaGridLines.h"
 #include "I_DataModel.h"
 #include "CalculatedGridLines.h"
 #include "RingBuffer.h"
@@ -42,6 +43,7 @@ typedef struct
       RingBuffer_t ringBuffer;
       uint8_t ringBufferArray[GridBlockCalculator_NumberOfPreviousGridBlocksToStore];
       const GridData_t *gridData;
+      const DeltaGridLines_t *deltaGridLines;
    } _private;
 } GridBlockCalculator_t;
 
@@ -49,6 +51,7 @@ void GridBlockCalculator_Init(
    GridBlockCalculator_t *instance,
    const GridBlockCalculatorConfiguration_t *config,
    I_DataModel_t *dataModel,
-   const GridData_t *gridData);
+   const GridData_t *gridData,
+   const DeltaGridLines_t *deltaGridLines);
 
 #endif

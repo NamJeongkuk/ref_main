@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "GridData.h"
+#include "DeltaGridLines.h"
 
 typedef struct
 {
@@ -23,7 +24,9 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       const CrossAmbientHysteresisAdjustmentCalculatorConfig_t *config;
-      const GridData_t *gridData;
+      TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
+      const DeltaGridLines_t *deltaGridLines;
       EventSubscription_t onCrossAmbientWindowedAverageTemperatureSubscription;
       TemperatureDegFx100_t lowestHysteresis;
    } _private;
@@ -32,7 +35,9 @@ typedef struct
 void CrossAmbientHysteresisAdjustmentCalculator_Init(
    CrossAmbientHysteresisAdjustmentCalculator_t *instance,
    I_DataModel_t *dataModel,
-   const GridData_t *gridData,
+   const TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100,
+   const uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF,
+   const DeltaGridLines_t *deltaGridLines,
    const CrossAmbientHysteresisAdjustmentCalculatorConfig_t *config);
 
 #endif

@@ -135,7 +135,8 @@ TEST_GROUP(GridBlockCalculator)
          &instance,
          &twoDimensionalConfig,
          dataModel,
-         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData);
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+         PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines);
    }
 
    void ModuleIsInitializedWithOneDimensionalGrid(void)
@@ -144,7 +145,8 @@ TEST_GROUP(GridBlockCalculator)
          &instance,
          &oneDimensionalConfig,
          dataModel,
-         PersonalityParametricData_Get(dataModel)->featurePanGridData);
+         PersonalityParametricData_Get(dataModel)->featurePanGridData,
+         PersonalityParametricData_Get(dataModel)->featurePanDeltaGridLines);
    }
 
    void GridLinesAreReady()

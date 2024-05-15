@@ -104,7 +104,7 @@ TEST_GROUP(GridLineCalculator)
       GridLineCalculator_Init(
          &instance,
          &freshFoodAndFreezerConfig,
-         parametric->freshFoodAndFreezerGridData,
+         parametric->freshFoodAndFreezerDeltaGridLines,
          dataModel);
    }
 
@@ -113,7 +113,7 @@ TEST_GROUP(GridLineCalculator)
       GridLineCalculator_Init(
          &instance,
          &featurePanConfig,
-         parametric->featurePanGridData,
+         parametric->featurePanDeltaGridLines,
          dataModel);
    }
 
@@ -226,7 +226,7 @@ TEST_GROUP(GridLineCalculator)
       gridDeltaOffset = TRUNCATE_UNSIGNED_SUBTRACTION(gridDeltaOffset, 1);
 
       temperature +=
-         parametric->featurePanGridData->deltaGridLines->gridLines[GridDelta_FirstDimension].gridLineData[(CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + gridLineIndex].gridLinesDegFx100;
+         parametric->featurePanDeltaGridLines->gridLines[GridDelta_FirstDimension].gridLineData[(CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + gridLineIndex].gridLinesDegFx100;
 
       CHECK_EQUAL(temperature, calcLines.firstDimensionGridLines.gridLinesDegFx100[gridLineIndex]);
    }
@@ -242,7 +242,7 @@ TEST_GROUP(GridLineCalculator)
          &calcLines);
 
       temperature +=
-         parametric->freshFoodAndFreezerGridData->deltaGridLines->gridLines[dimension].gridLineData[gridLineIndex].gridLinesDegFx100;
+         parametric->freshFoodAndFreezerDeltaGridLines->gridLines[dimension].gridLineData[gridLineIndex].gridLinesDegFx100;
 
       if(dimension == GridDelta_FirstDimension)
       {

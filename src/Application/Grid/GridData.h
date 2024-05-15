@@ -14,11 +14,8 @@
 typedef struct
 {
    GridId_t gridId;
-   DeltaGridLines_t *deltaGridLines;
    uint8_t gridInvalidSecondDimensionThermistorRow;
    uint8_t gridInvalidFirstDimensionThermistorColumn;
-   TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
-   uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
    uint16_t gridPeriodicRunRateInMSec;
 } GridData_t;
 

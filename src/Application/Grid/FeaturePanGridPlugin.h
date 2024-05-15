@@ -14,7 +14,6 @@
 #include "GridBlockCalculator.h"
 #include "GridOffsetAdder.h"
 #include "OverrideArbiter.h"
-#include "CrossAmbientHysteresisAdjustmentCalculator.h"
 #include "ConstArrayMap_FeaturePan.h"
 
 typedef struct
@@ -23,7 +22,6 @@ typedef struct
    GridLineCalculator_t gridLineCalculator;
    GridBlockCalculator_t gridBlockCalculator;
    OverrideArbiter_t gridBlockNumberArbiter;
-   CrossAmbientHysteresisAdjustmentCalculator_t crossAmbientHysteresisAdjustmentCalculator;
    ConstArrayMap_FeaturePan_t featurePanCoolingStateBasedGridVotesTable;
 } FeaturePanGridPlugin_t;
 

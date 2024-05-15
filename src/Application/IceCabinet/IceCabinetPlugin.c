@@ -69,8 +69,8 @@ void IceCabinetPlugin_Init(
       &instance->_private.gammaCalculator,
       dataModel,
       &gammaCalculatorConfig,
-      &PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData->deltaGridLines->gridLines[GridDelta_SecondDimension],
-      &PersonalityParametricData_Get(dataModel)->iceCabinetGridData->deltaGridLines->gridLines[GridDelta_FirstDimension]);
+      &PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines->gridLines[GridDelta_SecondDimension],
+      &PersonalityParametricData_Get(dataModel)->iceCabinetDeltaGridLines->gridLines[GridDelta_FirstDimension]);
 
    IceCabinetGridPlugin_Init(
       &instance->_private.iceCabinetGridPlugin,

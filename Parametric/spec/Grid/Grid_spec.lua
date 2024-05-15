@@ -13,11 +13,8 @@ describe('Grid', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
       grid_id = grid_id_type.grid_single_evap,
-      grid_deltas = TypedString('grid_deltas', 'grid_deltas'),
       grid_invalid_freezer_thermistor_fallback_row = 3,
       grid_invalid_fresh_food_thermistor_fallback_column = 1,
-      fresh_food_minimum_cross_ambient_adjusted_hysteresis_in_degfx100 = -20,
-      fresh_food_cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 500,
       grid_periodic_run_rate_in_msec = 1000
     }, overrides or {})
   end
@@ -25,10 +22,7 @@ describe('Grid', function()
   local function generate_feature_pan_config(overrides)
     return require 'lua-common'.table.merge({
       grid_id = grid_id_type.grid_feature_pan,
-      grid_deltas = TypedString('grid_deltas', 'grid_deltas'),
       grid_invalid_thermistor_fallback_block = 1,
-      minimum_cross_ambient_adjusted_hysteresis_in_degfx100 = -20,
-      cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 500,
       grid_periodic_run_rate_in_msec = 1000
     }, overrides or {})
   end
@@ -45,30 +39,6 @@ describe('Grid', function()
     should_fail_with("grid_id=not a valid grid id is not in the grid_id_type enumeration, allowable values: grid_dual_evap, grid_feature_pan, grid_ice_cabinet, grid_single_door_single_evap, grid_single_evap, grid_triple_evap", function()
       grid(generate_config({
         grid_id = 'not a valid grid id'
-      }))
-    end)
-  end)
-
-  it('should constrain all arguments', function()
-    should_fail_with('grid_deltas must be a typed string with type grid_deltas, but is a number', function()
-      grid(generate_config({
-        grid_deltas = -1
-      }))
-    end)
-  end)
-
-  it('should assert if fresh_food_cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf is not in range', function()
-    should_fail_with('fresh_food_cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf=999999 must be in [0, 65535]', function()
-      grid(generate_config({
-        fresh_food_cross_ambient_hysteresis_coefficient_in_degfx1000_over_degf = 999999
-      }))
-    end)
-  end)
-
-  it('should assert if fresh_food_minimum_cross_ambient_adjusted_hysteresis_in_degfx100 is not in range', function()
-    should_fail_with('fresh_food_minimum_cross_ambient_adjusted_hysteresis_in_degfx100=999999 must be in [-32768, 32767]', function()
-      grid(generate_config({
-        fresh_food_minimum_cross_ambient_adjusted_hysteresis_in_degfx100 = 999999
       }))
     end)
   end)
@@ -101,11 +71,8 @@ describe('Grid', function()
     local expected = remove_whitespace([[
         structure(
         u8(]] .. grid_id_type.grid_single_evap .. [[),
-        pointer(grid_deltas),
         u8(3),
         u8(1),
-        i16(-20),
-        u16(500),
         u16(1000)
       )
     ]])
@@ -120,11 +87,8 @@ describe('Grid', function()
     local expected = remove_whitespace([[
         structure(
         u8(]] .. grid_id_type.grid_feature_pan .. [[),
-        pointer(grid_deltas),
         u8(0),
         u8(1),
-        i16(-20),
-        u16(500),
         u16(1000)
       )
     ]])

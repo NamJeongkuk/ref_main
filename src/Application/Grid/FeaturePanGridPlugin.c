@@ -60,11 +60,6 @@ static const OverrideArbiterConfiguration_t gridBlockNumberOverrideConfiguration
    NUM_ELEMENTS(gridBlockNumberOverrideRequestErdList)
 };
 
-static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t crossAmbientHysteresisAdjustmentCalculatorConfig = {
-   .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .ambientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
-};
-
 void FeaturePanGridPlugin_Init(FeaturePanGridPlugin_t *instance, I_DataModel_t *dataModel)
 {
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_FeaturePan_Init(&instance->featurePanCoolingStateBasedGridVotesTable);
@@ -75,23 +70,18 @@ void FeaturePanGridPlugin_Init(FeaturePanGridPlugin_t *instance, I_DataModel_t *
       DataModel_AsDataSource(dataModel),
       &gridBlockNumberOverrideConfiguration);
 
-   CrossAmbientHysteresisAdjustmentCalculator_Init(
-      &instance->crossAmbientHysteresisAdjustmentCalculator,
-      dataModel,
-      PersonalityParametricData_Get(dataModel)->featurePanGridData,
-      &crossAmbientHysteresisAdjustmentCalculatorConfig);
-
    GridLineCalculator_Init(
       &instance->gridLineCalculator,
       &gridLineCalculatorConfig,
-      PersonalityParametricData_Get(dataModel)->featurePanGridData,
+      PersonalityParametricData_Get(dataModel)->featurePanDeltaGridLines,
       dataModel);
 
    GridBlockCalculator_Init(
       &instance->gridBlockCalculator,
       &gridBlockCalculatorConfig,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->featurePanGridData);
+      PersonalityParametricData_Get(dataModel)->featurePanGridData,
+      PersonalityParametricData_Get(dataModel)->featurePanDeltaGridLines);
 
    Grid_Init(
       &instance->grid,

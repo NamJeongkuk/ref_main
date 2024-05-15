@@ -16,7 +16,7 @@ enum
 };
 
 #define GRID_LINE_TEMP(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
+   instance->_private.deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
 
 static TemperatureDegFx100_t LowestHysteresis(CrossAmbientHysteresisAdjustmentCalculator_t *instance)
 {
@@ -31,7 +31,7 @@ static TemperatureDegFx100_t UncappedHysteresisAdjustment(CrossAmbientHysteresis
       instance->_private.config->ambientWindowAveragedTemperatureInDegFx100Erd,
       &ambientWindowedTemperatureInDegFx100);
 
-   return (instance->_private.gridData->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - ambientWindowedTemperatureInDegFx100)) / DegFx1000;
+   return (instance->_private.freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - ambientWindowedTemperatureInDegFx100)) / DegFx1000;
 }
 
 static void CalculateCrossAmbientHysteresisAdjustment(CrossAmbientHysteresisAdjustmentCalculator_t *instance)
@@ -46,10 +46,10 @@ static void CalculateCrossAmbientHysteresisAdjustment(CrossAmbientHysteresisAdju
 
    TemperatureDegFx100_t lowestHysteresisInDegFx100 = LowestHysteresis(instance);
 
-   if((lowestHysteresisInDegFx100 >= instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
+   if((lowestHysteresisInDegFx100 >= instance->_private.freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
       (ambientWindowedTemperatureInDegFx100 < AdjustmentThresholdInDegFx100))
    {
-      ambientHysteresisAdjustment = lowestHysteresisInDegFx100 - instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      ambientHysteresisAdjustment = lowestHysteresisInDegFx100 - instance->_private.freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
 
       TemperatureDegFx100_t uncappedHysteresisAdjustment = UncappedHysteresisAdjustment(instance);
       if(uncappedHysteresisAdjustment <= ambientHysteresisAdjustment)
@@ -75,12 +75,16 @@ static void OnCrossAmbientWindowedAverageTemperatureChange(void *context, const 
 void CrossAmbientHysteresisAdjustmentCalculator_Init(
    CrossAmbientHysteresisAdjustmentCalculator_t *instance,
    I_DataModel_t *dataModel,
-   const GridData_t *gridData,
+   const TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100,
+   const uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF,
+   const DeltaGridLines_t *deltaGridLines,
    const CrossAmbientHysteresisAdjustmentCalculatorConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.gridData = gridData;
+   instance->_private.freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100 = freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+   instance->_private.freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF = freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
+   instance->_private.deltaGridLines = deltaGridLines;
 
    CalculateCrossAmbientHysteresisAdjustment(instance);
 

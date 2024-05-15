@@ -38,8 +38,10 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   const GridData_t *gridData;
-   GridData_t modifiedGridData;
+   TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+   TemperatureDegFx100_t modifiedFreshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+   uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
+   const DeltaGridLines_t *deltaGridLines;
    PersonalityParametricData_t *parametricData;
 
    void setup()
@@ -48,7 +50,9 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
       dataModel = dataModelTestDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
-      gridData = PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData;
+      freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100 = PersonalityParametricData_Get(dataModel)->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF = PersonalityParametricData_Get(dataModel)->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
+      deltaGridLines = PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines;
    }
 
    void After(TimerTicks_t ticks)
@@ -61,19 +65,22 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
       CrossAmbientHysteresisAdjustmentCalculator_Init(
          &instance,
          dataModel,
-         gridData,
+         freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100,
+         freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF,
+         deltaGridLines,
          &config);
    }
 
    void GivenInitializationWithHighFreshFoodMinimumCrossAmbientAdjustedHysteresis()
    {
-      memcpy(&modifiedGridData, gridData, sizeof(GridData_t));
-      modifiedGridData.freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100 = 500;
+      modifiedFreshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100 = 500;
 
       CrossAmbientHysteresisAdjustmentCalculator_Init(
          &instance,
          dataModel,
-         &modifiedGridData,
+         modifiedFreshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100,
+         freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF,
+         deltaGridLines,
          &config);
    }
 
@@ -103,18 +110,18 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
    TemperatureDegFx100_t LowestHysteresis()
    {
       return MIN(
-         abs(gridData->deltaGridLines->gridLines[GridDelta_FreshFood].gridLineData[GridLine_FreshFoodLowHyst].gridLinesDegFx100),
-         abs(gridData->deltaGridLines->gridLines[GridDelta_FreshFood].gridLineData[GridLine_FreshFoodHighHyst].gridLinesDegFx100));
+         abs(deltaGridLines->gridLines[GridDelta_FreshFood].gridLineData[GridLine_FreshFoodLowHyst].gridLinesDegFx100),
+         abs(deltaGridLines->gridLines[GridDelta_FreshFood].gridLineData[GridLine_FreshFoodHighHyst].gridLinesDegFx100));
    }
 
    TemperatureDegFx100_t LowestHysteresisMinusAmbientAdjustmentHysteresis()
    {
-      return LowestHysteresis() - gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      return LowestHysteresis() - freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
    }
 
    TemperatureDegFx100_t UncappedHysteresisAdjustment(TemperatureDegFx100_t crossAmbientWindowedTemperature)
    {
-      return (gridData->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - crossAmbientWindowedTemperature)) / DegFx1000;
+      return (freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF * (AdjustmentThresholdInDegFx100 - crossAmbientWindowedTemperature)) / DegFx1000;
    }
 };
 

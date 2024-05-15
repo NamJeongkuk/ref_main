@@ -71,14 +71,15 @@ void IceCabinetGridPlugin_Init(IceCabinetGridPlugin_t *instance, I_DataModel_t *
    GridLineCalculator_Init(
       &instance->gridLineCalculator,
       &gridLineCalculatorConfig,
-      PersonalityParametricData_Get(dataModel)->iceCabinetGridData,
+      PersonalityParametricData_Get(dataModel)->iceCabinetDeltaGridLines,
       dataModel);
 
    GridBlockCalculator_Init(
       &instance->gridBlockCalculator,
       &gridBlockCalculatorConfig,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->iceCabinetGridData);
+      PersonalityParametricData_Get(dataModel)->iceCabinetGridData,
+      PersonalityParametricData_Get(dataModel)->iceCabinetDeltaGridLines);
 
    Grid_Init(
       &instance->grid,

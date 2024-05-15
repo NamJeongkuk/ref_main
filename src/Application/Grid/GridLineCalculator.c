@@ -26,19 +26,19 @@ enum
 };
 
 #define GRID_LINE_TEMP(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
+   instance->_private.deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
 
 #define PARAMETRIC_GRID_LINE_CORRECTION(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].correction
+   instance->_private.deltaGridLines->gridLines[_dimension].gridLineData[_line].correction
 
 #define GRID_LINE_ADJUSTMENTS(_dimension) \
    instance->_private.config->gridLineAdjustmentErds[_dimension]
 
 #define CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->multiplier
+   instance->_private.deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->multiplier
 
 #define CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->divider
+   instance->_private.deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->divider
 
 static bool AdjustedSetpointPluginIsReady(GridLineCalculator_t *instance)
 {
@@ -63,7 +63,7 @@ static void CalculateAxisGridLines(
    // we need to subtract 1 and truncate (in case it changes to "Off," or 0) so that we access the correct index.
    gridDeltaOffset = TRUNCATE_UNSIGNED_SUBTRACTION(gridDeltaOffset, 1);
 
-   for(uint8_t line = 0; line < instance->_private.gridData->deltaGridLines->gridLines->numberOfLines; line++)
+   for(uint8_t line = 0; line < instance->_private.deltaGridLines->gridLines->numberOfLines; line++)
    {
       axisToCalculate->gridLinesDegFx100[line] =
          GRID_LINE_TEMP(dimension, ((CalculatedGridLines_MaxGridLinesCount * gridDeltaOffset) + line));
@@ -98,13 +98,13 @@ static void CalculateAxisGridLines(
 
 static void ConfigureGridLines(GridLineCalculator_t *instance)
 {
-   if(OneDimension == instance->_private.gridData->deltaGridLines->dimensions)
+   if(OneDimension == instance->_private.deltaGridLines->dimensions)
    {
       CalculateAxisGridLines(
          instance,
          &instance->_private.oneDimensionalCalculatedGridLines.gridLines,
          FirstDimension);
-      instance->_private.oneDimensionalCalculatedGridLines.numberOfGridLines = instance->_private.gridData->deltaGridLines->gridLines[FirstDimension].numberOfLines;
+      instance->_private.oneDimensionalCalculatedGridLines.numberOfGridLines = instance->_private.deltaGridLines->gridLines[FirstDimension].numberOfLines;
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->calculatedGridLineErd,
@@ -120,7 +120,7 @@ static void ConfigureGridLines(GridLineCalculator_t *instance)
          instance,
          &instance->_private.twoDimensionalCalculatedGridLines.secondDimensionGridLines,
          SecondDimension);
-      instance->_private.twoDimensionalCalculatedGridLines.numberOfGridLinesPerDimension = instance->_private.gridData->deltaGridLines->gridLines[FirstDimension].numberOfLines;
+      instance->_private.twoDimensionalCalculatedGridLines.numberOfGridLinesPerDimension = instance->_private.deltaGridLines->gridLines[FirstDimension].numberOfLines;
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->calculatedGridLineErd,
@@ -141,7 +141,7 @@ static void OnDataModelChanged(void *context, const void *args)
    }
    else
    {
-      for(uint8_t i = 0; i < instance->_private.gridData->deltaGridLines->dimensions; i++)
+      for(uint8_t i = 0; i < instance->_private.deltaGridLines->dimensions; i++)
       {
          if((erd == instance->_private.config->gridLineAdjustmentErds[i].offsetInDegFx100Erd) ||
             (erd == instance->_private.config->gridLineAdjustmentErds[i].adjustedSetpointInDegFx100Erd))
@@ -156,28 +156,28 @@ static void OnDataModelChanged(void *context, const void *args)
 void GridLineCalculator_Init(
    GridLineCalculator_t *instance,
    const GridLineCalculatorConfiguration_t *config,
-   const GridData_t *gridData,
+   const DeltaGridLines_t *deltaGridLines,
    I_DataModel_t *dataModel)
 {
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
-   instance->_private.gridData = gridData;
+   instance->_private.deltaGridLines = deltaGridLines;
 
-   uassert(IN_RANGE(OneDimension, instance->_private.gridData->deltaGridLines->dimensions, TwoDimensions));
+   uassert(IN_RANGE(OneDimension, instance->_private.deltaGridLines->dimensions, TwoDimensions));
 
-   if(OneDimension == instance->_private.gridData->deltaGridLines->dimensions)
+   if(OneDimension == instance->_private.deltaGridLines->dimensions)
    {
       memset(
          &instance->_private.oneDimensionalCalculatedGridLines,
          0,
-         OneDimension * instance->_private.gridData->deltaGridLines->gridLines->numberOfLines * sizeof(TemperatureDegFx100_t));
+         OneDimension * instance->_private.deltaGridLines->gridLines->numberOfLines * sizeof(TemperatureDegFx100_t));
    }
    else
    {
       memset(
          &instance->_private.twoDimensionalCalculatedGridLines,
          0,
-         TwoDimensions * instance->_private.gridData->deltaGridLines->gridLines->numberOfLines * sizeof(TemperatureDegFx100_t));
+         TwoDimensions * instance->_private.deltaGridLines->gridLines->numberOfLines * sizeof(TemperatureDegFx100_t));
    }
 
    uassert(AdjustedSetpointPluginIsReady(instance));

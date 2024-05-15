@@ -54,8 +54,13 @@ typedef struct
    const EnhancedSabbathData_t *enhancedSabbathData;
    const CombinedFanData_t *fanData;
    const GridData_t *freshFoodAndFreezerGridData;
+   const DeltaGridLines_t *freshFoodAndFreezerDeltaGridLines;
+   const TemperatureDegFx100_t freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+   const uint16_t freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF;
    const GridData_t *featurePanGridData;
+   const DeltaGridLines_t *featurePanDeltaGridLines;
    const GridData_t *iceCabinetGridData;
+   const DeltaGridLines_t *iceCabinetDeltaGridLines;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;
    const FeaturePanData_t *featurePanData;

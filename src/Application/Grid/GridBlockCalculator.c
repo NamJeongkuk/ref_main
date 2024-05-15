@@ -63,7 +63,7 @@ static uint8_t GridLineIndex(
 
    uint8_t index;
 
-   for(index = 0; index < (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines); index++)
+   for(index = 0; index < (instance->_private.deltaGridLines->gridLines->numberOfLines); index++)
    {
       if(temperature <= calculatedGridLine.gridLinesDegFx100[index])
       {
@@ -73,7 +73,7 @@ static uint8_t GridLineIndex(
 
    if(gridLineIsInverted)
    {
-      index = (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines) - index;
+      index = (instance->_private.deltaGridLines->gridLines->numberOfLines) - index;
    }
 
    return index;
@@ -116,7 +116,7 @@ static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *ins
    uint8_t firstDimensionGridLinesIndex = 0;
    uint8_t secondDimensionGridLinesIndex = 0;
 
-   if(instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions)
+   if(instance->_private.deltaGridLines->dimensions == TwoDimensions)
    {
       if(ThermistorIsValid(instance, FirstDimension))
       {
@@ -161,7 +161,7 @@ static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *ins
       GridBlock(
          firstDimensionGridLinesIndex,
          secondDimensionGridLinesIndex,
-         (instance->_private.gridData->deltaGridLines->gridLines->numberOfLines + 1));
+         (instance->_private.deltaGridLines->gridLines->numberOfLines + 1));
 
    return calculatedBlockNumber;
 }
@@ -249,19 +249,19 @@ static void OnDataModelChanged(void *context, const void *args)
 
    if(erd == instance->_private.config->calculatedGridLinesErd)
    {
-      if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
+      if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
       {
          UpdateGridBlockIfDifferent(instance);
       }
    }
    else
    {
-      for(uint8_t i = 0; i < instance->_private.gridData->deltaGridLines->dimensions; i++)
+      for(uint8_t i = 0; i < instance->_private.deltaGridLines->dimensions; i++)
       {
          if((erd == instance->_private.config->gridBlockAdjustmentErds[i].filteredResolvedTemperatureInDegFx100) ||
             (erd == instance->_private.config->gridBlockAdjustmentErds[i].thermistorIsValidResolvedErd))
          {
-            if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.gridData->deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
+            if(ThermistorIsValid(instance, FirstDimension) || ((instance->_private.deltaGridLines->dimensions == TwoDimensions) && ThermistorIsValid(instance, SecondDimension)))
             {
                UpdateGridBlockIfDifferent(instance);
                break;
@@ -275,7 +275,8 @@ void GridBlockCalculator_Init(
    GridBlockCalculator_t *instance,
    const GridBlockCalculatorConfiguration_t *config,
    I_DataModel_t *dataModel,
-   const GridData_t *gridData)
+   const GridData_t *gridData,
+   const DeltaGridLines_t *deltaGridLines)
 {
    bool gridLineCalculatorReady;
    DataModel_Read(
@@ -287,6 +288,7 @@ void GridBlockCalculator_Init(
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
    instance->_private.gridData = gridData;
+   instance->_private.deltaGridLines = deltaGridLines;
 
    RingBuffer_Init(
       &instance->_private.ringBuffer,

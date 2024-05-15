@@ -73,7 +73,6 @@ TEST_GROUP(DefrostTimerIntegration)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
 
    PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
    const SystemMonitorData_t *systemMonitorData;

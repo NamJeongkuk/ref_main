@@ -16,7 +16,7 @@
 #include "Constants_Binary.h"
 #include "ParametricData.h"
 
-static void (*GridFunctions[])(void *context) = { Grid_SingleEvap, Grid_DualEvap, Grid_TripleEvap, Grid_SingleDoorSingleEvap };
+static void (*gridFunctions[])(void *context) = { Grid_SingleEvap, Grid_DualEvap, Grid_TripleEvap, Grid_SingleDoorSingleEvap };
 
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
@@ -153,27 +153,30 @@ void FreshFoodAndFreezerGridPlugin_Init(
    CrossAmbientHysteresisAdjustmentCalculator_Init(
       &instance->crossAmbientHysteresisAdjustmentCalculator,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+      PersonalityParametricData_Get(dataModel)->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100,
+      PersonalityParametricData_Get(dataModel)->freshFoodCrossAmbientHysteresisCoefficientDegFx1000OverDegF,
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines,
       &crossAmbientHysteresisAdjustmentCalculatorConfig);
 
    GridLineCalculator_Init(
       &instance->gridLineCalculator,
       &gridLineCalculatorConfig,
-      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines,
       dataModel);
 
    GridBlockCalculator_Init(
       &instance->gridBlockCalculator,
       &gridBlockCalculatorConfig,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData);
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
+      PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerDeltaGridLines);
 
    Grid_Init(
       &instance->gridInstance,
       dataModel,
       &gridConfig,
       PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData,
-      GridFunctions[PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData->gridId]);
+      gridFunctions[PersonalityParametricData_Get(dataModel)->freshFoodAndFreezerGridData->gridId]);
 
    DataModel_Write(
       dataModel,
