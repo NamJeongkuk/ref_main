@@ -43,6 +43,7 @@ static void TimerExpired(void *context)
       instance->_private.dataModel,
       instance->_private.config->freezerEvapFanSpeedFreezerIceRateVoteErd,
       &fanSpeedVoteDontCare);
+
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->freezerIceRateIsActiveErd,
@@ -156,7 +157,7 @@ void FreezerIceRateHandler_Init(
       instance,
       OnDataModelChange);
 
-   if(instance->_private.freezerIceRateData->timeInMinutes != 0)
+   if(instance->_private.freezerIceRateData->timeInMinutes > 0)
    {
       DataModel_Subscribe(
          dataModel,

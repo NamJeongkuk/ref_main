@@ -27,21 +27,30 @@ static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive
 };
 
+static const FreezerIceRateData_t freezerIceRateData = {
+   .timeInMinutes = 2,
+   .freezerSetpointInDegFx100 = 250,
+   .freezerEvaporatorFanSpeed = FanSpeed_High
+};
+
+static const FreezerIceRateData_t freezerIceRateDataWithZeroTime = {
+   .timeInMinutes = 0,
+   .freezerSetpointInDegFx100 = 250,
+   .freezerEvaporatorFanSpeed = FanSpeed_High
+};
+
 TEST_GROUP(FreezerIceRateHandler)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    FreezerIceRateHandler_t instance;
-   const FreezerIceRateData_t *freezerIceRateData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      freezerIceRateData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->freezerIceRateData;
    }
 
    void GivenTheModuleIsInitialized()
@@ -50,17 +59,24 @@ TEST_GROUP(FreezerIceRateHandler)
          &instance,
          dataModel,
          &freezerIceRateHandlerConfig,
-         freezerIceRateData);
+         &freezerIceRateData);
    }
 
-   void GivenTheFreezerSetpointUserVoteIs(TemperatureDegFx100_t temperature, bool care)
+   void GivenTheModuleIsInitializedWithZeroFreezerIceRateTime()
    {
-      SetpointVotedTemperature_t setpointVotedTemperature = {
-         .temperatureInDegFx100 = temperature,
-         .care = care,
-      };
+      FreezerIceRateHandler_Init(
+         &instance,
+         dataModel,
+         &freezerIceRateHandlerConfig,
+         &freezerIceRateDataWithZeroTime);
+   }
 
-      DataModel_Write(dataModel, Erd_FreezerSetpoint_UserVote, &setpointVotedTemperature);
+   void GivenTheFreezerEvapFanSpeedIceMakerVoteIs(FanSpeed_t speed, bool care)
+   {
+      FanVotedSpeed_t vote;
+      vote.speed = speed;
+      vote.care = care;
+      DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_FreezerIceRateVote, &vote);
    }
 
    void GivenTheIceRateTriggerSignalIsActivated()
@@ -84,6 +100,11 @@ TEST_GROUP(FreezerIceRateHandler)
       };
 
       DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote, &votedFanSpeed);
+   }
+
+   void WhenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_t speed, bool care)
+   {
+      GivenTheFreezerEvapFanSpeedResolvedVoteIs(speed, care);
    }
 
    void ThenTheFreezerSetpointIceRateVoteShouldBe(TemperatureDegFx100_t temperature, bool care)
@@ -119,7 +140,7 @@ TEST_GROUP(FreezerIceRateHandler)
    void GivenIceRateHasAlreadyBeenActiveForIceRateTime()
    {
       WhenTheIceRateTriggerSignalIsActivated();
-      After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+      After((freezerIceRateData.timeInMinutes * MSEC_PER_MIN) - 1);
       IceRateActiveErdShouldBe(true);
 
       After(1);
@@ -127,52 +148,51 @@ TEST_GROUP(FreezerIceRateHandler)
    }
 };
 
-TEST(FreezerIceRateHandler, FreezerSetpointIceRateVoteShouldBeSetToDefaultParametricSetpoint)
+TEST(FreezerIceRateHandler, ShouldVoteForParametricFreezerSetpointWhenIceRateTriggerSignalIsReceived)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheIceRateTriggerSignalIsActivated();
-   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData->freezerSetpointInDegFx100, Vote_Care);
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_Care);
 }
 
-TEST(FreezerIceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToParametricSetpointIfUserVoteIsGreaterThanParametricSetpoint)
+TEST(FreezerIceRateHandler, ShouldVoteForFreezerEvapFanSpeedWithParametricSpeedIfResolvedVoteIsLessThanParametricSpeed)
 {
-   GivenTheModuleIsInitialized();
-   GivenTheIceRateTriggerSignalIsActivated();
-
-   GivenTheFreezerSetpointUserVoteIs(300, Vote_Care);
-
-   ThenTheFreezerSetpointIceRateVoteShouldBe(250, Vote_Care);
-}
-
-TEST(FreezerIceRateHandler, FreezerEvapFanSpeedIceMakerVoteShouldBeFanSpeedMediumIfResolvedVoteIsLessThanFanSpeedMedium)
-{
-   GivenTheModuleIsInitialized();
-   GivenTheIceRateTriggerSignalIsActivated();
-
    GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
-
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_Care);
-}
-
-TEST(FreezerIceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
-{
    GivenTheModuleIsInitialized();
    GivenTheIceRateTriggerSignalIsActivated();
 
-   GivenTheFreezerSetpointUserVoteIs(300, Vote_Care);
-   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_Care);
+}
 
-   ThenTheFreezerSetpointIceRateVoteShouldBe(250, Vote_Care);
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_Care);
+TEST(FreezerIceRateHandler, ShouldVoteForFreezerEvapFanSpeedWithResolvedSpeedIfResolvedVoteIsEqualToParametricSpeed)
+{
+   GivenTheFreezerEvapFanSpeedResolvedVoteIs(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_Care);
+   GivenTheModuleIsInitialized();
+   GivenTheIceRateTriggerSignalIsActivated();
 
-   After(2 * MSEC_PER_MIN);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_Care);
+}
 
-   GivenTheFreezerSetpointUserVoteIs(999, Vote_Care);
+TEST(FreezerIceRateHandler, ShouldVoteForFreezerEvapFanSpeedWithResolvedSpeedIfResolvedVoteIsGreaterThanParametricSpeed)
+{
    GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_SuperHigh, Vote_Care);
+   GivenTheModuleIsInitialized();
+   GivenTheIceRateTriggerSignalIsActivated();
 
-   ThenTheFreezerSetpointIceRateVoteShouldBe(250, Vote_DontCare);
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_DontCare);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_SuperHigh, Vote_Care);
+}
+
+TEST(FreezerIceRateHandler, ShouldUpdateFreezerEvapFanSpeedVoteWhenResolvedVoteChanges)
+{
+   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_SuperHigh, Vote_Care);
+   GivenTheModuleIsInitialized();
+   GivenTheIceRateTriggerSignalIsActivated();
+
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_SuperHigh, Vote_Care);
+
+   WhenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_Care);
 }
 
 TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueWhenIceRateSignalTriggerActivated)
@@ -184,13 +204,13 @@ TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueWhenIceRateSignalTrigger
    IceRateActiveErdShouldBe(true);
 }
 
-TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToFalseAfterIceRateSignalTriggeredTimer)
+TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToFalseAfterIceRateTimerExpires)
 {
    GivenTheModuleIsInitialized();
    IceRateActiveErdShouldBe(false);
 
    WhenTheIceRateTriggerSignalIsActivated();
-   After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+   After((freezerIceRateData.timeInMinutes * MSEC_PER_MIN) - 1);
    IceRateActiveErdShouldBe(true);
 
    After(1);
@@ -203,9 +223,55 @@ TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueAfterIceRateSignalTrigge
    GivenIceRateHasAlreadyBeenActiveForIceRateTime();
 
    WhenTheIceRateTriggerSignalIsActivated();
-   After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+   After((freezerIceRateData.timeInMinutes * MSEC_PER_MIN) - 1);
    IceRateActiveErdShouldBe(true);
 
    After(1);
    IceRateActiveErdShouldBe(false);
+}
+
+TEST(FreezerIceRateHandler, ShouldVoteDontCareForFreezerSetpointAndFreezerEvapFanSpeedAfterIceRateTimerExpires)
+{
+   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_SuperHigh, Vote_Care);
+   GivenTheModuleIsInitialized();
+   GivenTheIceRateTriggerSignalIsActivated();
+
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_SuperHigh, Vote_Care);
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_Care);
+
+   After((freezerIceRateData.timeInMinutes * MSEC_PER_MIN) - 1);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_SuperHigh, Vote_Care);
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_Care);
+
+   After(1);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_DontCare);
+}
+
+TEST(FreezerIceRateHandler, ShouldUnsubscribeToFreezerEvapFanSpeedResolvedErdAfterTimerExpires)
+{
+   GivenTheModuleIsInitialized();
+   GivenTheIceRateTriggerSignalIsActivated();
+
+   WhenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
+
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_Care);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_Care);
+
+   After(freezerIceRateData.timeInMinutes * MSEC_PER_MIN);
+
+   WhenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_SuperHigh, Vote_Care);
+
+   ThenTheFreezerSetpointIceRateVoteShouldBe(freezerIceRateData.freezerSetpointInDegFx100, Vote_DontCare);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData.freezerEvaporatorFanSpeed, Vote_DontCare);
+}
+
+TEST(FreezerIceRateHandler, ShouldNotReactToFreezerIceRateTriggerSignalIfTimeIsZero)
+{
+   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
+   GivenTheFreezerEvapFanSpeedIceMakerVoteIs(FanSpeed_Off, Vote_DontCare);
+   GivenTheModuleIsInitializedWithZeroFreezerIceRateTime();
+   GivenTheIceRateTriggerSignalIsActivated();
+
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Off, Vote_DontCare);
 }
