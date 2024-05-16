@@ -13,6 +13,8 @@
 enum
 {
    DoorBoardErd_MainboardSignOfLife = 0x0900,
+   DoorBoardErd_IceCabinetThermistor_FilteredTemperatureInDegFx100 = 0xF232,
+   DoorBoardErd_IceCabinetThermistorIsValid = 0xF233
 };
 
 #endif

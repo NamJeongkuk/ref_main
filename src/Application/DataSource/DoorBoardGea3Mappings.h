@@ -23,13 +23,15 @@
    PeriodicAndOnChange => Write to DoorBoardErd periodically *and* on change
       - written at enable (init, most of the time), on subscription host startup, on change, and on period (if enabled)
 
-         DoorBoardErd                                                     PublicErd                                           Published/None    OnChangeOnly/PeriodicAndOnChange/None
+         DoorBoardErd                                                             PublicErd                                                        Published/None    OnChangeOnly/PeriodicAndOnChange/None
 */
 
 #define DOORBOARD_ERD_MAPPINGS(ENTRY) \
-   ENTRY(DoorBoardErd_MainboardSignOfLife,                                PublicErd_SignOfLifeFromDoorBoardToMainboard,       Published,        None               ) \
+   ENTRY(DoorBoardErd_MainboardSignOfLife,                                        PublicErd_SignOfLifeFromDoorBoardToMainboard,                     Published,        None               ) \
+   ENTRY(DoorBoardErd_IceCabinetThermistor_FilteredTemperatureInDegFx100,         PublicErd_IceCabinet_FilteredTemperatureInDegFx100,               Published,        None               ) \
+   ENTRY(DoorBoardErd_IceCabinetThermistorIsValid,                                PublicErd_IceCabinetThermistorIsValid,                            Published,        None               ) \
    \
-   ENTRY(DoorBoardErd_MainboardSignOfLife,                                PublicErd_SignOfLifeFromMainboardToDoorBoard,       None,             OnChangeOnly       )
+   ENTRY(DoorBoardErd_MainboardSignOfLife,                                        PublicErd_SignOfLifeFromMainboardToDoorBoard,                     None,             OnChangeOnly       )
 
 // clang-format on
 
