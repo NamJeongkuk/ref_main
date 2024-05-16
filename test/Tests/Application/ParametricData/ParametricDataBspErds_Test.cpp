@@ -950,6 +950,14 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
    CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_08);
 }
 
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow09)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_09)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_09);
+}
+
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcHwPersonality00)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_HW_PERSONALITY_00)");
@@ -958,12 +966,12 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
    CHECK_EQUAL(*erd, Erd_Adc_HW_PERSONALITY_00);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcHwPersonality01)
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForGpioHwPersonality01)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_HW_PERSONALITY_01)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HW_PERSONALITY_01)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Adc_HW_PERSONALITY_01);
+   CHECK_EQUAL(*erd, Erd_Gpio_HW_PERSONALITY_01);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForTwistTrayMotor00_01)

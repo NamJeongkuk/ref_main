@@ -30,9 +30,9 @@ return enum({
   Erd_Adc_ANALOG_TH_LOW_06 = 0xF603,
   Erd_Adc_ANALOG_TH_LOW_07 = 0xF604,
   Erd_Adc_ANALOG_TH_LOW_08 = 0xF605,
-  Erd_Adc_LOAD_CURRENT = 0xF606,
-  Erd_Adc_HW_PERSONALITY_00 = 0xF607,
-  Erd_Adc_HW_PERSONALITY_01 = 0xF608,
+  Erd_Adc_ANALOG_TH_LOW_09 = 0xF606,
+  Erd_Adc_LOAD_CURRENT = 0xF607,
+  Erd_Adc_HW_PERSONALITY_00 = 0xF608,
 
   Erd_Gpio_GPIO_OUT_00 = 0xF609,
   Erd_Gpio_GPIO_OUT_01 = 0xF610,
@@ -70,6 +70,7 @@ return enum({
   Erd_Gpio_GPIO_IN_03 = 0xF636,
   Erd_Gpio_PWM_VAR_01 = 0xF638,
   Erd_Gpio_CAPTURE_03 = 0xF639,
+  Erd_Gpio_HW_PERSONALITY_01 = 0xF63A,
 
   Erd_TwistTrayMotorOutput_MTR_DRV_00_01 = 0xF595,
   Erd_TwistTrayMotorOutput_MTR_DRV_02_03 = 0xF596

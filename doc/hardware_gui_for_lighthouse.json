@@ -411,7 +411,7 @@
         {
           "namespace": "mb",
           "displayName": "HW PERSONALITY 01",
-          "name": "Erd_Adc_HW_PERSONALITY_01",
+          "name": "Erd_Gpio_HW_PERSONALITY_01",
           "read": true,
           "write": false,
           "interval": 1000000000

@@ -478,8 +478,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Adc_HW_PERSONALITY_01",
-          "name": "Erd_Adc_HW_PERSONALITY_01",
+          "displayName": "Gpio_HW_PERSONALITY_01",
+          "name": "Erd_Gpio_HW_PERSONALITY_01",
           "read": true,
           "write": false
         }

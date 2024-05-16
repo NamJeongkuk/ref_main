@@ -26,9 +26,9 @@
    ENTRY(Erd_BspAdc_ANALOG_TH_LOW_06,    4, 6, 6) \
    ENTRY(Erd_BspAdc_ANALOG_TH_LOW_07,    4, 5, 5) \
    ENTRY(Erd_BspAdc_ANALOG_TH_LOW_08,    4, 4, 4) \
+   ENTRY(Erd_BspAdc_ANALOG_TH_LOW_09,    4, 1, 1) \
    ENTRY(Erd_BspAdc_LOAD_CURRENT,        4, 3, 3) \
-   ENTRY(Erd_BspAdc_HW_PERSONALITY_00,   4, 2, 2) \
-   ENTRY(Erd_BspAdc_HW_PERSONALITY_01,   4, 1, 1)
+   ENTRY(Erd_BspAdc_HW_PERSONALITY_00,   4, 2, 2)
 // clang-format on
 
 #endif
