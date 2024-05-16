@@ -26,10 +26,11 @@ enum
    RestrictedFullRangeErdStart = 0xF000,
    RestrictedFullRangeErdEnd = 0xFFFF,
    RetryCount = 3,
+   ErdClientRetryCount = 2,
    RequestTimeoutInMsec = 1 * MSEC_PER_SEC,
    DiagnosticsUpdatePeriodMsec = 1000,
-   ErdClientRetryCount = 10,
-   SubscriptionRetentionPeriodInMsec = 1 * MSEC_PER_MIN,
+   ErdSubscriptionWritePeriod = 3 * MSEC_PER_SEC,
+   SubscriptionRetentionPeriodInMsec = 5 * MSEC_PER_MIN,
    SignOfLifeTimeoutInMsec = 10 * MSEC_PER_SEC,
 };
 
@@ -86,7 +87,7 @@ static const ErdGea2ApiRevision2SubscriptionClientConfiguration_t subscriptionCl
    .hostGea2Address = Gea2Address_DoorBoard,
    .writeWrittenErdsPeriodically = true,
    .writeWrittenErdsOnChange = true,
-   .writePeriod = SubscriptionRetentionPeriodInMsec,
+   .writePeriod = ErdSubscriptionWritePeriod,
    .subscriptionRetentionPeriod = SubscriptionRetentionPeriodInMsec,
    .signOfLifeTimeout = SignOfLifeTimeoutInMsec,
    .enabledErd = PublicErd_DoorBoardEnable,
@@ -109,24 +110,6 @@ static const ErdClient_ApiRevision2Configuration_t erdClientConfiguration = {
    .requestTimeout = RequestTimeoutInMsec,
    .requestRetries = ErdClientRetryCount,
 };
-
-static void SubscribeToDoorboard(
-   GeaStack_t *instance,
-   TimerModule_t *timerModule,
-   I_DataSource_t *externalDataSource)
-{
-   ErdGea2ApiRevision2SubscriptionClient_Init(
-      &instance->_private.doorBoardErdSubscriptionClient,
-      timerModule,
-      externalDataSource,
-      &instance->_private.erdClient.interface,
-      &subscriptionClientConfig);
-
-   DataSource_Write(
-      externalDataSource,
-      PublicErd_DoorBoardEnable,
-      set);
-}
 
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] = {
    Gea2Address_EmbeddedWiFi,
@@ -403,10 +386,13 @@ void GeaStack_Init(
       externalDataSource,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
 
-   SubscribeToDoorboard(
-      instance,
+   // Erd_DoorBoardEnable must be set in a platform plugin for this to do anything
+   ErdGea2ApiRevision2SubscriptionClient_Init(
+      &instance->_private.doorBoardErdSubscriptionClient,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
-      externalDataSource);
+      externalDataSource,
+      &instance->_private.erdClient.interface,
+      &subscriptionClientConfig);
 
    Gea2CommonCommands_Init(
       &instance->_private.commonCommands,

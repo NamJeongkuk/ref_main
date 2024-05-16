@@ -6,6 +6,7 @@
  */
 
 #include "FourDoorConfigurationPlugin.h"
+#include "Constants_Binary.h"
 
 void FourDoorConfigurationPlugin_Init(FourDoorConfigurationPlugin_t *instance, I_DataModel_t *dataModel)
 {
@@ -21,4 +22,7 @@ void FourDoorConfigurationPlugin_Init(FourDoorConfigurationPlugin_t *instance, I
    FourDoorFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    FeaturePanPlugin_Init(&instance->_private.FeaturePanPlugin, dataModel);
    IceCabinetPlugin_Init(&instance->_private.IceCabinetPlugin, dataModel);
+
+   // Activate Subscription Client To Enable DoorBoard Communication
+   DataModel_Write(dataModel, Erd_DoorBoardEnable, set);
 }
