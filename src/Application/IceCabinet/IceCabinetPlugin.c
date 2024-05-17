@@ -39,6 +39,32 @@ static const IceCabinetGammaCalculatorConfig_t gammaCalculatorConfig = {
    .gammaErd = Erd_IceCabinetGamma
 };
 
+static bool IceCabinetGasketHeaterVotingErdCareDelegate(const void *votingErdData)
+{
+   const WaterValveVotedState_t *data = votingErdData;
+   return (data->care);
+}
+
+static const PercentageDutyCycleVote_t defaultIceCabinetGasketHeaterData = {
+   .percentageDutyCycle = PercentageDutyCycle_Min,
+   .care = Vote_DontCare
+};
+
+static const ErdResolverConfiguration_t iceCabinetGasketHeaterResolverConfiguration = {
+   .votingErdCare = IceCabinetGasketHeaterVotingErdCareDelegate,
+   .defaultData = &defaultIceCabinetGasketHeaterData,
+   .winningVoterErd = Erd_IceCabinetGasketHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_IceCabinetGasketHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceCabinetGasketHeater_IceCabinetHeaterControlVote - Erd_IceCabinetGasketHeater_WinningVoteErd)
+};
+
+static const IceCabinetHeaterControlConfig_t iceCabinetHeaterControlConfig = {
+   .iceFormationIsActiveErd = Erd_IceCabinet_IceFormationIsActive,
+   .iceCabinetFanSpeedVoteErd = Erd_IceCabinetFanSpeed_ResolvedVote,
+   .iceCabinetHeaterVoteErd = Erd_IceCabinetGasketHeater_IceCabinetHeaterControlVote,
+   .freezerResolvedSetpointErd = Erd_Freezer_ResolvedSetpointInDegFx100
+};
+
 void IceCabinetPlugin_Init(
    IceCabinetPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -75,4 +101,15 @@ void IceCabinetPlugin_Init(
    IceCabinetGridPlugin_Init(
       &instance->_private.iceCabinetGridPlugin,
       dataModel);
+
+   ErdResolver_Init(
+      &instance->_private.iceCabinetGasketHeaterErdResolver,
+      DataModel_AsDataSource(dataModel),
+      &iceCabinetGasketHeaterResolverConfiguration);
+
+   IceCabinetHeaterControl_Init(
+      &instance->_private.iceCabinetHeaterControl,
+      dataModel,
+      &iceCabinetHeaterControlConfig,
+      PersonalityParametricData_Get(dataModel)->iceCabinetGasketHeaterData);
 }

@@ -27,6 +27,9 @@ describe("Personality", function()
       convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
       feature_pan = TypedString('feature_pan', 'feature_pan'),
       ice_cabinet = TypedString('ice_cabinet', 'ice_cabinet'),
+      duct_door_heater = TypedString('duct_door_heater', 'duct_door_heater'),
+      ice_cabinet_gasket_heater = TypedString('ice_cabinet_gasket_heater', 'ice_cabinet_gasket_heater'),
+      ice_duct_port_heater = TypedString('ice_duct_port_heater', 'ice_duct_port_heater'),
       sensors = TypedString('sensors', 'sensors'),
       system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
@@ -191,6 +194,30 @@ describe("Personality", function()
     should_fail_with('ice_cabinet must be a typed string with type ice_cabinet, but is a number', function()
       personality(generate_config({
         ice_cabinet = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('duct_door_heater must be a typed string with type duct_door_heater, but is a number', function()
+      personality(generate_config({
+        duct_door_heater = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('ice_cabinet_gasket_heater must be a typed string with type ice_cabinet_gasket_heater, but is a number', function()
+      personality(generate_config({
+        ice_cabinet_gasket_heater = -1
+      }))
+    end)
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('ice_duct_port_heater must be a typed string with type ice_duct_port_heater, but is a number', function()
+      personality(generate_config({
+        ice_duct_port_heater = -1
       }))
     end)
   end)
@@ -415,6 +442,9 @@ describe("Personality", function()
         pointer(convertible_compartment),
         pointer(feature_pan),
         pointer(ice_cabinet),
+        pointer(duct_door_heater),
+        pointer(ice_cabinet_gasket_heater),
+        pointer(ice_duct_port_heater),
         pointer(sensors),
         pointer(system_monitor),
         pointer(compressor),

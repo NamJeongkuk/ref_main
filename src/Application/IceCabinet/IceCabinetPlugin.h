@@ -15,7 +15,9 @@
 #include "IceCabinetGridPlugin.h"
 #include "IceCabinetFanStartupSpeedVoting.h"
 #include "IceCabinetFreezerEvapFanDependencyVoting.h"
+#include "IceCabinetHeaterControl.h"
 #include "FreezerSetpointToIceCabinetSetpointMapper.h"
+#include "ErdResolver.h"
 
 typedef struct
 {
@@ -27,6 +29,8 @@ typedef struct
       IceCabinetFreezerEvapFanDependencyVoting_t iceCabinetFreezerEvapFanDependencyVoting;
       IceCabinetGammaCalculator_t gammaCalculator;
       IceCabinetGridPlugin_t iceCabinetGridPlugin;
+      ErdResolver_t iceCabinetGasketHeaterErdResolver;
+      IceCabinetHeaterControl_t iceCabinetHeaterControl;
    } _private;
 } IceCabinetPlugin_t;
 

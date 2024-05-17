@@ -117,6 +117,8 @@ return function(directory)
   import('IceCabinet/IceCabinet')
   import('IceCabinet/GammaTable')
   import('IceCabinet/IceCabinetFanStartup')
+  import('IceCabinet/IceCabinetHeater')
+  import('IceCabinet/IceCabinetHeaterId')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -235,6 +237,8 @@ return function(directory)
   ice_cabinet = IceCabinet(core)
   gamma_table = GammaTable(core)
   ice_cabinet_fan_startup = IceCabinetFanStartup(core)
+  ice_cabinet_heater = IceCabinetHeater(core)
+  ice_cabinet_heater_id = IceCabinetHeaterId
 
   return {
     core = core,
@@ -356,6 +360,8 @@ return function(directory)
     ice_cabinet = ice_cabinet,
     gamma_table = gamma_table,
     ice_cabinet_fan_startup = ice_cabinet_fan_startup,
+    ice_cabinet_heater = ice_cabinet_heater,
+    ice_cabinet_heater_id = ice_cabinet_heater_id,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
