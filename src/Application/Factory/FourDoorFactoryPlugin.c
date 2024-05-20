@@ -36,9 +36,16 @@ static const ErdOffValuePair_t factoryVotePairs[] = {
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_FreshFoodEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
-   { Erd_ConvertibleCompartmentDamperPosition_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_ConvertibleCompartmentDamperPosition_FactoryVote, DamperPosition_Closed },
    { Erd_ConvertibleCompartmentHeater_FactoryVote, HeaterState_Off },
-   { Erd_SealedSystemValvePosition_FactoryVote, SealedSystemValvePosition_D }
+   { Erd_ConvertibleCompartmentDefrostHeater_FactoryVote, HeaterState_Off },
+   { Erd_SealedSystemValvePosition_FactoryVote, SealedSystemValvePosition_D },
+   { Erd_DeliDamperPosition_FactoryVote, DamperPosition_Closed },
+   { Erd_DeliPanHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_IceCabinetFanSpeed_FactoryServiceVote, FanSpeed_Off },
+   { Erd_IceCabinetGasketHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_DuctDoorHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_IceDuctPortHeater_FactoryVote, PercentageDutyCycle_Min }
    // Light vote ERDs should not be configured here
    // It should be configured in lightVoteErds
 };
