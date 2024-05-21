@@ -48,6 +48,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_CompressorInverterDriver",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
          "interval": 60000
       },
@@ -84,6 +89,16 @@
       {
          "namespace": "mb",
          "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Freezer_LongTermAverageInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreshFood_LongTermAverageInDegFx100",
          "interval": 60000
       },
       {
