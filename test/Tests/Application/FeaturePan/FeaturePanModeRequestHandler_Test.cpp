@@ -68,6 +68,13 @@ TEST_GROUP(FeaturePanModeRequestHandler)
       DataModel_Read(dataModel, Erd_FeaturePanCurrentModeStatus, &actual);
       CHECK_EQUAL(expected, actual);
    }
+
+   void TheAlertSignalShouldBe(Signal_t expectedValue)
+   {
+      Signal_t actualValue;
+      DataModel_Read(dataModel, Erd_FeaturePan_ResetThermalShiftOffsetSignal, &actualValue);
+      CHECK_EQUAL(expectedValue, actualValue);
+   }
 };
 
 TEST(FeaturePanModeRequestHandler, ShouldWriteCurrentModeStatusToDefaultIfUninitializedWhenModuleIsInitialized)
@@ -89,30 +96,39 @@ TEST(FeaturePanModeRequestHandler, ShouldNotWriteCurrentModeStatusToDefaultIfIni
 TEST(FeaturePanModeRequestHandler, ShouldHandleAndResolveStatusWhenValidFeaturePanModesAreRequested)
 {
    GivenTheModuleIsInitialized();
+   TheAlertSignalShouldBe(0);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode1);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode1);
+   TheAlertSignalShouldBe(1);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode2);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode2);
+   TheAlertSignalShouldBe(2);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode3);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode3);
+   TheAlertSignalShouldBe(3);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode4);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode4);
+   TheAlertSignalShouldBe(4);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode5);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode5);
+   TheAlertSignalShouldBe(5);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode6);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode5);
+   TheAlertSignalShouldBe(5);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Mode7);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode5);
+   TheAlertSignalShouldBe(5);
 
    WhenTheRequestIs(FeaturePanCurrentMode_Off);
    TheStatusShouldBe(FeaturePanCurrentMode_Mode5);
+   TheAlertSignalShouldBe(5);
 }
 
 TEST(FeaturePanModeRequestHandler, ShouldNotHandleAndResolveStatusWhenNotControllableFeaturePanModeIsRequested)

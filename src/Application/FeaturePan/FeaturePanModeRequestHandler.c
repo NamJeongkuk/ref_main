@@ -7,8 +7,8 @@
 
 #include "FeaturePanMode.h"
 #include "FeaturePanModeRequestHandler.h"
-#include "utils.h"
 #include "SystemErds.h"
+#include "utils.h"
 
 static void WriteCurrentModeStatusToDefaultIfUninitialized(I_DataModel_t *dataModel)
 {
@@ -50,6 +50,8 @@ static void ResolveRequestBasedOnAllowedModes(FeaturePanModeRequestHandler_t *in
          instance->_private.dataModel,
          Erd_FeaturePanCurrentModeRequest,
          &resetRequest);
+
+      Signal_SendViaErd(DataModel_AsDataSource(instance->_private.dataModel), Erd_FeaturePan_ResetThermalShiftOffsetSignal);
    }
 }
 
