@@ -1,9 +1,9 @@
 return defrost({
   idle = {
-    freezer_door_increment_factor_in_seconds_per_second = 10,
-    fresh_food_door_increment_factor_in_seconds_per_second = 5,
-    minimum_time_between_defrosts_abnormal_run_time_in_minutes = 5,
-    max_time_between_defrosts_in_minutes = 9,
+    freezer_door_increment_factor_in_seconds_per_second = 5,
+    fresh_food_door_increment_factor_in_seconds_per_second = 4,
+    minimum_time_between_defrosts_abnormal_run_time_in_minutes = 8,
+    max_time_between_defrosts_in_minutes = 10,
     aham_prechill_time_between_defrosts_in_minutes = 6,
     number_of_secondary_only_defrosts_before_full_defrost = 0,
     number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = 0

@@ -1,25 +1,25 @@
--- Evaps and FZ Cab (LNTD1892G (FZ)), divider: 15K, precise zone between [-2000, 2000], precise zone max error: 5, outside zone max error: 25 degf_x100
+-- Evaps and FZ Cab (LNTD1892G (FZ)), divider: 15K to gnd, precise zone between [-2000, 2000], precise zone max error: 5, outside zone max error: 25 degf_x100
 return {
-   data = {
-     { raw = 2112, mapped = 13975 },
-     { raw = 2560, mapped = 12979 },
-     { raw = 3136, mapped = 11957 },
-     { raw = 3840, mapped = 10957 },
-     { raw = 4672, mapped = 10012 },
-     { raw = 5696, mapped = 9068 },
-     { raw = 7040, mapped = 8074 },
-     { raw = 8704, mapped = 7088 },
-     { raw = 10752, mapped = 6103 },
-     { raw = 13312, mapped = 5100 },
-     { raw = 16576, mapped = 4048 },
-     { raw = 20800, mapped = 2914 },
-     { raw = 25152, mapped = 1905 },
-     { raw = 28096, mapped = 1278 },
-     { raw = 32128, mapped = 463 },
-     { raw = 41408, mapped = -1359 },
-     { raw = 44928, mapped = -2082 },
-     { raw = 50432, mapped = -3331 },
-     { raw = 52992, mapped = -3999 }
-   },
-   invalid_value = 30000
- }
+  data = {
+    { raw = 12544, mapped = -3999 },
+    { raw = 16320, mapped = -3037 },
+    { raw = 21504, mapped = -1894 },
+    { raw = 25472, mapped = -1091 },
+    { raw = 34816, mapped = 744 },
+    { raw = 38336, mapped = 1465 },
+    { raw = 41152, mapped = 2074 },
+    { raw = 46272, mapped = 3304 },
+    { raw = 50112, mapped = 4398 },
+    { raw = 53120, mapped = 5429 },
+    { raw = 55552, mapped = 6448 },
+    { raw = 57408, mapped = 7406 },
+    { raw = 58944, mapped = 8382 },
+    { raw = 60160, mapped = 9341 },
+    { raw = 61184, mapped = 10350 },
+    { raw = 61952, mapped = 11296 },
+    { raw = 62592, mapped = 12272 },
+    { raw = 63104, mapped = 13245 },
+    { raw = 63424, mapped = 13975 }
+  },
+  invalid_value = 30000
+}

@@ -24,7 +24,7 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_DamperHeater,                              output = bsp_erd.Erd_SoftPwmGpio_HTR_03 },
   -- { input = bsp_mapped_erd.Erd_CameraHeater,                           output = bsp_erd.Erd_SoftPwmGpio_HTR_05 }, uncomment when available
   { input = bsp_mapped_erd.Erd_DamperStepperMotorDriveEnable,             output = bsp_erd.Erd_Gpio_MTR_DRV_EN_00},
-  -- { input = bsp_mapped_erd.Erd_ConvertibleCompartmentHeater,           output = bsp_erd.Erd_SoftPwmGpio_HTR_04}, Uncomment when available
+  { input = bsp_mapped_erd.Erd_ConvertibleCompartmentHeater,           output = bsp_erd.Erd_SoftPwmGpio_HTR_04},
   { input = bsp_mapped_erd.Erd_FreezerDefrostHeaterRelay,                 output = bsp_erd.Erd_Gpio_RLY_00 },
   { input = bsp_mapped_erd.Erd_IceMaker0_HeaterRelay,                     output = bsp_erd.Erd_Gpio_RLY_01 },
 

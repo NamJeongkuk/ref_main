@@ -1,6 +1,8 @@
+local grid_line_temps = import("../../../Grid/fresh_food_and_freezer_grid_line_temperatures_qa.lua")
+
 return sensor_type({
   mapping_table = import("../../temperature_sensor_15k_resistor_qa.lua"),
-  fallback_value_in_degfx100 = 30000,
+  fallback_value_in_degfx100 = grid_line_temps.freezer_grid_temperatures_in_degfx100.freezer_high_hyst_in_degfx100 + 50,
   exponentially_moving_average_filter_alpha_numerator = 1,
   exponentially_moving_average_filter_alpha_denominator = 10,
   exponentially_moving_average_filter_window_size = 10,

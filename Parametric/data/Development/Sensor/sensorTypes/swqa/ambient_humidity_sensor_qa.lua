@@ -1,6 +1,6 @@
 return humidity_sensor_type({
   mapping_table = import("../../humidity_sensor_dummy.lua"),
-  fallback_value_in_percent_humidityx100 = 7500,
+  fallback_value_in_percent_humidityx100 = 5000,
   exponentially_moving_average_filter_alpha_numerator = 1,
   exponentially_moving_average_filter_alpha_denominator = 10,
   exponentially_moving_average_filter_window_size = 10,

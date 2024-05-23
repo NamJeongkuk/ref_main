@@ -1,6 +1,6 @@
 return sensor_type({
-  mapping_table = import("../../fresh_food_temperature_sensor_qa.lua"),
-  fallback_value_in_degfx100 = 30000,
+  mapping_table = import("../../temperature_sensor_15k_resistor_qa.lua"),
+  fallback_value_in_degfx100 = -500,
   exponentially_moving_average_filter_alpha_numerator = 1,
   exponentially_moving_average_filter_alpha_denominator = 10,
   exponentially_moving_average_filter_window_size = 10,
