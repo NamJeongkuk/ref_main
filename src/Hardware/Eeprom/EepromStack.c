@@ -37,7 +37,7 @@ static const HardwareEeprom_I2cMt24xxmmmConfiguration_t eepromConfig = {
    .maxTicksAllowedSinceLastResponse = 90,
    .maxObjectErrorsAllowedWhenPolling = 10,
    .i2cBusAccessTimeOut = 20,
-   .coolDownTimeOutAfterTransactionCompletes = 5
+   .coolDownTimeOutAfterTransactionCompletes = 0
 };
 
 static EepromStack_t instance;
