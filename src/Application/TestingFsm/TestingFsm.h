@@ -19,4 +19,9 @@ typedef struct
 
 } TestingFsm_t;
 
+// TestingFsmConfig_t testconfig = {
+// .sampleerd  = ;
+// .sampleerd2 = ;
+// };
+
 void TestingFSM_Init(TestingFsm_t *fsm);
