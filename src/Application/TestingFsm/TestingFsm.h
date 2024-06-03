@@ -1,12 +1,19 @@
 #include <stdint.h>
+#include "Erd.h"
 #include "Fsm.h"
 #include "TestingState.h"
 
 typedef struct
 {
+   Erd_t sampleerd;
+   Erd_t sampleerd2;
+} TestingFsmConfig_t;
+
+typedef struct
+{
    struct
    {
-      uint8_t counter;
+      TestingFsmConfig_t tconfig;
       Fsm_t objfsm;
    } _private;
 
