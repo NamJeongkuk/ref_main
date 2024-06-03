@@ -20,6 +20,7 @@
     "editor.insertSpaces": true
   },
   "files.associations": {
-    "nonvolatileasyncdatasource.h": "c"
+    "nonvolatileasyncdatasource.h": "c",
+    "fsm.h": "c"
   }
 }

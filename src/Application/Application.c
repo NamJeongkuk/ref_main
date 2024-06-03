@@ -6,10 +6,10 @@
  */
 
 #include "Application.h"
-#include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "SnackModePlugin.h"
 #include "NotificationsPlugin.h"
+#include "SnackModePlugin.h"
+#include "SystemErds.h"
 
 static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
    .resetReasonErd = Erd_ResetReason,
@@ -77,4 +77,6 @@ void Application_Init(
    FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
 
    NonVolatileUsageMonitorPlugin_Init(&instance->_private.nvUsageMonitorPlugin, dataModel);
+
+   TestingFSM_Init(&instance->_private.testingfsm);
 }

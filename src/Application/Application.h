@@ -8,23 +8,24 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "I_DataModel.h"
-#include "HeartbeatLedPlugin.h"
-#include "TimerModuleDiagnostics.h"
-#include "Input_StackUsageCalculator.h"
 #include "ApplianceApiResetDiagnostics.h"
 #include "ApplianceFeatureApiUpdaterPlugin.h"
-#include "PeriodicNvUpdaterPlugin.h"
-#include "ShiftOffsetCalculatorCommonPlugin.h"
-#include "WaterFilterPlugin.h"
-#include "BroadcastResetPlugin.h"
-#include "SoundLevelPlugin.h"
-#include "ServiceModePlugin.h"
-#include "FaultMonitorPlugin.h"
 #include "BoardFeaturesToApplianceApiFeaturesUpdaterPlugin.h"
+#include "BroadcastResetPlugin.h"
+#include "FaultMonitorPlugin.h"
+#include "HeartbeatLedPlugin.h"
+#include "I_DataModel.h"
+#include "Input_StackUsageCalculator.h"
 #include "NonVolatileUsageMonitorPlugin.h"
-#include "PlatformPlugin.h"
 #include "ParallelMotorControlPlugin.h"
+#include "PeriodicNvUpdaterPlugin.h"
+#include "PlatformPlugin.h"
+#include "ServiceModePlugin.h"
+#include "ShiftOffsetCalculatorCommonPlugin.h"
+#include "SoundLevelPlugin.h"
+#include "TestingFsm.h"
+#include "TimerModuleDiagnostics.h"
+#include "WaterFilterPlugin.h"
 
 typedef struct
 {
@@ -46,6 +47,7 @@ typedef struct
       NonVolatileUsageMonitorPlugin_t nvUsageMonitorPlugin;
       PlatformPlugin_t platformPlugin;
       ParallelMotorControlPlugin_t parallelMotorControlPlugin;
+      TestingFsm_t testingfsm;
    } _private;
 } Application_t;
 
