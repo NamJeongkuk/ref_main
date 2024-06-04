@@ -16,7 +16,7 @@ static void State_B(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 static void OnTestErd1Changed(void *context, const void *args)
 {
    TestingFsm_t *instance = context;
-   const uint16_t *TestInput1 = args;
+   const bool *TestInput1 = args;
 
    instance = instance;
    TestInput1 = TestInput1;
@@ -25,7 +25,7 @@ static void OnTestErd1Changed(void *context, const void *args)
 static void OnTestErd2Changed(void *context, const void *args)
 {
    TestingFsm_t *instance = context;
-   const uint16_t *TestInput2 = args;
+   const bool *TestInput2 = args;
 
    instance = instance;
    TestInput2 = TestInput2;
