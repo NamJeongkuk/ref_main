@@ -58,30 +58,6 @@ void TestingFSM_Init(
       &instance->_private.foxeventsub);
 }
 
-// void AugerMotorController_Init(
-//    AugerMotorController_t *instance,
-//    I_DataModel_t *dataModel,
-//    const AugerMotorControllerConfig_t *config,
-//    const AugerMotorData_t *augerMotorData)
-// {
-//    instance->_private.dataModel = dataModel;
-//    instance->_private.config = config;
-//    instance->_private.augerMotorData = augerMotorData;
-//    instance->_private.storedAugerMotorIceType = AugerMotorIceType_Off;
-
-//    Fsm_Init(&instance->_private.fsm, State_Idle);
-
-//    EventSubscription_Init(
-//       &instance->_private.,
-//       instance,
-//       OnAugerMotorIceTypeVoteChange);
-
-//    DataModel_Subscribe(
-//       dataModel,
-//       config->augerMotorIceTypeVoteErd,
-//       &instance->_private.augerMotorIceTypeVoteChangeSubscription);
-// }
-
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    IGNORE(data);

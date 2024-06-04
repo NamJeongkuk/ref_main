@@ -15,32 +15,11 @@ typedef struct
    Erd_t printstate;
 } TestingFsmConfig_t;
 
-// void AugerMotorController_Init(
-//    AugerMotorController_t *instance,
-//    I_DataModel_t *dataModel,
-//    const AugerMotorControllerConfig_t *config,
-//    const AugerMotorData_t *augerMotorData);
-
-// typedef struct
-// {
-//    struct
-//    {
-//       I_DataModel_t *dataModel;
-//       EventSubscription_t augerMotorIceTypeVoteChangeSubscription;
-//       const AugerMotorData_t *augerMotorData;
-//       const AugerMotorControllerConfig_t *config;
-//       AugerMotorIceType_t storedAugerMotorIceType;
-//       Fsm_t fsm;
-//       Timer_t timer;
-//    } _private;
-// }  AugerMotorController_t;
-
 typedef struct
 {
    struct
    {
       EventSubscription_t foxeventsub;
-      // const TestingFsmConfig_t *tconfig;
       Fsm_t objfsm;
    } _private;
 
