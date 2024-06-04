@@ -10,8 +10,9 @@
 
 typedef struct
 {
-   Erd_t sampleerd;
-   Erd_t sampleerd2;
+   Erd_t clockwise;
+   Erd_t cclockwise;
+   Erd_t printstate;
 } TestingFsmConfig_t;
 
 // void AugerMotorController_Init(
@@ -39,7 +40,7 @@ typedef struct
    struct
    {
       EventSubscription_t foxeventsub;
-      TestingFsmConfig_t *tconfig;
+      // const TestingFsmConfig_t *tconfig;
       Fsm_t objfsm;
    } _private;
 
