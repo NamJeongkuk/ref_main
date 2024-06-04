@@ -78,5 +78,5 @@ void Application_Init(
 
    NonVolatileUsageMonitorPlugin_Init(&instance->_private.nvUsageMonitorPlugin, dataModel);
 
-   TestingFSM_Init(&instance->_private.testingfsm);
+   TestingFSM_Init(&instance->_private.testingfsm, dataModel);
 }

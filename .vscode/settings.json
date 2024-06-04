@@ -21,6 +21,7 @@
   },
   "files.associations": {
     "nonvolatileasyncdatasource.h": "c",
-    "fsm.h": "c"
+    "fsm.h": "c",
+    "utils.h": "c"
   }
 }
