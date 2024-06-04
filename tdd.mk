@@ -29,6 +29,7 @@ SRC_DIRS:=\
   src/Application/ConvertibleCompartment \
   src/Application/Cooling \
   src/Application/Damper \
+	src/Application/TestingFsm \
   src/Application/DataSource \
   src/Application/DataSource/BspDataSource \
   src/Application/DataSource/ConvertedDataSource \
@@ -123,6 +124,7 @@ SRC_DIRS:=\
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
   test/Tests/Application/Grid \
+	test/Tests/Application/TestingFsm \
   test/Tests/Application/IceCabinet \
   test/Tests/Application/IceMaker \
   test/Tests/Application/IceMaker/AluminumMoldIceMaker \

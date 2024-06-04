@@ -5,22 +5,43 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-enum
+extern "C"
 {
-
+#include "Fsm.h"
+#include "TestingFsm.h"
+#include "utils.h"
 };
 
-TEST_GROUP(TestingFsmGroup)
-{
-   void setup()
-   {
-   }
+#include "CppUTest/TestHarness.h"
+#include "CppUTestExt/MockSupport.h"
+#include "DataModel_TestDouble.h"
+#include "GpioGroup_TestDouble.h"
+#include "ReferDataModel_TestDouble.h"
+#include "uassert_test.h"
 
-   void GivenInitialization()
-   {
-   }
-}
+#define Given
+#define When
+#define And
+#define After
+#define Then
 
-TEST(TestingFsmGroup, Test1)
-{
-}
+TestingFsmConfig_t namtestconfigfortdd = {
+   .clockwise = Erd_Clockwise,
+   .cclockwise = Erd_CClockwise,
+   .printstate = Erd_TestCurState
+};
+
+// TEST_GROUP(TestingFsmGroup)
+// {
+//    void setup()
+//    {
+//    }
+
+//    void GivenInitialization()
+//    {
+//    }
+// }
+
+// TEST(TestingFsmGroup, Test1)
+// {
+// }

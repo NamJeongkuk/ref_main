@@ -15,20 +15,24 @@ static void State_B(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 
 static void OnTestErd1Changed(void *context, const void *args)
 {
-   TestingFsm_t *instance = context;
-   const bool *TestInput1 = args;
+   IGNORE(context);
+   IGNORE(args);
+   // TestingFsm_t *instance = context;
+   // const bool *TestInput1 = args;
 
-   instance = instance;
-   TestInput1 = TestInput1;
+   // instance = instance;
+   // TestInput1 = TestInput1;
 }
 
 static void OnTestErd2Changed(void *context, const void *args)
 {
-   TestingFsm_t *instance = context;
-   const bool *TestInput2 = args;
+   IGNORE(context);
+   IGNORE(args);
+   // TestingFsm_t *instance = context;
+   // const bool *TestInput2 = args;
 
-   instance = instance;
-   TestInput2 = TestInput2;
+   // instance = instance;
+   // TestInput2 = TestInput2;
 }
 
 void TestingFSM_Init(
