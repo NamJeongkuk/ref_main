@@ -16,10 +16,16 @@ static void OnFoxFsmErdChanged(void *context, const void *args)
    // TestInput1 = TestInput1;
 }
 
-void FoxFSM_Init(
+void FoxFsm_Init(
    FoxFsm_t *instance,
    I_DataModel_t *dataModel)
 {
+    // instance->foxfsmdata = data;
+    //instance->foxfsmdata = data;
+
+
+
+
    Fsm_Init(&instance->_private.objfsm, State_Idle);
 
    EventSubscription_Init(
@@ -29,12 +35,12 @@ void FoxFSM_Init(
 
    DataModel_Subscribe(
       dataModel,
-      foxfsmconf.clockwise,
+      instance->_private.foxfsmdata.clockwise,
       &instance->_private.foxeventsub);
 
    DataModel_Subscribe(
       dataModel,
-      foxfsmconf.cclockwise,
+      instance->_private.foxfsmdata.cclockwise,
       &instance->_private.foxeventsub);
 }
 
@@ -47,8 +53,8 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          // Entry actions
          // SetFsmStateTo(instance, FSM_TEST_SIG_IDLE);
          break;
-      case FSM_TEST_SIG_IDLE:
-         Fsm_Transition(fsm, State_A);
+      case FoxFsm_IDLE:
+         Fsm_Transition(fsm, State_Idle);
          break;
       case FSM_EXIT:
          // Exit actions
