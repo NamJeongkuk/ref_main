@@ -33,7 +33,7 @@ FoxFsmConfig_t foxtestconfigfortdd = {
 
 TEST_GROUP(TestingFsmGroup)
 {
-   FoxFsm_t instance;
+   FoxFsmPlugin_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
 
    void setup()
@@ -41,7 +41,7 @@ TEST_GROUP(TestingFsmGroup)
       ReferDataModel_TestDouble_Init(&dataModelDouble);
 
       FoxFSM_Init(
-         &instance,
+         &instance->foxfsm,
          dataModelDouble.dataModel);
    }
 
