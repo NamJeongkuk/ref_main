@@ -123,6 +123,7 @@ SRC_DIRS:=\
   test/Tests/Application/FeaturePan \
   test/Tests/Application/Features \
   test/Tests/Application/FlowMeter \
+  test/Tests/Application/FoxFsm \
   test/Tests/Application/Grid \
   test/Tests/Application/IceCabinet \
   test/Tests/Application/IceMaker \

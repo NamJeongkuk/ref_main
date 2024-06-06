@@ -16,6 +16,6 @@ void  FoxFsmPlugin_Init(
    I_DataModel_t *dataModel)
 
 {
-   FoxFsm_Init(&instance->foxfsm, dataModel);
+   FoxFsm_Init(&instance->foxfsm, &foxtestconfigfortdd,  dataModel);
 
 }

@@ -8,7 +8,8 @@
 extern "C"
 {
 #include "Fsm.h"
-#include "FoxFsm.h"
+#include "FoxFsmPlugin.h"
+#include "FoxFsmState.h"
 #include "utils.h"
 };
 
@@ -24,8 +25,10 @@ extern "C"
 #define And
 #define After
 #define Then
-
-FoxFsmConfig_t foxtestconfigfortdd = {
+/*
+preview
+*/
+static const FoxFsmData_t config = { 
    .clockwise = Erd_Clockwise,
    .cclockwise = Erd_CClockwise,
    .printstate = Erd_TestCurState
@@ -33,41 +36,82 @@ FoxFsmConfig_t foxtestconfigfortdd = {
 
 TEST_GROUP(TestingFsmGroup)
 {
-   FoxFsmPlugin_t instance;
+   FoxFsm_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t * dataModel;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
-
-      FoxFSM_Init(
-         &instance->foxfsm,
-         dataModelDouble.dataModel);
+      dataModel = dataModelDouble.dataModel;
+   }
+   void GivenModuleIsInitialized()
+   {
+      FoxFsm_Init(
+         &instance,
+         &config,
+         dataModel);
    }
 
-   // void GivenInitialization()
-   // {
-   // }
+   void FoxFsmStateShouldBe(FoxFsmState_t this_state){
+      IGNORE(this_state);
+   }
+
+   void ErdClockwiseShouldBe(bool this_decision){
+
+   }
+
+   void WhenErdClockwise(){
+
+   }
+
+   void WhenErdCounterClockwise(){
+
+   }
+
+
 };
 
-TEST(TestingFsmGroup, Test1)
-{ /*
- A to B using clockwise
- B to C using clockwise
- C to A using clockwise
- A to B using clockwise
- B to C using clockwise
- C to A using clockwise
- */
+TEST(TestingFsmGroup, ShouldStateAWhenModuleInitialze)
+{
+   GivenModuleIsInitialized();
+
+   FoxFsmStateShouldBe(FoxFsm_A);
 }
 
-TEST(TestingFsmGroup, Test2)
-{ /*
- A to C using clockwise
- C to B using clockwise
- B to A using clockwise
- A to C using clockwise
- C to B using clockwise
- B to A using clockwise
- */
+TEST(TestingFsmGroup, ShouldErdClockwiseFalseWhenModuleInitialize)
+{
+   GivenModuleIsInitialized();
+
+   ErdClockwiseShouldBe(false);
+}
+
+TEST(TestingFsmGroup, ShouldStateBWhenErdCW1)
+{
+   GivenModuleIsInitialized();
+   WhenErdClockwise();
+   FoxFsmStateShouldBe(FoxFsm_B);
+/*
+               Init 
+State          ____A---B----....
+Erd_Clockwise  ____F--T-F---....
+
+*/
+}
+
+TEST(TestingFsmGroup, ShouldStateCWhenErdCW2)
+{
+   GivenModuleIsInitialized();
+   WhenErdClockwise();
+   WhenErdClockwise();
+   FoxFsmStateShouldBe(FoxFsm_C);
+}
+
+TEST(TestingFsmGroup, ShouldStateAWhenErdCW3)
+{
+   GivenModuleIsInitialized();
+   WhenErdClockwise();
+   WhenErdClockwise();
+   WhenErdClockwise();
+   FoxFsmStateShouldBe(FoxFsm_A);
 }
