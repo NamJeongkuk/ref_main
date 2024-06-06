@@ -11,6 +11,7 @@ extern "C"
 #include "FoxFsmPlugin.h"
 #include "FoxFsmState.h"
 #include "utils.h"
+#include <stdint.h>
 
 
 #include "DataModelErdPointerAccess.h"
