@@ -77,4 +77,6 @@ void Application_Init(
    FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
 
    NonVolatileUsageMonitorPlugin_Init(&instance->_private.nvUsageMonitorPlugin, dataModel);
+
+   FoxFsmPlugin_Init(&instance->_private.foxfsmplugin, dataModel);
 }

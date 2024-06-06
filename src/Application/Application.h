@@ -25,6 +25,7 @@
 #include "NonVolatileUsageMonitorPlugin.h"
 #include "PlatformPlugin.h"
 #include "ParallelMotorControlPlugin.h"
+#include "FoxFsmPlugin.h"
 
 typedef struct
 {
@@ -46,6 +47,7 @@ typedef struct
       NonVolatileUsageMonitorPlugin_t nvUsageMonitorPlugin;
       PlatformPlugin_t platformPlugin;
       ParallelMotorControlPlugin_t parallelMotorControlPlugin;
+      FoxFsmPlugin_t foxfsmplugin;
    } _private;
 } Application_t;
 
