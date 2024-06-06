@@ -2,9 +2,11 @@
 #include "FoxFsm.h"
 #include "utils.h"
 #include "Constants_Binary.h"
-#include "DataModelErdPointerAccess.h"
+
 
 static void State_A(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_B(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_C(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 
 // static void SetErdClockwiseFalse();
 // static void SetErdCounterClockwiseFalse();
@@ -39,7 +41,7 @@ void FoxFsm_Init(
 {
     // instance->foxfsmdata = data;
     instance->_private.dataModel = dataModel;
-    instance->_private.foxfsmdata = *glue;
+    instance->_private.foxfsmdata = glue;
 
 
 
@@ -55,8 +57,19 @@ void FoxFsm_Init(
       //Sub not supported error on execution
    DataModel_Subscribe(
       dataModel,
-      instance->_private.foxfsmdata.clockwise,
+      instance->_private.foxfsmdata->clockwise,
       &instance->_private.cweventsub);
+
+   EventSubscription_Init(
+      &instance->_private.ccweventsub,
+      instance,
+      OnCCWChanged);
+      
+      //Sub not supported error on execution
+   DataModel_Subscribe(
+      dataModel,
+      instance->_private.foxfsmdata->clockwise,
+      &instance->_private.ccweventsub);
 
 
 //    EventSubscription_Init(
@@ -95,7 +108,44 @@ static void State_A(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          // Entry actions
          // SetFsmStateTo(instance, FSM_TEST_SIG_IDLE);
          break;
-      case FoxFsm_IDLE:
+      case FoxFsm_B:
+         Fsm_Transition(fsm, State_B);
+         break;
+      case FSM_EXIT:
+         // Exit actions
+         break;
+   }
+}
+
+static void State_B(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   IGNORE(data);
+   switch(signal)
+   {
+      case FSM_ENTRY:
+         // Entry actions
+         // SetFsmStateTo(instance, FSM_TEST_SIG_IDLE);
+         break;
+      case FoxFsm_C:
+         Fsm_Transition(fsm, State_C);
+         break;
+      case FSM_EXIT:
+         // Exit actions
+         break;
+   }
+}
+
+
+static void State_C(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   IGNORE(data);
+   switch(signal)
+   {
+      case FSM_ENTRY:
+         // Entry actions
+         // SetFsmStateTo(instance, FSM_TEST_SIG_IDLE);
+         break;
+      case FoxFsm_A:
          Fsm_Transition(fsm, State_A);
          break;
       case FSM_EXIT:

@@ -22,7 +22,7 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t cweventsub;
       EventSubscription_t ccweventsub;
-      FoxFsmData_t foxfsmdata;
+      const FoxFsmData_t * foxfsmdata;
       Fsm_t objfsm;
    } _private;
 

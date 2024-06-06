@@ -3,8 +3,8 @@
 
 
 typedef enum {
-   FoxFsm_ENTRY,
-   FoxFsm_EXIT,
+   FoxFsm_ENTRY = Fsm_Entry,
+   FoxFsm_EXIT = Fsm_Exit,
    FoxFsm_IDLE,
    FoxFsm_A,
    FoxFsm_B,

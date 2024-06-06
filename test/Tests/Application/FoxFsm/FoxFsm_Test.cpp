@@ -11,6 +11,13 @@ extern "C"
 #include "FoxFsmPlugin.h"
 #include "FoxFsmState.h"
 #include "utils.h"
+
+
+#include "DataModelErdPointerAccess.h"
+#include "SystemErds.h"
+
+#include "Constants_Binary.h"
+#include "ConstArrayMap_FourDoorDualEvap.h"
 };
 
 #include "CppUTest/TestHarness.h"
@@ -53,24 +60,51 @@ TEST_GROUP(TestingFsmGroup)
          dataModel);
    }
 
-   void FoxFsmStateShouldBe(FoxFsmState_t this_state){
-      IGNORE(this_state);
+   void FoxFsmStateShouldBe(FoxFsmState_t expected){
+
+      FoxFsmState_t actual;
+      DataModel_Read(dataModel, Erd_TestCurState, &actual);
+      CHECK_EQUAL(expected, actual);
+
    }
 
-   void ErdClockwiseShouldBe(bool this_decision){
-
+   void ErdClockwiseShouldBe(bool expected){
+      bool actual;
+      DataModel_Read(dataModel, Erd_Clockwise, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+   void ErdCounterClockwiseShouldBe(bool expected){
+      bool actual;
+      DataModel_Read(dataModel, Erd_CClockwise, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 
    void WhenErdClockwise(){
-
+      bool signal = true;
+      DataModel_Write(dataModel, Erd_Clockwise, &signal);
    }
 
    void WhenErdCounterClockwise(){
-
+      bool signal = true;
+      DataModel_Write(dataModel, Erd_CClockwise, &signal);
    }
 
 
 };
+/*
+               Init 
+State          ____A---B----....
+Erd_Clockwise  ____F--T-F---....
+
+// */
+
+/*
+                           |-----------|
+Erd_Clockwise     ---------|           |
+                           |           |---------- Erd_TestCurState
+Erd_CClockwise    ---------|           |
+                           |-----------|
+*/
 
 TEST(TestingFsmGroup, ShouldStateAWhenModuleInitialze)
 {
@@ -83,7 +117,14 @@ TEST(TestingFsmGroup, ShouldErdClockwiseFalseWhenModuleInitialize)
 {
    GivenModuleIsInitialized();
 
-   ErdClockwiseShouldBe(false);
+   ErdCounterClockwiseShouldBe(false);
+}
+
+TEST(TestingFsmGroup, ShouldErdCClockwiseFalseWhenModuleInitialize)
+{
+   GivenModuleIsInitialized();
+
+   ErdCounterClockwiseShouldBe(false);
 }
 
 TEST(TestingFsmGroup, ShouldStateBWhenErdCW1)
@@ -91,12 +132,6 @@ TEST(TestingFsmGroup, ShouldStateBWhenErdCW1)
    GivenModuleIsInitialized();
    WhenErdClockwise();
    FoxFsmStateShouldBe(FoxFsm_B);
-/*
-               Init 
-State          ____A---B----....
-Erd_Clockwise  ____F--T-F---....
-
-*/
 }
 
 TEST(TestingFsmGroup, ShouldStateCWhenErdCW2)
@@ -113,5 +148,29 @@ TEST(TestingFsmGroup, ShouldStateAWhenErdCW3)
    WhenErdClockwise();
    WhenErdClockwise();
    WhenErdClockwise();
+   FoxFsmStateShouldBe(FoxFsm_A);
+}
+
+TEST(TestingFsmGroup, ShouldStateBWhenErdCCW1)
+{
+   GivenModuleIsInitialized();
+   WhenErdCounterClockwise();
+   FoxFsmStateShouldBe(FoxFsm_C);
+}
+
+TEST(TestingFsmGroup, ShouldStateCWhenErdCCW2)
+{
+   GivenModuleIsInitialized();
+   WhenErdCounterClockwise();
+   WhenErdCounterClockwise();
+   FoxFsmStateShouldBe(FoxFsm_B);
+}
+
+TEST(TestingFsmGroup, ShouldStateAWhenErdCCW3)
+{
+   GivenModuleIsInitialized();
+   WhenErdCounterClockwise();
+   WhenErdCounterClockwise();
+   WhenErdCounterClockwise();
    FoxFsmStateShouldBe(FoxFsm_A);
 }
