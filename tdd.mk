@@ -47,6 +47,7 @@ SRC_DIRS:=\
   src/Application/FeaturePan \
   src/Application/Features \
   src/Application/FlowMeter \
+  src/Application/FoxFsm \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \

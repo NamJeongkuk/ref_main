@@ -84,6 +84,7 @@ SRC_DIRS:=\
   src/Application/FeaturePan \
   src/Application/Features \
   src/Application/FlowMeter \
+  src/Application/FoxFsm \
   src/Application/Gea \
   src/Application/Mapper \
   src/Application/Motor \
